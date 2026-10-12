@@ -89,6 +89,10 @@ def _ppr_op(f: Finding) -> PPrOp | None:
     prop = f.rule_id.split(".", 1)[1]
     exp = f.expected
 
+    if f.rule_id == "page_numbering.position":
+        horizontal = exp.split("_")[1]
+        return lambda ppr: _set(ordered_child(ppr, w("jc"), PPR_ORDER), val=horizontal)
+
     if prop == "alignment" and exp in JC:
         return lambda ppr: _set(ordered_child(ppr, w("jc"), PPR_ORDER), val=JC[exp])
     if prop == "line_spacing":

@@ -5,12 +5,13 @@ Bulgular metin içermez: yalnızca kural kimliği, konum ve biçim değerleri (e
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import StrEnum
 
 from synora.features import page_starts
-from synora.model import DocModel, LineRule, Paragraph, Role, Section
+from synora.model import Alignment, DocModel, LineRule, Paragraph, Role, Section, Story
 from synora.roles import RoleDecision, assign_roles
 from synora.ruleset import PAGE_SIZES_CM, LineSpacingRule, RoleRules, Ruleset
 
@@ -56,10 +57,12 @@ def check(doc: DocModel, rules: Ruleset) -> CheckResult:
     findings.extend(_document_rules(doc, rules))
     findings.extend(_page_rules(doc.sections, rules))
     findings.extend(_page_numbering(doc.sections, rules))
+    findings.extend(_page_number_position(doc, rules))
     checked = unknown = cover = 0
     body = doc.body()
     body_index = {p.para_id: i for i, p in enumerate(body)}
     starts_page = page_starts(body)
+    caption_places = _caption_places(body, roles)
     for para in doc.paragraphs:
         decision = roles[para.para_id]
         if decision.role is Role.UNKNOWN:
@@ -73,7 +76,8 @@ def check(doc: DocModel, rules: Ruleset) -> CheckResult:
             continue
         checked += 1
         starts = starts_page.get(para.para_id, False)
-        for f in _paragraph_rules(para, decision.role, role_rules, rules, starts):
+        place = caption_places.get(para.para_id)
+        for f in _paragraph_rules(para, decision.role, role_rules, rules, starts, place):
             findings.append(
                 _locate(f, para, decision.role, body_index.get(para.para_id))
             )
@@ -161,7 +165,8 @@ def _page_numbering(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[F
 
 
 def _paragraph_rules(
-    p: Paragraph, role: Role, rr: RoleRules, rules: Ruleset, starts_page: bool
+    p: Paragraph, role: Role, rr: RoleRules, rules: Ruleset, starts_page: bool,
+    caption_place: str | None = None,
 ) -> Iterator[Finding]:
     tol = rules.tolerance
     prefix = role.value
@@ -220,6 +225,139 @@ def _paragraph_rules(
 
     if rr.page_break_before and not starts_page:
         yield err("page_break_before", "true", "false")
+
+    # Yer değiştirmek paragraf sırasını (metni) değiştirir: otomatik düzeltilmez.
+    if rr.position and caption_place and caption_place != rr.position:
+        yield err("position", rr.position, caption_place, fixable=False)
+
+    if rr.case:
+        bad = case_problems(p.text, rr.case)
+        if bad:
+            yield Finding(f"{prefix}.case", Severity.WARNING, rr.case, "|".join(bad[:5]), False)
+
+
+# --- Şekil/tablo başlığının yeri ------------------------------------------------------------
+
+
+def _caption_places(body: tuple[Paragraph, ...], roles: dict[str, RoleDecision]) -> dict[str, str]:
+    """Başlığın nesnesine göre yeri: 'above' (nesne sonra gelir) ya da 'below' (önce gelir).
+    Aradaki boş paragraflar atlanır; komşu nesne bulunamazsa yer belirsizdir (sözlükte yok)."""
+    flow = [p for p in body if not p.in_textbox]
+    out: dict[str, str] = {}
+    for i, p in enumerate(flow):
+        role = roles[p.para_id].role
+        if role not in (Role.TABLE_CAPTION, Role.FIGURE_CAPTION) or p.in_table:
+            continue
+
+        def is_target(q: Paragraph, table: bool = role is Role.TABLE_CAPTION) -> bool:
+            return q.in_table if table else q.has_drawing
+
+        def adjacent(step: int, i: int = i) -> bool:
+            j = i + step
+            while 0 <= j < len(flow):
+                q = flow[j]
+                if is_target(q):
+                    return True
+                if q.text.strip() or q.in_table or q.has_drawing:
+                    return False
+                j += step
+            return False
+
+        after, before = adjacent(+1), adjacent(-1)
+        if after and not before:
+            out[p.para_id] = "above"
+        elif before and not after:
+            out[p.para_id] = "below"
+    return out
+
+
+# --- Başlık büyük/küçük harfi -----------------------------------------------------------------
+
+CONJUNCTIONS = frozenset({"ve", "veya", "ile", "ya", "da", "de", "ki", "yahut", "ama", "fakat",
+                          "ancak", "hem", "ne", "ise", "ya da", "and", "or", "of", "the", "in"})
+_PREFIX_RE = re.compile(r"^\s*(?:\d+(?:\.\d+)*\.?|[IVXLC]+\.)\s*")
+_TR_LOWER = str.maketrans({"I": "ı", "İ": "i"})
+
+
+def _tr_lower(text: str) -> str:
+    return text.translate(_TR_LOWER).lower()
+
+
+def case_problems(text: str, mode: str) -> list[str]:
+    """Kurala uymayan sözcükler. Kısaltmalar (BT, SPSS) ve rakamla başlayanlar atlanır.
+    Yalnızca yerel olarak çalışır; metin hiçbir yere gönderilmez."""
+    core_text = _PREFIX_RE.sub("", text).strip()
+    letters = [c for c in core_text if c.isalpha()]
+    if len(letters) > 3 and all(c.isupper() for c in letters):
+        return ["TAMAMI BÜYÜK HARF"]
+    bad: list[str] = []
+    for idx, raw in enumerate(core_text.split()):
+        word = raw.strip("“”\"'‘’()[]:;,.!?")
+        alpha = [c for c in word if c.isalpha()]
+        if not alpha or not word[0].isalpha():
+            continue
+        if len(alpha) > 1 and all(c.isupper() for c in alpha):
+            continue  # kısaltma
+        stem = re.split(r"['’]", word)[0]
+        is_conj = idx > 0 and _tr_lower(stem) in CONJUNCTIONS
+        first_upper = word[0].isupper()
+        if mode == "title":
+            if (is_conj and first_upper) or (not is_conj and not first_upper):
+                bad.append(word)
+        elif (idx == 0 and not first_upper) or (idx > 0 and first_upper):
+            bad.append(word)
+    return bad
+
+
+# --- Sayfa numarasının yeri -------------------------------------------------------------------
+
+_DECORATION_RE = re.compile(r"[()\[\]\-–—/]")
+
+
+def _horizontal(p: Paragraph) -> str:
+    tabs = len(p.text) - len(p.text.lstrip("\t"))
+    if tabs >= 2:
+        return "right"
+    if tabs == 1:
+        return "center"
+    return {Alignment.CENTER: "center", Alignment.RIGHT: "right"}.get(
+        p.props.alignment or Alignment.LEFT, "left")
+
+
+def _page_number_position(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
+    pn = rules.page_numbering
+    if pn.position is None and not pn.forbid_decoration:
+        return
+    holders: dict[str, Paragraph] = {}
+    for p in doc.paragraphs:
+        if p.story in (Story.HEADER, Story.FOOTER) and "PAGE" in p.field_kinds:
+            holders.setdefault(p.part, p)
+    if not holders:
+        yield Finding("page_numbering.position", Severity.ERROR, pn.position or "present",
+                      "missing", False)
+        return
+    seen: set[str] = set()
+    header: str | None = None
+    footer: str | None = None
+    for s in doc.sections:
+        # Word'de başvurusu olmayan bölüm, önceki bölümün üst/altbilgisini devralır.
+        header = s.headers.get("default", header)
+        footer = s.footers.get("default", footer)
+        for part, vertical in ((footer, "bottom"), (header, "top")):
+            if part is None or part not in holders or part in seen:
+                continue
+            seen.add(part)
+            p = holders[part]
+            actual = f"{vertical}_{_horizontal(p)}"
+            if pn.position and actual != pn.position:
+                # Yalnızca altbilgi/üstbilgi doğruysa ve sekmeyle hizalanmamışsa düzeltilebilir.
+                fixable = (vertical == pn.position.split("_")[0]
+                           and not p.text.startswith("\t"))
+                yield Finding("page_numbering.position", Severity.ERROR, pn.position, actual,
+                              fixable, para_id=p.para_id, section_index=s.index)
+            if pn.forbid_decoration and _DECORATION_RE.search(p.text):
+                yield Finding("page_numbering.decoration", Severity.ERROR, "none", "decorated",
+                              False, para_id=p.para_id, section_index=s.index)
 
 
 def _typed_upper(text: str) -> bool:

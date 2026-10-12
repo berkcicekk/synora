@@ -70,7 +70,7 @@ def classify(f: ParaFeatures) -> RoleDecision:
     if (
         f.on_first_page
         and f.word_count <= 12
-        and f.keyword is not Keyword.SECTION_TITLE
+        and f.keyword not in (Keyword.SECTION_TITLE, Keyword.FRONT_TITLE)
         and (
             f.alignment in (Alignment.CENTER, Alignment.RIGHT)
             or not f.ends_with_sentence_punct
@@ -107,6 +107,10 @@ def classify(f: ParaFeatures) -> RoleDecision:
         and f.size_ratio is not None and f.size_ratio < 1.0
     ):
         return _d(Role.BLOCK_QUOTE, 0.6)
+    if f.in_front_matter:
+        # Önsöz/özet metni: kılavuzlar burada gövdeden farklı kurallara izin verebilir
+        # (ör. ZBEÜ: önsöz tek satır aralıklı yazılabilir).
+        return _d(Role.FRONT_MATTER, 0.7)
     return _d(Role.BODY, 0.6 if f.style_kind is StyleKind.CUSTOM else 0.7)
 
 
@@ -141,7 +145,8 @@ def _unstyled_heading(f: ParaFeatures) -> RoleDecision | None:
         return None
     caps = f.upper_ratio >= 0.8
     emphasized = f.bold or caps or (f.size_ratio is not None and f.size_ratio >= 1.1)
-    if f.keyword in (Keyword.SECTION_TITLE, Keyword.REFERENCES_TITLE, Keyword.CHAPTER):
+    if f.keyword in (Keyword.SECTION_TITLE, Keyword.REFERENCES_TITLE, Keyword.CHAPTER,
+                     Keyword.FRONT_TITLE):
         return _d(Role.HEADING_1, 0.85 if emphasized or f.starts_page else 0.7)
     if not emphasized:
         return None

@@ -146,7 +146,7 @@ def front_matter(rng: random.Random) -> list[Sample]:
         (p("Danışman: Doç. Dr. Ayşe KARA", ppr=center), Role.COVER),
         (p("Zonguldak, 2026", ppr=center), Role.COVER),
         (p(r("ÖZET", rpr="<w:b/>"), ppr=center + "<w:pageBreakBefore/>"), Role.HEADING_1),
-        body(rng),
+        (body(rng)[0], Role.FRONT_MATTER),  # özet metni ön sayfadır
         (p(r("İÇİNDEKİLER", rpr="<w:b/>"), ppr=center + "<w:pageBreakBefore/>"), Role.HEADING_1),
         *[(p(line, ppr='<w:pStyle w:val="TOC1"/>'), Role.TOC_ENTRY) for line in TOC_LINES[:2]],
         *[(p(line), Role.TOC_ENTRY) for line in TOC_LINES[2:]],

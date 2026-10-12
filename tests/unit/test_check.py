@@ -32,7 +32,7 @@ def test_roles_of_compliant_thesis() -> None:
     result = run(thesis())
     assert sorted({d.role for d in result.roles.values()}) == sorted({
         Role.HEADING_1, Role.HEADING_2, Role.BODY, Role.FIGURE_CAPTION, Role.TABLE_CAPTION,
-        Role.TABLE_CELL, Role.EMPTY, Role.FOOTNOTE,
+        Role.TABLE_CELL, Role.EMPTY, Role.FOOTNOTE, Role.FRONT_MATTER,
     })
 
 

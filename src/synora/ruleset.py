@@ -82,6 +82,11 @@ class RoleRules(_Strict):
     space_before_pt: float | None = Field(None, ge=0)
     space_after_pt: float | None = Field(None, ge=0)
     page_break_before: bool | None = None
+    # Şekil/tablo başlığının nesneye göre yeri
+    position: Literal["above", "below"] | None = None
+    # Başlık yazımı: title = Her Sözcüğün İlk Harfi Büyük (bağlaçlar küçük);
+    # sentence = yalnızca ilk sözcüğün ilk harfi büyük
+    case: Literal["title", "sentence"] | None = None
 
     def spacing_rule(self) -> LineSpacingRule | None:
         if isinstance(self.line_spacing, float | int):
@@ -89,9 +94,16 @@ class RoleRules(_Strict):
         return self.line_spacing
 
 
+PageNumberPosition = Literal["bottom_left", "bottom_center", "bottom_right",
+                             "top_left", "top_center", "top_right"]
+
+
 class PageNumbering(_Strict):
     # Bölümlerin sayfa numarası biçimleri, sırayla (art arda tekrarlar tek sayılır).
     formats_in_order: tuple[PageNumberFormat, ...] = ()
+    position: PageNumberPosition | None = None
+    # Sayfa numarasının yanında parantez, tire vb. olmamalı
+    forbid_decoration: bool = False
 
 
 class DocumentRules(_Strict):

@@ -60,6 +60,7 @@ class Keyword(StrEnum):
     CHAPTER = "chapter"  # "BİRİNCİ BÖLÜM", "BÖLÜM 2"
     SECTION_TITLE = "section_title"  # ÖZET, GİRİŞ, KAYNAKÇA...
     REFERENCES_TITLE = "references_title"  # KAYNAKLAR / KAYNAKÇA / REFERENCES
+    FRONT_TITLE = "front_title"  # ÖNSÖZ, ÖZET, ABSTRACT, İÇİNDEKİLER, dizinler...
 
 
 class ParaFeatures(BaseModel):
@@ -76,6 +77,7 @@ class ParaFeatures(BaseModel):
     next_empty: bool
     next_is_table: bool
     in_references_section: bool
+    in_front_matter: bool  # ön sayfa başlığından (ÖNSÖZ, ÖZET...) sonra, ilk bölüme kadar
     on_first_page: bool  # ilk sayfa sonundan/bölüm sonundan önce (kapak olabilir)
 
     # Biçim
@@ -145,6 +147,14 @@ _CHAPTER_RE = re.compile(
     r"(?:\d+\.\s*)?BÖLÜM\b|BÖLÜM\s+[\dIVX]+|(?:BİRİNCİ|İKİNCİ|ÜÇÜNCÜ|DÖRDÜNCÜ|BEŞİNCİ|"
     r"ALTINCI|YEDİNCİ|SEKİZİNCİ|DOKUZUNCU|ONUNCU)\s+BÖLÜM|CHAPTER\s+\d+"
 )
+FRONT_TITLES = frozenset({
+    "ÖZET", "ABSTRACT", "SUMMARY", "ÖZ", "ÖNSÖZ", "TEŞEKKÜR", "ÖNSÖZ VE TEŞEKKÜR",
+    "TEŞEKKÜR VE ÖNSÖZ", "İÇİNDEKİLER", "ŞEKİLLER LİSTESİ", "ŞEKİL LİSTESİ", "TABLOLAR LİSTESİ",
+    "TABLO LİSTESİ", "ÇİZELGELER LİSTESİ", "ŞEKİLLER DİZİNİ", "TABLOLAR DİZİNİ",
+    "SİMGELER VE KISALTMALAR", "SİMGELER VE KISALTMALAR DİZİNİ", "KISALTMALAR",
+    "KISALTMALAR DİZİNİ", "SİMGELER", "KISALTMALAR LİSTESİ", "ETİK BEYAN",
+    "BİLİMSEL ETİK BİLDİRİMİ", "ACKNOWLEDGEMENTS", "CONTENTS",
+})
 REFERENCE_TITLES = frozenset({"KAYNAKLAR", "KAYNAKÇA", "REFERENCES", "BIBLIOGRAPHY",
                               "YARARLANILAN KAYNAKLAR"})
 _REFERENCE_END_TITLES = frozenset({"EKLER", "EK", "ÖZGEÇMİŞ", "APPENDIX", "APPENDICES",
@@ -206,6 +216,8 @@ def keyword(text: str) -> Keyword:
         title = _normalized_title(t)
         if title in REFERENCE_TITLES:
             return Keyword.REFERENCES_TITLE
+        if title in FRONT_TITLES:
+            return Keyword.FRONT_TITLE
         if title in SECTION_TITLES:
             return Keyword.SECTION_TITLE
     return Keyword.NONE
@@ -282,6 +294,41 @@ def _body_size(doc: DocModel) -> float | None:
     return weights.most_common(1)[0][0] if weights else None
 
 
+def _looks_like_chapter(p: Paragraph, starts_page: bool) -> bool:
+    """Bölüm başlığına benzeyen yapısal işaretler (adı bilinen listede olmasa bile)."""
+    name = (p.style_name or "").casefold()
+    if re.match(r"(?:heading|başlık|baslik)\s*1(?!\d)", name) or p.props.outline_level == 0:
+        return True
+    text = p.text.strip()
+    if not text or len(text.split()) > 12 or text.endswith((".", "!", "?")):
+        return False
+    letters = [c for c in text if c.isalpha()]
+    caps = bool(letters) and (p.dominant.all_caps or all(c.isupper() for c in letters))
+    numbered = number_prefix(text) is NumberPrefix.ARABIC_1
+    return (numbered and (bool(p.dominant.bold) or caps)) or (starts_page and caps)
+
+
+def _front_matter(body: tuple[Paragraph, ...], starts: dict[str, bool]) -> set[str]:
+    """Ön sayfa başlığından (ÖNSÖZ, ÖZET...) sonra, ilk ana bölüm başlığına kadarki paragraflar."""
+    inside = False
+    out: set[str] = set()
+    for p in body:
+        if p.in_table or p.in_textbox:
+            continue
+        kw = keyword(p.text)
+        if kw is Keyword.FRONT_TITLE:
+            inside = True
+            continue
+        if kw in (Keyword.SECTION_TITLE, Keyword.CHAPTER, Keyword.REFERENCES_TITLE) or (
+            inside and _looks_like_chapter(p, starts.get(p.para_id, False))
+        ):
+            inside = False
+            continue
+        if inside and p.text.strip():
+            out.add(p.para_id)
+    return out
+
+
 def _references_section(body: tuple[Paragraph, ...]) -> set[str]:
     inside = False
     out: set[str] = set()
@@ -292,7 +339,7 @@ def _references_section(body: tuple[Paragraph, ...]) -> set[str]:
         if kw is Keyword.REFERENCES_TITLE:
             inside = True
             continue
-        if inside and (kw in (Keyword.SECTION_TITLE, Keyword.CHAPTER)):
+        if inside and (kw in (Keyword.SECTION_TITLE, Keyword.CHAPTER, Keyword.FRONT_TITLE)):
             inside = False
             continue
         if inside and p.text.strip():
@@ -321,6 +368,7 @@ def extract_features(doc: DocModel) -> dict[str, ParaFeatures]:
     starts = page_starts(body)
     body_size = _body_size(doc)
     refs = _references_section(body)
+    front = _front_matter(body, starts)
     first_page = _first_page(body, starts)
     flow = [p for p in body if not p.in_table and not p.in_textbox]
     flow_pos = {p.para_id: i for i, p in enumerate(flow)}
@@ -361,6 +409,7 @@ def extract_features(doc: DocModel) -> dict[str, ParaFeatures]:
             next_empty=next_flow is not None and not next_flow.text.strip(),
             next_is_table=next_p is not None and next_p.in_table and not p.in_table,
             in_references_section=p.para_id in refs,
+            in_front_matter=p.para_id in front,
             on_first_page=p.para_id in first_page,
             style_kind=_style_kind(p.style_name, is_default=p.style_id is None),
             outline_level=p.props.outline_level,

@@ -226,6 +226,7 @@ class _StoryWalker:
                 in_table=in_table,
                 in_textbox=in_textbox,
                 has_page_break=page_break,
+                has_drawing=_has_drawing(p),
                 field_kinds=frozenset(kinds),
                 text="".join(texts),
             )
@@ -265,6 +266,18 @@ class _StoryWalker:
             if candidate not in ctx.used_ids:
                 ctx.used_ids.add(candidate)
                 return candidate
+
+
+_DRAWING_TAGS = (w("drawing"), w("pict"), w("object"))
+
+
+def _has_drawing(p: Any) -> bool:
+    """Paragrafın kendi run'larında resim/çizim var mı (metin kutusu içi hariç)."""
+    for el in p.iter(*_DRAWING_TAGS):
+        owner = next(el.iterancestors(w("p")), None)
+        if owner is p:
+            return True
+    return False
 
 
 def _dominant(runs: list[RunInfo]) -> RunProps:

@@ -37,6 +37,7 @@ class Role(StrEnum):
     TEXTBOX = "textbox"
     HEADER_FOOTER = "header_footer"
     COVER = "cover"  # kapak sayfası satırları
+    FRONT_MATTER = "front_matter"  # önsöz, özet, dizinler gibi ön sayfaların metni
     EMPTY = "empty"
     UNKNOWN = "unknown"
 
@@ -161,6 +162,7 @@ class Paragraph:
     in_table: bool
     in_textbox: bool
     has_page_break: bool  # paragraf içinde elle sayfa sonu
+    has_drawing: bool  # paragraf bir resim/çizim/nesne taşıyor (şekil)
     field_kinds: frozenset[str]
     text: str = field(repr=False)
 

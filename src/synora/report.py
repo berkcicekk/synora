@@ -30,6 +30,7 @@ ROLE_NAMES: dict[Role, str] = {
     Role.REFERENCE_ENTRY: "Kaynakça girdisi",
     Role.TOC_ENTRY: "İçindekiler satırı",
     Role.FOOTNOTE: "Dipnot",
+    Role.FRONT_MATTER: "Ön sayfa metni",
     Role.ENDNOTE: "Sonnot",
 }
 ALIGN_NAMES = {
@@ -40,6 +41,11 @@ ALIGN_NAMES = {
 }
 SIDE_NAMES = {"top": "Üst", "bottom": "Alt", "left": "Sol", "right": "Sağ"}
 PAGE_NUM_NAMES = {"decimal": "1, 2, 3", "lowerRoman": "i, ii, iii", "upperRoman": "I, II, III"}
+POSITION_NAMES = {
+    "bottom_left": "sayfanın altında, solda", "bottom_center": "sayfanın altında, ortada",
+    "bottom_right": "sayfanın altında, sağda", "top_left": "sayfanın üstünde, solda",
+    "top_center": "sayfanın üstünde, ortada", "top_right": "sayfanın üstünde, sağda",
+}
 SEVERITY_NAMES = {Severity.ERROR: "Hata", Severity.WARNING: "Uyarı", Severity.INFO: "Bilgi"}
 
 INGEST_MESSAGES: dict[ErrorCode, str] = {
@@ -99,7 +105,29 @@ def message(f: Finding) -> str:
             return "; sonra ".join(PAGE_NUM_NAMES.get(x, x) for x in v.split(","))
         return f"Sayfa numaralandırma sırası: {seq(act)}. Kılavuz: {seq(exp)}."
 
+    if rid == "page_numbering.position":
+        if act == "missing":
+            return "Sayfa numarası bulunamadı. Altbilgiye bir sayfa numarası alanı ekleyin."
+        return (f"Sayfa numarası {POSITION_NAMES.get(act, act)}. "
+                f"Kılavuz {POSITION_NAMES.get(exp, exp)} istiyor.")
+    if rid == "page_numbering.decoration":
+        return ("Sayfa numarasının yanında parantez ya da tire var. "
+                "Kılavuz yalnızca rakam istiyor.")
+
     prop = rid.split(".", 1)[1] if "." in rid else rid
+    if prop == "position":
+        thing = "Tablo başlığı tablonun" if rid.startswith("table") else "Şekil yazısı şeklin"
+        where = {"above": "üstünde", "below": "altında"}
+        return (f"{thing} {where.get(act, act)}. Kılavuz {where.get(exp, exp)} olmasını istiyor. "
+                "Word'de başlığı taşıyın.")
+    if prop == "case":
+        words = act.replace("|", ", ")
+        if exp == "title":
+            rule = ("her sözcüğün ilk harfi büyük olmalı; “ve”, “veya”, “ile” gibi bağlaçlar "
+                    "küçük yazılır")
+        else:
+            rule = "yalnızca ilk sözcüğün ilk harfi büyük olmalı (özel adlar hariç)"
+        return f"Bu başlıkta {rule}. Kontrol edin: {words}."
     if prop == "font":
         return f"Yazı tipi {act.replace('|', ', ')}. Kılavuz {exp.replace('|', ' ya da ')} istiyor."
     if prop == "size_pt":

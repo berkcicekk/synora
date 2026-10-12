@@ -37,14 +37,21 @@ roles:
     size_pt: 12                 # 3.3
     bold: true                  # 3.8
     alignment: left             # 3.8 "sol bloğa yaslanarak"
+    case: title                 # 3.8 her sözcüğün ilk harfi büyük, bağlaçlar küçük (uyarı)
   heading_3:
     size_pt: 12                 # 3.3
     bold: true                  # 3.8
     alignment: left             # 3.8
+    case: sentence              # 3.8 yalnızca ilk sözcüğün ilk harfi büyük (uyarı)
   figure_caption:
     line_spacing: 1.5           # 3.6
+    position: below             # 3.15 "şekil açıklamaları şeklin altına"
   table_caption:
     line_spacing: 1.5           # 3.6
+    position: above             # 3.15 "tablo açıklamaları tablonun üstüne"
+  front_matter:
+    # 5.3: önsöz "gerekirse bir satır aralıklı yazılabilir" → satır aralığı burada denetlenmez
+    size_pt: 12
   block_quote:
     line_spacing: 1.5           # 3.6
   reference_entry:
@@ -56,6 +63,8 @@ roles:
 page_numbering:
   # 3.5: ön sayfalar küçük Roma rakamı (ii, iii…), "Giriş"ten itibaren 1, 2, 3…
   formats_in_order: [lowerRoman, decimal]
+  position: bottom_right        # 3.5 "sayfa altında ve sağa"
+  forbid_decoration: true       # 3.5 "yanında parantez vs bulunmamalıdır"
 
 document:
   forbid_tracked_changes: true
