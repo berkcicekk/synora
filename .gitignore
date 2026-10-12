@@ -12,3 +12,6 @@ build/
 # Gerçek tezler asla repoya girmez
 tests/fixtures/real/*
 !tests/fixtures/real/.gitkeep
+
+# Demo çıktıları (scripts/demo.py üretir)
+demo/
