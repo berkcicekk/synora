@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import multiprocessing as mp
 import queue
 import sys
@@ -138,6 +139,12 @@ class JobRunner:
             job_id, data, ruleset_path = item
             try:
                 self.run_now(job_id, data, ruleset_path)
+            except Exception:
+                # Bir işteki beklenmeyen hata (ör. geçici veritabanı kilidi) yürütücüyü öldürmemeli;
+                # yoksa sonraki tüm işler sonsuza dek "sırada" kalır.
+                log_event("job.worker_error", job_id=job_id, code="INTERNAL")
+                with contextlib.suppress(Exception):
+                    self.db.finish_job(job_id, report=None, error_code="INTERNAL")
             finally:
                 del data, item  # tez baytlarına referans kalmasın
 

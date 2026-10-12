@@ -135,3 +135,32 @@ def page_spec(rules: Ruleset) -> PageSpec:
         indent_mm=(body.first_line_indent_cm or 0) * 10 if body else 10,
         line_gap_mm=round(4.2 * multiple, 2),
     )
+
+
+# --- Piksel blok motifi --------------------------------------------------------------------
+
+BLOCK = 48  # px, SVG birimi
+
+
+@dataclass(frozen=True)
+class Block:
+    x: int
+    y: int
+    tone: str  # CSS sınıfı: night / tint / deep
+
+
+def pixel_blocks(cols: int = 26, rows: int = 4, seed: int = 8) -> list[Block]:
+    """Bandın üst kenarından basamak basamak dökülen bloklar. Sabit tohum: her yüklemede aynı
+    desen (rastgele süs değil, sayfanın ızgarası gibi okunur)."""
+    import random
+
+    rng = random.Random(seed)  # noqa: S311 (görsel desen; güvenlikle ilgisi yok)
+    density = [0.55, 0.32, 0.16, 0.07]
+    tones = ["night", "night", "tint", "deep"]
+    out: list[Block] = []
+    for row in range(rows):
+        for col in range(cols):
+            above = row == 0 or any(b.x == col * BLOCK and b.y == (row - 1) * BLOCK for b in out)
+            if above and rng.random() < density[min(row, len(density) - 1)]:
+                out.append(Block(col * BLOCK, row * BLOCK, rng.choice(tones)))
+    return out

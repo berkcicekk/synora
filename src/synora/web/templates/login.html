@@ -1,62 +1,91 @@
 {% extends "base.html" %}
-{% from "_marks.html" import maketitle, page_diagram %}
+{% from "_marks.html" import arrow, blocks, circuit, page_diagram %}
 {% block title %}Giriş · Synora{% endblock %}
 {% block content %}
-{{ maketitle("Synora: Tez Biçim Denetimi", "Zonguldak Bülent Ecevit Üniversitesi", now() | date_tr, emblem=True, thanks=True) }}
-
-<section class="abstract">
-  <h2>Özet</h2>
-  <p>Synora, tezinizi enstitü ya da fakülte yazım kılavuzuna göre teslimden önce denetler. Kenar
-     boşluğundan satır aralığına, bölüm başlıklarından şekil yazılarına kadar biçim hatalarını bulur;
-     Word'de tek tek kabul edebileceğiniz düzeltmeler hazırlar. Metninizin tek bir harfine dokunulmaz.</p>
+<section class="hero">
+  {{ blocks() }}
+  {{ circuit() }}
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">Tez biçim denetimi</span>
+      <h1>Tezinizi kılavuza göre, <em>harfine dokunmadan</em> denetleyin.</h1>
+      <p class="lead">Synora, tezinizi enstitü ya da fakülte yazım kılavuzuyla karşılaştırır: kenar
+        boşlukları, yazı tipi, satır aralığı, başlıklar, şekil ve tablo yazıları. Hataları bulur,
+        Word'de tek tek kabul edeceğiniz düzeltmeler hazırlar.</p>
+    </div>
+    <form method="post" action="/login" class="login-card stack">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <h2>Giriş</h2>
+      <p>Üniversite e-postanıza tek kullanımlık bir bağlantı gönderilir; parola gerekmez.</p>
+      {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
+      <label for="email">E-posta adresi</label>
+      <input id="email" name="email" type="email" required autocomplete="email"
+             placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
+      <div><button class="btn" type="submit"><span class="lbl">Giriş bağlantısı gönder</span>{{ arrow() }}</button></div>
+      {% if domains %}
+      <p class="fineprint">Kabul edilen adresler:
+        {% for d in domains %}@{{ d }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+      {% endif %}
+    </form>
+  </div>
 </section>
 
-<div class="prose">
-  <h2 class="section">Giriş</h2>
-  <p>Üniversite e-posta adresinize tek kullanımlık bir giriş bağlantısı gönderilir; parola gerekmez.
-     Bağlantı on beş dakika geçerlidir.</p>
-</div>
-
-<form method="post" action="/login" class="fbox stack">
-  <input type="hidden" name="csrf" value="{{ csrf }}">
-  {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
-  <label for="email">E-posta adresi</label>
-  <input id="email" name="email" type="email" required autocomplete="email"
-         placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
-  <div class="actions">
-    <button class="primary" type="submit">Giriş bağlantısı gönder</button>
-    {% if domains %}
-    <span class="muted small">Kabul edilen adresler:
-      {% for d in domains %}<span class="mono">@{{ d }}</span>{% if not loop.last %}, {% endif %}{% endfor %}</span>
-    {% endif %}
-  </div>
-</form>
-
 {% if page %}
-<div class="prose">
-  <h2 class="section">Sayfa düzeni</h2>
-  <p>Şekil 1, varsayılan kılavuzun sayfa düzenini gösterir. Synora tezinizin her bölümünü bu ölçülerle
-     karşılaştırır: kenar boşlukları, yazı tipi ve punto, satır aralığı, paragraf girintisi ve bölüm
-     başlıklarının biçimi.</p>
-</div>
-<figure class="figure">
-  {{ page_diagram(page) }}
-  <figcaption>Şekil 1: {{ page.name }} kılavuzunun sayfa düzeni.</figcaption>
-</figure>
+<section class="section" id="duzen">
+  <div class="wrap split">
+    <div class="section-head">
+      <span class="eyebrow">Sayfa düzeni</span>
+      <h2>Kılavuzun her ölçüsü, tezinizin her sayfasında.</h2>
+      <p>Şekil 1, varsayılan kılavuzun sayfa düzenidir. Synora her bölümü bu ölçülerle karşılaştırır;
+         kılavuz değişirse çizim de kural setinden yeniden üretilir.</p>
+    </div>
+    <figure>
+      {{ page_diagram(page) }}
+      <figcaption>Şekil 1 — {{ page.name }}</figcaption>
+    </figure>
+  </div>
+</section>
 {% endif %}
 
-<div class="prose">
-  <h2 class="section">İlkeler</h2>
-</div>
-<dl class="description">
-  <dt>Bütünlük.</dt>
-  <dd>Synora yalnızca biçimi okur. Her işlemden sonra metnin harfi harfine aynı kaldığı doğrulanır;
-      doğrulanamazsa hiçbir dosya üretilmez.</dd>
-  <dt>Gizlilik.</dt>
-  <dd>Paragrafların türü (başlık, gövde, şekil yazısı) metinden değil, biçimden çıkarılan sayılarla
-      belirlenir; yapay zekâ metni görmez.</dd>
-  <dt>Saklama.</dt>
-  <dd>Belge bellekte denetlenir ve atılır. Rapor 24 saat sonra kendiliğinden silinir; dilerseniz
-      hemen silebilirsiniz.</dd>
-</dl>
+<section class="section" id="ilkeler">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">İlkeler</span>
+      <h2>Tezinize ait olan, sizde kalır.</h2>
+    </div>
+    <div class="cards">
+      <article class="card blue">
+        <svg class="glyph" viewBox="0 0 240 64" aria-hidden="true">
+          <rect x="4" y="8" width="44" height="48"/><path d="M12 20 H40 M12 28 H40 M12 36 H34 M48 32 H96 q8 0 8 8 V56 M104 56 H236"/>
+          <rect x="188" y="8" width="44" height="48"/><path d="M196 20 H224 M196 28 H224 M196 36 H218"/>
+        </svg>
+        <span class="eyebrow">Bütünlük</span>
+        <h3>Metniniz değişmez</h3>
+        <p>Synora yalnızca biçimi okur. Her işlemden sonra metnin harfi harfine aynı kaldığı doğrulanır;
+           doğrulanamazsa hiçbir dosya üretilmez.</p>
+      </article>
+      <article class="card">
+        <svg class="glyph" viewBox="0 0 240 64" aria-hidden="true">
+          <rect x="4" y="20" width="16" height="16" class="solid"/><rect x="24" y="20" width="16" height="16"/>
+          <rect x="44" y="20" width="16" height="16" class="solid"/><rect x="64" y="20" width="16" height="16"/>
+          <path d="M80 28 H140 q8 0 8 -8 V8 M148 8 H236"/>
+        </svg>
+        <span class="eyebrow">Gizlilik</span>
+        <h3>Yapay zekâ metni görmez</h3>
+        <p>Paragrafların türü metinden değil, biçimden çıkarılan sayılarla belirlenir. Sınıflandırıcıya
+           tek bir sözcük bile gitmez.</p>
+      </article>
+      <article class="card">
+        <svg class="glyph" viewBox="0 0 240 64" aria-hidden="true">
+          <rect x="4" y="8" width="44" height="48"/><path d="M48 32 H120 M120 20 V44 M132 20 V44 M144 20 V44"/>
+          <path d="M156 32 H236"/>
+        </svg>
+        <span class="eyebrow">Saklama</span>
+        <h3>Dosyanız saklanmaz</h3>
+        <p>Belge bellekte denetlenir ve atılır. Rapor 24 saat sonra kendiliğinden silinir; dilerseniz
+           hemen silebilirsiniz.</p>
+      </article>
+    </div>
+  </div>
+</section>
 {% endblock %}

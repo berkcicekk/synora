@@ -1,19 +1,31 @@
 {# Synora amblemi: synoralogo.jpg'den kontur izlenerek vektörleştirildi (orijinalle %98,5 örtüşme).
-   Satır içi SVG: her boyutta keskin, rengi currentColor ile mürekkepten alır. #}
+   Satır içi SVG: her boyutta keskin, rengi currentColor ile alır. #}
 {% macro mark(cls="mark", label="") -%}
 <svg class="{{ cls }}" viewBox="0 0 152 183" {% if label %}role="img" aria-label="{{ label }}"{% else %}aria-hidden="true"{% endif %}>
   <path fill="currentColor" fill-rule="evenodd" d="M1 0 L0 75 L30 96 L34 100 L35 110 L51 111 L150 182 L104 111 L105 110 L151 110 L24 17 L33 12 L36 12 L41 15 L41 1 Z M19 7 L20 5 L32 5 L33 6 L30 10 L22 10 Z"/>
 </svg>
 {%- endmacro %}
 
-{# \maketitle: başlık, yazar, tarih. thanks=True ise başlığa dipnot işareti (*) konur. #}
-{% macro maketitle(title, author, date, emblem=False, thanks=False) -%}
-<header class="maketitle">
-  {% if emblem %}{{ mark("emblem", "Synora amblemi") }}{% endif %}
-  <h1>{{ title }}{% if thanks %}<span class="thanks-mark" aria-hidden="true">*</span>{% endif %}</h1>
-  {% if author %}<p class="author">{{ author }}</p>{% endif %}
-  {% if date %}<p class="date">{{ date }}</p>{% endif %}
-</header>
+{# Ok kutusu (↗): düğmelerin sağındaki kare. #}
+{% macro arrow() -%}
+<span class="arr" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 12 L12 4 M5.5 4 H12 V10.5"/></svg></span>
+{%- endmacro %}
+
+{# Bandın üst kenarından dökülen piksel bloklar (presentation.pixel_blocks, sabit desen). #}
+{% macro blocks() -%}
+<svg class="blocks" viewBox="0 0 1248 144" preserveAspectRatio="xMinYMin slice" aria-hidden="true">
+  {% for b in hero_blocks %}<rect class="blk {{ b.tone }}" x="{{ b.x }}" y="{{ b.y }}" width="48" height="48"/>{% endfor %}
+</svg>
+{%- endmacro %}
+
+{# İnce, dik açılı, köşeleri yumuşatılmış "devre" çizgileri. #}
+{% macro circuit() -%}
+<svg class="circuit" viewBox="0 0 1200 48" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 30 H220 q8 0 8 -8 V14 q0 -8 8 -8 H480"/>
+  <path d="M120 48 V40 q0 -6 6 -6 H400 q6 0 6 6 V48"/>
+  <path d="M640 48 V30 q0 -8 8 -8 H900 q8 0 8 -8 V10 q0 -6 6 -6 H1200"/>
+  <path d="M760 48 V40 q0 -5 5 -5 H1080"/>
+</svg>
 {%- endmacro %}
 
 {# A4 sayfa çizimi: değerler varsayılan kural setinden (presentation.page_spec). Milimetre ölçekli. #}
@@ -43,7 +55,6 @@
   <text class="sp-dim-label" x="{{ bx + 3.5 }}" y="{{ (B + H) / 2 + 2 }}">{{ page.labels.bottom }}</text>
 
   {% for note, tx, ty, ny in page.callouts() %}
-  {# dirsekli kılavuz çizgisi: önce yatay (sayfa kenarına), sonra nota; sıralı olduğu için kesişmez #}
   <path class="sp-leader" d="M{{ tx }} {{ ty }} H{{ W + 4 }} L{{ W + 12 }} {{ ny }} H{{ W + 18 }}"/>
   <circle class="sp-dot" cx="{{ tx }}" cy="{{ ty }}" r="1.3"/>
   <text class="sp-note" x="{{ W + 21 }}" y="{{ ny + 2.4 }}">{{ note }}</text>

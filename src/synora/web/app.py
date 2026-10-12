@@ -31,7 +31,7 @@ from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message
 from synora.ruleset import Ruleset, load_ruleset
 from synora.web.db import Database, Job
 from synora.web.mailer import Mailer, make_mailer
-from synora.web.presentation import PageSpec, page_spec
+from synora.web.presentation import PageSpec, page_spec, pixel_blocks
 from synora.web.settings import Settings
 from synora.web.worker import JobRunner
 
@@ -174,6 +174,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     templates.env.filters["when"] = format_when
     templates.env.filters["date_tr"] = format_date
     templates.env.globals["now"] = time.time
+    templates.env.globals["hero_blocks"] = pixel_blocks()
     # Statik dosyalar için sürüm damgası: içerik değişince tarayıcı önbelleği geçersizleşir.
     asset_hash = hashlib.sha256()
     for name in ("app.css", "app.js", "fonts.css"):
@@ -270,7 +271,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             set_pre_csrf(resp, token)
             return resp
         jobs = db.recent_jobs(user.email)
-        return render(request, "upload.html", user=user, rulesets=ordered_rulesets,
+        return render(request, "upload.html", user=user, active="upload", rulesets=ordered_rulesets,
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
 
