@@ -203,7 +203,8 @@ tipli alan bulunursa test başarısız olur.
 | **B. Yerel model** | Özellik vektörü üzerinde küçük bir model (ör. gradient boosting), sunucuda çalışır | Hiçbir veri dışarı çıkmaz, hızlı, ucuz | Etiketli eğitim verisi gerekir |
 | **C. Bulut LLM** | Özellik vektörü + komşu bağlam JSON olarak gönderilir, `RoleDecision` döner | Az veriyle esnek | Ücretli, dış bağımlılık; metin görmeyince B'ye göre üstünlüğü sınırlı |
 
-**Karar (pilot):** Önce A. Belirsiz kalan paragraflar raporda "rolü belirsiz" diye işaretlenir. Kullanıcı arayüzde
+**Karar (pilot):** Önce A. Uygulandı: `synora.features` (özellik çıkarımı, metin burada kalır) →
+`synora.classify` (yalnızca `ParaFeatures` görür). Belirsiz kalan paragraflar raporda "rolü belirsiz" diye işaretlenir. Kullanıcı arayüzde
 rolü tek tıkla düzeltebilir; bu düzeltmeler (yalnızca özellik vektörü + etiket, metin yok, açık rıza ile)
 B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
 

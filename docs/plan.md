@@ -10,7 +10,7 @@
 | F0 | Temel + güvenli giriş | A1, xmlsafe | ✅ | — | ✅ |
 | F1 | Belge modeli + fingerprint | A2 | ✅ | F0 | ✅ |
 | F2 | Kural seti + denetim, `synora check` | A3, A6, A7 (JSON/terminal), A8 | | F1, ZBEÜ kılavuzu (⛔ yalnızca `zbeu.yaml` için) | ✅ (`zbeu.yaml` ⛔) |
-| F3 | Metni görmeyen rol sınıflandırma | A4 | | F2 | ⬜ |
+| F3 | Metni görmeyen rol sınıflandırma | A4 | | F2 | ✅ |
 | F4 | Web: yükle → rapor | A9, A10, A11, A7 (HTML) | ✅ | F3, marka kiti | ⬜ |
 | F5 | Düzeltici + indirme | A5 | ✅ | F4 | ⬜ |
 | P | ZBEÜ pilotu | yayın, KVKK, destek | | F5 + dış işler | ⬜ |
@@ -79,6 +79,11 @@ Not (F2'de yapıldı): F3 gelene kadar roller stil adı + yapı + yerel desenler
 belirsiz rollerin rapora "rolü belirsiz" olarak düşmesi; rol bazlı kurallar.
 
 Bitti: etiketli sentetik test setinde rol doğruluğu ölçülüyor ve raporlanıyor (hedef ≥ %90, belirsizler hariç).
+
+Sonuç (2026-10-12): sentetik derlemde (12 tohum, 754 paragraf) kesinlik %100, kapsam %100.
+Derlemi sınıflandırıcıyı yazan taraf ürettiği için bu bir **üst sınırdır**; gerçek tezlerdeki
+doğruluk pilotta ve izinli örneklerle ölçülmeli. Derlem dışı testler kapak sayfası kuralındaki
+bir zayıflığı yakaladı ve düzeltildi.
 
 ## F4 — Web: yükle → rapor
 

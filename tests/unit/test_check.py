@@ -132,9 +132,22 @@ def test_footnote_size() -> None:
     assert result.findings[0].para_index is None
 
 
-def test_unstyled_bold_heading_is_unknown_not_flagged() -> None:
+def test_unstyled_numbered_heading_is_recognized_and_checked() -> None:
+    # F2'de bu satır "rolü belirsiz" sayılıp atlanıyordu; F3 stilsiz başlıkları tanır.
     fake_heading = p(r("2. YÖNTEM", rpr="<w:b/>"))
     result = run(thesis(front_matter() + main_matter(extra=fake_heading)))
+    assert result.unknown_paragraphs == 0
+    assert {f.role for f in result.findings} == {Role.HEADING_1}
+    # Metin büyük harfle yazıldığı için all_caps bulgusu YOK.
+    assert rule_ids(result) == {
+        "heading_1.size_pt", "heading_1.alignment", "heading_1.page_break_before",
+        "heading_1.space_after_pt",
+    }
+
+
+def test_unstyled_bold_mixed_case_line_stays_unknown() -> None:
+    ambiguous = p(r("Araştırmanın sınırlılıkları", rpr="<w:b/>"))
+    result = run(thesis(front_matter() + main_matter(extra=ambiguous)))
     assert result.findings == ()
     assert result.unknown_paragraphs == 1
 

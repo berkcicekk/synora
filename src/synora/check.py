@@ -9,6 +9,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import StrEnum
 
+from synora.features import page_starts
 from synora.model import DocModel, LineRule, Paragraph, Role, Section
 from synora.roles import RoleDecision, assign_roles
 from synora.ruleset import PAGE_SIZES_CM, LineSpacingRule, RoleRules, Ruleset
@@ -56,7 +57,7 @@ def check(doc: DocModel, rules: Ruleset) -> CheckResult:
     checked = unknown = 0
     body = doc.body()
     body_index = {p.para_id: i for i, p in enumerate(body)}
-    starts_page = _page_starts(body)
+    starts_page = page_starts(body)
     for para in doc.paragraphs:
         decision = roles[para.para_id]
         if decision.role is Role.UNKNOWN:
@@ -154,24 +155,6 @@ def _page_numbering(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[F
 # --- Paragraf ---------------------------------------------------------------------------
 
 
-def _page_starts(body: tuple[Paragraph, ...]) -> dict[str, bool]:
-    """Paragraf yeni sayfada mı başlıyor: kendi sayfa sonu özelliği, önceki paragraftaki
-    elle sayfa sonu ya da bölüm sonu (varsayılan tür: sonraki sayfa)."""
-    out: dict[str, bool] = {}
-    prev: Paragraph | None = None
-    for p in body:
-        if p.in_table or p.in_textbox:
-            continue
-        out[p.para_id] = bool(
-            prev is None
-            or p.props.page_break_before
-            or prev.has_page_break
-            or prev.section_index != p.section_index
-        )
-        prev = p
-    return out
-
-
 def _paragraph_rules(
     p: Paragraph, role: Role, rr: RoleRules, rules: Ruleset, starts_page: bool
 ) -> Iterator[Finding]:
@@ -198,7 +181,7 @@ def _paragraph_rules(
     toggles: tuple[tuple[str, bool | None, bool | None], ...] = (
         ("bold", rr.bold, d.bold),
         ("italic", rr.italic, d.italic),
-        ("all_caps", rr.all_caps, d.all_caps),
+        ("all_caps", rr.all_caps, d.all_caps or _typed_upper(p.text)),
     )
     for name, want, have in toggles:
         if want is not None and bool(have) != want:
@@ -230,6 +213,12 @@ def _paragraph_rules(
 
     if rr.page_break_before and not starts_page:
         yield err("page_break_before", "true", "false")
+
+
+def _typed_upper(text: str) -> bool:
+    """Metin zaten büyük harfle yazılmışsa (biçim olarak değil) büyük harfli sayılır."""
+    letters = [c for c in text if c.isalpha()]
+    return bool(letters) and all(c.isupper() for c in letters)
 
 
 def _line_spacing(
