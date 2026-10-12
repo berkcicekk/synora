@@ -6,33 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#FAF5E6">
   <title>{% block title %}Synora{% endblock %}</title>
-  <link rel="stylesheet" href="/static/fonts.css">
-  <link rel="stylesheet" href="/static/app.css">
+  <link rel="stylesheet" href="/static/fonts.css?v={{ asset_v }}">
+  <link rel="stylesheet" href="/static/app.css?v={{ asset_v }}">
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
-  <script src="/static/app.js" defer></script>
+  <script src="/static/app.js?v={{ asset_v }}" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">İçeriğe geç</a>
   <header class="site">
-    <div class="wrap site-inner">
-      <a class="brand" href="/" aria-label="Synora ana sayfa">
-        {{ mark() }}
-        <span class="brand-text">
-          <span class="wordmark">Synora</span>
-          <span class="tagline">Tez Biçim Denetimi</span>
+    <div class="wrap">
+      <div class="strip">
+        <span class="strip-left">Zonguldak Bülent Ecevit Üniversitesi · Pilot</span>
+        {% if user %}
+        <span class="who">
+          <span class="email">{{ user.email }}</span>
+          <form method="post" action="/logout">
+            <input type="hidden" name="csrf" value="{{ user.csrf }}">
+            <button class="link" type="submit">Çıkış</button>
+          </form>
         </span>
-      </a>
-      {% if user %}
-      <div class="who">
-        <span class="email">{{ user.email }}</span>
-        <form method="post" action="/logout">
-          <input type="hidden" name="csrf" value="{{ user.csrf }}">
-          <button class="link" type="submit">Çıkış</button>
-        </form>
+        {% else %}
+        <span class="strip-right">Tez Biçim Denetimi</span>
+        {% endif %}
       </div>
-      {% endif %}
+      <a class="masthead" href="/" aria-label="Synora ana sayfa">
+        {{ mark() }}
+        <span class="wordmark">Synora</span>
+      </a>
+      <hr class="double-rule">
     </div>
-    <div class="wrap"><hr class="double-rule"></div>
   </header>
   <main id="main" class="wrap">
     {% block content %}{% endblock %}
@@ -43,6 +45,7 @@
       <p>Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca bellekte
          işlenir, sunucuya kaydedilmez; düzeltilmiş kopya için yeniden seçmeniz istenir.</p>
       <p class="colophon">Synora · Zonguldak Bülent Ecevit Üniversitesi pilotu</p>
+      <p class="imprint">Bu sayfa EB Garamond ve Source Serif ile dizilmiştir.</p>
     </div>
   </footer>
 </body>

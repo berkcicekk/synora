@@ -28,9 +28,10 @@ from pydantic import ValidationError
 
 from synora.errors import ErrorCode
 from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message
-from synora.ruleset import load_ruleset
+from synora.ruleset import Ruleset, load_ruleset
 from synora.web.db import Database, Job
 from synora.web.mailer import Mailer, make_mailer
+from synora.web.presentation import PageSpec, page_spec
 from synora.web.settings import Settings
 from synora.web.worker import JobRunner
 
@@ -74,6 +75,7 @@ class RulesetInfo:
     id: str
     name: str
     path: Path
+    rules: Ruleset
 
 
 def discover_rulesets(directory: Path) -> dict[str, RulesetInfo]:
@@ -83,7 +85,7 @@ def discover_rulesets(directory: Path) -> dict[str, RulesetInfo]:
             rules = load_ruleset(path)
         except (ValidationError, OSError, ValueError):
             continue
-        found[rules.ruleset] = RulesetInfo(rules.ruleset, rules.name, path)
+        found[rules.ruleset] = RulesetInfo(rules.ruleset, rules.name, path, rules)
     return found
 
 
@@ -153,8 +155,18 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     mailer = mailer or make_mailer(settings)
     runner = JobRunner(db, settings)
     rulesets = discover_rulesets(settings.rulesets_dir)
+    # Örnek kural seti en sona: pilotta varsayılan seçim gerçek kılavuz olsun.
+    ordered_rulesets = sorted(rulesets.values(), key=lambda r: (r.id == "example", r.name))
+    login_page: PageSpec | None = (
+        page_spec(ordered_rulesets[0].rules) if ordered_rulesets else None
+    )
     templates = Jinja2Templates(directory=str(HERE / "templates"))
     templates.env.filters["when"] = format_when
+    # Statik dosyalar için sürüm damgası: içerik değişince tarayıcı önbelleği geçersizleşir.
+    asset_hash = hashlib.sha256()
+    for name in ("app.css", "app.js", "fonts.css"):
+        asset_hash.update((HERE / "static" / name).read_bytes())
+    templates.env.globals["asset_v"] = asset_hash.hexdigest()[:10]
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -241,14 +253,12 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         user = current_user(request)
         if user is None:
             token = pre_csrf(request)
-            resp = render(request, "login.html", csrf=token,
+            resp = render(request, "login.html", csrf=token, page=login_page,
                           domains=settings.allowed_domains, error=None)
             set_pre_csrf(resp, token)
             return resp
         jobs = db.recent_jobs(user.email)
-        # Örnek kural seti en sona: pilotta varsayılan seçim gerçek kılavuz olsun.
-        ordered = sorted(rulesets.values(), key=lambda r: (r.id == "example", r.name))
-        return render(request, "upload.html", user=user, rulesets=ordered,
+        return render(request, "upload.html", user=user, rulesets=ordered_rulesets,
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
 
@@ -260,7 +270,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         token = pre_csrf(request)
 
         def fail(msg: str) -> HTMLResponse:
-            resp = render(request, "login.html", status=400, csrf=token,
+            resp = render(request, "login.html", status=400, csrf=token, page=login_page,
                           domains=settings.allowed_domains, error=msg, email=email)
             set_pre_csrf(resp, token)
             return resp

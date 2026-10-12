@@ -1,33 +1,41 @@
 {% extends "base.html" %}
-{% from "_marks.html" import mark, ornament %}
+{% from "_marks.html" import ornament, page_diagram %}
 {% block title %}Giriş · Synora{% endblock %}
 {% block content %}
-<section class="title-page">
-  {{ mark("emblem", "Synora amblemi") }}
-  <p class="label">Zonguldak Bülent Ecevit Üniversitesi · Pilot</p>
-  <h1>Tezinizi kılavuza göre, teslimden önce denetleyin.</h1>
-  <p class="lead">Kenar boşluğundan satır aralığına, başlıklardan şekil yazılarına kadar biçim
-     hatalarını bulur ve Word'de düzeltmenize yardım eder. Metninize dokunulmaz.</p>
-  {{ ornament() }}
-</section>
+<section class="hero">
+  <div class="hero-text">
+    <p class="label">Teslimden önce</p>
+    <h1>Tezinizi kılavuza göre, <em>harfine dokunmadan</em> denetleyin.</h1>
+    <p class="lead">Kenar boşluğundan satır aralığına, bölüm başlıklarından şekil yazılarına kadar
+       biçim hatalarını bulur; Word'de tek tıkla kabul edeceğiniz düzeltmeler hazırlar.</p>
 
-<section class="sheet narrow">
-  <h2>Giriş</h2>
-  <p class="muted center-text">Üniversite e-posta adresinize tek kullanımlık bir giriş bağlantısı
-     gönderilir. Parola gerekmez.</p>
-  {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
-  <form method="post" action="/login" class="stack">
-    <input type="hidden" name="csrf" value="{{ csrf }}">
-    <label for="email">E-posta adresi</label>
-    <input id="email" name="email" type="email" required autocomplete="email"
-           placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
-    <button class="primary" type="submit">Giriş bağlantısı gönder</button>
-  </form>
-  {% if domains %}
-  <p class="muted small center-text">Pilot süresince kabul edilen adresler:
-    {% for d in domains %}<span class="mono">@{{ d }}</span>{% if not loop.last %}, {% endif %}{% endfor %}</p>
+    <div class="sheet login">
+      <h2>Giriş</h2>
+      <p class="muted">Üniversite e-posta adresinize tek kullanımlık bir giriş bağlantısı gönderilir.
+         Parola gerekmez.</p>
+      {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
+      <form method="post" action="/login" class="stack">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <label for="email">E-posta adresi</label>
+        <input id="email" name="email" type="email" required autocomplete="email"
+               placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
+        <button class="primary" type="submit">Giriş bağlantısı gönder</button>
+      </form>
+      {% if domains %}
+      <p class="muted small">Pilot süresince kabul edilen adresler:
+        {% for d in domains %}<span class="mono">@{{ d }}</span>{% if not loop.last %}, {% endif %}{% endfor %}</p>
+      {% endif %}
+    </div>
+  </div>
+  {% if page %}
+  <div class="hero-figure">
+    {{ page_diagram(page) }}
+    <p class="figure-caption"><em>Şekil 1.</em> Kılavuzun sayfa düzeni; Synora her sayfayı bu ölçülerle karşılaştırır.</p>
+  </div>
   {% endif %}
 </section>
+
+{{ ornament() }}
 
 <section class="tenets">
   <div>

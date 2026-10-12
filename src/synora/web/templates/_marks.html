@@ -9,3 +9,42 @@
 {% macro ornament() -%}
 <div class="ornament" aria-hidden="true"><svg viewBox="0 0 10 10"><path d="M5 0 L10 5 L5 10 L0 5 Z"/></svg></div>
 {%- endmacro %}
+
+{# A4 sayfa çizimi: değerler varsayılan kural setinden (presentation.page_spec). Milimetre ölçekli. #}
+{% macro page_diagram(page) -%}
+{% set W = page.width_mm %}{% set H = page.height_mm %}
+{% set L = page.left_mm %}{% set R = W - page.right_mm %}{% set T = page.top_mm %}{% set B = H - page.bottom_mm %}
+<figure class="specimen">
+<svg viewBox="-16 -12 400 322" role="img"
+     aria-label="{{ page.name }}: kenar boşlukları üst {{ page.labels.top }}, alt {{ page.labels.bottom }}, sol {{ page.labels.left }}, sağ {{ page.labels.right }}; {{ page.notes|join('; ') }}">
+  <rect class="sp-under" x="5" y="5" width="{{ W }}" height="{{ H }}"/>
+  <rect class="sp-page" x="0" y="0" width="{{ W }}" height="{{ H }}"/>
+  <rect class="sp-block" x="{{ L }}" y="{{ T }}" width="{{ R - L }}" height="{{ B - T }}"/>
+  <rect class="sp-heading" x="{{ W / 2 - 30 }}" y="{{ page.heading_y - 2.2 }}" width="60" height="4.4"/>
+  {% for x1, x2, y in page.text_lines() %}<rect class="sp-line" x="{{ x1 }}" y="{{ y - 0.8 }}" width="{{ x2 - x1 }}" height="1.6"/>{% endfor %}
+
+  {# ölçü çizgileri #}
+  {% set dx = L + (R - L) * 0.78 %}
+  <path class="sp-dim" d="M{{ dx }} 2 V{{ T - 2 }} M{{ dx - 2 }} 2 H{{ dx + 2 }} M{{ dx - 2 }} {{ T - 2 }} H{{ dx + 2 }}"/>
+  <text class="sp-dim-label" x="{{ dx + 3.5 }}" y="{{ T / 2 + 2 }}">{{ page.labels.top }}</text>
+  {% set ly = H * 0.62 %}
+  <path class="sp-dim" d="M2 {{ ly }} H{{ L - 2 }} M2 {{ ly - 2 }} V{{ ly + 2 }} M{{ L - 2 }} {{ ly - 2 }} V{{ ly + 2 }}"/>
+  <text class="sp-dim-label" x="{{ L / 2 }}" y="{{ ly - 3.5 }}" text-anchor="middle">{{ page.labels.left }}</text>
+  {% set ry = H * 0.8 %}
+  <path class="sp-dim" d="M{{ R + 2 }} {{ ry }} H{{ W - 2 }} M{{ R + 2 }} {{ ry - 2 }} V{{ ry + 2 }} M{{ W - 2 }} {{ ry - 2 }} V{{ ry + 2 }}"/>
+  <text class="sp-dim-label" x="{{ (R + W) / 2 }}" y="{{ ry - 3.5 }}" text-anchor="middle">{{ page.labels.right }}</text>
+  {% set bx = L + 18 %}
+  <path class="sp-dim" d="M{{ bx }} {{ B + 2 }} V{{ H - 2 }} M{{ bx - 2 }} {{ B + 2 }} H{{ bx + 2 }} M{{ bx - 2 }} {{ H - 2 }} H{{ bx + 2 }}"/>
+  <text class="sp-dim-label" x="{{ bx + 3.5 }}" y="{{ (B + H) / 2 + 2 }}">{{ page.labels.bottom }}</text>
+
+  {# kenar notları #}
+  {% for note, tx, ty, ny in page.callouts() %}
+  {# dirsekli kılavuz çizgisi: önce yatay (sayfa kenarına), sonra nota; sıralı olduğu için kesişmez #}
+  <path class="sp-leader" d="M{{ tx }} {{ ty }} H{{ W + 4 }} L{{ W + 12 }} {{ ny }} H{{ W + 18 }}"/>
+  <circle class="sp-dot" cx="{{ tx }}" cy="{{ ty }}" r="1.3"/>
+  <text class="sp-note" x="{{ W + 21 }}" y="{{ ny + 2.4 }}">{{ note }}</text>
+  {% endfor %}
+  <text class="sp-caption" x="0" y="306">A4 · {{ page.name }}</text>
+</svg>
+</figure>
+{%- endmacro %}
