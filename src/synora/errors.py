@@ -1,0 +1,47 @@
+"""Hata tipleri. Hatalar yalnızca kod taşır; belge içeriği asla mesaja girmez."""
+
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class ErrorCode(StrEnum):
+    # Zip katmanı
+    FILE_TOO_LARGE = "FILE_TOO_LARGE"
+    NOT_A_ZIP = "NOT_A_ZIP"
+    CORRUPT_ZIP = "CORRUPT_ZIP"
+    ENCRYPTED = "ENCRYPTED"
+    UNSUPPORTED_COMPRESSION = "UNSUPPORTED_COMPRESSION"
+    TOO_MANY_PARTS = "TOO_MANY_PARTS"
+    BAD_PART_NAME = "BAD_PART_NAME"
+    DUPLICATE_PART = "DUPLICATE_PART"
+    TOTAL_TOO_LARGE = "TOTAL_TOO_LARGE"
+    COMPRESSION_RATIO = "COMPRESSION_RATIO"
+    # OPC paket katmanı
+    MISSING_CONTENT_TYPES = "MISSING_CONTENT_TYPES"
+    MISSING_MAIN_DOCUMENT = "MISSING_MAIN_DOCUMENT"
+    MACRO_ENABLED = "MACRO_ENABLED"
+    NOT_DOCX = "NOT_DOCX"
+    # XML katmanı
+    XML_DOCTYPE = "XML_DOCTYPE"
+    XML_MALFORMED = "XML_MALFORMED"
+    XML_TOO_LARGE = "XML_TOO_LARGE"
+
+
+class SynoraError(Exception):
+    """Tüm Synora hatalarının tabanı. Mesaj daima yalnızca hata kodudur."""
+
+    def __init__(self, code: ErrorCode) -> None:
+        super().__init__(code.value)
+        self.code = code
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}({self.code.value})"
+
+
+class IngestError(SynoraError):
+    """Girdi dosyası güvenlik ya da biçim denetiminden geçemedi (A1)."""
+
+
+class UnsafeXmlError(IngestError):
+    """XML parçası güvensiz ya da bozuk."""
