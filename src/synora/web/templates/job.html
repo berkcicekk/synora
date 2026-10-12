@@ -26,7 +26,7 @@
   {% if s.errors == 0 and s.warnings == 0 %}
   <p>Kılavuza aykırı biçim bulunamadı. {{ s.checked_paragraphs }} paragraf denetlendi.</p>
   {% else %}
-  <p>Belgede <strong>{{ s.errors }} hata, {{ s.warnings }} uyarı.</strong> bulundu; bunlardan
+  <p>Belgede bulunanlar: <strong>{{ s.errors }} hata, {{ s.warnings }} uyarı.</strong> Bunlardan
      {{ s.fixable }} tanesi otomatik olarak düzeltilebilir. Toplam {{ s.checked_paragraphs }} paragraf
      denetlendi.{% if s.cover_paragraphs %} Kapak sayfası ({{ s.cover_paragraphs }} satır) denetlenmedi.{% endif %}
      {% if s.unknown_paragraphs %}Türü belirlenemeyen {{ s.unknown_paragraphs }} paragraf da denetlenmedi

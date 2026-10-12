@@ -104,7 +104,7 @@ figure.table { margin: 1.4rem 0; }
 figure.table figcaption { text-align: center; margin-bottom: .5rem; }
 table.booktabs { border-collapse: collapse; margin-inline: auto; font-variant-numeric: lining-nums tabular-nums; }
 table.booktabs th, table.booktabs td { padding: .28rem .9rem; text-align: left; vertical-align: baseline; }
-table.booktabs .num { text-align: right; }
+table.booktabs .num { text-align: center; }
 table.booktabs thead tr:first-child th { border-top: 1.6px solid var(--rule); padding-top: .4rem; }
 table.booktabs thead tr:last-child th { border-bottom: .8px solid var(--rule); font-weight: 400; }
 table.booktabs tbody tr:last-child td { border-bottom: 1.6px solid var(--rule); padding-bottom: .4rem; }
@@ -157,6 +157,7 @@ input[type=email], select {
 input[type=email]:focus, select:focus { outline: none; border-bottom: 2px solid var(--link); }
 input::placeholder { color: var(--muted); font-style: italic; }
 .stack { display: grid; gap: .45rem; }
+#upload { margin-top: 1rem; }
 .fbox { border: .8px solid var(--ink); padding: 1rem 1.2rem; margin: 1rem 0; background: #FFFDF6; }
 button, .button {
   font: inherit; font-variant: small-caps; letter-spacing: .04em; cursor: pointer;
@@ -177,11 +178,11 @@ button.link:hover { text-decoration: underline; background: none; }
 
 .drop {
   display: grid; justify-items: center; gap: .2rem; text-align: center; cursor: pointer;
-  border: .8px dashed var(--ink); padding: 1.8rem 1rem; margin: .8rem 0; background: #FFFDF6;
+  border: 1px dashed var(--border); padding: 1.8rem 1rem; margin: .8rem 0; background: #FFFDF6;
   font-variant: normal; letter-spacing: 0;
 }
-.drop:hover, .drop.over { background: var(--tint); border-style: solid; }
-.drop.has-file { border-style: solid; }
+.drop:hover, .drop.over { background: var(--tint); border-color: var(--ink); }
+.drop.has-file { border-style: solid; border-color: var(--ink); }
 .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .drop:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
 .drop-title { font-size: 1.15rem; }
