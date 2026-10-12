@@ -1,16 +1,13 @@
 {% extends "base.html" %}
-{% from "_marks.html" import arrow, blocks %}
+{% from "_marks.html" import arrow %}
 {% block title %}Hata · Synora{% endblock %}
 {% block content %}
-<section class="hero compact">
-  {{ blocks() }}
-  <div class="wrap hero-inner">
-    <div class="hero-copy">
-      <span class="eyebrow">Bir sorun oluştu</span>
-      <h1>Sayfa açılamadı.</h1>
-      <p class="lead">{{ message }}</p>
-      <div><a class="btn light" href="/"><span class="lbl">Ana sayfaya dön</span>{{ arrow() }}</a></div>
-    </div>
+<section class="section simple">
+  <div class="sheet-card">
+    <span class="eyebrow">Bir sorun oluştu</span>
+    <h1 class="page-title">Sayfa açılamadı.</h1>
+    <p>{{ message }}</p>
+    <div><a class="btn" href="/"><span class="lbl">Ana sayfaya dön</span>{{ arrow() }}</a></div>
   </div>
 </section>
 {% endblock %}

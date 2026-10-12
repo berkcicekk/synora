@@ -17,6 +17,7 @@ from synora.fix import fix_document
 from synora.ingest import open_docx
 from synora.locate import locations
 from synora.log import log_event
+from synora.outline import build_outline
 from synora.parse import parse_package
 from synora.report import to_json
 from synora.ruleset import load_ruleset
@@ -64,8 +65,11 @@ def run_pipeline(data: bytes, ruleset_path: str, job_id: str = "job") -> Pipelin
         result = check(doc, rules)
         report = json.loads(to_json(result, rules))
         where = locations(doc, result.roles)
-        for f in report["findings"]:
+        blocks, finding_block = build_outline(doc, result)
+        report["document"] = blocks  # editör görünümü: gövde metni içermez
+        for i, f in enumerate(report["findings"]):
             f["location"] = where.get(f["para_id"]) if f["para_id"] else None
+            f["block"] = finding_block.get(i)
     except SynoraError as exc:
         log_event("job.rejected", job_id=job_id, code=exc.code.value)
         return {"report": None, "error_code": exc.code.value, "source_sha256": sha}

@@ -1,56 +1,51 @@
-{% from "_marks.html" import mark %}
+{% from "_marks.html" import mark, arrow %}
 <!doctype html>
 <html lang="tr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1A47A6">
+  <meta name="theme-color" content="#FAF6EA">
   <title>{% block title %}Synora{% endblock %}</title>
   <link rel="stylesheet" href="/static/fonts.css?v={{ asset_v }}">
   <link rel="stylesheet" href="/static/app.css?v={{ asset_v }}">
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <script src="/static/app.js?v={{ asset_v }}" defer></script>
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
   <a class="skip" href="#main">İçeriğe geç</a>
+  {% block topbar %}
   <header class="topbar">
     <div class="wrap topbar-inner">
       <a class="brand" href="/" aria-label="Synora ana sayfa">{{ mark() }}<span class="word">Synora</span></a>
-      {% block nav %}
-      <nav class="capsule" aria-label="Bölümler">
+      <nav class="topnav" aria-label="Site">
         {% if user %}
-        <a href="/" {% if active == "upload" %}aria-current="page"{% endif %}>Yeni denetim</a>
-        <a href="/#onceki">Denetimlerim</a>
-        {% else %}
-        <a href="/" aria-current="page">Giriş</a>
-        <a href="/#duzen">Sayfa düzeni</a>
-        <a href="/#ilkeler">İlkeler</a>
-        {% endif %}
-      </nav>
-      {% endblock %}
-      <div class="account">
-        {% if user %}
+        <a href="/" {% if active == "docs" %}aria-current="page"{% endif %}>Belgelerim</a>
         <span class="email">{{ user.email }}</span>
         <form method="post" action="/logout">
           <input type="hidden" name="csrf" value="{{ user.csrf }}">
           <button class="linkbtn" type="submit">Çıkış</button>
         </form>
         {% else %}
-        <span class="email">ZBEÜ · Pilot</span>
+        <a href="#nasil">Nasıl çalışır</a>
+        <a href="#gizlilik">Gizlilik</a>
+        <a class="btn small" href="#giris"><span class="lbl">Giriş yap</span>{{ arrow() }}</a>
         {% endif %}
-      </div>
+      </nav>
     </div>
   </header>
+  {% endblock %}
   <main id="main">
     {% block content %}{% endblock %}
   </main>
+  {% block footer %}
   <footer class="footer">
     <div class="wrap footer-inner">
+      <div class="sig">{{ mark() }}<span>Synora</span></div>
       <p>Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca bellekte
          işlenir, sunucuya kaydedilmez; rapor 24 saat sonra kendiliğinden silinir.
-         Synora · Zonguldak Bülent Ecevit Üniversitesi pilotu.</p>
-      <div class="sig">{{ mark() }}<span>Synora</span></div>
+         Zonguldak Bülent Ecevit Üniversitesi pilotu.</p>
     </div>
   </footer>
+  {% endblock %}
 </body>
 </html>

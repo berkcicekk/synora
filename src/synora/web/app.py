@@ -139,13 +139,42 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
             g["locations"].append(f["location"])
         elif f.get("section_index") is not None:
             g["sections"].add(f["section_index"] + 1)
+        g.setdefault("blocks", set())
+        if f.get("block") is not None:
+            g["blocks"].add(f["block"])
     order = {"error": 0, "warning": 1, "info": 2}
+    # Editörde yorumlar belge sırasını izler (Word'ün gözden geçirme bölmesi gibi).
     cards = sorted(
-        groups.values(), key=lambda g: (order.get(g["severity"], 9), -len(g["locations"]))
+        groups.values(),
+        key=lambda g: (min(g["blocks"]) if g["blocks"] else -1, order.get(g["severity"], 9)),
     )
-    for c in cards:
+    blocks: list[dict[str, Any]] = [dict(b) for b in report.get("document") or []]
+    for b in blocks:
+        b["cards"], b["sev"] = [], None
+    for n, c in enumerate(cards, start=1):
+        c["n"] = n
         c["sections"] = sorted(c["sections"])
-    return {"summary": report["summary"], "ruleset": report["ruleset"], "cards": cards}
+        c["blocks"] = sorted(c["blocks"])
+        for i in c["blocks"]:
+            if 0 <= i < len(blocks):
+                blocks[i]["cards"].append(n)
+                if blocks[i]["sev"] != "error":
+                    blocks[i]["sev"] = c["severity"]
+    return {"summary": report["summary"], "ruleset": report["ruleset"], "cards": cards,
+            "blocks": blocks, "outline": _outline(blocks)}
+
+
+def _outline(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Sol bölme: bölümler ve başlıklar; her girdinin kapsadığı bloklardaki bulgu sayısı."""
+    entries: list[dict[str, Any]] = []
+    for i, b in enumerate(blocks):
+        if b["kind"] in ("h1", "h2", "h3", "section"):
+            entries.append({"i": i, "kind": b["kind"],
+                            "text": b.get("text") or f"Bölüm {b.get('n')}"})
+    for k, e in enumerate(entries):
+        end = entries[k + 1]["i"] if k + 1 < len(entries) else len(blocks)
+        e["count"] = len({n for b in blocks[e["i"]:end] for n in b["cards"]})
+    return entries
 
 
 def _role_name(role: str | None) -> str:
@@ -271,7 +300,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             set_pre_csrf(resp, token)
             return resp
         jobs = db.recent_jobs(user.email)
-        return render(request, "upload.html", user=user, active="upload", rulesets=ordered_rulesets,
+        return render(request, "upload.html", user=user, active="docs", rulesets=ordered_rulesets,
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
 

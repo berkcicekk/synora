@@ -1,18 +1,14 @@
 {% extends "base.html" %}
-{% from "_marks.html" import blocks, circuit %}
 {% block title %}E-postanızı kontrol edin · Synora{% endblock %}
 {% block content %}
-<section class="hero compact">
-  {{ blocks() }}
-  {{ circuit() }}
-  <div class="wrap hero-inner">
-    <div class="hero-copy">
-      <span class="eyebrow">Bağlantı gönderildi</span>
-      <h1>E-postanızı kontrol edin.</h1>
-      <p class="lead">{{ email }} adresine bir giriş bağlantısı gönderdik. Bağlantı {{ minutes }} dakika
-        geçerlidir ve yalnızca bir kez kullanılabilir. E-posta gelmediyse istenmeyen posta klasörüne bakın.</p>
-      <p class="lead"><a class="linkbtn" href="/">Başka bir adres kullan</a></p>
-    </div>
+<section class="section simple">
+  <div class="sheet-card">
+    <span class="eyebrow">Bağlantı gönderildi</span>
+    <h1 class="page-title">E-postanızı kontrol edin.</h1>
+    <p><span class="mono">{{ email }}</span> adresine bir giriş bağlantısı gönderdik. Bağlantı {{ minutes }}
+       dakika geçerlidir ve yalnızca bir kez kullanılabilir.</p>
+    <p class="muted">E-posta gelmediyse istenmeyen posta klasörüne bakın.</p>
+    <p><a class="textlink" href="/#giris">Başka bir adres kullan</a></p>
   </div>
 </section>
 {% endblock %}

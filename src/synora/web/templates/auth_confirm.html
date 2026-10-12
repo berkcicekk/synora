@@ -1,27 +1,23 @@
 {% extends "base.html" %}
-{% from "_marks.html" import arrow, blocks, circuit %}
+{% from "_marks.html" import arrow %}
 {% block title %}Giriş · Synora{% endblock %}
 {% block content %}
-<section class="hero compact">
-  {{ blocks() }}
-  {{ circuit() }}
-  <div class="wrap hero-inner">
-    <div class="hero-copy">
-      {% if valid %}
-      <span class="eyebrow">Bağlantı doğrulandı</span>
-      <h1>Synora'ya hoş geldiniz.</h1>
-      <form method="post" action="/auth">
-        <input type="hidden" name="csrf" value="{{ csrf }}">
-        <input type="hidden" name="token" value="{{ token }}">
-        <button class="btn light" type="submit"><span class="lbl">Giriş yap</span>{{ arrow() }}</button>
-      </form>
-      {% else %}
-      <span class="eyebrow">Geçersiz bağlantı</span>
-      <h1>Bağlantının süresi dolmuş.</h1>
-      <p class="lead">Bu giriş bağlantısı kullanılmış ya da süresi dolmuş.</p>
-      <div><a class="btn light" href="/"><span class="lbl">Yeni bağlantı iste</span>{{ arrow() }}</a></div>
-      {% endif %}
-    </div>
+<section class="section simple">
+  <div class="sheet-card">
+    {% if valid %}
+    <span class="eyebrow">Bağlantı doğrulandı</span>
+    <h1 class="page-title">Synora'ya hoş geldiniz.</h1>
+    <form method="post" action="/auth">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <input type="hidden" name="token" value="{{ token }}">
+      <button class="btn primary" type="submit"><span class="lbl">Giriş yap</span>{{ arrow() }}</button>
+    </form>
+    {% else %}
+    <span class="eyebrow">Geçersiz bağlantı</span>
+    <h1 class="page-title">Bağlantının süresi dolmuş.</h1>
+    <p>Bu giriş bağlantısı kullanılmış ya da süresi dolmuş.</p>
+    <div><a class="btn" href="/#giris"><span class="lbl">Yeni bağlantı iste</span>{{ arrow() }}</a></div>
+    {% endif %}
   </div>
 </section>
 {% endblock %}

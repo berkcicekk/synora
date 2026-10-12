@@ -105,7 +105,82 @@
     });
     const empty = document.getElementById("filter-empty");
     if (empty) empty.hidden = document.querySelectorAll(".card:not([hidden])").length > 0;
+    // Editör: görünür yorumu olmayan paragrafları soluklaştır.
+    const visible = new Set([...document.querySelectorAll(".comment:not([hidden])")].map((c) => c.dataset.card));
+    document.querySelectorAll(".blk[data-cards]").forEach((blk) => {
+      const cards = blk.dataset.cards.split(" ").filter(Boolean);
+      blk.classList.toggle("dim", f !== "all" && cards.length > 0 && !cards.some((n) => visible.has(n)));
+    });
   }));
+
+  // --- Editör: yorum ↔ paragraf ------------------------------------------------------------
+  const canvas = document.querySelector(".pane-canvas");
+  const commentsPane = document.querySelector(".pane-comments");
+  if (canvas && commentsPane) {
+    const clearActive = () => document.querySelectorAll(".blk.active, .comment.active")
+      .forEach((el) => el.classList.remove("active"));
+    const scrollInto = (pane, el) => {
+      const top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - 80;
+      pane.scrollTo({ top, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    };
+    const activateCard = (comment, scrollCanvas) => {
+      clearActive();
+      comment.classList.add("active");
+      const blocks = comment.dataset.blocks.split(" ").filter(Boolean)
+        .map((i) => document.getElementById("b" + i)).filter(Boolean);
+      blocks.forEach((b) => b.classList.add("active"));
+      if (scrollCanvas && blocks[0]) scrollInto(canvas, blocks[0]);
+    };
+    document.querySelectorAll(".comment").forEach((c) => {
+      c.addEventListener("click", (e) => { if (!e.target.closest("summary")) activateCard(c, true); });
+      c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activateCard(c, true); } });
+    });
+    document.querySelectorAll(".blk[data-cards]").forEach((blk) => {
+      const open = () => {
+        const first = blk.dataset.cards.split(" ").filter(Boolean)[0];
+        const comment = first && document.getElementById("c" + first);
+        if (!comment) return;
+        activateCard(comment, false);
+        blk.classList.add("active");
+        scrollInto(commentsPane, comment);
+      };
+      if (!blk.dataset.cards) return;
+      blk.addEventListener("click", open);
+      blk.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+    });
+    document.querySelectorAll("[data-jump]").forEach((a) => a.addEventListener("click", (e) => {
+      const target = document.getElementById("b" + a.dataset.jump);
+      if (!target) return;
+      e.preventDefault();
+      document.querySelectorAll(".outline a.current").forEach((x) => x.classList.remove("current"));
+      a.classList.add("current");
+      scrollInto(canvas, target);
+    }));
+  }
+
+  // --- Tanıtım: parallax ve kaydırınca beliren adımlar -------------------------------------
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const layers = [...document.querySelectorAll(".parallax-layer[data-speed]")];
+  if (layers.length && !reduced) {
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      layers.forEach((el) => { el.style.transform = "translate3d(0," + (y * Number(el.dataset.speed)).toFixed(1) + "px,0)"; });
+      ticking = false;
+    };
+    window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    update();
+  }
+  const reveals = document.querySelectorAll(".reveal");
+  if (reveals.length && "IntersectionObserver" in window && !reduced) {
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.remove("pending"); io.unobserve(en.target); }
+    }), { threshold: 0.2 });
+    reveals.forEach((el) => {
+      // Ekranın altında kalanlar sonradan belirir; görünenler hemen görünür kalır.
+      if (el.getBoundingClientRect().top > window.innerHeight) { el.classList.add("pending"); io.observe(el); }
+    });
+  }
 
   // --- Düzeltilmiş / yorumlu kopya --------------------------------------------------------
   const outputs = document.getElementById("outputs");

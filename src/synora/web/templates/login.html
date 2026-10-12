@@ -1,91 +1,99 @@
 {% extends "base.html" %}
-{% from "_marks.html" import arrow, blocks, circuit, page_diagram %}
-{% block title %}Giriş · Synora{% endblock %}
+{% from "_marks.html" import arrow, blocks, page_diagram %}
+{% block title %}Synora · Tez biçim denetimi{% endblock %}
+{% block body_class %}landing{% endblock %}
 {% block content %}
-<section class="hero">
-  {{ blocks() }}
-  {{ circuit() }}
-  <div class="wrap hero-inner">
-    <div class="hero-copy">
+{# Kahraman: tek mesaj, tek eylem. Katmanlar kaydırırken farklı hızda hareket eder (parallax). #}
+<section class="hero-landing">
+  <div class="parallax-layer layer-blocks" data-speed="0.35" aria-hidden="true">{{ blocks() }}</div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy parallax-layer" data-speed="-0.06">
       <span class="eyebrow">Tez biçim denetimi</span>
-      <h1>Tezinizi kılavuza göre, <em>harfine dokunmadan</em> denetleyin.</h1>
-      <p class="lead">Synora, tezinizi enstitü ya da fakülte yazım kılavuzuyla karşılaştırır: kenar
-        boşlukları, yazı tipi, satır aralığı, başlıklar, şekil ve tablo yazıları. Hataları bulur,
-        Word'de tek tek kabul edeceğiniz düzeltmeler hazırlar.</p>
+      <h1>Tezinizi kılavuza <em>teslimden önce</em> uydurun.</h1>
+      <p class="lead">Synora, Word belgenizi enstitü ya da fakülte yazım kılavuzuyla karşılaştırır,
+        hataları gösterir ve Word'de kabul edeceğiniz düzeltmeleri hazırlar. Metninize dokunmaz.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#giris"><span class="lbl">Başlayın</span>{{ arrow() }}</a>
+        <a class="textlink" href="#nasil">Nasıl çalışır?</a>
+      </div>
+    </div>
+    {% if page %}
+    <figure class="hero-figure parallax-layer" data-speed="0.12">
+      {{ page_diagram(page) }}
+      <figcaption>{{ page.name }} · sayfa düzeni</figcaption>
+    </figure>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section" id="nasil">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Nasıl çalışır</span>
+      <h2>Üç adımda kılavuza uygun bir tez.</h2>
+    </div>
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step-n">1</span>
+        <svg class="step-art" viewBox="0 0 120 80" aria-hidden="true">
+          <rect x="36" y="6" width="48" height="64"/><path d="M44 18 H76 M44 26 H76 M44 34 H70 M60 76 V56 M52 64 L60 56 L68 64"/>
+        </svg>
+        <h3>Yükleyin</h3>
+        <p>Word belgenizi (.docx) bırakın, kılavuzunuzu seçin. Birkaç saniye sürer.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">2</span>
+        <svg class="step-art" viewBox="0 0 120 80" aria-hidden="true">
+          <rect x="14" y="6" width="56" height="68"/><path d="M22 18 H62 M22 26 H62 M22 34 H56 M22 42 H62 M22 50 H48"/>
+          <rect x="78" y="14" width="34" height="14"/><rect x="78" y="34" width="34" height="14"/><path d="M62 21 H78 M56 41 H78"/>
+        </svg>
+        <h3>İnceleyin</h3>
+        <p>Bulgular, belgenizin yapısı üzerinde yorum olarak görünür: neyin, nerede, nasıl düzeltileceği.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">3</span>
+        <svg class="step-art" viewBox="0 0 120 80" aria-hidden="true">
+          <rect x="36" y="6" width="48" height="64"/><path d="M44 18 H76 M44 26 H76 M44 34 H70 M46 52 L54 60 L74 40"/>
+        </svg>
+        <h3>Düzeltin</h3>
+        <p>Düzeltilmiş kopyayı indirin; Word'de “Tümünü Kabul Et” deyin. İstemediğinizi reddedin.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="band" id="gizlilik">
+  <div class="wrap band-grid">
+    <div class="section-head on-dark">
+      <span class="eyebrow">Gizlilik</span>
+      <h2>Tezinize ait olan, sizde kalır.</h2>
+    </div>
+    <ul class="promises">
+      <li><strong>Metniniz değişmez.</strong> Her işlemden sonra harfi harfine aynı kaldığı doğrulanır.</li>
+      <li><strong>Yapay zekâ metni görmez.</strong> Paragraf türleri yalnızca biçimden çıkarılan sayılarla belirlenir.</li>
+      <li><strong>Dosyanız saklanmaz.</strong> Bellekte denetlenir ve atılır; rapor 24 saatte silinir.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="giris">
+  <div class="wrap login-wrap">
+    <div class="section-head">
+      <span class="eyebrow">Giriş</span>
+      <h2>Üniversite e&#8209;postanızla başlayın.</h2>
+      <p>Tek kullanımlık bir giriş bağlantısı gönderilir; parola gerekmez.</p>
     </div>
     <form method="post" action="/login" class="login-card stack">
       <input type="hidden" name="csrf" value="{{ csrf }}">
-      <h2>Giriş</h2>
-      <p>Üniversite e-postanıza tek kullanımlık bir bağlantı gönderilir; parola gerekmez.</p>
       {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
       <label for="email">E-posta adresi</label>
       <input id="email" name="email" type="email" required autocomplete="email"
              placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
-      <div><button class="btn" type="submit"><span class="lbl">Giriş bağlantısı gönder</span>{{ arrow() }}</button></div>
+      <div><button class="btn primary" type="submit"><span class="lbl">Giriş bağlantısı gönder</span>{{ arrow() }}</button></div>
       {% if domains %}
-      <p class="fineprint">Kabul edilen adresler:
-        {% for d in domains %}@{{ d }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+      <p class="fineprint">Kabul edilen adresler: {% for d in domains %}@{{ d }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
       {% endif %}
     </form>
-  </div>
-</section>
-
-{% if page %}
-<section class="section" id="duzen">
-  <div class="wrap split">
-    <div class="section-head">
-      <span class="eyebrow">Sayfa düzeni</span>
-      <h2>Kılavuzun her ölçüsü, tezinizin her sayfasında.</h2>
-      <p>Şekil 1, varsayılan kılavuzun sayfa düzenidir. Synora her bölümü bu ölçülerle karşılaştırır;
-         kılavuz değişirse çizim de kural setinden yeniden üretilir.</p>
-    </div>
-    <figure>
-      {{ page_diagram(page) }}
-      <figcaption>Şekil 1 — {{ page.name }}</figcaption>
-    </figure>
-  </div>
-</section>
-{% endif %}
-
-<section class="section" id="ilkeler">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">İlkeler</span>
-      <h2>Tezinize ait olan, sizde kalır.</h2>
-    </div>
-    <div class="cards">
-      <article class="card blue">
-        <svg class="glyph" viewBox="0 0 240 64" aria-hidden="true">
-          <rect x="4" y="8" width="44" height="48"/><path d="M12 20 H40 M12 28 H40 M12 36 H34 M48 32 H96 q8 0 8 8 V56 M104 56 H236"/>
-          <rect x="188" y="8" width="44" height="48"/><path d="M196 20 H224 M196 28 H224 M196 36 H218"/>
-        </svg>
-        <span class="eyebrow">Bütünlük</span>
-        <h3>Metniniz değişmez</h3>
-        <p>Synora yalnızca biçimi okur. Her işlemden sonra metnin harfi harfine aynı kaldığı doğrulanır;
-           doğrulanamazsa hiçbir dosya üretilmez.</p>
-      </article>
-      <article class="card">
-        <svg class="glyph" viewBox="0 0 240 64" aria-hidden="true">
-          <rect x="4" y="20" width="16" height="16" class="solid"/><rect x="24" y="20" width="16" height="16"/>
-          <rect x="44" y="20" width="16" height="16" class="solid"/><rect x="64" y="20" width="16" height="16"/>
-          <path d="M80 28 H140 q8 0 8 -8 V8 M148 8 H236"/>
-        </svg>
-        <span class="eyebrow">Gizlilik</span>
-        <h3>Yapay zekâ metni görmez</h3>
-        <p>Paragrafların türü metinden değil, biçimden çıkarılan sayılarla belirlenir. Sınıflandırıcıya
-           tek bir sözcük bile gitmez.</p>
-      </article>
-      <article class="card">
-        <svg class="glyph" viewBox="0 0 240 64" aria-hidden="true">
-          <rect x="4" y="8" width="44" height="48"/><path d="M48 32 H120 M120 20 V44 M132 20 V44 M144 20 V44"/>
-          <path d="M156 32 H236"/>
-        </svg>
-        <span class="eyebrow">Saklama</span>
-        <h3>Dosyanız saklanmaz</h3>
-        <p>Belge bellekte denetlenir ve atılır. Rapor 24 saat sonra kendiliğinden silinir; dilerseniz
-           hemen silebilirsiniz.</p>
-      </article>
-    </div>
   </div>
 </section>
 {% endblock %}
