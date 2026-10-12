@@ -26,6 +26,8 @@ class ErrorCode(StrEnum):
     XML_DOCTYPE = "XML_DOCTYPE"
     XML_MALFORMED = "XML_MALFORMED"
     XML_TOO_LARGE = "XML_TOO_LARGE"
+    # Parser (A2)
+    NOT_WORDML = "NOT_WORDML"
 
 
 class SynoraError(Exception):
@@ -45,3 +47,7 @@ class IngestError(SynoraError):
 
 class UnsafeXmlError(IngestError):
     """XML parçası güvensiz ya da bozuk."""
+
+
+class ParseError(SynoraError):
+    """Paket güvenli ama bir Word belgesi olarak yorumlanamıyor (A2)."""

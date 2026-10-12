@@ -107,14 +107,23 @@ doc defaults). Denetim her zaman çözülmüş değer üzerinden yapılır.
 
 ## 6. content_fingerprint
 
-- Kapsam: `word/document.xml`, `footnotes.xml`, `endnotes.xml`.
-- Belge sırasıyla `w:t` metni, `w:tab` → `\t`, `w:br`/`w:cr` → `\n`, `w:sym` → karakter kodu.
-- Her paragraf `(part_adı, sıra, metin)` olarak normalize edilir; tümü SHA-256 ile özetlenir.
-- Alan (field) sonuçları (sayfa numarası, SEQ, TOC önbellek metni) **hariç** tutulur — bunlar biçim
-  düzeltmesiyle meşru olarak değişebilir. `[KARAR?]`
-- Track changes içeren belge: `[KARAR?]` reddet mi, uyar mı?
+Uygulama: `synora.fingerprint` + `synora.text` (metin tanımı tek yerde).
 
-Fingerprint testi property-based (Hypothesis) testlerle her yama tipi için ayrıca doğrulanır.
+- Kapsam: gövde, dipnotlar, sonnotlar, üstbilgiler, altbilgiler; metin kutuları dahil.
+- Her part'taki her `w:p` sırasıyla: görünen metin (`w:t`, `w:tab` → `	`, `w:br`/`w:cr` → `
+`,
+  `w:sym`, bölünmez/yumuşak tire) SHA-256 ile özetlenir. Run bölünmesi ve biçim özeti etkilemez.
+- **Alan sonuçları dahil** (atıflar, kaynakça, TOC önbellek metni, sayfa numaraları). Synora alan
+  sonuçlarına dokunmaz; Zotero/Mendeley atıfları da alan sonucu olduğu için hariç tutmak kaynakça
+  değişikliklerini görünmez kılardı. Yalnızca **alan komutları** (`w:instrText`) hariç; A5 sayfa
+  numarası biçimini (`PAGE \* roman`) değiştirebilir.
+- Track changes: eklenen metin dahil, silinen metin hariç. `DocModel.has_tracked_changes` işaretlenir;
+  raporda uyarı olarak gösterilecek (F2).
+- Boş paragraf eklemek/silmek özeti değiştirir: A5 sayfa sonu için boş paragraf değil
+  `pageBreakBefore` kullanmalı.
+
+Hypothesis testleri: rastgele biçim + rastgele run bölünmesi → aynı özet; tek karakter ekleme/silme/
+değiştirme → farklı özet.
 
 ## 7. Kural seti (YAML) örneği
 

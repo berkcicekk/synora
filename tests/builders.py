@@ -72,6 +72,140 @@ def minimal_docx() -> bytes:
     return zip_parts(minimal_parts())
 
 
+# --- Zengin belge üretici (F1+) ----------------------------------------------------
+
+NS_DECL = (
+    f'xmlns:w="{W_NS}" '
+    'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" '
+    'xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" '
+    'xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" '
+    'xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" '
+    'xmlns:v="urn:schemas-microsoft-com:vml" '
+    'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"'
+)
+REL_BASE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/"
+XML_DECL = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+
+
+def esc(text: str) -> str:
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def r(text: str, rpr: str = "") -> str:
+    rpr_xml = f"<w:rPr>{rpr}</w:rPr>" if rpr else ""
+    return f'<w:r>{rpr_xml}<w:t xml:space="preserve">{esc(text)}</w:t></w:r>'
+
+
+def p(*runs: str, ppr: str = "", attrs: str = "") -> str:
+    """runs: r() çıktıları ya da düz metin (tek run'a çevrilir)."""
+    body = "".join(x if x.startswith("<") else r(x) for x in runs)
+    ppr_xml = f"<w:pPr>{ppr}</w:pPr>" if ppr else ""
+    return f"<w:p {attrs}>{ppr_xml}{body}</w:p>"
+
+
+def styles_xml(defaults_rpr: str = "", defaults_ppr: str = "", styles: str = "") -> str:
+    return (
+        f"{XML_DECL}<w:styles {NS_DECL}><w:docDefaults>"
+        f"<w:rPrDefault><w:rPr>{defaults_rpr}</w:rPr></w:rPrDefault>"
+        f"<w:pPrDefault><w:pPr>{defaults_ppr}</w:pPr></w:pPrDefault>"
+        f"</w:docDefaults>{styles}</w:styles>"
+    )
+
+
+def style(sid: str, kind: str = "paragraph", *, based_on: str | None = None,
+          ppr: str = "", rpr: str = "", default: bool = False, name: str | None = None) -> str:
+    d = ' w:default="1"' if default else ""
+    b = f'<w:basedOn w:val="{based_on}"/>' if based_on else ""
+    return (
+        f'<w:style w:type="{kind}" w:styleId="{sid}"{d}><w:name w:val="{name or sid}"/>{b}'
+        f"<w:pPr>{ppr}</w:pPr><w:rPr>{rpr}</w:rPr></w:style>"
+    )
+
+
+def theme_xml(major: str, minor: str) -> str:
+    return (
+        f'{XML_DECL}<a:theme {NS_DECL} name="T"><a:themeElements><a:fontScheme name="F">'
+        f'<a:majorFont><a:latin typeface="{major}"/></a:majorFont>'
+        f'<a:minorFont><a:latin typeface="{minor}"/></a:minorFont>'
+        "</a:fontScheme></a:themeElements></a:theme>"
+    )
+
+
+def numbering_xml(levels: dict[int, tuple[str, str]], num_id: int = 1) -> str:
+    lvls = "".join(
+        f'<w:lvl w:ilvl="{i}"><w:numFmt w:val="{fmt}"/><w:lvlText w:val="{text}"/></w:lvl>'
+        for i, (fmt, text) in levels.items()
+    )
+    return (
+        f'{XML_DECL}<w:numbering {NS_DECL}><w:abstractNum w:abstractNumId="7">{lvls}'
+        f'</w:abstractNum><w:num w:numId="{num_id}"><w:abstractNumId w:val="7"/></w:num>'
+        "</w:numbering>"
+    )
+
+
+def notes_xml(kind: str, notes: dict[int, str]) -> str:
+    """kind: footnote/endnote. notes: id → içerik (p() çıktıları)."""
+    sep = (
+        f'<w:{kind} w:type="separator" w:id="-1"><w:p><w:r><w:separator/></w:r></w:p></w:{kind}>'
+    )
+    body = "".join(f'<w:{kind} w:id="{i}">{xml}</w:{kind}>' for i, xml in notes.items())
+    return f"{XML_DECL}<w:{kind}s {NS_DECL}>{sep}{body}</w:{kind}s>"
+
+
+def hdr_xml(content: str, tag: str = "hdr") -> str:
+    return f"{XML_DECL}<w:{tag} {NS_DECL}>{content}</w:{tag}>"
+
+
+def make_docx(
+    body: str,
+    *,
+    styles: str | None = None,
+    numbering: str | None = None,
+    theme: str | None = None,
+    footnotes: str | None = None,
+    endnotes: str | None = None,
+    headers: dict[str, str] | None = None,
+    footers: dict[str, str] | None = None,
+) -> bytes:
+    """body: <w:body> içeriği. headers/footers: rId → hdr_xml() çıktısı."""
+    parts: dict[str, bytes] = {
+        "_rels/.rels": root_rels(),
+        "word/document.xml": f"{XML_DECL}<w:document {NS_DECL}><w:body>{body}</w:body>"
+        "</w:document>".encode(),
+    }
+    rels: list[tuple[str, str, str]] = []
+    overrides: list[tuple[str, str]] = []
+    ct_base = "application/vnd.openxmlformats-officedocument.wordprocessingml."
+    for content, rel, name, ctype in (
+        (styles, "styles", "styles.xml", "styles+xml"),
+        (numbering, "numbering", "numbering.xml", "numbering+xml"),
+        (theme, "theme", "theme/theme1.xml", None),
+        (footnotes, "footnotes", "footnotes.xml", "footnotes+xml"),
+        (endnotes, "endnotes", "endnotes.xml", "endnotes+xml"),
+    ):
+        if content is not None:
+            parts[f"word/{name}"] = content.encode()
+            rels.append((f"rId{rel}", REL_BASE + rel, name))
+            if ctype:
+                overrides.append((f"/word/{name}", ct_base + ctype))
+    for kind, mapping in (("header", headers or {}), ("footer", footers or {})):
+        for i, (rid, content) in enumerate(mapping.items(), start=1):
+            name = f"{kind}{i}.xml"
+            parts[f"word/{name}"] = content.encode()
+            rels.append((rid, REL_BASE + kind, name))
+            overrides.append((f"/word/{name}", ct_base + kind + "+xml"))
+    if rels:
+        parts["word/_rels/document.xml.rels"] = (
+            f'{XML_DECL}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/'
+            'relationships">'
+            + "".join(f'<Relationship Id="{i}" Type="{t}" Target="{n}"/>' for i, t, n in rels)
+            + "</Relationships>"
+        ).encode()
+    extra = "".join(f'<Override PartName="{n}" ContentType="{c}"/>' for n, c in overrides)
+    parts["[Content_Types].xml"] = content_types(extra_overrides=extra)
+    return zip_parts(parts)
+
+
 def _central_entries(data: bytes) -> list[tuple[int, str]]:
     """Merkezi dizindeki (kayıt ofseti, ad) çiftleri."""
     out: list[tuple[int, str]] = []

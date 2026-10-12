@@ -8,7 +8,7 @@
 | Faz | Konu | Modüller | Hassas | Bağımlılık | Durum |
 |-----|------|----------|--------|------------|-------|
 | F0 | Temel + güvenli giriş | A1, xmlsafe | ✅ | — | ✅ |
-| F1 | Belge modeli + fingerprint | A2 | ✅ | F0 | ⬜ |
+| F1 | Belge modeli + fingerprint | A2 | ✅ | F0 | ✅ |
 | F2 | Kural seti + denetim, `synora check` | A3, A6, A7 (JSON/terminal), A8 | | F1, ZBEÜ kılavuzu (⛔ yalnızca `zbeu.yaml` için) | ⬜ |
 | F3 | Metni görmeyen rol sınıflandırma | A4 | | F2 | ⬜ |
 | F4 | Web: yükle → rapor | A9, A10, A11, A7 (HTML) | ✅ | F3, marka kiti | ⬜ |
