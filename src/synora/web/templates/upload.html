@@ -1,21 +1,23 @@
 {% extends "base.html" %}
+{% from "_marks.html" import ornament %}
 {% block title %}Tez yükle · Synora{% endblock %}
 {% block content %}
-<section class="intro">
+<section class="page-head">
   <p class="label">Yeni denetim</p>
   <h1>Tezinizi yükleyin.</h1>
+  <p class="subtitle">Word belgenizi (.docx) seçin; birkaç saniye içinde raporunuz hazır olur.</p>
 </section>
 
-<section class="panel">
+<section class="sheet">
   <form id="upload" class="stack" data-csrf="{{ user.csrf }}" data-max="{{ max_mb * 1024 * 1024 }}">
     {% if rulesets|length > 1 %}
-    <label for="ruleset">Enstitü ve kılavuz</label>
+    <label for="ruleset">Kılavuz</label>
     <select id="ruleset" name="ruleset">
       {% for r in rulesets %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
     </select>
     {% elif rulesets %}
     <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
-    <p class="muted">Kılavuz: <strong>{{ rulesets[0].name }}</strong></p>
+    <p class="ruleset-line">Kılavuz: <strong>{{ rulesets[0].name }}</strong></p>
     {% else %}
     <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
     {% endif %}
@@ -24,8 +26,8 @@
       <svg class="icon-lg" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M14 3H6v18h12V7z M14 3v4h4 M12 17v-6 M9 14l3-3 3 3"/>
       </svg>
-      <span class="drop-title">.docx dosyanızı buraya bırakın</span>
-      <span class="muted">ya da seçmek için tıklayın · en fazla {{ max_mb }} MB</span>
+      <span class="drop-title">Dosyanızı buraya bırakın</span>
+      <span class="muted"><em>ya da seçmek için tıklayın · .docx · en fazla {{ max_mb }} MB</em></span>
       <input id="file" name="file" type="file"
              accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
     </label>
@@ -38,14 +40,15 @@
 
 {% if jobs %}
 <section>
-  <h2>Son denetimler</h2>
-  <p class="muted small">Raporlar {{ retention }} saat sonra kendiliğinden silinir.</p>
-  <ul class="jobs">
+  {{ ornament() }}
+  <h2 class="center-text">Son denetimler</h2>
+  <p class="muted small center-text"><em>Raporlar {{ retention }} saat sonra kendiliğinden silinir.</em></p>
+  <ul class="toc">
     {% for j in jobs %}
     <li>
       <a href="/jobs/{{ j.id }}">
-        <span>{{ j.created_at | when }}</span>
-        <span class="chip chip-{{ j.status }}">{{ {"queued": "Sırada", "running": "Denetleniyor", "done": "Tamamlandı", "failed": "Başarısız"}[j.status] }}</span>
+        <span class="when">{{ j.created_at | when }}</span>
+        <span class="chip chip-{{ j.status }}">{{ {"queued": "sırada", "running": "denetleniyor", "done": "tamamlandı", "failed": "başarısız"}[j.status] }}</span>
       </a>
     </li>
     {% endfor %}

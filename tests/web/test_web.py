@@ -217,7 +217,7 @@ def test_user_can_delete_report(client: TestClient, mailer: ConsoleMailer) -> No
 def test_logout(client: TestClient, mailer: ConsoleMailer) -> None:
     csrf = login(client, mailer)
     client.post("/logout", data={"csrf": csrf})
-    assert "Giriş yapın" in client.get("/").text
+    assert "Giriş bağlantısı gönder" in client.get("/").text
 
 
 # --- Güvenlik ve saklama ------------------------------------------------------------------
@@ -277,7 +277,7 @@ def test_static_fonts_served_locally(client: TestClient) -> None:
     css = client.get("/static/fonts.css")
     assert css.status_code == 200
     assert "fonts.gstatic.com" not in css.text
-    assert client.get("/static/fonts/schibsted-grotesk-latin-ext.woff2").status_code == 200
+    assert client.get("/static/fonts/eb-garamond-normal-latin-ext.woff2").status_code == 200
 
 
 # --- F5: düzeltilmiş / yorumlu kopya ---------------------------------------------------------

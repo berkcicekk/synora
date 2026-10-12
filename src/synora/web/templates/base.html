@@ -1,25 +1,30 @@
+{% from "_marks.html" import mark, ornament %}
 <!doctype html>
 <html lang="tr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF5E6">
   <title>{% block title %}Synora{% endblock %}</title>
   <link rel="stylesheet" href="/static/fonts.css">
   <link rel="stylesheet" href="/static/app.css">
-  <link rel="icon" href="/static/logo.jpg">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <script src="/static/app.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">İçeriğe geç</a>
   <header class="site">
     <div class="wrap site-inner">
-      <a class="brand" href="/">
-        <img src="/static/logo.jpg" alt="" width="40" height="27">
-        <span>Synora</span>
+      <a class="brand" href="/" aria-label="Synora ana sayfa">
+        {{ mark() }}
+        <span class="brand-text">
+          <span class="wordmark">Synora</span>
+          <span class="tagline">Tez Biçim Denetimi</span>
+        </span>
       </a>
       {% if user %}
       <div class="who">
-        <span class="mono">{{ user.email }}</span>
+        <span class="email">{{ user.email }}</span>
         <form method="post" action="/logout">
           <input type="hidden" name="csrf" value="{{ user.csrf }}">
           <button class="link" type="submit">Çıkış</button>
@@ -27,16 +32,17 @@
       </div>
       {% endif %}
     </div>
+    <div class="wrap"><hr class="double-rule"></div>
   </header>
   <main id="main" class="wrap">
     {% block content %}{% endblock %}
   </main>
   <footer class="site-foot">
     <div class="wrap">
-      <p>Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz.
-         Dosyanız yalnızca bellekte işlenir, sunucuya kaydedilmez; düzeltilmiş kopya için
-         yeniden seçmeniz istenir.</p>
-      <p class="muted">Synora · Pilot: Zonguldak Bülent Ecevit Üniversitesi</p>
+      {{ ornament() }}
+      <p>Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca bellekte
+         işlenir, sunucuya kaydedilmez; düzeltilmiş kopya için yeniden seçmeniz istenir.</p>
+      <p class="colophon">Synora · Zonguldak Bülent Ecevit Üniversitesi pilotu</p>
     </div>
   </footer>
 </body>

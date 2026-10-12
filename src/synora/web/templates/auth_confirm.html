@@ -1,10 +1,12 @@
 {% extends "base.html" %}
+{% from "_marks.html" import mark %}
 {% block title %}Giriş · Synora{% endblock %}
 {% block content %}
-<section class="panel narrow">
+<section class="sheet narrow center">
   {% if valid %}
-  <h1>Synora'ya giriş yapın.</h1>
-  <p>Giriş bağlantınız doğrulandı.</p>
+  {{ mark("emblem", "Synora amblemi") }}
+  <h1>Synora'ya hoş geldiniz.</h1>
+  <p class="muted"><em>Giriş bağlantınız doğrulandı.</em></p>
   <form method="post" action="/auth">
     <input type="hidden" name="csrf" value="{{ csrf }}">
     <input type="hidden" name="token" value="{{ token }}">
