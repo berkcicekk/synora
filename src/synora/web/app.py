@@ -246,7 +246,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             set_pre_csrf(resp, token)
             return resp
         jobs = db.recent_jobs(user.email)
-        return render(request, "upload.html", user=user, rulesets=list(rulesets.values()),
+        # Örnek kural seti en sona: pilotta varsayılan seçim gerçek kılavuz olsun.
+        ordered = sorted(rulesets.values(), key=lambda r: (r.id == "example", r.name))
+        return render(request, "upload.html", user=user, rulesets=ordered,
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
 

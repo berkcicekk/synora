@@ -11,8 +11,10 @@ isteğe bağlı olarak **biçimsel hataları düzeltir**. Tezin metnine hiçbir 
 Öğrenci tezini sade bir **web arayüzüne** yükler, raporu ekranda görür, isterse düzeltilmiş dosyayı indirir.
 Görsel kimlik ve arayüz dili: Synora marka kiti (https://claude.ai/artifact/Bg7bwS9wQZqqiyaEWTHzMK).
 
-**Pilot:** Zonguldak Bülent Ecevit Üniversitesi (ZBEÜ) Lisansüstü Eğitim Enstitüsü. İlk kural seti
-`rulesets/zbeu.yaml`, enstitünün güncel tez yazım kılavuzundan çıkarılacak (kılavuz PDF'i bekleniyor).
+**Pilot:** Zonguldak Bülent Ecevit Üniversitesi (ZBEÜ). İlk kural seti `rulesets/zbeu-tip.yaml`:
+Tıp Fakültesi *Tıpta Uzmanlık Öğrencileri için Tez Yazım Kılavuzu* (2019). Kılavuzla madde madde eşleme,
+kapsanmayan kurallar ve kılavuzdaki çelişkiler `rulesets/zbeu-tip.md`'de. Lisansüstü Eğitim Enstitüsü
+(yüksek lisans/doktora) için ayrı kılavuz gerekir `[KARAR?]`.
 
 Kapsam dışı: yazım/dil denetimi, intihal, içerik önerisi, kaynakça içeriğinin doğruluğu.
 

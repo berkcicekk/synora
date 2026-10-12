@@ -9,7 +9,7 @@
 |-----|------|----------|--------|------------|-------|
 | F0 | Temel + güvenli giriş | A1, xmlsafe | ✅ | — | ✅ |
 | F1 | Belge modeli + fingerprint | A2 | ✅ | F0 | ✅ |
-| F2 | Kural seti + denetim, `synora check` | A3, A6, A7 (JSON/terminal), A8 | | F1, ZBEÜ kılavuzu (⛔ yalnızca `zbeu.yaml` için) | ✅ (`zbeu.yaml` ⛔) |
+| F2 | Kural seti + denetim, `synora check` | A3, A6, A7 (JSON/terminal), A8 | | F1, ZBEÜ kılavuzu (⛔ yalnızca `zbeu.yaml` için) | ✅ (`zbeu-tip.yaml` ✅, enstitü ⛔) |
 | F3 | Metni görmeyen rol sınıflandırma | A4 | | F2 | ✅ |
 | F4 | Web: yükle → rapor | A9, A10, A11, A7 (HTML) | ✅ | F3, marka kiti | ✅ |
 | F5 | Düzeltici + indirme | A5 | ✅ | F4 | ✅ |
@@ -138,7 +138,8 @@ Pilotta toplanan (rızalı, yalnızca özellik + etiket) rol düzeltmeleriyle k�
 
 | İş | Sorumlu | Gerektiği faz |
 |----|---------|---------------|
-| ZBEÜ tez yazım kılavuzu (PDF) + şablon `.docx` | Kullanıcı | F2 |
+| ZBEÜ Tıp Fakültesi kılavuzu (2019) → `rulesets/zbeu-tip.yaml` ✅; 4 çelişki fakülteye sorulmalı (`rulesets/zbeu-tip.md`) | Kullanıcı | P |
+| ZBEÜ Lisansüstü Eğitim Enstitüsü kılavuzu (yüksek lisans/doktora için) | Kullanıcı | P (kapsam kararı) |
 | Enstitüde pilot muhatabı | Kullanıcı | P (konuşmaya erken başlanmalı) |
 | Logo SVG + koyu zemin sürümü | Tasarımcı | F4 |
 | Barındırma kararı (üniversite sunucusu / TR bulut) | Kullanıcı + enstitü | F4 |
