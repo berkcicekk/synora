@@ -102,6 +102,16 @@ TR_TZ = timezone(timedelta(hours=3))  # Türkiye 2016'dan beri yaz saati uygulam
 TR_MONTHS = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"]
 
 
+TR_MONTHS_LONG = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos",
+                  "Eylül", "Ekim", "Kasım", "Aralık"]
+
+
+def format_date(ts: float) -> str:
+    """LaTeX'teki bugünün tarihi biçimi: '12 Ekim 2026'."""
+    d = datetime.fromtimestamp(ts, TR_TZ)
+    return f"{d.day} {TR_MONTHS_LONG[d.month - 1]} {d.year}"
+
+
 def format_when(ts: float) -> str:
     d = datetime.fromtimestamp(ts, TR_TZ)
     return f"{d.day} {TR_MONTHS[d.month - 1]} {d:%H:%M}"
@@ -162,6 +172,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     )
     templates = Jinja2Templates(directory=str(HERE / "templates"))
     templates.env.filters["when"] = format_when
+    templates.env.filters["date_tr"] = format_date
+    templates.env.globals["now"] = time.time
     # Statik dosyalar için sürüm damgası: içerik değişince tarayıcı önbelleği geçersizleşir.
     asset_hash = hashlib.sha256()
     for name in ("app.css", "app.js", "fonts.css"):

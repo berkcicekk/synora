@@ -1,57 +1,62 @@
 {% extends "base.html" %}
-{% from "_marks.html" import ornament, page_diagram %}
+{% from "_marks.html" import maketitle, page_diagram %}
 {% block title %}Giriş · Synora{% endblock %}
 {% block content %}
-<section class="hero">
-  <div class="hero-text">
-    <p class="label">Teslimden önce</p>
-    <h1>Tezinizi kılavuza göre, <em>harfine dokunmadan</em> denetleyin.</h1>
-    <p class="lead">Kenar boşluğundan satır aralığına, bölüm başlıklarından şekil yazılarına kadar
-       biçim hatalarını bulur; Word'de tek tıkla kabul edeceğiniz düzeltmeler hazırlar.</p>
+{{ maketitle("Synora: Tez Biçim Denetimi", "Zonguldak Bülent Ecevit Üniversitesi", now() | date_tr, emblem=True, thanks=True) }}
 
-    <div class="sheet login">
-      <h2>Giriş</h2>
-      <p class="muted">Üniversite e-posta adresinize tek kullanımlık bir giriş bağlantısı gönderilir.
-         Parola gerekmez.</p>
-      {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
-      <form method="post" action="/login" class="stack">
-        <input type="hidden" name="csrf" value="{{ csrf }}">
-        <label for="email">E-posta adresi</label>
-        <input id="email" name="email" type="email" required autocomplete="email"
-               placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
-        <button class="primary" type="submit">Giriş bağlantısı gönder</button>
-      </form>
-      {% if domains %}
-      <p class="muted small">Pilot süresince kabul edilen adresler:
-        {% for d in domains %}<span class="mono">@{{ d }}</span>{% if not loop.last %}, {% endif %}{% endfor %}</p>
-      {% endif %}
-    </div>
-  </div>
-  {% if page %}
-  <div class="hero-figure">
-    {{ page_diagram(page) }}
-    <p class="figure-caption"><em>Şekil 1.</em> Kılavuzun sayfa düzeni; Synora her sayfayı bu ölçülerle karşılaştırır.</p>
-  </div>
-  {% endif %}
+<section class="abstract">
+  <h2>Özet</h2>
+  <p>Synora, tezinizi enstitü ya da fakülte yazım kılavuzuna göre teslimden önce denetler. Kenar
+     boşluğundan satır aralığına, bölüm başlıklarından şekil yazılarına kadar biçim hatalarını bulur;
+     Word'de tek tek kabul edebileceğiniz düzeltmeler hazırlar. Metninizin tek bir harfine dokunulmaz.</p>
 </section>
 
-{{ ornament() }}
+<div class="prose">
+  <h2 class="section">Giriş</h2>
+  <p>Üniversite e-posta adresinize tek kullanımlık bir giriş bağlantısı gönderilir; parola gerekmez.
+     Bağlantı on beş dakika geçerlidir.</p>
+</div>
 
-<section class="tenets">
-  <div>
-    <p class="label">Bütünlük</p>
-    <h3>Metniniz değişmez</h3>
-    <p>Synora yalnızca biçimi okur. Her işlemden sonra metnin harfi harfine aynı kaldığı doğrulanır.</p>
+<form method="post" action="/login" class="fbox stack">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
+  <label for="email">E-posta adresi</label>
+  <input id="email" name="email" type="email" required autocomplete="email"
+         placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
+  <div class="actions">
+    <button class="primary" type="submit">Giriş bağlantısı gönder</button>
+    {% if domains %}
+    <span class="muted small">Kabul edilen adresler:
+      {% for d in domains %}<span class="mono">@{{ d }}</span>{% if not loop.last %}, {% endif %}{% endfor %}</span>
+    {% endif %}
   </div>
-  <div>
-    <p class="label">Gizlilik</p>
-    <h3>Yapay zekâ metni görmez</h3>
-    <p>Paragrafların türü metinden değil, biçimden çıkarılan sayılarla belirlenir.</p>
-  </div>
-  <div>
-    <p class="label">Saklama</p>
-    <h3>Dosyanız saklanmaz</h3>
-    <p>Belge bellekte denetlenir ve atılır. Rapor 24 saat sonra kendiliğinden silinir.</p>
-  </div>
-</section>
+</form>
+
+{% if page %}
+<div class="prose">
+  <h2 class="section">Sayfa düzeni</h2>
+  <p>Şekil 1, varsayılan kılavuzun sayfa düzenini gösterir. Synora tezinizin her bölümünü bu ölçülerle
+     karşılaştırır: kenar boşlukları, yazı tipi ve punto, satır aralığı, paragraf girintisi ve bölüm
+     başlıklarının biçimi.</p>
+</div>
+<figure class="figure">
+  {{ page_diagram(page) }}
+  <figcaption>Şekil 1: {{ page.name }} kılavuzunun sayfa düzeni.</figcaption>
+</figure>
+{% endif %}
+
+<div class="prose">
+  <h2 class="section">İlkeler</h2>
+</div>
+<dl class="description">
+  <dt>Bütünlük.</dt>
+  <dd>Synora yalnızca biçimi okur. Her işlemden sonra metnin harfi harfine aynı kaldığı doğrulanır;
+      doğrulanamazsa hiçbir dosya üretilmez.</dd>
+  <dt>Gizlilik.</dt>
+  <dd>Paragrafların türü (başlık, gövde, şekil yazısı) metinden değil, biçimden çıkarılan sayılarla
+      belirlenir; yapay zekâ metni görmez.</dd>
+  <dt>Saklama.</dt>
+  <dd>Belge bellekte denetlenir ve atılır. Rapor 24 saat sonra kendiliğinden silinir; dilerseniz
+      hemen silebilirsiniz.</dd>
+</dl>
 {% endblock %}

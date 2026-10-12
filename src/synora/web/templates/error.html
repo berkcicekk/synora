@@ -1,10 +1,10 @@
 {% extends "base.html" %}
+{% from "_marks.html" import maketitle %}
 {% block title %}Hata · Synora{% endblock %}
 {% block content %}
-<section class="sheet narrow center">
-  <p class="label">Bir sorun oluştu</p>
-  <h1>Sayfa açılamadı.</h1>
-  <p>{{ message }}</p>
-  <p><a class="button" href="/">Ana sayfaya dön</a></p>
-</section>
+{{ maketitle("Sayfa açılamadı", "", now() | date_tr) }}
+<div class="prose">
+  <p class="noindent">{{ message }}</p>
+  <p><a href="/">Ana sayfaya dönün.</a></p>
+</div>
 {% endblock %}

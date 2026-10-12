@@ -1,21 +1,18 @@
 {% extends "base.html" %}
-{% from "_marks.html" import mark %}
+{% from "_marks.html" import maketitle %}
 {% block title %}Giriş · Synora{% endblock %}
 {% block content %}
-<section class="sheet narrow center">
-  {% if valid %}
-  {{ mark("emblem", "Synora amblemi") }}
-  <h1>Synora'ya hoş geldiniz.</h1>
-  <p class="muted"><em>Giriş bağlantınız doğrulandı.</em></p>
-  <form method="post" action="/auth">
-    <input type="hidden" name="csrf" value="{{ csrf }}">
-    <input type="hidden" name="token" value="{{ token }}">
-    <button class="primary" type="submit">Giriş yap</button>
-  </form>
-  {% else %}
-  <h1>Bağlantının süresi dolmuş.</h1>
-  <p>Bu giriş bağlantısı kullanılmış ya da süresi dolmuş. Yeni bir bağlantı isteyin.</p>
-  <p><a class="button" href="/">Yeni bağlantı iste</a></p>
-  {% endif %}
-</section>
+{% if valid %}
+{{ maketitle("Synora'ya hoş geldiniz", "Giriş bağlantınız doğrulandı", now() | date_tr, emblem=True) }}
+<form method="post" action="/auth" class="center">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <input type="hidden" name="token" value="{{ token }}">
+  <button class="primary" type="submit">Giriş yap</button>
+</form>
+{% else %}
+{{ maketitle("Bağlantının süresi dolmuş", "", now() | date_tr) }}
+<div class="prose">
+  <p class="noindent">Bu giriş bağlantısı kullanılmış ya da süresi dolmuş. <a href="/">Yeni bir bağlantı isteyin.</a></p>
+</div>
+{% endif %}
 {% endblock %}

@@ -1,14 +1,11 @@
 {% extends "base.html" %}
-{% from "_marks.html" import ornament %}
+{% from "_marks.html" import maketitle %}
 {% block title %}E-postanızı kontrol edin · Synora{% endblock %}
 {% block content %}
-<section class="sheet narrow center">
-  <p class="label">Bağlantı gönderildi</p>
-  <h1>E-postanızı kontrol edin.</h1>
-  {{ ornament() }}
-  <p><span class="mono">{{ email }}</span> adresine bir giriş bağlantısı gönderdik.
-     Bağlantı {{ minutes }} dakika geçerlidir ve yalnızca bir kez kullanılabilir.</p>
-  <p class="muted"><em>E-posta gelmediyse istenmeyen posta klasörüne bakın.</em></p>
-  <p><a href="/">Başka bir adres kullan</a></p>
-</section>
+{{ maketitle("E-postanızı kontrol edin", email, now() | date_tr) }}
+<div class="prose">
+  <p class="noindent">Bu adrese bir giriş bağlantısı gönderdik. Bağlantı {{ minutes }} dakika geçerlidir
+     ve yalnızca bir kez kullanılabilir. E-posta gelmediyse istenmeyen posta klasörüne bakın.</p>
+  <p><a href="/">Başka bir adres kullan.</a></p>
+</div>
 {% endblock %}

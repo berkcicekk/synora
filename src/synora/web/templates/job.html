@@ -1,114 +1,111 @@
 {% extends "base.html" %}
-{% from "_marks.html" import mark, ornament %}
+{% from "_marks.html" import maketitle %}
 {% block title %}Denetim raporu · Synora{% endblock %}
-{% macro sev_icon(sev) -%}
-{% if sev == "error" %}<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6 M15 9l-6 6"/></svg>
-{% elif sev == "warning" %}<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z M12 10v5 M12 17.5v.5"/></svg>
-{% else %}<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>{% endif %}
-{%- endmacro %}
 {% block content %}
-<p class="crumbs"><a href="/">Denetimler</a> › {{ job.created_at | when }}</p>
-
 {% if job.status in ("queued", "running") %}
-<section class="sheet narrow center" data-poll="/jobs/{{ job.id }}/status">
-  {{ mark("emblem") }}
-  <h1>Teziniz denetleniyor.</h1>
+{{ maketitle("Teziniz denetleniyor", ruleset.name if ruleset else "", job.created_at | date_tr, thanks=True) }}
+<div class="prose center" data-poll="/jobs/{{ job.id }}/status">
   <div class="progress" aria-hidden="true"><span></span></div>
-  <p class="muted" role="status" aria-live="polite"><em>Güvenlik kontrolü, biçim okuma ve kılavuz
-    denetimi yapılıyor. Genellikle birkaç saniye sürer.</em></p>
-</section>
+  <p class="noindent muted" role="status" aria-live="polite"><em>Güvenlik kontrolü, biçim okuma ve
+     kılavuz denetimi yapılıyor. Genellikle birkaç saniye sürer.</em></p>
+</div>
 
 {% elif job.status == "failed" %}
-<section class="sheet narrow center">
-  <p class="badge badge-error">{{ sev_icon("error") }} Denetlenemedi</p>
-  <h1>Dosya denetlenemedi.</h1>
-  <p>{{ error }}</p>
-  <p class="mono small muted">Kod: {{ job.error_code }}</p>
-  <p><a class="button primary" href="/">Yeniden yükle</a></p>
-</section>
+{{ maketitle("Dosya denetlenemedi", ruleset.name if ruleset else "", job.created_at | date_tr, thanks=True) }}
+<div class="prose">
+  <p class="noindent">{{ error }}</p>
+  <p>Hata kodu: <span class="mono">{{ job.error_code }}</span>. <a href="/">Yeni bir denetim başlatın.</a></p>
+</div>
 
 {% else %}
 {% set s = view.summary %}
-<section class="report-head">
-  <p class="label">Denetim raporu</p>
+{{ maketitle("Denetim Raporu", view.ruleset.name, job.created_at | date_tr, thanks=True) }}
+
+<section class="abstract">
+  <h2>Özet</h2>
   {% if s.errors == 0 and s.warnings == 0 %}
-  <h1>Kılavuza aykırı biçim bulunamadı.</h1>
+  <p>Kılavuza aykırı biçim bulunamadı. {{ s.checked_paragraphs }} paragraf denetlendi.</p>
   {% else %}
-  <h1>{{ s.errors }} hata, {{ s.warnings }} uyarı.</h1>
-  <p class="lead">{{ view.ruleset.name }} · otomatik düzeltilebilir: {{ s.fixable }}</p>
-  {% endif %}
-  <dl class="stats">
-    <div class="stat stat-error"><dt>Hata</dt><dd>{{ s.errors }}</dd></div>
-    <div class="stat stat-warning"><dt>Uyarı</dt><dd>{{ s.warnings }}</dd></div>
-    <div class="stat"><dt>Denetlenen paragraf</dt><dd>{{ s.checked_paragraphs }}</dd></div>
-  </dl>
-  {% if s.unknown_paragraphs or s.cover_paragraphs %}
-  <p class="note">
-    {% if s.cover_paragraphs %}Kapak sayfası ({{ s.cover_paragraphs }} satır) denetlenmedi.{% endif %}
-    {% if s.unknown_paragraphs %}Türü belirlenemeyen {{ s.unknown_paragraphs }} paragraf denetlenmedi
-    (ör. stil kullanılmadan kalın yazılmış ara başlıklar). Word'ün “Başlık 2/3” stillerini
-    kullanırsanız bunlar da denetlenir.{% endif %}
-  </p>
+  <p>Belgede <strong>{{ s.errors }} hata, {{ s.warnings }} uyarı.</strong> bulundu; bunlardan
+     {{ s.fixable }} tanesi otomatik olarak düzeltilebilir. Toplam {{ s.checked_paragraphs }} paragraf
+     denetlendi.{% if s.cover_paragraphs %} Kapak sayfası ({{ s.cover_paragraphs }} satır) denetlenmedi.{% endif %}
+     {% if s.unknown_paragraphs %}Türü belirlenemeyen {{ s.unknown_paragraphs }} paragraf da denetlenmedi
+     (örneğin stil kullanılmadan kalın yazılmış ara başlıklar); Word'ün “Başlık 2/3” stillerini
+     kullanırsanız bunlar da denetlenir.{% endif %}</p>
   {% endif %}
 </section>
 
-{% if view.cards %}
-<section class="findings">
-  <div class="filters" role="group" aria-label="Bulguları süz">
-    <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü</button>
-    <button type="button" class="filter" data-filter="error" aria-pressed="false">Hatalar</button>
-    <button type="button" class="filter" data-filter="warning" aria-pressed="false">Uyarılar</button>
-    <button type="button" class="filter" data-filter="fixable" aria-pressed="false">Düzeltilebilir</button>
+<figure class="table">
+  <figcaption>Tablo 1: Denetim özeti.</figcaption>
+  <div class="table-wrap">
+  <table class="booktabs">
+    <thead><tr><th>Hata</th><th>Uyarı</th><th>Otomatik düzeltilebilir</th><th>Denetlenen paragraf</th></tr></thead>
+    <tbody><tr>
+      <td class="num error">{{ s.errors }}</td><td class="num warning">{{ s.warnings }}</td>
+      <td class="num">{{ s.fixable }}</td><td class="num">{{ s.checked_paragraphs }}</td>
+    </tr></tbody>
+  </table>
   </div>
-  <ol class="cards">
-    {% for c in view.cards %}
-    <li class="card sev-{{ c.severity }}" data-severity="{{ c.severity }}" data-fixable="{{ 'yes' if c.fixable else 'no' }}">
-      <div class="card-head">
-        <span class="badge badge-{{ c.severity }}">{{ sev_icon(c.severity) }} {{ c.severity_name }}</span>
-        {% if c.role_name %}<span class="role">{{ c.role_name }}</span>{% endif %}
-        {% if c.fixable %}<span class="chip fix">düzeltilebilir</span>{% endif %}
-      </div>
-      <p class="message">{{ c.message }}</p>
+</figure>
+
+{% if view.cards %}
+<div class="prose">
+  <h2 class="section">Bulgular</h2>
+</div>
+<p class="filters" role="group" aria-label="Bulguları süz">
+  Göster:
+  <button type="button" class="filter" data-filter="all" aria-pressed="true">tümü</button><span class="sep">·</span>
+  <button type="button" class="filter" data-filter="error" aria-pressed="false">hatalar</button><span class="sep">·</span>
+  <button type="button" class="filter" data-filter="warning" aria-pressed="false">uyarılar</button><span class="sep">·</span>
+  <button type="button" class="filter" data-filter="fixable" aria-pressed="false">düzeltilebilir</button>
+</p>
+<ol class="findings">
+  {% for c in view.cards %}
+  <li class="finding card" data-severity="{{ c.severity }}" data-fixable="{{ 'yes' if c.fixable else 'no' }}">
+    <p class="head">
+      <span class="label">Bulgu</span>
+      {% if c.role_name %}({{ c.role_name }}){% endif %}.
+      <span class="sev {{ c.severity }}">{{ c.severity_name }}{% if c.fixable %}, düzeltilebilir{% endif %}.</span>
+      <span class="statement">{{ c.message }}</span>
+    </p>
+    <div class="where">
       {% if c.locations %}
-      <details {% if c.locations|length <= 3 %}open{% endif %}>
-        <summary>{{ c.locations|length }} yerde</summary>
-        <ul class="where">
-          {% for loc in c.locations %}<li>{{ loc }}</li>{% endfor %}
-        </ul>
-      </details>
+        {% if c.locations|length == 1 %}
+        <em>Yer:</em> {{ c.locations[0] }}.
+        {% else %}
+        <details {% if c.locations|length <= 3 %}open{% endif %}>
+          <summary><em>{{ c.locations|length }} yerde</em></summary>
+          <ul>{% for loc in c.locations %}<li>{{ loc }}</li>{% endfor %}</ul>
+        </details>
+        {% endif %}
       {% elif c.sections %}
-      <p class="where-inline muted">Bölüm {{ c.sections|join(", ") }} (sayfa ayarları)</p>
+        <em>Yer:</em> bölüm {{ c.sections|join(", ") }} (sayfa ayarları).
       {% endif %}
-      <p class="rule mono">{{ c.rule_id }}</p>
-    </li>
-    {% endfor %}
-  </ol>
-  <p id="filter-empty" class="muted center-text" hidden><em>Bu süzgeçte bulgu yok.</em></p>
-</section>
+      <span class="rule">{{ c.rule_id }}</span>
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+<p id="filter-empty" class="muted center" hidden><em>Bu süzgeçte bulgu yok.</em></p>
 {% endif %}
 
 {% if s.errors or s.warnings %}
-<section class="sheet outputs" id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}">
-  <p class="label center-text">Sonraki adım</p>
-  <h2>Word'de düzeltin</h2>
-  <p class="measure">Gizliliğiniz için dosyanızı saklamıyoruz. Aşağıdaki kopyalar için aynı
-     dosyayı yeniden seçmeniz istenir; dosya yalnızca bu işlem için kullanılır.</p>
-  <div class="output-grid">
+<section id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}">
+  <div class="prose">
+    <h2 class="section">Word'de düzeltin</h2>
+    <p>Gizliliğiniz için dosyanızı saklamıyoruz. Aşağıdaki kopyalar için aynı dosyayı yeniden seçmeniz
+       istenir; dosya yalnızca bu işlem için kullanılır.</p>
     {% if s.fixable %}
-    <div class="output">
-      <h3>Düzeltilmiş kopya</h3>
-      <p>{{ s.fixable }} düzeltme, Word'de “Synora” adıyla <em>izlenen değişiklik</em> olarak gelir.
-         İnceleyip <strong>Gözden Geçir › Tümünü Kabul Et</strong> deyin; istemediğinizi
-         reddedebilirsiniz. Metniniz değişmez.</p>
-      <button type="button" class="primary" data-output="fixed">Düzeltilmiş kopyayı indir</button>
-    </div>
+    <h3 class="subsection">Düzeltilmiş kopya</h3>
+    <p>{{ s.fixable }} düzeltme, Word'de “Synora” adıyla <em>izlenen değişiklik</em> olarak gelir.
+       İnceleyip <em>Gözden Geçir › Tümünü Kabul Et</em> deyin; istemediğinizi reddedebilirsiniz.
+       Metniniz değişmez.</p>
+    <div class="actions"><button type="button" class="primary" data-output="fixed">Düzeltilmiş kopyayı indir</button></div>
     {% endif %}
-    <div class="output">
-      <h3>Yorumlu kopya</h3>
-      <p>Her bulgu, belgenizde ilgili paragrafın yanına <em>yorum</em> olarak eklenir.
-         Düzeltilemeyen hataları yerinde görmek için.</p>
-      <button type="button" data-output="annotated">Yorumlu kopyayı indir</button>
-    </div>
+    <h3 class="subsection">Yorumlu kopya</h3>
+    <p>Her bulgu, belgenizde ilgili paragrafın yanına <em>yorum</em> olarak eklenir; otomatik
+       düzeltilemeyen hataları yerinde görmek için kullanın.</p>
+    <div class="actions"><button type="button" data-output="annotated">Yorumlu kopyayı indir</button></div>
   </div>
   <input type="file" id="output-file" class="visually-hidden" tabindex="-1" aria-hidden="true"
          accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
@@ -116,15 +113,17 @@
 </section>
 {% endif %}
 
-<section class="actions">
+<div class="prose">
+  <h2 class="section">Rapor</h2>
+  <p>Bu rapor {{ retention }} saat sonra kendiliğinden silinir.</p>
+</div>
+<div class="actions">
   <a class="button" href="/jobs/{{ job.id }}/report.json">Raporu indir (JSON)</a>
-  <form method="post" action="/jobs/{{ job.id }}/delete" class="delete-form">
+  <form method="post" action="/jobs/{{ job.id }}/delete" class="actions">
     <input type="hidden" name="csrf" value="{{ user.csrf }}">
     <button type="button" class="button ghost" data-confirm>Raporu şimdi sil</button>
     <button type="submit" class="button danger" hidden>Evet, sil</button>
   </form>
-  <p class="muted small">Bu rapor {{ retention }} saat sonra kendiliğinden silinir.</p>
-</section>
-{{ ornament() }}
+</div>
 {% endif %}
 {% endblock %}

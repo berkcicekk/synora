@@ -1,10 +1,10 @@
-{% from "_marks.html" import mark, ornament %}
+{% from "_marks.html" import mark %}
 <!doctype html>
 <html lang="tr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#FAF5E6">
+  <meta name="theme-color" content="#FAF6EA">
   <title>{% block title %}Synora{% endblock %}</title>
   <link rel="stylesheet" href="/static/fonts.css?v={{ asset_v }}">
   <link rel="stylesheet" href="/static/app.css?v={{ asset_v }}">
@@ -13,40 +13,33 @@
 </head>
 <body>
   <a class="skip" href="#main">İçeriğe geç</a>
-  <header class="site">
-    <div class="wrap">
-      <div class="strip">
-        <span class="strip-left">Zonguldak Bülent Ecevit Üniversitesi · Pilot</span>
+  <div class="page">
+    <div class="running-head">
+      <span class="left"><a href="/" aria-label="Synora ana sayfa">{{ mark() }}<span class="title">Synora — Tez Biçim Denetimi</span></a></span>
+      <span class="right">
         {% if user %}
-        <span class="who">
-          <span class="email">{{ user.email }}</span>
-          <form method="post" action="/logout">
-            <input type="hidden" name="csrf" value="{{ user.csrf }}">
-            <button class="link" type="submit">Çıkış</button>
-          </form>
-        </span>
+        <span class="email">{{ user.email }}</span>
+        <form method="post" action="/logout">
+          <input type="hidden" name="csrf" value="{{ user.csrf }}">
+          <button class="link" type="submit">Çıkış</button>
+        </form>
         {% else %}
-        <span class="strip-right">Tez Biçim Denetimi</span>
+        <span>ZBEÜ · Pilot</span>
         {% endif %}
-      </div>
-      <a class="masthead" href="/" aria-label="Synora ana sayfa">
-        {{ mark() }}
-        <span class="wordmark">Synora</span>
-      </a>
-      <hr class="double-rule">
+      </span>
     </div>
-  </header>
-  <main id="main" class="wrap">
+  </div>
+  <main id="main" class="page">
     {% block content %}{% endblock %}
-  </main>
-  <footer class="site-foot">
-    <div class="wrap">
-      {{ ornament() }}
-      <p>Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca bellekte
-         işlenir, sunucuya kaydedilmez; düzeltilmiş kopya için yeniden seçmeniz istenir.</p>
-      <p class="colophon">Synora · Zonguldak Bülent Ecevit Üniversitesi pilotu</p>
-      <p class="imprint">Bu sayfa EB Garamond ve Source Serif ile dizilmiştir.</p>
+    <div class="footnotes">
+      {% block footnotes %}
+      <p><sup>*</sup>Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca
+         bellekte işlenir ve sunucuya kaydedilmez; rapor 24 saat sonra kendiliğinden silinir.</p>
+      {% endblock %}
     </div>
+  </main>
+  <footer class="page colophon">
+    <span class="imprint">Bu sayfa, LaTeX'in yazı tipi Latin Modern ile dizilmiştir.</span>
   </footer>
 </body>
 </html>

@@ -1,58 +1,62 @@
 {% extends "base.html" %}
-{% from "_marks.html" import ornament %}
+{% from "_marks.html" import maketitle %}
 {% block title %}Tez yükle · Synora{% endblock %}
 {% block content %}
-<section class="page-head">
-  <p class="label">Yeni denetim</p>
-  <h1>Tezinizi yükleyin.</h1>
-  <p class="subtitle">Word belgenizi (.docx) seçin; birkaç saniye içinde raporunuz hazır olur.</p>
-</section>
+{{ maketitle("Yeni denetim", user.email, now() | date_tr, thanks=True) }}
 
-<section class="sheet">
-  <form id="upload" class="stack" data-csrf="{{ user.csrf }}" data-max="{{ max_mb * 1024 * 1024 }}">
-    {% if rulesets|length > 1 %}
-    <label for="ruleset">Kılavuz</label>
-    <select id="ruleset" name="ruleset">
-      {% for r in rulesets %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
-    </select>
-    {% elif rulesets %}
-    <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
-    <p class="ruleset-line">Kılavuz: <strong>{{ rulesets[0].name }}</strong></p>
-    {% else %}
-    <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
-    {% endif %}
+<div class="prose">
+  <h2 class="section">Dosya</h2>
+  <p>Tezinizi yükleyin. Word belgesi (.docx) olmalı; birkaç saniye içinde raporunuz hazır olur.
+     Denetim, seçtiğiniz kılavuzun kurallarıyla yapılır.</p>
+</div>
 
-    <label class="drop" for="file" id="drop">
-      <svg class="icon-lg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M14 3H6v18h12V7z M14 3v4h4 M12 17v-6 M9 14l3-3 3 3"/>
-      </svg>
-      <span class="drop-title">Dosyanızı buraya bırakın</span>
-      <span class="muted"><em>ya da seçmek için tıklayın · .docx · en fazla {{ max_mb }} MB</em></span>
-      <input id="file" name="file" type="file"
-             accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-    </label>
-    <p id="upload-status" class="status" role="status" aria-live="polite"></p>
-    <button id="submit" class="primary" type="submit" disabled>Tezi denetle</button>
-  </form>
-  <p class="privacy">Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz.
-     Dosyanız işlem bitince silinir.</p>
-</section>
+<form id="upload" class="stack" data-csrf="{{ user.csrf }}" data-max="{{ max_mb * 1024 * 1024 }}">
+  {% if rulesets|length > 1 %}
+  <label for="ruleset">Kılavuz</label>
+  <select id="ruleset" name="ruleset">
+    {% for r in rulesets %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
+  </select>
+  {% elif rulesets %}
+  <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
+  <p class="muted">Kılavuz: <em>{{ rulesets[0].name }}</em></p>
+  {% else %}
+  <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
+  {% endif %}
+
+  <label class="drop" for="file" id="drop">
+    <svg class="icon-lg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14 3H6v18h12V7z M14 3v4h4 M12 17v-6 M9 14l3-3 3 3"/>
+    </svg>
+    <span class="drop-title">Dosyanızı buraya bırakın</span>
+    <span class="muted small"><em>ya da seçmek için tıklayın; .docx, en fazla {{ max_mb }} MB</em></span>
+    <input id="file" name="file" type="file"
+           accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+  </label>
+  <p id="upload-status" class="status" role="status" aria-live="polite"></p>
+  <div class="center"><button id="submit" class="primary" type="submit" disabled>Tezi denetle</button></div>
+</form>
 
 {% if jobs %}
-<section>
-  {{ ornament() }}
-  <h2 class="center-text">Son denetimler</h2>
-  <p class="muted small center-text"><em>Raporlar {{ retention }} saat sonra kendiliğinden silinir.</em></p>
-  <ul class="toc">
-    {% for j in jobs %}
-    <li>
-      <a href="/jobs/{{ j.id }}">
-        <span class="when">{{ j.created_at | when }}</span>
-        <span class="chip chip-{{ j.status }}">{{ {"queued": "sırada", "running": "denetleniyor", "done": "tamamlandı", "failed": "başarısız"}[j.status] }}</span>
-      </a>
-    </li>
-    {% endfor %}
-  </ul>
-</section>
+<div class="prose">
+  <h2 class="section">Önceki denetimler</h2>
+  <p>Raporlar {{ retention }} saat sonra kendiliğinden silinir.</p>
+</div>
+<figure class="table">
+  <figcaption>Tablo 1: Son denetimleriniz.</figcaption>
+  <div class="table-wrap">
+  <table class="booktabs">
+    <thead><tr><th>Tarih</th><th>Durum</th><th></th></tr></thead>
+    <tbody>
+      {% for j in jobs %}
+      <tr>
+        <td>{{ j.created_at | when }}</td>
+        <td>{{ {"queued": "sırada", "running": "denetleniyor", "done": "tamamlandı", "failed": "başarısız"}[j.status] }}</td>
+        <td><a href="/jobs/{{ j.id }}">raporu aç</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</figure>
 {% endif %}
 {% endblock %}
