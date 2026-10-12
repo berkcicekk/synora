@@ -19,6 +19,27 @@ class Story(StrEnum):
     FOOTER = "footer"
 
 
+class Role(StrEnum):
+    TITLE = "title"
+    HEADING_1 = "heading_1"
+    HEADING_2 = "heading_2"
+    HEADING_3 = "heading_3"
+    BODY = "body"
+    BLOCK_QUOTE = "block_quote"
+    LIST_ITEM = "list_item"
+    FIGURE_CAPTION = "figure_caption"
+    TABLE_CAPTION = "table_caption"
+    REFERENCE_ENTRY = "reference_entry"
+    TOC_ENTRY = "toc_entry"
+    FOOTNOTE = "footnote"
+    ENDNOTE = "endnote"
+    TABLE_CELL = "table_cell"
+    TEXTBOX = "textbox"
+    HEADER_FOOTER = "header_footer"
+    EMPTY = "empty"
+    UNKNOWN = "unknown"
+
+
 class Alignment(StrEnum):
     LEFT = "left"
     CENTER = "center"

@@ -9,7 +9,7 @@
 |-----|------|----------|--------|------------|-------|
 | F0 | Temel + güvenli giriş | A1, xmlsafe | ✅ | — | ✅ |
 | F1 | Belge modeli + fingerprint | A2 | ✅ | F0 | ✅ |
-| F2 | Kural seti + denetim, `synora check` | A3, A6, A7 (JSON/terminal), A8 | | F1, ZBEÜ kılavuzu (⛔ yalnızca `zbeu.yaml` için) | ⬜ |
+| F2 | Kural seti + denetim, `synora check` | A3, A6, A7 (JSON/terminal), A8 | | F1, ZBEÜ kılavuzu (⛔ yalnızca `zbeu.yaml` için) | ✅ (`zbeu.yaml` ⛔) |
 | F3 | Metni görmeyen rol sınıflandırma | A4 | | F2 | ⬜ |
 | F4 | Web: yükle → rapor | A9, A10, A11, A7 (HTML) | ✅ | F3, marka kiti | ⬜ |
 | F5 | Düzeltici + indirme | A5 | ✅ | F4 | ⬜ |
@@ -67,6 +67,9 @@ kılavuzdaki her madde → `rule_id` eşleme tablosu (`rulesets/zbeu.md`) ile, k
 
 Bitti: ZBEÜ şablonundan üretilmiş "temiz" belgede 0 hata; kasıtlı bozulmuş kopyada beklenen bulgular.
 ⛔ Kılavuz gelene kadar şema ve motor `rulesets/example.yaml` ile geliştirilir.
+
+Not (F2'de yapıldı): F3 gelene kadar roller stil adı + yapı + yerel desenlerle atanır
+(`synora.roles`). Stilsiz, elle kalınlaştırılmış kısa satırlar "rolü belirsiz" sayılır ve denetlenmez.
 
 ## F3 — Metni görmeyen rol sınıflandırma
 

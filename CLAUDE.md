@@ -17,7 +17,8 @@ Arayüz: Synora marka kiti (https://claude.ai/artifact/Bg7bwS9wQZqqiyaEWTHzMK) d
 ## Komutlar
 - Test: `uv run pytest -q`
 - Lint/tip: `uv run ruff check . && uv run mypy src`
-- CLI: `uv run synora check <docx> --ruleset <yaml>`
+- CLI: `uv run synora check <docx> --ruleset rulesets/example.yaml [--format json]`
+- `uv` PATH'te değilse: `python -m uv run ...`
 
 ## Çalışma biçimi
 - Önce test yaz, sonra kod. Mevcut bir testi geçirmek için assertion'ı değiştirme; neden başarısız olduğunu açıkla.
