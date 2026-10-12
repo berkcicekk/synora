@@ -12,7 +12,7 @@
 | F2 | Kural seti + denetim, `synora check` | A3, A6, A7 (JSON/terminal), A8 | | F1, ZBEÜ kılavuzu (⛔ yalnızca `zbeu.yaml` için) | ✅ (`zbeu.yaml` ⛔) |
 | F3 | Metni görmeyen rol sınıflandırma | A4 | | F2 | ✅ |
 | F4 | Web: yükle → rapor | A9, A10, A11, A7 (HTML) | ✅ | F3, marka kiti | ✅ |
-| F5 | Düzeltici + indirme | A5 | ✅ | F4 | ⬜ |
+| F5 | Düzeltici + indirme | A5 | ✅ | F4 | ✅ |
 | P | ZBEÜ pilotu | yayın, KVKK, destek | | F5 + dış işler | ⬜ |
 | F6 | Yerel model (seçenek B) | A4 | | pilot verisi | ⬜ |
 
@@ -110,6 +110,16 @@ düzeltilmiş dosyanın Word ve LibreOffice'te açıldığının testi; web'den 
 "Word'de nasıl düzeltilir" yönergeleri.
 
 Bitti: düzeltilmiş belge yeniden denetlendiğinde düzeltilebilir hata sayısı 0; fingerprint her testte eşit.
+
+Yapılan (2026-10-12), kullanıcı kararlarıyla:
+- Düzeltmeler **izlenen biçim değişikliği** (pPrChange/rPrChange/sectPrChange, yazar "Synora").
+- Sunucu dosya tutmaz: düzeltilmiş/yorumlu kopya için öğrenci **aynı dosyayı yeniden seçer**;
+  yalnızca SHA-256 özeti karşılaştırılır, çıktı doğrudan indirilir.
+- **Yorumlu kopya**: her bulgu ilgili paragrafa Word yorumu olarak eklenir.
+- Beş doğrulama kapısı (metin, yeniden okuma, yeniden denetim, dokunulmayan part'lar, yapı).
+- Bilerek otomatik düzeltilmeyenler: gövdedeki italik/kalın kaldırma, rolü belirsiz paragraflar,
+  kapak, öğrencinin kendi değişiklik kaydı olan paragraflar, bölüm sayısı eşleşmeyen sayfa numaraları.
+- LibreOffice ile açılabilirlik otomatik test ediliyor. **Açık:** Word'de elle açılış testi.
 
 ## P — ZBEÜ pilotu
 

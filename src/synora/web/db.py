@@ -51,6 +51,7 @@ class Job:
     finished_at: float | None
     error_code: str | None
     report: str | None
+    source_sha256: str | None = None  # yeniden yüklemede "aynı dosya mı" denetimi için
 
 
 class Database:
@@ -63,6 +64,9 @@ class Database:
         self._lock = threading.Lock()
         with self._lock:
             self._conn.executescript(SCHEMA)
+            columns = {row[1] for row in self._conn.execute("PRAGMA table_info(jobs)")}
+            if "source_sha256" not in columns:
+                self._conn.execute("ALTER TABLE jobs ADD COLUMN source_sha256 TEXT")
             # Yeniden başlatmada yarıda kalan işler: dosya bellekteydi, artık yok.
             self._conn.execute(
                 "UPDATE jobs SET status='failed', error_code='INTERRUPTED', finished_at=? "
@@ -127,10 +131,12 @@ class Database:
     def set_running(self, job_id: str) -> None:
         self.execute("UPDATE jobs SET status='running' WHERE id=?", (job_id,))
 
-    def finish_job(self, job_id: str, *, report: str | None, error_code: str | None) -> None:
+    def finish_job(self, job_id: str, *, report: str | None, error_code: str | None,
+                   source_sha256: str | None = None) -> None:
         status = "done" if report is not None else "failed"
-        self.execute("UPDATE jobs SET status=?, report=?, error_code=?, finished_at=? WHERE id=?",
-                     (status, report, error_code, time.time(), job_id))
+        self.execute("UPDATE jobs SET status=?, report=?, error_code=?, finished_at=?, "
+                     "source_sha256=? WHERE id=?",
+                     (status, report, error_code, time.time(), source_sha256, job_id))
 
     def get_job(self, job_id: str) -> Job | None:
         row = self.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()

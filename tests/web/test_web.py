@@ -68,7 +68,7 @@ def upload(client: TestClient, csrf: str, data: bytes, ruleset: str = "example")
 
 
 def wait_done(client: TestClient, job_id: str) -> str:
-    for _ in range(200):
+    for _ in range(1200):  # yük altında (ör. LibreOffice testleri) 60 sn'ye kadar bekle
         status = client.get(f"/jobs/{job_id}/status").json()["status"]
         if status not in ("queued", "running"):
             return str(status)
@@ -278,3 +278,76 @@ def test_static_fonts_served_locally(client: TestClient) -> None:
     assert css.status_code == 200
     assert "fonts.gstatic.com" not in css.text
     assert client.get("/static/fonts/schibsted-grotesk-latin-ext.woff2").status_code == 200
+
+
+# --- F5: düzeltilmiş / yorumlu kopya ---------------------------------------------------------
+
+
+def output(client: TestClient, csrf: str, job_id: str, kind: str, data: bytes):  # type: ignore[no-untyped-def]
+    return client.post(f"/jobs/{job_id}/output/{kind}", content=data,
+                       headers={"X-CSRF-Token": csrf, "Content-Type": "application/octet-stream"})
+
+
+@pytest.mark.parametrize("kind", ["fixed", "annotated"])
+def test_output_with_same_file(client: TestClient, mailer: ConsoleMailer, kind: str) -> None:
+    from synora.fingerprint import content_fingerprint
+    from synora.ingest import open_docx
+
+    csrf = login(client, mailer)
+    data = bad_thesis()
+    job_id = upload(client, csrf, data)
+    assert wait_done(client, job_id) == "done"
+    assert "Düzeltilmiş kopyayı indir" in client.get(f"/jobs/{job_id}").text
+    res = output(client, csrf, job_id, kind, data)
+    assert res.status_code == 200, res.text
+    assert res.headers["content-type"].startswith("application/vnd.openxmlformats")
+    assert "attachment" in res.headers["content-disposition"]
+    assert content_fingerprint(open_docx(res.content)) == content_fingerprint(open_docx(data))
+
+
+def test_output_rejects_different_file(client: TestClient, mailer: ConsoleMailer) -> None:
+    csrf = login(client, mailer)
+    job_id = upload(client, csrf, bad_thesis())
+    wait_done(client, job_id)
+    res = output(client, csrf, job_id, "fixed", thesis())
+    assert res.status_code == 409
+    assert "denetlenen dosya değil" in res.json()["error"]
+
+
+def test_output_requires_csrf_and_ownership(settings: Settings, mailer: ConsoleMailer) -> None:
+    app = create_app(settings, mailer)
+    with TestClient(app) as alice, TestClient(app) as bob:
+        data = bad_thesis()
+        a_csrf = login(alice, mailer, "alice@beun.edu.tr")
+        job_id = upload(alice, a_csrf, data)
+        wait_done(alice, job_id)
+        assert output(alice, "yanlis", job_id, "fixed", data).status_code == 403
+        b_csrf = login(bob, mailer, "bob@beun.edu.tr")
+        assert output(bob, b_csrf, job_id, "fixed", data).status_code == 404
+
+
+def test_output_nothing_to_fix(client: TestClient, mailer: ConsoleMailer) -> None:
+    csrf = login(client, mailer)
+    data = thesis()
+    job_id = upload(client, csrf, data)
+    wait_done(client, job_id)
+    res = output(client, csrf, job_id, "fixed", data)
+    assert res.status_code == 422
+    assert "NOTHING_TO_FIX" in res.json()["error"]
+
+
+def test_source_hash_stored_not_file(client: TestClient, mailer: ConsoleMailer,
+                                     settings: Settings) -> None:
+    import hashlib
+    csrf = login(client, mailer)
+    data = bad_thesis()
+    job_id = upload(client, csrf, data)
+    wait_done(client, job_id)
+    job = client.app.state.db.get_job(job_id)  # type: ignore[attr-defined]
+    assert job.source_sha256 == hashlib.sha256(data).hexdigest()
+
+
+def test_css_respects_hidden_attribute(client: TestClient) -> None:
+    # .button/.card display tanımları [hidden]'ı ezerse onay düğmesi ve filtreler bozulur.
+    css = client.get("/static/app.css").text
+    assert "[hidden] { display: none !important; }" in css

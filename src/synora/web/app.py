@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -44,6 +45,12 @@ CSP = (
     "font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; "
     "frame-ancestors 'none'; form-action 'self'"
 )
+OUTPUT_FILES = {"fixed": "synora-duzeltilmis.docx", "annotated": "synora-yorumlu.docx"}
+DOCX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+OUTPUT_ERRORS = {
+    "NOTHING_TO_FIX": "Bu belgede otomatik düzeltilebilecek bir bulgu yok.",
+    "TIMEOUT": "İşlem süre sınırını aştı. Raporu kullanarak Word'de düzeltebilirsiniz.",
+}
 JOB_ERRORS = {
     "TIMEOUT": "Denetim süre sınırını aştı. Belge çok büyük ya da karmaşık olabilir.",
     "INTERNAL": "Beklenmeyen bir hata oluştu. Dosyanızı Word'de açıp yeniden kaydedip deneyin.",
@@ -370,13 +377,50 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         db.delete_job(job_id)
         return RedirectResponse("/", status_code=303)
 
+    @app.post("/jobs/{job_id}/output/{kind}")
+    async def job_output(request: Request, job_id: str, kind: str) -> Response:
+        """Düzeltilmiş ya da yorumlu kopya. Sunucu tezi saklamadığı için öğrenci aynı dosyayı
+        yeniden seçer; yalnızca SHA-256 özeti karşılaştırılır, sonuç doğrudan indirilir."""
+        user = require_user(request)
+        check_csrf(user.csrf, request.headers.get("x-csrf-token"))
+        if kind not in OUTPUT_FILES:
+            raise HTTPException(404)
+        job = own_job(user, job_id)
+        ruleset = rulesets.get(job.ruleset)
+        if job.status != "done" or ruleset is None or not job.source_sha256:
+            raise HTTPException(409, "Bu denetim için kopya üretilemiyor.")
+        chunks: list[bytes] = []
+        size = 0
+        async for chunk in request.stream():
+            size += len(chunk)
+            if size > settings.max_upload_bytes:
+                raise HTTPException(413, "Dosya çok büyük.")
+            chunks.append(chunk)
+        data = b"".join(chunks)
+        if not hmac.compare_digest(hashlib.sha256(data).hexdigest(), job.source_sha256):
+            raise HTTPException(409, "Bu, denetlenen dosya değil. Aynı dosyayı seçin ya da "
+                                     "yeni dosya için yeni bir denetim başlatın.")
+        result = await run_in_threadpool(runner.make_output, kind,  # type: ignore[arg-type]
+                                         job_id, data, str(ruleset.path))
+        del data, chunks
+        if result["docx"] is None:
+            code = result["error_code"] or "INTERNAL"
+            message = OUTPUT_ERRORS.get(code, "Belge otomatik olarak işlenemedi; metninizin "
+                                              "korunması için dosya üretilmedi. Raporu kullanarak "
+                                              "Word'de düzeltebilirsiniz.")
+            raise HTTPException(422, f"{message} (kod: {code})")
+        return Response(result["docx"], media_type=DOCX_TYPE, headers={
+            "Content-Disposition": f'attachment; filename="{OUTPUT_FILES[kind]}"'})
+
     @app.get("/health")
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
     @app.exception_handler(HTTPException)
     async def http_error(request: Request, exc: HTTPException) -> Response:
-        if request.url.path == "/jobs" and request.method == "POST":
+        if request.method == "POST" and (
+            request.url.path == "/jobs" or "/output/" in request.url.path
+        ):
             return JSONResponse({"error": exc.detail}, status_code=exc.status_code)
         if exc.status_code == 401:
             return RedirectResponse("/", status_code=303)

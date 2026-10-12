@@ -11,7 +11,8 @@ Arayüz: Synora marka kiti (https://claude.ai/artifact/Bg7bwS9wQZqqiyaEWTHzMK) d
 - Tez metni loglanmaz, exception mesajına konmaz. Log'da yalnızca job_id, para_id, hash.
 - Hiçbir model (LLM dahil) tez metnini görmez; yalnızca `ParaFeatures` (enum/sayı/bool, str alan yok) alır.
 - Model çıktısı yalnızca Pydantic ile doğrulanmış enum + float. Serbest metin kabul edilmez.
-- Yüklenen dosya ve rapor saklama süresi dolunca silinir; tez içeriği kalıcı depolamaya yazılmaz.
+- Tez dosyası diske/veritabanına yazılmaz (yalnızca SHA-256 özeti). Rapor 24 saat sonra silinir.
+- A5 çıktısı `write.verify_output` kapılarından geçmeden kullanıcıya verilmez; kapıları gevşetme.
 - tests/fixtures/real/ altına gerçek tez KOYMA; yalnızca sentetik veya izinli belge.
 
 ## Komutlar

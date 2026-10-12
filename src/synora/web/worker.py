@@ -16,46 +16,74 @@ from multiprocessing.connection import Connection
 
 from synora.log import log_event
 from synora.web.db import Database
-from synora.web.pipeline import PipelineResult, run_pipeline
+from synora.web.pipeline import (
+    OutputKind,
+    OutputResult,
+    PipelineResult,
+    run_output,
+    run_pipeline,
+)
 from synora.web.settings import Settings
 
 MEMORY_LIMIT_BYTES = 2 * 1024 * 1024 * 1024
 
 
-def _child(conn: Connection, ruleset_path: str, job_id: str, cpu_seconds: int) -> None:
+def _child(
+    conn: Connection, task: str, ruleset_path: str, job_id: str, cpu_seconds: int
+) -> None:
     if sys.platform != "win32":
         import resource
 
         resource.setrlimit(resource.RLIMIT_AS, (MEMORY_LIMIT_BYTES, MEMORY_LIMIT_BYTES))
         resource.setrlimit(resource.RLIMIT_CPU, (cpu_seconds, cpu_seconds))
     data = conn.recv_bytes()
-    conn.send(run_pipeline(data, ruleset_path, job_id))
+    if task == "check":
+        conn.send(run_pipeline(data, ruleset_path, job_id))
+    elif task in ("fixed", "annotated"):
+        conn.send(run_output(task, data, ruleset_path, job_id))  # type: ignore[arg-type]
     conn.close()
 
 
-def run_isolated(data: bytes, ruleset_path: str, job_id: str, timeout: float) -> PipelineResult:
+def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: float) -> object:
+    """Görevi ayrı süreçte çalıştırır; süre aşımında süreci sonlandırır.
+    Başarısızlıkta hata kodu (str) döner."""
     ctx = mp.get_context("spawn")
     parent, child = ctx.Pipe()
-    proc = ctx.Process(target=_child, args=(child, ruleset_path, job_id, int(timeout) + 5),
-                       daemon=True)
+    proc = ctx.Process(target=_child,
+                       args=(child, task, ruleset_path, job_id, int(timeout) + 5), daemon=True)
     proc.start()
     child.close()
     try:
         parent.send_bytes(data)
         if parent.poll(timeout):
-            result: PipelineResult = parent.recv()
-            return result
+            return parent.recv()
         log_event("job.timeout", job_id=job_id, code="TIMEOUT")
-        return {"report": None, "error_code": "TIMEOUT"}
+        return "TIMEOUT"
     except (EOFError, OSError):
         # Süreç çöktü ya da bellek sınırına takıldı.
-        return {"report": None, "error_code": "INTERNAL"}
+        return "INTERNAL"
     finally:
         parent.close()
         proc.join(1)
         if proc.is_alive():
             proc.terminate()
             proc.join(1)
+
+
+def run_isolated(data: bytes, ruleset_path: str, job_id: str, timeout: float) -> PipelineResult:
+    result = _spawn("check", data, ruleset_path, job_id, timeout)
+    if isinstance(result, str):
+        return {"report": None, "error_code": result, "source_sha256": None}
+    return result  # type: ignore[return-value]
+
+
+def output_isolated(
+    kind: OutputKind, data: bytes, ruleset_path: str, job_id: str, timeout: float
+) -> OutputResult:
+    result = _spawn(kind, data, ruleset_path, job_id, timeout)
+    if isinstance(result, str):
+        return {"docx": None, "error_code": result}
+    return result  # type: ignore[return-value]
 
 
 class JobRunner:
@@ -90,7 +118,17 @@ class JobRunner:
         else:
             result = run_pipeline(data, ruleset_path, job_id)
         if self.db.get_job(job_id) is not None:  # kullanıcı bu arada silmiş olabilir
-            self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"])
+            self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"],
+                               source_sha256=result["source_sha256"])
+
+    def make_output(
+        self, kind: OutputKind, job_id: str, data: bytes, ruleset_path: str
+    ) -> OutputResult:
+        """Düzeltilmiş/yorumlu kopyayı istek içinde üretir; sonuç saklanmaz."""
+        if self.settings.isolate_jobs:
+            return output_isolated(kind, data, ruleset_path, job_id,
+                                   self.settings.job_timeout_seconds)
+        return run_output(kind, data, ruleset_path, job_id)
 
     def _loop(self) -> None:
         while not self._stop.is_set():

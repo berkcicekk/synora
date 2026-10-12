@@ -152,8 +152,9 @@ def _page_numbering(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[F
         if not actual or actual[-1] != fmt:
             actual.append(fmt)
     if actual != expected:
+        # Hangi bölümün ön bölüm olduğu tahmin edilmez: yalnızca grup sayısı eşleşiyorsa düzeltilir.
         yield Finding("page_numbering.formats", Severity.ERROR, ",".join(expected),
-                      ",".join(actual), True)
+                      ",".join(actual), len(actual) == len(expected))
 
 
 # --- Paragraf ---------------------------------------------------------------------------
@@ -166,8 +167,8 @@ def _paragraph_rules(
     prefix = role.value
     props = p.props
 
-    def err(name: str, expected: str, actual: str) -> Finding:
-        return Finding(f"{prefix}.{name}", Severity.ERROR, expected, actual, True)
+    def err(name: str, expected: str, actual: str, fixable: bool = True) -> Finding:
+        return Finding(f"{prefix}.{name}", Severity.ERROR, expected, actual, fixable)
 
     allowed = rr.font or rules.fonts.allowed
     if allowed:
@@ -189,7 +190,9 @@ def _paragraph_rules(
     )
     for name, want, have in toggles:
         if want is not None and bool(have) != want:
-            yield err(name, str(want).lower(), str(bool(have)).lower())
+            # Kalın/italik kaldırmak kasıtlı vurguyu (ör. Latince terimler) bozabilir:
+            # yalnızca "olmalı" yönündeki bulgular otomatik düzeltilebilir.
+            yield err(name, str(want).lower(), str(bool(have)).lower(), fixable=want)
 
     if rr.alignment is not None:
         actual_align = props.alignment.value if props.alignment else "left"

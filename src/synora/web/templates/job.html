@@ -35,7 +35,7 @@
     <h1>Kılavuza aykırı biçim bulunamadı.</h1>
     {% else %}
     <h1>{{ s.errors }} hata, {{ s.warnings }} uyarı.</h1>
-    <p class="lead">Otomatik düzeltilebilir: {{ s.fixable }}. Düzeltme özelliği yakında.</p>
+    <p class="lead">Otomatik düzeltilebilir: {{ s.fixable }}.</p>
     {% endif %}
   </div>
   <dl class="stats">
@@ -84,6 +84,35 @@
     </li>
     {% endfor %}
   </ol>
+  <p id="filter-empty" class="muted" hidden>Bu süzgeçte bulgu yok.</p>
+</section>
+{% endif %}
+
+{% if s.errors or s.warnings %}
+<section class="panel outputs" id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}">
+  <h2>Word'de düzeltin</h2>
+  <p class="reading">Gizliliğiniz için dosyanızı saklamıyoruz. Aşağıdaki kopyalar için aynı
+     dosyayı yeniden seçmeniz istenir; dosya yalnızca bu işlem için kullanılır.</p>
+  <div class="output-grid">
+    {% if s.fixable %}
+    <div class="output">
+      <h3>Düzeltilmiş kopya</h3>
+      <p class="muted">{{ s.fixable }} düzeltme, Word'de “Synora” adıyla izlenen değişiklik olarak
+         gelir. İnceleyip <strong>Gözden Geçir › Tümünü Kabul Et</strong> deyin; istemediğinizi
+         reddedebilirsiniz. Metniniz değişmez.</p>
+      <button type="button" class="primary" data-output="fixed">Düzeltilmiş kopyayı indir</button>
+    </div>
+    {% endif %}
+    <div class="output">
+      <h3>Yorumlu kopya</h3>
+      <p class="muted">Her bulgu, belgenizde ilgili paragrafın yanına yorum olarak eklenir.
+         Düzeltilemeyen hataları yerinde görmek için.</p>
+      <button type="button" data-output="annotated">Yorumlu kopyayı indir</button>
+    </div>
+  </div>
+  <input type="file" id="output-file" class="visually-hidden" tabindex="-1" aria-hidden="true"
+         accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+  <p id="output-status" class="status" role="status" aria-live="polite"></p>
 </section>
 {% endif %}
 

@@ -51,6 +51,26 @@ _NOTE_SKIP_TYPES = frozenset({"separator", "continuationSeparator", "continuatio
 _BODY_CONTAINERS = frozenset({w("sdt"), w("sdtContent"), w("customXml")})
 
 
+@dataclass(frozen=True)
+class ParaElements:
+    """Bir paragrafın XML öğesi ve metin taşıyan run öğeleri (A5 yazıcısı için)."""
+
+    p: Any
+    runs: tuple[tuple[Any, RunInfo], ...]
+
+
+@dataclass(frozen=True)
+class ParseResult:
+    """DocModel + yazıcının değiştireceği canlı XML ağaçları. Aynı yürüyüşten çıktıkları için
+    para_id → öğe eşlemesi DocModel ile birebir tutarlıdır."""
+
+    doc: DocModel
+    roots: dict[str, Any]  # part adı → kök öğe (hikâye part'ları + styles)
+    paragraphs: dict[str, ParaElements]
+    body: Any | None  # w:body
+    section_elements: tuple[Any | None, ...]  # bölüm sırasıyla sectPr (son eksikse None)
+
+
 @dataclass
 class _Ctx:
     pkg: DocxPackage
@@ -58,11 +78,16 @@ class _Ctx:
     numbering: Numbering
     main_rels: dict[str, str | None]
     paragraphs: list[Paragraph] = field(default_factory=list)
+    elements: dict[str, ParaElements] = field(default_factory=dict)
     used_ids: set[str] = field(default_factory=set)
     counter: int = 0
 
 
 def parse_package(pkg: DocxPackage) -> DocModel:
+    return parse_document(pkg).doc
+
+
+def parse_document(pkg: DocxPackage) -> ParseResult:
     main_root = parse_part(pkg, pkg.main_part)
     if main_root.tag != w("document"):
         raise ParseError(ErrorCode.NOT_WORDML)
@@ -82,17 +107,23 @@ def parse_package(pkg: DocxPackage) -> DocModel:
     )
 
     sections: list[Section] = []
+    section_elements: list[Any | None] = []
+    body_el: Any | None = None
+    roots: dict[str, Any] = {}
     tracked = False
     for story, part in story_parts(pkg):
         root = main_root if part == pkg.main_part else parse_part(pkg, part)
+        roots[part] = root
         tracked = tracked or any(el.tag in TRACKED_CHANGE_TAGS for el in root.iter())
         walker = _StoryWalker(ctx, story, part)
         if story is Story.BODY:
             body = child(root, "body")
+            body_el = body
             if body is not None:
                 walker.walk(body)
                 final = child(body, "sectPr")
                 walker.section_elements.append(final)
+            section_elements = list(walker.section_elements)
             sections = [
                 _read_section(i, el, ctx.main_rels)
                 for i, el in enumerate(walker.section_elements)
@@ -105,12 +136,13 @@ def parse_package(pkg: DocxPackage) -> DocModel:
         else:
             walker.walk(root)
 
-    return DocModel(
+    doc = DocModel(
         sections=tuple(sections),
         paragraphs=tuple(ctx.paragraphs),
         has_tracked_changes=tracked,
         source_sha256=pkg.sha256,
     )
+    return ParseResult(doc, roots, dict(ctx.elements), body_el, tuple(section_elements))
 
 
 class _StoryWalker:
@@ -151,6 +183,7 @@ class _StoryWalker:
         base_rpr = styles.doc_rpr.merge(style_rpr)
 
         runs: list[RunInfo] = []
+        run_elements: list[tuple[Any, RunInfo]] = []
         texts: list[str] = []
         kinds: set[str] = set()
         page_break = False
@@ -162,7 +195,9 @@ class _StoryWalker:
             rprops = base_rpr.merge(styles.character_style(char_style)).merge(
                 read_rpr(rpr_el, styles.theme)
             )
-            runs.append(RunInfo(rprops, len(rt.text), rt.field_kind, rt.inserted))
+            info = RunInfo(rprops, len(rt.text), rt.field_kind, rt.inserted)
+            runs.append(info)
+            run_elements.append((rt.run, info))
             texts.append(rt.text)
             page_break = page_break or rt.page_break
             if rt.field_kind:
@@ -173,9 +208,11 @@ class _StoryWalker:
         else:
             dominant = base_rpr.merge(read_rpr(child(ppr_el, "rPr"), styles.theme))
 
+        para_id = self._para_id(p)
+        ctx.elements[para_id] = ParaElements(p, tuple(run_elements))
         ctx.paragraphs.append(
             Paragraph(
-                para_id=self._para_id(p),
+                para_id=para_id,
                 story=self.story,
                 part=self.part,
                 index=self.index,

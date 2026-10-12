@@ -233,8 +233,9 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
 
 ### 10.3 Veri ve KVKK
 
-- Dosyalar diskte şifreli tutulur; **saklama süresi** iş bitiminden itibaren en fazla 24 saat `[KARAR?]`, sonra
-  A10 siler. Rapor da aynı süreyle silinir; yalnızca anonim sayaçlar (kural bazlı hata sayıları) kalır.
+- Tez dosyası **diske hiç yazılmaz**: bellekte, ayrı süreçte işlenir. Düzeltilmiş/yorumlu kopya için öğrenci
+  aynı dosyayı yeniden seçer; sunucu yalnızca ilk yüklemenin SHA-256 özetini tutar. Rapor (metin içermez,
+  başlık yolları hariç) 24 saat sonra silinir; öğrenci hemen silebilir.
 - Sunucu Türkiye'de barındırılır (KVKK yurt dışı aktarım). Model katmanı metin görmediği için tez metni hiçbir
   koşulda üçüncü tarafa gitmez.
 - KVKK aydınlatma metni ve açık rıza (rol düzeltmelerinin eğitim verisi olarak kullanımı için ayrı onay).

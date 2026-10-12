@@ -103,7 +103,63 @@
         || card.dataset.severity === f;
       card.hidden = !show;
     });
+    const empty = document.getElementById("filter-empty");
+    if (empty) empty.hidden = document.querySelectorAll(".card:not([hidden])").length > 0;
   }));
+
+  // --- Düzeltilmiş / yorumlu kopya --------------------------------------------------------
+  const outputs = document.getElementById("outputs");
+  if (outputs) {
+    const picker = document.getElementById("output-file");
+    const status = document.getElementById("output-status");
+    let kind = null;
+    const say = (msg, isError) => {
+      status.textContent = msg;
+      status.classList.toggle("error", Boolean(isError));
+    };
+    outputs.querySelectorAll("[data-output]").forEach((btn) => btn.addEventListener("click", () => {
+      kind = btn.dataset.output;
+      say("Denetlediğiniz dosyayı yeniden seçin.");
+      picker.value = "";
+      picker.click();
+    }));
+    picker.addEventListener("change", async () => {
+      const file = picker.files[0];
+      if (!file || !kind) return;
+      const buttons = outputs.querySelectorAll("[data-output]");
+      buttons.forEach((b) => { b.disabled = true; });
+      say("Hazırlanıyor… Metninizin değişmediği doğrulanıyor.");
+      try {
+        const res = await fetch("/jobs/" + outputs.dataset.job + "/output/" + kind, {
+          method: "POST",
+          headers: { "Content-Type": "application/octet-stream",
+                     "X-CSRF-Token": outputs.dataset.csrf },
+          body: file,
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          say(data.error || "Kopya hazırlanamadı. Sayfayı yenileyip yeniden deneyin.", true);
+          return;
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = kind === "fixed" ? "synora-duzeltilmis.docx" : "synora-yorumlu.docx";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        say(kind === "fixed"
+          ? "İndirildi. Word'de açıp Gözden Geçir › Tümünü Kabul Et deyin."
+          : "İndirildi. Yorumlar Word'ün sağ kenarında görünür.");
+      } catch (err) {
+        say("Bağlantı hatası. Yeniden deneyin.", true);
+      } finally {
+        buttons.forEach((b) => { b.disabled = false; });
+      }
+    });
+  }
 
   // --- Silme onayı (tarayıcı confirm() yerine sayfa içi) ------------------------------------
   document.querySelectorAll("[data-confirm]").forEach((btn) => btn.addEventListener("click", () => {
