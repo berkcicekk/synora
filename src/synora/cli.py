@@ -75,3 +75,24 @@ def check_command(
         typer.echo(text, nl=False)
     has_errors = any(f.severity is Severity.ERROR for f in result.findings)
     raise typer.Exit(1 if has_errors else 0)
+
+
+@app.command("serve")
+def serve_command(
+    host: Annotated[str, typer.Option(help="Dinlenecek adres")] = "127.0.0.1",
+    port: Annotated[int, typer.Option(help="Port")] = 8000,
+    dev: Annotated[
+        bool, typer.Option("--dev", help="Geliştirme: giriş bağlantısı konsola yazılır")
+    ] = False,
+) -> None:
+    """Web arayüzünü başlatır."""
+    import os
+
+    import uvicorn
+
+    if dev:
+        os.environ.setdefault("SYNORA_DEV", "1")
+        os.environ.setdefault("SYNORA_BASE_URL", f"http://{host}:{port}")
+    from synora.web.app import create_app
+
+    uvicorn.run(create_app(), host=host, port=port, proxy_headers=True, server_header=False)

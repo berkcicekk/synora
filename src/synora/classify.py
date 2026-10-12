@@ -66,7 +66,7 @@ def classify(f: ParaFeatures) -> RoleDecision:
         return _d(_caption_role(f), 0.85)
 
     # Kapak: ilk sayfadaki kısa satırlar (üniversite adı, "T.C.", danışman, tarih).
-    # Kapak kuralları ayrı bir rol olarak eklenene kadar denetlenmez.
+    # Kapak kuralları kural setine eklenene kadar denetlenmez.
     if (
         f.on_first_page
         and f.word_count <= 12
@@ -76,7 +76,7 @@ def classify(f: ParaFeatures) -> RoleDecision:
             or not f.ends_with_sentence_punct
         )
     ):
-        return UNKNOWN
+        return _d(Role.COVER, 0.8)
 
     # Desen sinyalleri
     if f.toc_like and f.word_count <= 25:

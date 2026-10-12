@@ -141,10 +141,10 @@ def mixed(rng: random.Random, ch: int) -> list[Sample]:
 def front_matter(rng: random.Random) -> list[Sample]:
     center = '<w:jc w:val="center"/><w:ind w:firstLine="0"/>'
     return [
-        (p(r("T.C.", rpr="<w:b/>"), ppr=center), Role.UNKNOWN),
-        (p(r("ZONGULDAK BÜLENT ECEVİT ÜNİVERSİTESİ", rpr="<w:b/>"), ppr=center), Role.UNKNOWN),
-        (p("Danışman: Doç. Dr. Ayşe KARA", ppr=center), Role.UNKNOWN),
-        (p("Zonguldak, 2026", ppr=center), Role.UNKNOWN),
+        (p(r("T.C.", rpr="<w:b/>"), ppr=center), Role.COVER),
+        (p(r("ZONGULDAK BÜLENT ECEVİT ÜNİVERSİTESİ", rpr="<w:b/>"), ppr=center), Role.COVER),
+        (p("Danışman: Doç. Dr. Ayşe KARA", ppr=center), Role.COVER),
+        (p("Zonguldak, 2026", ppr=center), Role.COVER),
         (p(r("ÖZET", rpr="<w:b/>"), ppr=center + "<w:pageBreakBefore/>"), Role.HEADING_1),
         body(rng),
         (p(r("İÇİNDEKİLER", rpr="<w:b/>"), ppr=center + "<w:pageBreakBefore/>"), Role.HEADING_1),

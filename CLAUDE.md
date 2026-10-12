@@ -18,6 +18,8 @@ Arayüz: Synora marka kiti (https://claude.ai/artifact/Bg7bwS9wQZqqiyaEWTHzMK) d
 - Test: `uv run pytest -q`
 - Lint/tip: `uv run ruff check . && uv run mypy src`
 - CLI: `uv run synora check <docx> --ruleset rulesets/example.yaml [--format json]`
+- Web (geliştirme): `uv run synora serve --dev` → giriş bağlantısı konsola yazılır
+- Demo: `uv run python scripts/demo.py`
 - `uv` PATH'te değilse: `python -m uv run ...`
 
 ## Çalışma biçimi

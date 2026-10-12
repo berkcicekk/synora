@@ -41,10 +41,12 @@ class CheckResult:
     roles: dict[str, RoleDecision]
     checked_paragraphs: int
     unknown_paragraphs: int
+    cover_paragraphs: int = 0
 
 
 SKIPPED_ROLES = frozenset(
-    {Role.EMPTY, Role.UNKNOWN, Role.TABLE_CELL, Role.TEXTBOX, Role.HEADER_FOOTER, Role.TOC_ENTRY}
+    {Role.EMPTY, Role.UNKNOWN, Role.TABLE_CELL, Role.TEXTBOX, Role.HEADER_FOOTER, Role.TOC_ENTRY,
+     Role.COVER}
 )
 
 
@@ -54,7 +56,7 @@ def check(doc: DocModel, rules: Ruleset) -> CheckResult:
     findings.extend(_document_rules(doc, rules))
     findings.extend(_page_rules(doc.sections, rules))
     findings.extend(_page_numbering(doc.sections, rules))
-    checked = unknown = 0
+    checked = unknown = cover = 0
     body = doc.body()
     body_index = {p.para_id: i for i, p in enumerate(body)}
     starts_page = page_starts(body)
@@ -62,6 +64,8 @@ def check(doc: DocModel, rules: Ruleset) -> CheckResult:
         decision = roles[para.para_id]
         if decision.role is Role.UNKNOWN:
             unknown += 1
+        elif decision.role is Role.COVER:
+            cover += 1
         if decision.role in SKIPPED_ROLES:
             continue
         role_rules = rules.roles.get(decision.role)
@@ -73,7 +77,7 @@ def check(doc: DocModel, rules: Ruleset) -> CheckResult:
             findings.append(
                 _locate(f, para, decision.role, body_index.get(para.para_id))
             )
-    return CheckResult(tuple(findings), roles, checked, unknown)
+    return CheckResult(tuple(findings), roles, checked, unknown, cover)
 
 
 def _locate(f: Finding, para: Paragraph, role: Role, index: int | None) -> Finding:

@@ -11,7 +11,7 @@
 | F1 | Belge modeli + fingerprint | A2 | ✅ | F0 | ✅ |
 | F2 | Kural seti + denetim, `synora check` | A3, A6, A7 (JSON/terminal), A8 | | F1, ZBEÜ kılavuzu (⛔ yalnızca `zbeu.yaml` için) | ✅ (`zbeu.yaml` ⛔) |
 | F3 | Metni görmeyen rol sınıflandırma | A4 | | F2 | ✅ |
-| F4 | Web: yükle → rapor | A9, A10, A11, A7 (HTML) | ✅ | F3, marka kiti | ⬜ |
+| F4 | Web: yükle → rapor | A9, A10, A11, A7 (HTML) | ✅ | F3, marka kiti | ✅ |
 | F5 | Düzeltici + indirme | A5 | ✅ | F4 | ⬜ |
 | P | ZBEÜ pilotu | yayın, KVKK, destek | | F5 + dış işler | ⬜ |
 | F6 | Yerel model (seçenek B) | A4 | | pilot verisi | ⬜ |
@@ -94,6 +94,12 @@ arayüz (A11): marka kitine uygun yükleme, ilerleme, rapor ekranları, mobil ve
 e-posta ile tek kullanımlık giriş; hız sınırları; CSRF.
 
 Bitti: uçtan uca test (yükle → rapor); dosyanın süre sonunda gerçekten silindiği test; Lighthouse erişilebilirlik ≥ 95.
+
+Yapılan (2026-10-12): FastAPI + sunucu taraflı şablonlar + bağımlılıksız JS; e-posta ile tek kullanımlık
+giriş (GET bağlantıyı tüketmez); tez yalnızca bellekte, ayrı süreçte ve süre sınırıyla işlenir, diske
+yazılmaz; rapor 24 saat sonra silinir, kullanıcı hemen silebilir; CSRF, sıkı CSP (inline yok), güvenlik
+başlıkları, eşzamanlı/günlük iş sınırları; yazı tipleri yerelde (Google'a istek yok); bulgu yeri başlık
+yoluyla gösterilir. Açık: Lighthouse ölçümü yapılmadı; SMTP gerçek sunucuyla denenmedi; logo SVG yok.
 
 ## F5 — Düzeltici
 

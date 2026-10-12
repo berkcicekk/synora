@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Synora{% endblock %}</title>
+  <link rel="stylesheet" href="/static/fonts.css">
+  <link rel="stylesheet" href="/static/app.css">
+  <link rel="icon" href="/static/logo.jpg">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">İçeriğe geç</a>
+  <header class="site">
+    <div class="wrap site-inner">
+      <a class="brand" href="/">
+        <img src="/static/logo.jpg" alt="" width="40" height="27">
+        <span>Synora</span>
+      </a>
+      {% if user %}
+      <div class="who">
+        <span class="mono">{{ user.email }}</span>
+        <form method="post" action="/logout">
+          <input type="hidden" name="csrf" value="{{ user.csrf }}">
+          <button class="link" type="submit">Çıkış</button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+  <main id="main" class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-foot">
+    <div class="wrap">
+      <p>Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz.
+         Dosyanız yalnızca bellekte işlenir, sunucuya kaydedilmez.</p>
+      <p class="muted">Synora · Pilot: Zonguldak Bülent Ecevit Üniversitesi</p>
+    </div>
+  </footer>
+</body>
+</html>

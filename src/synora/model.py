@@ -36,6 +36,7 @@ class Role(StrEnum):
     TABLE_CELL = "table_cell"
     TEXTBOX = "textbox"
     HEADER_FOOTER = "header_footer"
+    COVER = "cover"  # kapak sayfası satırları
     EMPTY = "empty"
     UNKNOWN = "unknown"
 

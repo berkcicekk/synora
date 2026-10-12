@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}E-postanızı kontrol edin · Synora{% endblock %}
+{% block content %}
+<section class="panel narrow">
+  <p class="label">Bağlantı gönderildi</p>
+  <h1>E-postanızı kontrol edin.</h1>
+  <p><span class="mono">{{ email }}</span> adresine bir giriş bağlantısı gönderdik.
+     Bağlantı {{ minutes }} dakika geçerlidir ve yalnızca bir kez kullanılabilir.</p>
+  <p class="muted">E-posta gelmediyse istenmeyen posta klasörüne bakın.</p>
+  <p><a href="/">Başka bir adres kullan</a></p>
+</section>
+{% endblock %}

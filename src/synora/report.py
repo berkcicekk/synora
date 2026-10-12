@@ -141,6 +141,7 @@ def summary(result: CheckResult) -> dict[str, int]:
         "fixable": fixable,
         "checked_paragraphs": result.checked_paragraphs,
         "unknown_paragraphs": result.unknown_paragraphs,
+        "cover_paragraphs": result.cover_paragraphs,
     }
 
 
@@ -168,6 +169,11 @@ def to_text(result: CheckResult, rules: Ruleset, *, max_locations: int = 8) -> s
         lines.append(
             f"{s['errors']} hata, {s['warnings']} uyarı. "
             f"Otomatik düzeltilebilir: {s['fixable']}."
+        )
+    if s["cover_paragraphs"]:
+        lines.append(
+            f"Kapak sayfası ({s['cover_paragraphs']} satır) denetlenmedi; "
+            "kapak kuralları bu kural setinde tanımlı değil."
         )
     if s["unknown_paragraphs"]:
         lines.append(

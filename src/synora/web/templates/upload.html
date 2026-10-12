@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Tez yükle · Synora{% endblock %}
+{% block content %}
+<section class="intro">
+  <p class="label">Yeni denetim</p>
+  <h1>Tezinizi yükleyin.</h1>
+</section>
+
+<section class="panel">
+  <form id="upload" class="stack" data-csrf="{{ user.csrf }}" data-max="{{ max_mb * 1024 * 1024 }}">
+    {% if rulesets|length > 1 %}
+    <label for="ruleset">Enstitü ve kılavuz</label>
+    <select id="ruleset" name="ruleset">
+      {% for r in rulesets %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
+    </select>
+    {% elif rulesets %}
+    <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
+    <p class="muted">Kılavuz: <strong>{{ rulesets[0].name }}</strong></p>
+    {% else %}
+    <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
+    {% endif %}
+
+    <label class="drop" for="file" id="drop">
+      <svg class="icon-lg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M14 3H6v18h12V7z M14 3v4h4 M12 17v-6 M9 14l3-3 3 3"/>
+      </svg>
+      <span class="drop-title">.docx dosyanızı buraya bırakın</span>
+      <span class="muted">ya da seçmek için tıklayın · en fazla {{ max_mb }} MB</span>
+      <input id="file" name="file" type="file"
+             accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    </label>
+    <p id="upload-status" class="status" role="status" aria-live="polite"></p>
+    <button id="submit" class="primary" type="submit" disabled>Tezi denetle</button>
+  </form>
+  <p class="privacy">Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz.
+     Dosyanız işlem bitince silinir.</p>
+</section>
+
+{% if jobs %}
+<section>
+  <h2>Son denetimler</h2>
+  <p class="muted small">Raporlar {{ retention }} saat sonra kendiliğinden silinir.</p>
+  <ul class="jobs">
+    {% for j in jobs %}
+    <li>
+      <a href="/jobs/{{ j.id }}">
+        <span>{{ j.created_at | when }}</span>
+        <span class="chip chip-{{ j.status }}">{{ {"queued": "Sırada", "running": "Denetleniyor", "done": "Tamamlandı", "failed": "Başarısız"}[j.status] }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

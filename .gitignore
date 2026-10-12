@@ -15,3 +15,6 @@ tests/fixtures/real/*
 
 # Demo çıktıları (scripts/demo.py üretir)
 demo/
+
+# Yerel veritabanı
+var/
