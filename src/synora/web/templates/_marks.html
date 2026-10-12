@@ -62,3 +62,27 @@
 </svg>
 </div>
 {%- endmacro %}
+
+{# Ürün kartı illüstrasyonları: mavi üzerinde ince beyaz çizgi (Cantor8 kartları gibi). #}
+{% macro illo(kind) -%}
+<svg class="illo" viewBox="0 0 320 180" aria-hidden="true">
+  {% if kind == "report" %}
+  <rect x="40" y="18" width="104" height="144" rx="2"/>
+  <path d="M56 44 H128 M56 58 H128 M56 72 H112 M56 92 H128 M56 106 H128 M56 120 H100"/>
+  <rect x="196" y="34" width="84" height="28" rx="2"/><rect x="196" y="86" width="84" height="28" rx="2"/>
+  <path d="M128 58 H160 q8 0 8 -8 V48 H196 M112 106 H168 q8 0 8 -6 V100 H196"/>
+  <circle class="dot" cx="128" cy="58" r="3"/><circle class="dot" cx="112" cy="106" r="3"/>
+  {% elif kind == "fix" %}
+  <rect x="34" y="18" width="104" height="144" rx="2"/><rect x="182" y="18" width="104" height="144" rx="2"/>
+  <path d="M50 44 H122 M50 58 H110 M50 72 H122 M50 92 H96 M198 44 H270 M198 58 H270 M198 72 H270 M198 92 H270"/>
+  <path d="M138 90 H182 M172 80 L182 90 L172 100"/>
+  <path class="accent" d="M214 124 L226 136 L254 108"/>
+  {% else %}
+  <rect x="48" y="18" width="120" height="144" rx="2"/>
+  <path d="M64 44 H152 M64 58 H152 M64 72 H136 M64 92 H152 M64 106 H120"/>
+  <path d="M188 52 H284 V102 H222 L206 116 V102 H188 Z"/>
+  <path d="M200 68 H270 M200 84 H252"/>
+  <path d="M152 72 H188" stroke-dasharray="3 4"/>
+  {% endif %}
+</svg>
+{%- endmacro %}

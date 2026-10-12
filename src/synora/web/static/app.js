@@ -162,10 +162,20 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const layers = [...document.querySelectorAll(".parallax-layer[data-speed]")];
   if (layers.length && !reduced) {
+    // Her katman, kendi (dönüşümsüz) konumunun ekran ortasına uzaklığıyla orantılı kayar;
+    // böylece sayfanın derinindeki öğeler de yalnızca birkaç on piksel hareket eder.
+    const docTop = (el) => { let y = 0; for (let n = el; n; n = n.offsetParent) y += n.offsetTop; return y; };
+    let tops = layers.map((el) => docTop(el) + el.offsetHeight / 2);
+    window.addEventListener("resize", () => { tops = layers.map((el) => docTop(el) + el.offsetHeight / 2); });
     let ticking = false;
     const update = () => {
-      const y = window.scrollY;
-      layers.forEach((el) => { el.style.transform = "translate3d(0," + (y * Number(el.dataset.speed)).toFixed(1) + "px,0)"; });
+      const mid = window.scrollY + window.innerHeight / 2;
+      layers.forEach((el, i) => {
+        // İlk ekrandaki katmanlar açılışta yerinde durur (referans: ekran ortası).
+        const anchor = Math.max(tops[i], window.innerHeight / 2);
+        const shift = Math.max(-80, Math.min(80, (mid - anchor) * Number(el.dataset.speed)));
+        el.style.transform = "translate3d(0," + shift.toFixed(1) + "px,0)";
+      });
       ticking = false;
     };
     window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });

@@ -4,33 +4,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#FAF6EA">
+  <meta name="theme-color" content="#1447B4">
   <title>{% block title %}Synora{% endblock %}</title>
   <link rel="stylesheet" href="/static/fonts.css?v={{ asset_v }}">
   <link rel="stylesheet" href="/static/app.css?v={{ asset_v }}">
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <script src="/static/app.js?v={{ asset_v }}" defer></script>
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}app{% endblock %}">
   <a class="skip" href="#main">İçeriğe geç</a>
   {% block topbar %}
-  <header class="topbar">
-    <div class="wrap topbar-inner">
+  <header class="site-nav">
+    <div class="wrap nav-inner">
       <a class="brand" href="/" aria-label="Synora ana sayfa">{{ mark() }}<span class="word">Synora</span></a>
-      <nav class="topnav" aria-label="Site">
+      <nav class="pill" aria-label="Site">
         {% if user %}
         <a href="/" {% if active == "docs" %}aria-current="page"{% endif %}>Belgelerim</a>
-        <span class="email">{{ user.email }}</span>
-        <form method="post" action="/logout">
-          <input type="hidden" name="csrf" value="{{ user.csrf }}">
-          <button class="linkbtn" type="submit">Çıkış</button>
-        </form>
+        <a href="/#yeni">Yeni denetim</a>
         {% else %}
-        <a href="#nasil">Nasıl çalışır</a>
+        <a href="#urun">Ürün</a>
+        <a href="#kilavuz">Kılavuz</a>
         <a href="#gizlilik">Gizlilik</a>
-        <a class="btn small" href="#giris"><span class="lbl">Giriş yap</span>{{ arrow() }}</a>
         {% endif %}
       </nav>
+      <div class="nav-end">
+        {% if user %}
+        <span class="who">{{ user.email }}</span>
+        <form method="post" action="/logout">
+          <input type="hidden" name="csrf" value="{{ user.csrf }}">
+          <button class="btn small" type="submit"><span class="lbl">Çıkış</span>{{ arrow() }}</button>
+        </form>
+        {% else %}
+        <a class="btn small" href="#giris"><span class="lbl">Giriş yap</span>{{ arrow() }}</a>
+        {% endif %}
+      </div>
     </div>
   </header>
   {% endblock %}
@@ -39,11 +46,20 @@
   </main>
   {% block footer %}
   <footer class="footer">
-    <div class="wrap footer-inner">
-      <div class="sig">{{ mark() }}<span>Synora</span></div>
-      <p>Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca bellekte
-         işlenir, sunucuya kaydedilmez; rapor 24 saat sonra kendiliğinden silinir.
-         Zonguldak Bülent Ecevit Üniversitesi pilotu.</p>
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/">{{ mark() }}<span class="word">Synora</span></a>
+        <p>Tez biçim denetimi. Zonguldak Bülent Ecevit Üniversitesi pilotu.</p>
+      </div>
+      <div class="footer-col">
+        <span class="meta">Gizlilik</span>
+        <p>Metniniz değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca bellekte işlenir;
+           rapor 24 saat sonra silinir.</p>
+      </div>
+      <div class="footer-col">
+        <span class="meta">Kılavuz</span>
+        <p>ZBEÜ Tıp Fakültesi Tez Yazım Kılavuzu (2019) temel alınmıştır.</p>
+      </div>
     </div>
   </footer>
   {% endblock %}

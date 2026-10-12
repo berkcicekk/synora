@@ -1,98 +1,116 @@
 {% extends "base.html" %}
-{% from "_marks.html" import arrow, blocks, page_diagram %}
+{% from "_marks.html" import arrow, blocks, illo %}
 {% block title %}Synora · Tez biçim denetimi{% endblock %}
 {% block body_class %}landing{% endblock %}
 {% block content %}
-{# Kahraman: tek mesaj, tek eylem. Katmanlar kaydırırken farklı hızda hareket eder (parallax). #}
-<section class="hero-landing">
-  <div class="parallax-layer layer-blocks" data-speed="0.35" aria-hidden="true">{{ blocks() }}</div>
-  <div class="wrap hero-grid">
-    <div class="hero-copy parallax-layer" data-speed="-0.06">
-      <span class="eyebrow">Tez biçim denetimi</span>
-      <h1>Tezinizi kılavuza <em>teslimden önce</em> uydurun.</h1>
-      <p class="lead">Synora, Word belgenizi enstitü ya da fakülte yazım kılavuzuyla karşılaştırır,
-        hataları gösterir ve Word'de kabul edeceğiniz düzeltmeleri hazırlar. Metninize dokunmaz.</p>
-      <div class="hero-actions">
-        <a class="btn" href="#giris"><span class="lbl">Başlayın</span>{{ arrow() }}</a>
-        <a class="textlink" href="#nasil">Nasıl çalışır?</a>
-      </div>
+
+{# 1 — Kahraman: kobalt alan, üstten dökülen bloklar, alta yaslanan büyük başlık. #}
+<section class="hero">
+  <div class="hero-blocks parallax-layer" data-speed="-0.18" aria-hidden="true">{{ blocks() }}</div>
+  <div class="wrap hero-bottom">
+    <div class="hero-title">
+      <span class="meta on-blue">Tez biçim denetimi</span>
+      <h1>Tezinizi kılavuza<br>teslimden önce uydurun.</h1>
     </div>
-    {% if page %}
-    <figure class="hero-figure parallax-layer" data-speed="0.12">
-      {{ page_diagram(page) }}
-      <figcaption>{{ page.name }} · sayfa düzeni</figcaption>
-    </figure>
-    {% endif %}
+    <div class="hero-aside">
+      <p>Synora, Word belgenizi yazım kılavuzuyla karşılaştırır, hataları belgenizin üzerinde gösterir ve
+         Word'de kabul edeceğiniz düzeltmeleri hazırlar. Metninize dokunmadan.</p>
+      <a class="btn light" href="#giris"><span class="lbl">Başlayın</span>{{ arrow() }}</a>
+    </div>
+  </div>
+  <svg class="hero-lines" viewBox="0 0 1440 56" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 26 H340 q12 0 12 12 V56"/>
+    <path d="M560 56 V40 q0 -12 12 -12 H906 q12 0 12 12 V56"/>
+    <path d="M1100 56 V42 q0 -12 12 -12 H1440"/>
+  </svg>
+</section>
+
+{# 2 — Ürün: tek yüklemeden üç çıktı. #}
+<section class="products" id="urun">
+  <div class="wrap">
+    <div class="split-head">
+      <h2>Tek yükleme,<br>üç çıktı.</h2>
+      <p>Raporunuzu belgenizin yapısı üzerinde inceleyin; ister düzeltilmiş kopyayı, ister yorumlu
+         kopyayı alın. Her çıktı, metnin harfi harfine korunduğu doğrulanmadan verilmez.</p>
+    </div>
+    <div class="product-grid">
+      <article class="product parallax-layer" data-speed="0.05">
+        {{ illo("report") }}
+        <div class="product-text">
+          <h3>Denetim raporu</h3>
+          <p>Bulgular, tezinizin ana hattı ve sayfa düzeni üzerinde; neyin, nerede, nasıl düzeltileceği.</p>
+        </div>
+      </article>
+      <article class="product parallax-layer" data-speed="-0.03">
+        {{ illo("fix") }}
+        <div class="product-text">
+          <h3>Düzeltilmiş kopya</h3>
+          <p>Biçim düzeltmeleri Word'de “Synora” adıyla izlenen değişiklik olarak gelir. İnceleyin, kabul edin.</p>
+        </div>
+      </article>
+      <article class="product parallax-layer" data-speed="0.08">
+        {{ illo("comment") }}
+        <div class="product-text">
+          <h3>Yorumlu kopya</h3>
+          <p>Otomatik düzeltilemeyen her bulgu, ilgili paragrafın yanına Word yorumu olarak eklenir.</p>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
-<section class="section" id="nasil">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Nasıl çalışır</span>
-      <h2>Üç adımda kılavuza uygun bir tez.</h2>
+{# 3 — Kılavuz ızgarası: kural setinin ölçüleri, basamaklı bloklar halinde. #}
+<section class="guide" id="kilavuz">
+  <div class="wrap guide-grid">
+    <div class="guide-text">
+      <span class="meta">Kılavuz</span>
+      <h2>Kılavuzunuz,<br>ölçü ölçü.</h2>
+      <p>Synora, enstitünüzün ya da fakültenizin kılavuzunu satır satır kurala çevirir. Pilotta
+         ZBEÜ Tıp Fakültesi kılavuzu kullanılır; aşağıdaki değerler doğrudan bu kural setinden gelir.</p>
     </div>
-    <ol class="steps">
-      <li class="step reveal">
-        <span class="step-n">1</span>
-        <svg class="step-art" viewBox="0 0 120 80" aria-hidden="true">
-          <rect x="36" y="6" width="48" height="64"/><path d="M44 18 H76 M44 26 H76 M44 34 H70 M60 76 V56 M52 64 L60 56 L68 64"/>
-        </svg>
-        <h3>Yükleyin</h3>
-        <p>Word belgenizi (.docx) bırakın, kılavuzunuzu seçin. Birkaç saniye sürer.</p>
-      </li>
-      <li class="step reveal">
-        <span class="step-n">2</span>
-        <svg class="step-art" viewBox="0 0 120 80" aria-hidden="true">
-          <rect x="14" y="6" width="56" height="68"/><path d="M22 18 H62 M22 26 H62 M22 34 H56 M22 42 H62 M22 50 H48"/>
-          <rect x="78" y="14" width="34" height="14"/><rect x="78" y="34" width="34" height="14"/><path d="M62 21 H78 M56 41 H78"/>
-        </svg>
-        <h3>İnceleyin</h3>
-        <p>Bulgular, belgenizin yapısı üzerinde yorum olarak görünür: neyin, nerede, nasıl düzeltileceği.</p>
-      </li>
-      <li class="step reveal">
-        <span class="step-n">3</span>
-        <svg class="step-art" viewBox="0 0 120 80" aria-hidden="true">
-          <rect x="36" y="6" width="48" height="64"/><path d="M44 18 H76 M44 26 H76 M44 34 H70 M46 52 L54 60 L74 40"/>
-        </svg>
-        <h3>Düzeltin</h3>
-        <p>Düzeltilmiş kopyayı indirin; Word'de “Tümünü Kabul Et” deyin. İstemediğinizi reddedin.</p>
-      </li>
+    <div class="tiles parallax-layer" data-speed="0.08">
+      {% for t in tiles %}
+      <div class="tile tone-{{ t.tone }} slot-{{ t.slot }}">
+        <span class="tile-label">{{ t.label }}</span>
+        <span class="tile-value">{{ t.value }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# 4 — Gizlilik beyanı. #}
+<section class="statement" id="gizlilik">
+  <div class="wrap">
+    <span class="meta on-dark">Gizlilik</span>
+    <ol class="statement-lines">
+      <li class="reveal"><span class="big">Metniniz değişmez.</span>
+        <span class="note">Her işlemden sonra metnin harfi harfine aynı kaldığı doğrulanır; doğrulanamazsa dosya üretilmez.</span></li>
+      <li class="reveal"><span class="big">Yapay zekâ metni görmez.</span>
+        <span class="note">Paragraf türleri yalnızca biçimden çıkarılan sayılarla belirlenir.</span></li>
+      <li class="reveal"><span class="big">Dosyanız saklanmaz.</span>
+        <span class="note">Belge bellekte denetlenir ve atılır; rapor 24 saatte silinir.</span></li>
     </ol>
   </div>
 </section>
 
-<section class="band" id="gizlilik">
-  <div class="wrap band-grid">
-    <div class="section-head on-dark">
-      <span class="eyebrow">Gizlilik</span>
-      <h2>Tezinize ait olan, sizde kalır.</h2>
+{# 5 — Giriş. #}
+<section class="join" id="giris">
+  <div class="wrap join-grid">
+    <div>
+      <h2>Başlayın.</h2>
+      <p>Üniversite e&#8209;postanıza tek kullanımlık bir giriş bağlantısı gönderilir; parola gerekmez.</p>
     </div>
-    <ul class="promises">
-      <li><strong>Metniniz değişmez.</strong> Her işlemden sonra harfi harfine aynı kaldığı doğrulanır.</li>
-      <li><strong>Yapay zekâ metni görmez.</strong> Paragraf türleri yalnızca biçimden çıkarılan sayılarla belirlenir.</li>
-      <li><strong>Dosyanız saklanmaz.</strong> Bellekte denetlenir ve atılır; rapor 24 saatte silinir.</li>
-    </ul>
-  </div>
-</section>
-
-<section class="section" id="giris">
-  <div class="wrap login-wrap">
-    <div class="section-head">
-      <span class="eyebrow">Giriş</span>
-      <h2>Üniversite e&#8209;postanızla başlayın.</h2>
-      <p>Tek kullanımlık bir giriş bağlantısı gönderilir; parola gerekmez.</p>
-    </div>
-    <form method="post" action="/login" class="login-card stack">
+    <form method="post" action="/login" class="join-card">
       <input type="hidden" name="csrf" value="{{ csrf }}">
       {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
       <label for="email">E-posta adresi</label>
       <input id="email" name="email" type="email" required autocomplete="email"
              placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
-      <div><button class="btn primary" type="submit"><span class="lbl">Giriş bağlantısı gönder</span>{{ arrow() }}</button></div>
-      {% if domains %}
-      <p class="fineprint">Kabul edilen adresler: {% for d in domains %}@{{ d }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
-      {% endif %}
+      <div class="join-actions">
+        <button class="btn primary" type="submit"><span class="lbl">Giriş bağlantısı gönder</span>{{ arrow() }}</button>
+        {% if domains %}<span class="meta">{% for d in domains %}@{{ d }}{% if not loop.last %} · {% endif %}{% endfor %}</span>{% endif %}
+      </div>
     </form>
   </div>
 </section>

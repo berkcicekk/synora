@@ -31,7 +31,7 @@ from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message
 from synora.ruleset import Ruleset, load_ruleset
 from synora.web.db import Database, Job
 from synora.web.mailer import Mailer, make_mailer
-from synora.web.presentation import PageSpec, page_spec, pixel_blocks
+from synora.web.presentation import PageSpec, RuleTile, page_spec, pixel_blocks, rule_tiles
 from synora.web.settings import Settings
 from synora.web.worker import JobRunner
 
@@ -199,6 +199,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     login_page: PageSpec | None = (
         page_spec(ordered_rulesets[0].rules) if ordered_rulesets else None
     )
+    login_tiles: list[RuleTile] = rule_tiles(ordered_rulesets[0].rules) if ordered_rulesets else []
     templates = Jinja2Templates(directory=str(HERE / "templates"))
     templates.env.filters["when"] = format_when
     templates.env.filters["date_tr"] = format_date
@@ -295,7 +296,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         user = current_user(request)
         if user is None:
             token = pre_csrf(request)
-            resp = render(request, "login.html", csrf=token, page=login_page,
+            resp = render(request, "login.html", csrf=token, page=login_page, tiles=login_tiles,
                           domains=settings.allowed_domains, error=None)
             set_pre_csrf(resp, token)
             return resp
@@ -313,7 +314,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
         def fail(msg: str) -> HTMLResponse:
             resp = render(request, "login.html", status=400, csrf=token, page=login_page,
-                          domains=settings.allowed_domains, error=msg, email=email)
+                          tiles=login_tiles, domains=settings.allowed_domains, error=msg,
+                          email=email)
             set_pre_csrf(resp, token)
             return resp
 

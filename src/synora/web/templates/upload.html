@@ -2,66 +2,65 @@
 {% from "_marks.html" import arrow %}
 {% block title %}Belgelerim · Synora{% endblock %}
 {% block content %}
-<section class="section docs">
-  <div class="wrap docs-grid">
-    <div class="docs-main">
-      <div class="section-head">
-        <span class="eyebrow">Yeni denetim</span>
-        <h1 class="page-title">Tezinizi yükleyin.</h1>
-        <p>Word belgesi (.docx). Raporunuz birkaç saniye içinde hazır olur.</p>
-      </div>
-      <form id="upload" class="upload-panel" data-csrf="{{ user.csrf }}" data-max="{{ max_mb * 1024 * 1024 }}">
-        <label class="drop" for="file" id="drop">
-          <svg class="icon-lg" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M14 3H6v18h12V7z M14 3v4h4 M12 17v-6 M9 14l3-3 3 3"/>
-          </svg>
-          <span class="drop-title">Dosyanızı buraya bırakın</span>
-          <span class="mono muted">ya da seçmek için tıklayın · .docx · en fazla {{ max_mb }} MB</span>
-          <input id="file" name="file" type="file"
-                 accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-        </label>
-        <div class="upload-row">
-          {% if rulesets|length > 1 %}
-          <div class="stack grow">
-            <label for="ruleset">Kılavuz</label>
-            <select id="ruleset" name="ruleset">
-              {% for r in rulesets %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
-            </select>
-          </div>
-          {% elif rulesets %}
-          <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
-          <p class="mono muted grow">Kılavuz: {{ rulesets[0].name }}</p>
-          {% else %}
-          <p class="alert grow">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
-          {% endif %}
-          <button id="submit" class="btn primary" type="submit" disabled><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
-        </div>
-        <p id="upload-status" class="status" role="status" aria-live="polite"></p>
-      </form>
-    </div>
-
-    <aside class="docs-side" id="onceki" aria-labelledby="onceki-baslik">
-      <span class="eyebrow">Denetimlerim</span>
-      <h2 id="onceki-baslik" class="side-title">Son denetimler</h2>
-      {% if jobs %}
-      <ul class="doclist">
-        {% for j in jobs %}
-        <li>
-          <a href="/jobs/{{ j.id }}">
-            <svg class="doc-ico" viewBox="0 0 20 24" aria-hidden="true"><path d="M3 1h9l5 5v17H3z M12 1v5h5"/></svg>
-            <span class="doc-meta">
-              <span class="doc-title">Denetim · {{ j.created_at | when }}</span>
-              <span class="doc-state state-{{ j.status }}">{{ {"queued": "sırada", "running": "denetleniyor", "done": "tamamlandı", "failed": "başarısız"}[j.status] }}</span>
-            </span>
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
-      <p class="fineprint">Raporlar {{ retention }} saat sonra kendiliğinden silinir.</p>
-      {% else %}
-      <p class="muted empty">Henüz bir denetiminiz yok. İlk tezinizi soldaki alana bırakın.</p>
-      {% endif %}
-    </aside>
+<section class="app-head">
+  <div class="wrap">
+    <span class="meta">Belgelerim</span>
+    <h1>Tezinizi yükleyin.</h1>
+    <p>Word belgesi (.docx). Raporunuz birkaç saniye içinde, belgenizin üzerinde hazır olur.</p>
   </div>
+</section>
+
+<section class="wrap app-grid" id="yeni">
+  <form id="upload" class="dropcard" data-csrf="{{ user.csrf }}" data-max="{{ max_mb * 1024 * 1024 }}">
+    <label class="drop" for="file" id="drop">
+      <span class="drop-corner" aria-hidden="true"><i></i><i></i><i></i></span>
+      <svg class="drop-ico" viewBox="0 0 48 56" aria-hidden="true">
+        <path d="M6 2h24l12 12v40H6z M30 2v12h12 M24 44V24 M16 32l8-8 8 8"/>
+      </svg>
+      <span class="drop-title">Dosyanızı buraya bırakın</span>
+      <span class="drop-sub">ya da seçmek için tıklayın · .docx · en fazla {{ max_mb }} MB</span>
+      <input id="file" name="file" type="file"
+             accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    </label>
+    <div class="dropcard-row">
+      {% if rulesets|length > 1 %}
+      <div class="field grow">
+        <label for="ruleset">Kılavuz</label>
+        <select id="ruleset" name="ruleset">
+          {% for r in rulesets %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
+        </select>
+      </div>
+      {% elif rulesets %}
+      <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
+      <div class="field grow"><span class="label-like">Kılavuz</span><span>{{ rulesets[0].name }}</span></div>
+      {% else %}
+      <p class="alert grow">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
+      {% endif %}
+      <button id="submit" class="btn primary" type="submit" disabled><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
+    </div>
+    <p id="upload-status" class="status" role="status" aria-live="polite"></p>
+  </form>
+
+  <aside class="history" aria-labelledby="gecmis">
+    <div class="history-head">
+      <h2 id="gecmis">Son denetimler</h2>
+      <span class="meta">{{ retention }} saatte silinir</span>
+    </div>
+    {% if jobs %}
+    <ul class="history-list">
+      {% for j in jobs %}
+      <li>
+        <a href="/jobs/{{ j.id }}">
+          <span class="h-date">{{ j.created_at | when }}</span>
+          <span class="state state-{{ j.status }}">{{ {"queued": "sırada", "running": "denetleniyor", "done": "tamamlandı", "failed": "başarısız"}[j.status] }}</span>
+          <span class="h-arrow" aria-hidden="true">↗</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Henüz bir denetiminiz yok. İlk tezinizi soldaki alana bırakın.</p>
+    {% endif %}
+  </aside>
 </section>
 {% endblock %}

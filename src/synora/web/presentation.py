@@ -164,3 +164,43 @@ def pixel_blocks(cols: int = 26, rows: int = 4, seed: int = 8) -> list[Block]:
             if above and rng.random() < density[min(row, len(density) - 1)]:
                 out.append(Block(col * BLOCK, row * BLOCK, rng.choice(tones)))
     return out
+
+
+# --- Kılavuz ızgarası (tanıtım sayfası) ------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class RuleTile:
+    label: str  # "Sol kenar"
+    value: str  # "4 cm"
+    tone: str  # cobalt / paper / night / tint
+    slot: int  # basamaklı ızgaradaki konum (CSS .slot-N)
+
+
+def rule_tiles(rules: Ruleset) -> list[RuleTile]:
+    """Kılavuzun ölçüleri, basamaklı blok ızgarasında. Değerler kural setinden okunur."""
+    spec = page_spec(rules)
+    body = rules.roles.get(Role.BODY)
+    heading = rules.roles.get(Role.HEADING_1)
+    footnote = rules.roles.get(Role.FOOTNOTE)
+    items: list[tuple[str, str]] = [("Kağıt", rules.page.size or "A4")]
+    items += [("Sol kenar", spec.labels["left"]), ("Üst kenar", spec.labels["top"]),
+              ("Sağ kenar", spec.labels["right"]), ("Alt kenar", spec.labels["bottom"])]
+    font = rules.fonts.allowed[0] if rules.fonts.allowed else None
+    if font:
+        items.append(("Yazı tipi", font))
+    if body and body.size_pt:
+        items.append(("Gövde", f"{tr_num(body.size_pt)} pt"))
+    spacing = body.spacing_rule() if body else None
+    if spacing and spacing.multiple:
+        items.append(("Satır aralığı", tr_num(spacing.multiple)))
+    if body and body.first_line_indent_cm:
+        items.append(("Girinti", f"{tr_num(body.first_line_indent_cm)} cm"))
+    if heading and heading.size_pt:
+        items.append(("Bölüm başlığı", f"{tr_num(heading.size_pt)} pt"))
+    if footnote and footnote.size_pt:
+        items.append(("Dipnot", f"{tr_num(footnote.size_pt)} pt"))
+    tones = ["cobalt", "paper", "night", "paper", "cobalt", "tint", "paper", "night", "cobalt",
+             "paper", "tint"]
+    return [RuleTile(label, value, tones[i % len(tones)], i + 1)
+            for i, (label, value) in enumerate(items[:11])]
