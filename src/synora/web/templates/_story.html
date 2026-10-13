@@ -1,0 +1,55 @@
+{# Gizlilik anlatısı: dört kare. Tanıtım sayfasında masaüstünde yapışkan sahnede, mobilde her adımın
+   içinde gösterilir. Örnek değerler temsilidir; hiçbir gerçek tezden gelmez. #}
+{% from "_marks.html" import mark %}
+
+{% macro doc_icon() -%}
+<svg class="sf-doc" viewBox="0 0 40 50" aria-hidden="true"><path d="M3 2h22l12 12v34H3z M25 2v12h12 M10 24h20 M10 31h20 M10 38h13"/></svg>
+{%- endmacro %}
+
+{% macro frame(n) -%}
+{% if n == 1 %}
+<div class="sf sf-route">
+  <div class="sf-node sf-in d1">{{ doc_icon() }}<span class="sf-name">tez.docx</span><span class="sf-sub">bilgisayarınız</span></div>
+  <div class="sf-link ok sf-in d2" aria-hidden="true"><i></i></div>
+  <div class="sf-node primary sf-in d3">{{ mark() }}<span class="sf-name">Synora</span><span class="sf-sub">yalnızca bellekte</span></div>
+  <div class="sf-link no sf-in d4" aria-hidden="true"><i></i><b>×</b></div>
+  <div class="sf-node ghost sf-in d5">
+    <svg class="sf-cloud" viewBox="0 0 56 36" aria-hidden="true"><path d="M14 32h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2 11 11 0 0 0-3 22z"/></svg>
+    <span class="sf-name">Yapay zekâ servisleri</span><span class="sf-sub">sohbet botu, bulut model</span>
+  </div>
+</div>
+{% elif n == 2 %}
+<div class="sf sf-measure">
+  <div class="sf-para sf-in d1" aria-hidden="true">
+    <span class="sf-num">1.1</span><span class="bar h"></span>
+    <span class="bar"></span><span class="bar"></span><span class="bar short"></span>
+    <span class="sf-lock">kelimeler sınıflandırıcıya verilmez</span>
+  </div>
+  <div class="sf-arrow-down sf-in d2" aria-hidden="true"></div>
+  <ul class="sf-chips">
+    <li class="sf-in d3">14 pt</li><li class="sf-in d3">kalın</li><li class="sf-in d4">ortalı</li>
+    <li class="sf-in d4">numara: 1.1</li><li class="sf-in d5">önce 12 pt</li><li class="sf-in d5">4 kelime</li>
+  </ul>
+</div>
+{% elif n == 3 %}
+<div class="sf sf-decide">
+  <ul class="sf-chips small sf-in d1"><li>14 pt</li><li>kalın</li><li>ortalı</li><li>numara: 1.1</li></ul>
+  <div class="sf-arrow-down sf-in d2" aria-hidden="true"></div>
+  <div class="sf-verdict sf-in d3"><span class="sf-sub">rol</span><span class="sf-name">Alt bölüm başlığı</span></div>
+  <ul class="sf-checks">
+    <li class="sf-in d4"><span>Punto 14</span><b class="yes">✓</b></li>
+    <li class="sf-in d4"><span>Kalın</span><b class="yes">✓</b></li>
+    <li class="sf-in d5"><span>Önce 24 pt boşluk</span><b class="no">düzeltilecek</b></li>
+  </ul>
+</div>
+{% else %}
+<div class="sf sf-verify">
+  <div class="sf-pair">
+    <div class="sf-node sf-in d1">{{ doc_icon() }}<span class="sf-name">Yüklenen</span><span class="sf-hash">metin özeti 7c2e…91</span></div>
+    <div class="sf-equal sf-in d3" aria-hidden="true">=</div>
+    <div class="sf-node primary sf-in d2">{{ doc_icon() }}<span class="sf-name">Düzeltilmiş</span><span class="sf-hash">metin özeti 7c2e…91</span></div>
+  </div>
+  <div class="sf-wipe sf-in d4"><span class="sf-bar"><i></i></span><span>Dosya bellekten silindi · rapor 24 saat sonra silinir</span></div>
+</div>
+{% endif %}
+{%- endmacro %}

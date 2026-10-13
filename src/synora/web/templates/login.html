@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% from "_marks.html" import arrow, blocks, illo %}
+{% from "_story.html" import frame %}
 {% block title %}Synora · Tez biçim denetimi{% endblock %}
 {% block body_class %}landing{% endblock %}
 {% block content %}
 
-{# 1 — Kahraman: kobalt alan, üstten dökülen bloklar, alta yaslanan büyük başlık. #}
+{# 1 — Kahraman: tam ekran kobalt alan, üstten dökülen bloklar, alta yaslanan büyük başlık. #}
 <section class="hero">
   <div class="hero-blocks parallax-layer" data-speed="-0.18" aria-hidden="true">{{ blocks() }}</div>
-  <div class="wrap hero-bottom">
+  <div class="wrap hero-bottom" id="hero-content">
     <div class="hero-title">
-      <span class="meta on-blue">Tez biçim denetimi</span>
+      <span class="meta on-blue">Tez biçim denetimi · ZBEÜ pilotu</span>
       <h1>Biçim kusursuz,<br>tez teslime hazır.</h1>
     </div>
     <div class="hero-aside">
@@ -18,39 +19,38 @@
       <a class="btn light" href="#giris"><span class="lbl">Başlayın</span>{{ arrow() }}</a>
     </div>
   </div>
-  <svg class="hero-lines" viewBox="0 0 1440 56" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 26 H340 q12 0 12 12 V56"/>
-    <path d="M560 56 V40 q0 -12 12 -12 H906 q12 0 12 12 V56"/>
-    <path d="M1100 56 V42 q0 -12 12 -12 H1440"/>
-  </svg>
+  <a class="scroll-cue" href="#urun"><span class="cue-line" aria-hidden="true"></span>Nasıl çalışır</a>
 </section>
 
 {# 2 — Ürün: tek yüklemeden üç çıktı. #}
 <section class="products" id="urun">
   <div class="wrap">
-    <div class="split-head">
+    <div class="split-head reveal">
       <h2>Tek yükleme,<br>üç çıktı.</h2>
       <p>Raporunuzu belgenizin yapısı üzerinde inceleyin; ister düzeltilmiş kopyayı, ister yorumlu
          kopyayı alın. Her çıktı, metnin harfi harfine korunduğu doğrulanmadan verilmez.</p>
     </div>
     <div class="product-grid">
-      <article class="product parallax-layer" data-speed="0.05">
+      <article class="product reveal d1">
         {{ illo("report") }}
         <div class="product-text">
+          <span class="meta on-blue">01</span>
           <h3>Denetim raporu</h3>
           <p>Bulgular, tezinizin ana hattı ve sayfa düzeni üzerinde; neyin, nerede, nasıl düzeltileceği.</p>
         </div>
       </article>
-      <article class="product parallax-layer" data-speed="-0.03">
+      <article class="product reveal d2">
         {{ illo("fix") }}
         <div class="product-text">
+          <span class="meta on-blue">02</span>
           <h3>Düzeltilmiş kopya</h3>
           <p>Biçim düzeltmeleri Word'de “Synora” adıyla izlenen değişiklik olarak gelir. İnceleyin, kabul edin.</p>
         </div>
       </article>
-      <article class="product parallax-layer" data-speed="0.08">
+      <article class="product reveal d3">
         {{ illo("comment") }}
         <div class="product-text">
+          <span class="meta on-blue">03</span>
           <h3>Yorumlu kopya</h3>
           <p>Otomatik düzeltilemeyen her bulgu, ilgili paragrafın yanına Word yorumu olarak eklenir.</p>
         </div>
@@ -59,18 +59,72 @@
   </div>
 </section>
 
-{# 3 — Kılavuz ızgarası: kural setinin ölçüleri, basamaklı bloklar halinde. #}
+{# 3 — Gizlilik: kaydırdıkça değişen dört karelik anlatı. #}
+<section class="story" id="gizlilik">
+  <div class="wrap">
+    <div class="story-head reveal">
+      <span class="meta">Gizlilik</span>
+      <h2>Tezinizi yapay zekâyla<br>paylaşmıyorsunuz.</h2>
+      <p>Synora'nın tezinizle ne yaptığı, dört adımda.</p>
+    </div>
+    <div class="story-grid">
+      <div class="story-stage" aria-hidden="true">
+        <div class="story-visual is-1" id="story-visual">
+          <div class="story-progress"><i></i><i></i><i></i><i></i></div>
+          {% for n in range(1, 5) %}<div class="story-frame f{{ n }}">{{ frame(n) }}</div>{% endfor %}
+        </div>
+      </div>
+      <ol class="story-steps">
+        <li class="story-step active" data-step="1">
+          <span class="step-no">01</span>
+          <h3>Dosyanız yalnızca Synora'ya gelir.</h3>
+          <p>Tezinizi bir sohbet botuna ya da bulut yapay zekâ servisine göndermiyoruz. Dosya Synora
+             sunucusunda yalnızca bellekte açılır; diske ya da veritabanına yazılmaz.</p>
+          <div class="step-figure" aria-hidden="true">{{ frame(1) }}</div>
+        </li>
+        <li class="story-step" data-step="2">
+          <span class="step-no">02</span>
+          <h3>Metin okunmaz, ölçülür.</h3>
+          <p>Her paragraftan punto, kalınlık, hizalama, numara deseni gibi ölçüler çıkarılır.
+             Paragrafın türünü belirleyen adıma kelimeler değil, yalnızca bu sayılar verilir.</p>
+          <div class="step-figure" aria-hidden="true">{{ frame(2) }}</div>
+        </li>
+        <li class="story-step" data-step="3">
+          <span class="step-no">03</span>
+          <h3>Karar biçimden verilir.</h3>
+          <p>Paragrafın bölüm başlığı mı, şekil yazısı mı olduğu bu ölçülerle belirlenir ve kılavuzla
+             karşılaştırılır. Metninizin anlamını yorumlayan bir model yoktur.</p>
+          <div class="step-figure" aria-hidden="true">{{ frame(3) }}</div>
+        </li>
+        <li class="story-step" data-step="4">
+          <span class="step-no">04</span>
+          <h3>Metniniz aynı kalır, dosyanız silinir.</h3>
+          <p>Kopya verilmeden önce metnin harfi harfine aynı olduğu doğrulanır; doğrulanamazsa dosya
+             üretilmez. İş bitince belge bellekten atılır, rapor 24 saatte silinir.</p>
+          <div class="step-figure" aria-hidden="true">{{ frame(4) }}</div>
+        </li>
+      </ol>
+    </div>
+    <ul class="zeros">
+      <li class="reveal d1"><span class="zero">0</span><span>yapay zekâ servisine gönderim</span></li>
+      <li class="reveal d2"><span class="zero">0</span><span>değişen harf</span></li>
+      <li class="reveal d3"><span class="zero">0</span><span>diske yazılan tez</span></li>
+    </ul>
+  </div>
+</section>
+
+{# 4 — Kılavuz ızgarası: kural setinin ölçüleri, basamaklı bloklar halinde. #}
 <section class="guide" id="kilavuz">
   <div class="wrap guide-grid">
-    <div class="guide-text">
+    <div class="guide-text reveal">
       <span class="meta">Kılavuz</span>
       <h2>Kılavuzunuz,<br>ölçü ölçü.</h2>
       <p>Synora, enstitünüzün ya da fakültenizin kılavuzunu satır satır kurala çevirir. Pilotta
-         ZBEÜ Tıp Fakültesi kılavuzu kullanılır; aşağıdaki değerler doğrudan bu kural setinden gelir.</p>
+         ZBEÜ Tıp Fakültesi kılavuzu kullanılır; yandaki değerler doğrudan bu kural setinden gelir.</p>
     </div>
-    <div class="tiles parallax-layer" data-speed="0.08">
+    <div class="tiles">
       {% for t in tiles %}
-      <div class="tile tone-{{ t.tone }} slot-{{ t.slot }}">
+      <div class="tile tone-{{ t.tone }} slot-{{ t.slot }} reveal pop d{{ loop.index0 % 5 + 1 }}">
         <span class="tile-label">{{ t.label }}</span>
         <span class="tile-value">{{ t.value }}</span>
       </div>
@@ -79,29 +133,14 @@
   </div>
 </section>
 
-{# 4 — Gizlilik beyanı. #}
-<section class="statement" id="gizlilik">
-  <div class="wrap">
-    <span class="meta on-dark">Gizlilik</span>
-    <ol class="statement-lines">
-      <li class="reveal"><span class="big">Metniniz değişmez.</span>
-        <span class="note">Her işlemden sonra metnin harfi harfine aynı kaldığı doğrulanır; doğrulanamazsa dosya üretilmez.</span></li>
-      <li class="reveal"><span class="big">Yapay zekâ metni görmez.</span>
-        <span class="note">Paragraf türleri yalnızca biçimden çıkarılan sayılarla belirlenir.</span></li>
-      <li class="reveal"><span class="big">Dosyanız saklanmaz.</span>
-        <span class="note">Belge bellekte denetlenir ve atılır; rapor 24 saatte silinir.</span></li>
-    </ol>
-  </div>
-</section>
-
 {# 5 — Giriş. #}
 <section class="join" id="giris">
   <div class="wrap join-grid">
-    <div>
+    <div class="reveal">
       <h2>Başlayın.</h2>
       <p>Üniversite e&#8209;postanıza tek kullanımlık bir giriş bağlantısı gönderilir; parola gerekmez.</p>
     </div>
-    <form method="post" action="/login" class="join-card">
+    <form method="post" action="/login" class="join-card reveal d2">
       <input type="hidden" name="csrf" value="{{ csrf }}">
       {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
       <label for="email">E-posta adresi</label>

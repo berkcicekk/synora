@@ -181,6 +181,34 @@
     window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
     update();
   }
+  // Kahraman metni kaydırdıkça yavaşça yükselir ve solar.
+  const heroContent = document.getElementById("hero-content");
+  if (heroContent && !reduced) {
+    let pending = false;
+    const fade = () => {
+      const p = Math.min(1, window.scrollY / (window.innerHeight * 0.75));
+      heroContent.style.opacity = String(1 - p * 0.9);
+      heroContent.style.transform = "translate3d(0," + (p * -60).toFixed(1) + "px,0)";
+      pending = false;
+    };
+    window.addEventListener("scroll", () => { if (!pending) { pending = true; requestAnimationFrame(fade); } }, { passive: true });
+    fade();
+  }
+
+  // Gizlilik anlatısı: ekranın ortasına gelen adım, yapışkan sahnedeki kareyi seçer.
+  const visual = document.getElementById("story-visual");
+  const steps = [...document.querySelectorAll(".story-step")];
+  if (visual && steps.length && "IntersectionObserver" in window) {
+    const show = (step) => {
+      steps.forEach((s) => s.classList.toggle("active", s === step));
+      visual.className = "story-visual is-" + step.dataset.step;
+    };
+    const so = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (en.isIntersecting) show(en.target);
+    }), { rootMargin: "-45% 0px -45% 0px" });
+    steps.forEach((s) => so.observe(s));
+  }
+
   const reveals = document.querySelectorAll(".reveal");
   if (reveals.length && "IntersectionObserver" in window && !reduced) {
     const io = new IntersectionObserver((entries) => entries.forEach((en) => {
