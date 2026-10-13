@@ -99,8 +99,14 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 .landing .site-nav { background: var(--blue); border-bottom-color: transparent; color: var(--on-blue); }
 .landing .pill { background: var(--night); }
 @media (max-width: 760px) {
-  .nav-inner { grid-template-columns: 1fr auto; }
-  .pill { display: none; }
+  /* Telefonda menü ikinci satıra iner; sığmazsa yatay kayar. */
+  .nav-inner { grid-template-columns: 1fr auto; grid-template-areas: "brand end" "pill pill";
+               row-gap: 0; padding-top: .55rem; padding-bottom: .55rem; min-height: 0; }
+  .nav-inner > .brand { grid-area: brand; }
+  .nav-inner > .nav-end { grid-area: end; }
+  .pill { grid-area: pill; justify-self: stretch; margin-top: .55rem; overflow-x: auto; scrollbar-width: none; }
+  .pill::-webkit-scrollbar { display: none; }
+  .pill a { flex: 1 0 auto; text-align: center; padding: .42rem .6rem; }
   .who { display: none; }
 }
 
@@ -116,6 +122,8 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 .hero { min-height: calc(100vh - 64px); min-height: calc(100svh - 64px); display: flex; flex-direction: column; justify-content: flex-end; }
 .hero-bottom { position: relative; display: grid; gap: 2.4rem; padding-top: clamp(12rem, 24vh, 18rem); padding-bottom: clamp(6rem, 14vh, 9rem); align-items: end; will-change: transform, opacity; }
 @media (min-width: 960px) { .hero-bottom { grid-template-columns: minmax(0, 1fr) 20rem; } .hero h1 { white-space: nowrap; } }
+/* Telefonda gezinme iki satır (~103px); başlık ve aşağı ok ilk ekrana sığsın. */
+@media (max-width: 760px) { .hero { min-height: calc(100svh - 103px); } .hero-bottom { padding-top: 7rem; padding-bottom: 6.5rem; } }
 .hero-title { display: grid; gap: 1.2rem; min-width: 0; }
 .hero h1 { font-size: clamp(2.8rem, min(6.2vw, 11vh), 7rem); line-height: .95; letter-spacing: -.035em; }
 .hero-aside { display: grid; gap: 1.5rem; justify-items: start; max-width: 30rem; padding-bottom: .4rem; }
@@ -252,7 +260,7 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 .sf-cloud { width: 42px; fill: none; stroke: currentColor; stroke-width: 1.6; }
 .sf-name { font-size: .98rem; font-weight: 500; }
 .sf-sub { font-family: var(--mono); font-size: .62rem; letter-spacing: .05em; color: var(--muted); text-transform: uppercase; }
-.sf-hash { font-family: var(--mono); font-size: .66rem; color: var(--blue); }
+.sf-hash { font-family: var(--mono); font-size: .66rem; color: var(--blue); white-space: nowrap; }
 
 .sf-route { grid-template-columns: auto minmax(44px, 1fr) auto minmax(44px, 1fr) auto; align-items: center; gap: .5rem; }
 .sf-route .sf-node { min-width: 0; max-width: 132px; padding: 1rem .7rem; }
