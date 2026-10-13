@@ -134,7 +134,9 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
                 "rule_id": f["rule_id"],
                 "locations": [],
                 "sections": set(),
+                "count": 0,
             }
+        g["count"] += 1
         if f.get("location"):
             g["locations"].append(f["location"])
         elif f.get("section_index") is not None:
@@ -161,7 +163,7 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
                 if blocks[i]["sev"] != "error":
                     blocks[i]["sev"] = c["severity"]
     return {"summary": report["summary"], "ruleset": report["ruleset"], "cards": cards,
-            "blocks": blocks, "outline": _outline(blocks)}
+            "finding_count": len(report["findings"]), "blocks": blocks, "outline": _outline(blocks)}
 
 
 def _outline(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:

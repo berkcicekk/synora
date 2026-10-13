@@ -136,6 +136,9 @@
   <aside class="pane pane-comments" aria-label="Bulgular">
     <div class="pane-head">
       <p class="pane-title">Yorumlar <span class="muted">({{ view.cards|length }})</span></p>
+      {% if view.finding_count > view.cards|length %}
+      <p class="muted small">{{ view.finding_count }} bulgu; aynı türdekiler tek yorumda toplandı.</p>
+      {% endif %}
       <div class="filters" role="group" aria-label="Bulguları süz">
         <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü</button>
         <button type="button" class="filter" data-filter="error" aria-pressed="false">Hatalar</button>
@@ -160,6 +163,7 @@
           <span class="sev {{ c.severity }}">{{ c.severity_name }}</span>
           {% if c.role_name %}<span>{{ c.role_name }}</span>{% endif %}
           {% if c.fixable %}<span class="fix">Düzeltilebilir</span>{% endif %}
+          {% if c.count > 1 %}<span>× {{ c.count }}</span>{% endif %}
         </div>
         <p class="message">{{ c.message }}</p>
         <div class="where">

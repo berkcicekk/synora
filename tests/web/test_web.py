@@ -361,3 +361,16 @@ def test_pricing_page_is_public(client: TestClient, mailer: ConsoleMailer) -> No
     assert 'aria-current="page"' in res.text
     login(client, mailer)
     assert client.get("/fiyatlandirma").status_code == 200
+
+
+def test_report_view_counts_grouped_findings() -> None:
+    from synora.web.app import report_view
+
+    def finding(block: int) -> dict[str, object]:
+        return {"rule_id": "body.line_spacing", "expected": "1.5", "actual": "1.0",
+                "message": "m", "severity": "error", "fixable": True, "block": block}
+
+    view = report_view({"summary": {}, "ruleset": {}, "findings": [finding(0), finding(3)]})
+    assert len(view["cards"]) == 1
+    assert view["finding_count"] == 2
+    assert view["cards"][0]["count"] == 2
