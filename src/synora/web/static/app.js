@@ -197,21 +197,38 @@
   if (outputs) {
     const picker = document.getElementById("output-file");
     const status = document.getElementById("output-status");
+    const panel = document.getElementById("output-panel");
+    const choose = document.getElementById("output-choose");
+    const zone = document.getElementById("output-drop");
     let kind = null;
     const say = (msg, isError) => {
       status.textContent = msg;
       status.classList.toggle("error", Boolean(isError));
     };
+    // Dosya sunucuda saklanmadığı için önce neden yeniden seçileceğini açıklayan panel açılır;
+    // dosya seçici ancak kullanıcı "Dosyayı seç"e bastığında açılır.
+    const close = () => { panel.hidden = true; kind = null; };
     outputs.querySelectorAll("[data-output]").forEach((btn) => btn.addEventListener("click", () => {
       kind = btn.dataset.output;
-      say("Denetlediğiniz dosyayı yeniden seçin.");
-      picker.value = "";
-      picker.click();
+      document.getElementById("output-title").textContent =
+        kind === "fixed" ? "Düzeltilmiş kopya" : "Yorumlu kopya";
+      say("");
+      panel.hidden = false;
+      choose.focus();
     }));
-    picker.addEventListener("change", async () => {
-      const file = picker.files[0];
+    document.getElementById("output-close").addEventListener("click", close);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) close(); });
+    choose.addEventListener("click", () => { picker.value = ""; picker.click(); });
+    picker.addEventListener("cancel", () => say("Dosya seçilmedi. Kopya için denetlediğiniz dosyayı seçin."));
+    ["dragenter", "dragover"].forEach((t) =>
+      zone.addEventListener(t, (e) => { e.preventDefault(); zone.classList.add("over"); }));
+    ["dragleave", "drop"].forEach((t) =>
+      zone.addEventListener(t, (e) => { e.preventDefault(); zone.classList.remove("over"); }));
+    zone.addEventListener("drop", (e) => send(e.dataTransfer.files[0]));
+    picker.addEventListener("change", () => send(picker.files[0]));
+    const send = async (file) => {
       if (!file || !kind) return;
-      const buttons = outputs.querySelectorAll("[data-output]");
+      const buttons = [...outputs.querySelectorAll("[data-output]"), choose];
       buttons.forEach((b) => { b.disabled = true; });
       say("Hazırlanıyor… Metninizin değişmediği doğrulanıyor.");
       try {
@@ -243,7 +260,7 @@
       } finally {
         buttons.forEach((b) => { b.disabled = false; });
       }
-    });
+    };
   }
 
   // --- Silme onayı (tarayıcı confirm() yerine sayfa içi) ------------------------------------

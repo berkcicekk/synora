@@ -29,7 +29,19 @@
     <input type="file" id="output-file" class="visually-hidden" tabindex="-1" aria-hidden="true"
            accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
   </div>
-  <p id="output-status" class="status toolbar-status" role="status" aria-live="polite"></p>
+  <div class="output-panel" id="output-panel" role="dialog" aria-labelledby="output-title" hidden>
+    <div class="output-panel-head">
+      <strong id="output-title">Düzeltilmiş kopya</strong>
+      <button type="button" class="output-close" id="output-close" aria-label="Kapat">×</button>
+    </div>
+    <p class="output-help">Dosyanızı sunucuda saklamıyoruz. Kopyayı hazırlamak için <strong>denetlediğiniz dosyayı</strong>
+       yeniden seçin; metninize dokunulmadan hazırlanıp indirilir.</p>
+    <div class="output-drop" id="output-drop">
+      <button type="button" class="btn small primary" id="output-choose"><span class="lbl">Dosyayı seç</span>{{ arrow() }}</button>
+      <span class="muted small">ya da buraya bırakın</span>
+    </div>
+    <p id="output-status" class="status" role="status" aria-live="polite"></p>
+  </div>
 </header>
 {% else %}
 {{ super() }}
