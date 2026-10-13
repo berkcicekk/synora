@@ -305,6 +305,10 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
 
+    @app.get("/fiyatlandirma", response_class=HTMLResponse)
+    def pricing(request: Request) -> HTMLResponse:
+        return render(request, "pricing.html", user=current_user(request), active="pricing")
+
     @app.post("/login", response_class=HTMLResponse)
     async def login(request: Request) -> HTMLResponse:
         form = await request.form()

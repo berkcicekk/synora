@@ -22,9 +22,10 @@
         <a href="/" {% if active == "docs" %}aria-current="page"{% endif %}>Belgelerim</a>
         <a href="/#yeni">Yeni denetim</a>
         {% else %}
-        <a href="#urun">Ürün</a>
-        <a href="#gizlilik">Gizlilik</a>
-        <a href="#kilavuz">Kılavuz</a>
+        <a href="/#urun">Ürün</a>
+        <a href="/#gizlilik">Gizlilik</a>
+        <a href="/#kilavuz">Kılavuz</a>
+        <a href="/fiyatlandirma" {% if active == "pricing" %}aria-current="page"{% endif %}>Fiyatlandırma</a>
         {% endif %}
       </nav>
       <div class="nav-end">
@@ -35,7 +36,7 @@
           <button class="btn small" type="submit"><span class="lbl">Çıkış</span>{{ arrow() }}</button>
         </form>
         {% else %}
-        <a class="btn small" href="#giris"><span class="lbl">Giriş yap</span>{{ arrow() }}</a>
+        <a class="btn small" href="/#giris"><span class="lbl">Giriş yap</span>{{ arrow() }}</a>
         {% endif %}
       </div>
     </div>

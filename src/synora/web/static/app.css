@@ -311,6 +311,41 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 .join-card { background: var(--card); color: var(--ink); padding: 1.6rem; border-radius: 3px; display: grid; gap: .7rem; }
 .join-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: .4rem; }
 
+/* ================================ FİYATLANDIRMA ================================ */
+.price-hero { background: var(--blue); color: #fff; padding-block: clamp(4rem, 9vw, 7rem) clamp(7rem, 12vw, 9rem); }
+.price-hero .wrap { display: grid; gap: 1.2rem; justify-items: start; }
+.price-hero h1 { font-size: clamp(3rem, 7vw, 6rem); letter-spacing: -.035em; }
+.price-hero p { color: var(--on-blue-soft); max-width: 40rem; line-height: 1.65; }
+.test-flag { display: inline-flex; align-items: center; gap: .55rem; font-family: var(--mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: .45rem .8rem; border-radius: 999px; background: var(--night); color: var(--cyan); }
+.test-flag i { width: 8px; height: 8px; border-radius: 50%; background: #F2C14E; box-shadow: 0 0 0 0 rgba(242, 193, 78, .6); animation: pulse 1.8s ease-out infinite; }
+@keyframes pulse { to { box-shadow: 0 0 0 10px rgba(242, 193, 78, 0); } }
+@media (prefers-reduced-motion: reduce) { .test-flag i { animation: none; } }
+.pricing { padding-bottom: clamp(4rem, 8vw, 6rem); }
+.plans { display: grid; gap: 1rem; margin-top: clamp(-5rem, -8vw, -3.5rem); }
+@media (min-width: 900px) { .plans { grid-template-columns: repeat(3, 1fr); align-items: stretch; } }
+.plan { position: relative; display: flex; flex-direction: column; gap: 1rem; padding: 1.8rem 1.6rem; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; box-shadow: 0 18px 40px -26px rgba(13, 22, 38, .35); transition: transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s; }
+.plan:hover { transform: translateY(-6px); box-shadow: 0 26px 50px -24px rgba(13, 22, 38, .4); }
+.plan.featured { background: var(--night); color: #fff; border-color: var(--night); }
+.plan h2 { font-size: 2rem; }
+.plan-tag { align-self: flex-start; font-family: var(--mono); font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; padding: .3rem .6rem; border: 1px dashed #C9A23A; color: #7D5300; background: var(--warning-wash); border-radius: 2px; }
+.plan.featured .plan-tag { background: transparent; color: #F2C14E; border-color: #F2C14E; }
+.plan-for { color: var(--muted); font-size: .95rem; line-height: 1.55; min-height: 3em; }
+.plan.featured .plan-for { color: #B9C3D6; }
+.plan-price { display: grid; gap: .2rem; padding-block: 1rem; border-block: 1px solid var(--hair); }
+.plan.featured .plan-price { border-color: var(--hair-dark); }
+.plan-price .amount { font-size: clamp(2.6rem, 4vw, 3.4rem); font-weight: 300; letter-spacing: -.03em; line-height: 1; color: var(--blue); }
+.plan.featured .amount { color: var(--cyan); }
+.plan-price .per { font-family: var(--mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.plan.featured .per { color: #B9C3D6; }
+.plan-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; flex: 1; }
+.plan-list li { position: relative; padding-left: 1.4rem; font-size: .95rem; line-height: 1.45; }
+.plan-list li::before { content: ""; position: absolute; left: 0; top: .45em; width: 8px; height: 8px; background: var(--blue); }
+.plan.featured .plan-list li::before { background: var(--cyan); }
+.plan .btn { align-self: flex-start; margin-top: .4rem; }
+.btn.is-soon { opacity: .55; cursor: default; }
+.btn.is-soon:hover { background: inherit; }
+.plans-note { margin-top: 2rem; color: var(--muted); font-size: .92rem; max-width: 46rem; line-height: 1.6; }
+
 /* --- Form --- */
 label, .label-like { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 input[type=email], select {

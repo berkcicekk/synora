@@ -351,3 +351,13 @@ def test_css_respects_hidden_attribute(client: TestClient) -> None:
     # .button/.card display tanımları [hidden]'ı ezerse onay düğmesi ve filtreler bozulur.
     css = client.get("/static/app.css").text
     assert "[hidden] { display: none !important; }" in css
+
+
+def test_pricing_page_is_public(client: TestClient, mailer: ConsoleMailer) -> None:
+    res = client.get("/fiyatlandirma")
+    assert res.status_code == 200
+    assert "Fiyatlandırma" in res.text
+    assert "Test aşamasında" in res.text
+    assert 'aria-current="page"' in res.text
+    login(client, mailer)
+    assert client.get("/fiyatlandirma").status_code == 200

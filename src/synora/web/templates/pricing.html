@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "_marks.html" import arrow %}
+{% block title %}Fiyatlandırma · Synora{% endblock %}
+{% block body_class %}landing{% endblock %}
+{% block content %}
+
+<section class="price-hero">
+  <div class="wrap">
+    <span class="test-flag"><i aria-hidden="true"></i>Test aşamasında</span>
+    <h1>Fiyatlandırma</h1>
+    <p>Synora şu an Zonguldak Bülent Ecevit Üniversitesi'nde pilot olarak denenmektedir. Aşağıdaki
+       paketler ve fiyatlar kesin değildir; pilot süresince öğrenciler için kullanım ücretsizdir.</p>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="wrap">
+    <div class="plans">
+      <article class="plan reveal d1">
+        <span class="plan-tag">Test aşamasında</span>
+        <h2>Öğrenci</h2>
+        <p class="plan-for">Tezini teslimden önce kılavuza uydurmak isteyenler için.</p>
+        <div class="plan-price"><span class="amount">0 ₺</span><span class="per">pilot süresince</span></div>
+        <ul class="plan-list">
+          <li>Denetim raporu, belgenin üzerinde</li>
+          <li>Düzeltilmiş kopya (Word'de izlenen değişiklik)</li>
+          <li>Yorumlu kopya</li>
+          <li>Üniversite e-postasıyla giriş</li>
+        </ul>
+        <a class="btn primary" href="/#giris"><span class="lbl">Ücretsiz deneyin</span>{{ arrow() }}</a>
+      </article>
+
+      <article class="plan featured reveal d2">
+        <span class="plan-tag">Test aşamasında</span>
+        <h2>Anabilim dalı</h2>
+        <p class="plan-for">Danışmanlar ve bölümler için toplu kullanım.</p>
+        <div class="plan-price"><span class="amount">—</span><span class="per">fiyat henüz belirlenmedi</span></div>
+        <ul class="plan-list">
+          <li>Öğrenci paketindeki her şey</li>
+          <li>Bölüm için toplu denetim</li>
+          <li>Kılavuz güncellemelerinin takibi</li>
+          <li>Öncelikli destek</li>
+        </ul>
+        <span class="btn light is-soon" aria-disabled="true"><span class="lbl">İletişim yakında</span></span>
+      </article>
+
+      <article class="plan reveal d3">
+        <span class="plan-tag">Test aşamasında</span>
+        <h2>Enstitü / Fakülte</h2>
+        <p class="plan-for">Kendi kılavuzuyla, kendi sunucusunda çalışmak isteyen kurumlar için.</p>
+        <div class="plan-price"><span class="amount">Teklif</span><span class="per">kuruma özel</span></div>
+        <ul class="plan-list">
+          <li>Kurum kılavuzunun kural setine çevrilmesi</li>
+          <li>Kurum sunucusunda kurulum</li>
+          <li>Tüm öğrenciler için erişim</li>
+          <li>Kılavuz çelişkileri raporu</li>
+        </ul>
+        <span class="btn is-soon" aria-disabled="true"><span class="lbl">İletişim yakında</span></span>
+      </article>
+    </div>
+    <p class="plans-note">Test aşamasında paket içerikleri değişebilir. Hangi pakette olursa olsun tezinizin metni
+       değiştirilmez, yapay zekâ servislerine gönderilmez ve sunucuda saklanmaz.</p>
+  </div>
+</section>
+{% endblock %}
