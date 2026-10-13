@@ -374,3 +374,75 @@ def test_report_view_counts_grouped_findings() -> None:
     assert len(view["cards"]) == 1
     assert view["finding_count"] == 2
     assert view["cards"][0]["count"] == 2
+
+
+# --- Rol düzeltme ---------------------------------------------------------------------------
+
+
+def ambiguous_thesis() -> bytes:
+    return thesis(front_matter() + main_matter(extra=p(r("Araştırmanın sınırlılıkları",
+                                                         rpr="<w:b/>"))))
+
+
+def unknown_pid(client: TestClient, job_id: str) -> str:
+    blocks = client.get(f"/jobs/{job_id}/report.json").json()["document"]
+    return str(next(b["pid"] for b in blocks if b.get("role") == "unknown"))
+
+
+def set_roles(client: TestClient, csrf: str, job_id: str, roles: dict[str, str]):  # type: ignore[no-untyped-def]
+    return client.post(f"/jobs/{job_id}/roles", json={"roles": roles},
+                       headers={"X-CSRF-Token": csrf})
+
+
+def recheck(client: TestClient, csrf: str, job_id: str, data: bytes):  # type: ignore[no-untyped-def]
+    return client.post(f"/jobs/{job_id}/recheck", content=data,
+                       headers={"X-CSRF-Token": csrf, "Content-Type": "application/octet-stream"})
+
+
+def test_role_correction_then_recheck(client: TestClient, mailer: ConsoleMailer) -> None:
+    csrf = login(client, mailer)
+    data = ambiguous_thesis()
+    job_id = upload(client, csrf, data)
+    assert wait_done(client, job_id) == "done"
+    page = client.get(f"/jobs/{job_id}").text
+    pid = unknown_pid(client, job_id)
+    assert f'data-pid="{pid}"' in page
+    assert output(client, csrf, job_id, "fixed", data).status_code == 422  # düzeltilecek yok
+
+    res = set_roles(client, csrf, job_id, {pid: "heading_2"})
+    assert res.status_code == 200, res.text
+    assert res.json()["roles"] == {pid: "heading_2"}
+    assert "Yeniden denetle" in client.get(f"/jobs/{job_id}").text
+
+    res = recheck(client, csrf, job_id, data)
+    assert res.status_code == 202, res.text
+    assert wait_done(client, job_id) == "done"
+    rep = client.get(f"/jobs/{job_id}/report.json").json()
+    assert rep["summary"]["unknown_paragraphs"] == 0
+    assert rep["user_roles"] == {pid: "heading_2"}
+    assert "2. düzey başlık" in client.get(f"/jobs/{job_id}").text
+    assert output(client, csrf, job_id, "fixed", data).status_code == 200
+
+    # Seçim geri alınabilir.
+    assert set_roles(client, csrf, job_id, {pid: ""}).json()["roles"] == {}
+
+
+def test_role_correction_validation(settings: Settings, mailer: ConsoleMailer) -> None:
+    app = create_app(settings, mailer)
+    with TestClient(app) as alice, TestClient(app) as bob:
+        csrf = login(alice, mailer, "alice@beun.edu.tr")
+        data = ambiguous_thesis()
+        job_id = upload(alice, csrf, data)
+        wait_done(alice, job_id)
+        pid = unknown_pid(alice, job_id)
+        assert set_roles(alice, csrf, job_id, {pid: "cover"}).status_code == 400
+        assert set_roles(alice, csrf, job_id, {pid: "<b>"}).status_code == 400
+        assert set_roles(alice, csrf, job_id, {"p-yok": "body"}).status_code == 400
+        assert alice.post(f"/jobs/{job_id}/roles", json={"roles": "x"},
+                          headers={"X-CSRF-Token": csrf}).status_code == 400
+        assert set_roles(alice, "yanlis", job_id, {pid: "body"}).status_code == 403
+        assert recheck(alice, csrf, job_id, thesis()).status_code == 409
+        assert recheck(alice, "yanlis", job_id, data).status_code == 403
+        b_csrf = login(bob, mailer, "bob@beun.edu.tr")
+        assert set_roles(bob, b_csrf, job_id, {pid: "body"}).status_code == 404
+        assert recheck(bob, b_csrf, job_id, data).status_code == 404

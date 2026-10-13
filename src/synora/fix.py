@@ -12,7 +12,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from synora.check import Finding, check
+from synora.check import Finding, UserRoles, check
 from synora.errors import ErrorCode
 from synora.ingest import DocxPackage, open_docx
 from synora.model import RunInfo
@@ -60,8 +60,10 @@ def key(f: Finding) -> FindingKey:
     return (f.rule_id, f.para_id, f.section_index if f.para_id is None else None)
 
 
-def findings_of(pkg: DocxPackage, rules: Ruleset) -> set[FindingKey]:
-    return {key(f) for f in check(parse_package(pkg), rules).findings}
+def findings_of(
+    pkg: DocxPackage, rules: Ruleset, user_roles: UserRoles | None = None
+) -> set[FindingKey]:
+    return {key(f) for f in check(parse_package(pkg), rules, user_roles).findings}
 
 
 def cm_to_twips(cm: float) -> int:
@@ -242,10 +244,12 @@ def _page_number_ops(f: Finding, sections: int, current: list[str]) -> dict[int,
 # --- Uygulama ------------------------------------------------------------------------------------
 
 
-def fix_document(data: bytes, rules: Ruleset) -> FixResult:
+def fix_document(
+    data: bytes, rules: Ruleset, user_roles: UserRoles | None = None
+) -> FixResult:
     pkg = open_docx(data)
     parsed = parse_document(pkg)
-    result = check(parsed.doc, rules)
+    result = check(parsed.doc, rules, user_roles)
     fixable = [f for f in result.findings if f.fixable]
     if not fixable:
         raise WriteError(ErrorCode.NOTHING_TO_FIX)
@@ -291,7 +295,7 @@ def fix_document(data: bytes, rules: Ruleset) -> FixResult:
         pkg, output,
         modified_parts=modified,
         expected_structure_delta=Counter(),
-        check_findings=lambda p: findings_of(p, rules),
+        check_findings=lambda p: findings_of(p, rules, user_roles),
         before_findings={key(f) for f in result.findings},
         must_disappear={key(f) for f in applied},
         allowed_new=ALLOWED_NEW_FINDINGS,

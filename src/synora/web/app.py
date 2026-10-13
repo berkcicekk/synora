@@ -26,6 +26,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import ValidationError
 
+from synora.check import USER_ROLES
 from synora.errors import ErrorCode
 from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message
 from synora.ruleset import Ruleset, load_ruleset
@@ -52,6 +53,11 @@ OUTPUT_ERRORS = {
     "NOTHING_TO_FIX": "Bu belgede otomatik düzeltilebilecek bir bulgu yok.",
     "TIMEOUT": "İşlem süre sınırını aştı. Raporu kullanarak Word'de düzeltebilirsiniz.",
 }
+MAX_USER_ROLES = 2000
+# Rol seçim listesi (arayüz sırası); yalnızca synora.check.USER_ROLES içindekiler.
+ROLE_CHOICES = [r for r in (
+    "heading_1", "heading_2", "heading_3", "body", "front_matter", "block_quote", "list_item",
+    "figure_caption", "table_caption", "reference_entry") if r in {u.value for u in USER_ROLES}]
 JOB_ERRORS = {
     "TIMEOUT": "Denetim süre sınırını aştı. Belge çok büyük ya da karmaşık olabilir.",
     "INTERNAL": "Beklenmeyen bir hata oluştu. Dosyanızı Word'de açıp yeniden kaydedip deneyin.",
@@ -117,6 +123,15 @@ def format_when(ts: float) -> str:
     return f"{d.day} {TR_MONTHS[d.month - 1]} {d:%H:%M}"
 
 
+def applied_roles(report: dict[str, Any]) -> dict[str, str]:
+    return dict(report.get("user_roles") or {})
+
+
+def pending_roles(job: Job, report: dict[str, Any]) -> dict[str, str]:
+    """Öğrencinin şu anki seçimleri: kaydedilmiş seçim yoksa rapora uygulanmış olanlar."""
+    return dict(json.loads(job.user_roles)) if job.user_roles is not None else applied_roles(report)
+
+
 def report_view(report: dict[str, Any]) -> dict[str, Any]:
     """Rapor JSON'unu ekran için gruplar: aynı kural + aynı değerler tek kart."""
     groups: dict[tuple[str, str, str], dict[str, Any]] = {}
@@ -163,7 +178,9 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
                 if blocks[i]["sev"] != "error":
                     blocks[i]["sev"] = c["severity"]
     return {"summary": report["summary"], "ruleset": report["ruleset"], "cards": cards,
-            "finding_count": len(report["findings"]), "blocks": blocks, "outline": _outline(blocks)}
+            "finding_count": len(report["findings"]), "blocks": blocks, "outline": _outline(blocks),
+            "role_choices": [(r, _role_name(r)) for r in ROLE_CHOICES],
+            "editable": sum(1 for b in blocks if "pid" in b)}
 
 
 def _outline(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -412,7 +429,11 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if user is None:
             return RedirectResponse("/", status_code=303)
         job = own_job(user, job_id)
-        view = report_view(json.loads(job.report)) if job.report else None
+        report = json.loads(job.report) if job.report else None
+        view = report_view(report) if report else None
+        if report and view:
+            view["pending"] = pending_roles(job, report)
+            view["roles_changed"] = view["pending"] != applied_roles(report)
         return render(request, "job.html", user=user, job=job, view=view,
                       error=job_error_message(job.error_code) if job.status == "failed" else None,
                       ruleset=rulesets.get(job.ruleset), retention=int(settings.retention_hours))
@@ -439,6 +460,71 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         db.delete_job(job_id)
         return RedirectResponse("/", status_code=303)
 
+    async def same_file(request: Request, expected_sha256: str) -> bytes:
+        """Sunucu tezi saklamadığından öğrenci aynı dosyayı yeniden gönderir; bellekte okunur,
+        yalnızca SHA-256 özeti karşılaştırılır."""
+        chunks: list[bytes] = []
+        size = 0
+        async for chunk in request.stream():
+            size += len(chunk)
+            if size > settings.max_upload_bytes:
+                raise HTTPException(413, "Dosya çok büyük.")
+            chunks.append(chunk)
+        data = b"".join(chunks)
+        if not hmac.compare_digest(hashlib.sha256(data).hexdigest(), expected_sha256):
+            raise HTTPException(409, "Bu, denetlenen dosya değil. Aynı dosyayı seçin ya da "
+                                     "yeni dosya için yeni bir denetim başlatın.")
+        return data
+
+    @app.post("/jobs/{job_id}/roles")
+    async def job_roles(request: Request, job_id: str) -> JSONResponse:
+        """Rolü belirsiz paragraflar için öğrencinin seçimi. Yalnızca paragraf kimliği ve izinli
+        bir rol adı alınır; metin alınmaz. Boş rol seçimi kaldırır."""
+        user = require_user(request)
+        check_csrf(user.csrf, request.headers.get("x-csrf-token"))
+        job = own_job(user, job_id)
+        if job.status != "done" or not job.report:
+            raise HTTPException(409, "Bu denetim için rol seçilemiyor.")
+        try:
+            body = await request.json()
+        except ValueError:
+            raise HTTPException(400, "Geçersiz istek.") from None
+        changes = body.get("roles") if isinstance(body, dict) else None
+        if not isinstance(changes, dict) or len(changes) > MAX_USER_ROLES:
+            raise HTTPException(400, "Geçersiz istek.")
+        report = json.loads(job.report)
+        editable = {b["pid"] for b in report.get("document") or [] if "pid" in b}
+        pending = pending_roles(job, report)
+        for pid, role in changes.items():
+            if pid not in editable or not isinstance(role, str) or (
+                role and role not in ROLE_CHOICES
+            ):
+                raise HTTPException(400, "Geçersiz paragraf ya da rol.")
+            if role:
+                pending[pid] = role
+            else:
+                pending.pop(pid, None)
+        db.set_user_roles(job_id, json.dumps(pending, sort_keys=True))
+        return JSONResponse({"roles": pending, "changed": pending != applied_roles(report)})
+
+    @app.post("/jobs/{job_id}/recheck")
+    async def job_recheck(request: Request, job_id: str) -> JSONResponse:
+        """Seçilen rollerle aynı dosyayı yeniden denetler."""
+        user = require_user(request)
+        check_csrf(user.csrf, request.headers.get("x-csrf-token"))
+        job = own_job(user, job_id)
+        ruleset = rulesets.get(job.ruleset)
+        if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
+            raise HTTPException(409, "Bu denetim yeniden çalıştırılamıyor.")
+        if db.active_jobs(user.email) >= settings.max_active_jobs:
+            raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+        data = await same_file(request, job.source_sha256)
+        roles = pending_roles(job, json.loads(job.report))
+        db.requeue(job_id)
+        runner.submit(job_id, data, str(ruleset.path), roles)
+        del data
+        return JSONResponse({"id": job_id, "url": f"/jobs/{job_id}"}, status_code=202)
+
     @app.post("/jobs/{job_id}/output/{kind}")
     async def job_output(request: Request, job_id: str, kind: str) -> Response:
         """Düzeltilmiş ya da yorumlu kopya. Sunucu tezi saklamadığı için öğrenci aynı dosyayı
@@ -449,22 +535,15 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             raise HTTPException(404)
         job = own_job(user, job_id)
         ruleset = rulesets.get(job.ruleset)
-        if job.status != "done" or ruleset is None or not job.source_sha256:
+        if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim için kopya üretilemiyor.")
-        chunks: list[bytes] = []
-        size = 0
-        async for chunk in request.stream():
-            size += len(chunk)
-            if size > settings.max_upload_bytes:
-                raise HTTPException(413, "Dosya çok büyük.")
-            chunks.append(chunk)
-        data = b"".join(chunks)
-        if not hmac.compare_digest(hashlib.sha256(data).hexdigest(), job.source_sha256):
-            raise HTTPException(409, "Bu, denetlenen dosya değil. Aynı dosyayı seçin ya da "
-                                     "yeni dosya için yeni bir denetim başlatın.")
+        data = await same_file(request, job.source_sha256)
+        # Kopya, ekrandaki raporla aynı rollerle üretilir (kaydedilmiş ama henüz yeniden
+        # denetlenmemiş seçimlerle değil).
+        roles = applied_roles(json.loads(job.report))
         result = await run_in_threadpool(runner.make_output, kind,  # type: ignore[arg-type]
-                                         job_id, data, str(ruleset.path))
-        del data, chunks
+                                         job_id, data, str(ruleset.path), roles)
+        del data
         if result["docx"] is None:
             code = result["error_code"] or "INTERNAL"
             message = OUTPUT_ERRORS.get(code, "Belge otomatik olarak işlenemedi; metninizin "
@@ -482,6 +561,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     async def http_error(request: Request, exc: HTTPException) -> Response:
         if request.method == "POST" and (
             request.url.path == "/jobs" or "/output/" in request.url.path
+            or request.url.path.endswith(("/roles", "/recheck"))
         ):
             return JSONResponse({"error": exc.detail}, status_code=exc.status_code)
         if exc.status_code == 401:

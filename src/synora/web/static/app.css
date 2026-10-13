@@ -484,6 +484,15 @@ body.editor main { display: flex; min-height: 0; }
 .blk.has-warning { background: var(--warning-wash); box-shadow: inset 2px 0 0 var(--warning); }
 .blk.active { outline: 2px solid var(--blue); outline-offset: 2px; }
 .blk.dim { opacity: .3; }
+/* Rolü belirsiz paragraf: kesikli çerçeve + tür seçimi (öğrenci düzeltir, yeniden denetler). */
+.blk.is-unsure { outline: 1px dashed var(--blue); outline-offset: 2px; }
+.role-pick { display: flex; align-items: center; gap: .5rem; justify-self: start; font-family: var(--sans); font-size: .72rem; color: var(--blue); }
+.role-pick span { font-family: var(--mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.role-pick select { font: inherit; font-family: var(--sans); color: var(--ink); background: #fff; border: 1px solid var(--hair); border-radius: 3px; padding: .2rem .35rem; }
+.role-pick select:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+.roles-bar { display: grid; gap: .6rem; margin: 0 0 .9rem; padding: .8rem .9rem; border: 1px solid var(--blue); border-radius: 4px; background: #fff; font-size: .82rem; }
+.roles-bar p { margin: 0; }
+.roles-bar .btn { justify-self: start; }
 .pins { position: absolute; left: -3.3rem; top: .25rem; display: flex; gap: 2px; flex-direction: row-reverse; }
 .pin { font-family: var(--mono); font-size: .62rem; min-width: 1.45rem; height: 1.45rem; padding: 0 .3rem; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--blue); color: #fff; }
 .pin.more { background: #fff; color: var(--ink); border: 1px solid var(--hair); }

@@ -164,3 +164,30 @@ def test_margins_within_tolerance() -> None:
     near = MARGINS.replace('w:top="1701"', 'w:top="1710"')  # 3,016 cm
     body = front_matter() + main_matter().replace(sect("decimal"), sect("decimal", margins=near))
     assert run(thesis(body)).findings == ()
+
+
+# --- Kullanıcının rol düzeltmesi ----------------------------------------------------------
+
+
+def _unknown_pid(result: CheckResult) -> str:
+    return next(pid for pid, d in result.roles.items() if d.role is Role.UNKNOWN)
+
+
+def test_user_role_applies_to_unknown_paragraph() -> None:
+    ambiguous = p(r("Araştırmanın sınırlılıkları", rpr="<w:b/>"))
+    doc = parse_package(open_docx(thesis(front_matter() + main_matter(extra=ambiguous))))
+    pid = _unknown_pid(check(doc, RULES))
+    result = check(doc, RULES, user_roles={pid: Role.HEADING_2})
+    assert result.unknown_paragraphs == 0
+    assert result.roles[pid].role is Role.HEADING_2
+    assert {f.para_id for f in result.findings} == {pid}
+    assert {f.role for f in result.findings} == {Role.HEADING_2}
+
+
+def test_user_role_never_overrides_a_classified_paragraph() -> None:
+    doc = parse_package(open_docx(thesis()))
+    before = check(doc, RULES)
+    pid, decision = next((k, d) for k, d in before.roles.items() if d.role is Role.BODY)
+    after = check(doc, RULES, user_roles={pid: Role.HEADING_1, "yok": Role.HEADING_1})
+    assert after.roles[pid] == decision
+    assert after.findings == before.findings

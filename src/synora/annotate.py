@@ -13,7 +13,7 @@ from typing import Any
 from lxml import etree
 
 from synora import xmlsafe
-from synora.check import Finding, check
+from synora.check import Finding, UserRoles, check
 from synora.errors import ErrorCode
 from synora.ingest import open_docx
 from synora.model import Role, Story
@@ -38,10 +38,12 @@ def _comment_lines(findings: list[Finding]) -> list[str]:
     return lines
 
 
-def annotate_document(data: bytes, rules: Ruleset) -> bytes:
+def annotate_document(
+    data: bytes, rules: Ruleset, user_roles: UserRoles | None = None
+) -> bytes:
     pkg = open_docx(data)
     parsed = parse_document(pkg)
-    result = check(parsed.doc, rules)
+    result = check(parsed.doc, rules, user_roles)
     if not result.findings:
         raise WriteError(ErrorCode.NOTHING_TO_FIX)
 
@@ -122,7 +124,8 @@ def annotate_document(data: bytes, rules: Ruleset) -> bytes:
         expected_structure_delta=Counter({w("commentRangeStart"): n, w("commentRangeEnd"): n,
                                           w("commentReference"): n, w("r"): n}),
         check_findings=lambda p: {(f.rule_id, f.para_id, f.section_index)
-                                  for f in check(parse_document(p).doc, rules).findings},
+                                  for f in check(parse_document(p).doc, rules,
+                                                 user_roles).findings},
         before_findings=before,
         must_disappear=set(),
         allowed_new=set(),

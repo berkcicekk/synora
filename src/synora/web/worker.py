@@ -29,8 +29,12 @@ from synora.web.settings import Settings
 MEMORY_LIMIT_BYTES = 2 * 1024 * 1024 * 1024
 
 
+UserRoles = dict[str, str] | None
+
+
 def _child(
-    conn: Connection, task: str, ruleset_path: str, job_id: str, cpu_seconds: int
+    conn: Connection, task: str, ruleset_path: str, job_id: str, cpu_seconds: int,
+    user_roles: UserRoles = None,
 ) -> None:
     if sys.platform != "win32":
         import resource
@@ -39,19 +43,22 @@ def _child(
         resource.setrlimit(resource.RLIMIT_CPU, (cpu_seconds, cpu_seconds))
     data = conn.recv_bytes()
     if task == "check":
-        conn.send(run_pipeline(data, ruleset_path, job_id))
+        conn.send(run_pipeline(data, ruleset_path, job_id, user_roles))
     elif task in ("fixed", "annotated"):
-        conn.send(run_output(task, data, ruleset_path, job_id))  # type: ignore[arg-type]
+        conn.send(run_output(task, data, ruleset_path, job_id,  # type: ignore[arg-type]
+                             user_roles))
     conn.close()
 
 
-def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: float) -> object:
+def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: float,
+           user_roles: UserRoles = None) -> object:
     """Görevi ayrı süreçte çalıştırır; süre aşımında süreci sonlandırır.
     Başarısızlıkta hata kodu (str) döner."""
     ctx = mp.get_context("spawn")
     parent, child = ctx.Pipe()
     proc = ctx.Process(target=_child,
-                       args=(child, task, ruleset_path, job_id, int(timeout) + 5), daemon=True)
+                       args=(child, task, ruleset_path, job_id, int(timeout) + 5, user_roles),
+                       daemon=True)
     proc.start()
     child.close()
     try:
@@ -71,17 +78,19 @@ def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: floa
             proc.join(1)
 
 
-def run_isolated(data: bytes, ruleset_path: str, job_id: str, timeout: float) -> PipelineResult:
-    result = _spawn("check", data, ruleset_path, job_id, timeout)
+def run_isolated(data: bytes, ruleset_path: str, job_id: str, timeout: float,
+                 user_roles: UserRoles = None) -> PipelineResult:
+    result = _spawn("check", data, ruleset_path, job_id, timeout, user_roles)
     if isinstance(result, str):
         return {"report": None, "error_code": result, "source_sha256": None}
     return result  # type: ignore[return-value]
 
 
 def output_isolated(
-    kind: OutputKind, data: bytes, ruleset_path: str, job_id: str, timeout: float
+    kind: OutputKind, data: bytes, ruleset_path: str, job_id: str, timeout: float,
+    user_roles: UserRoles = None,
 ) -> OutputResult:
-    result = _spawn(kind, data, ruleset_path, job_id, timeout)
+    result = _spawn(kind, data, ruleset_path, job_id, timeout, user_roles)
     if isinstance(result, str):
         return {"docx": None, "error_code": result}
     return result  # type: ignore[return-value]
@@ -91,7 +100,7 @@ class JobRunner:
     def __init__(self, db: Database, settings: Settings) -> None:
         self.db = db
         self.settings = settings
-        self._queue: queue.Queue[tuple[str, bytes, str] | None] = queue.Queue()
+        self._queue: queue.Queue[tuple[str, bytes, str, UserRoles] | None] = queue.Queue()
         self._threads: list[threading.Thread] = []
         self._stop = threading.Event()
 
@@ -109,36 +118,40 @@ class JobRunner:
         for _ in range(self.settings.workers):
             self._queue.put(None)
 
-    def submit(self, job_id: str, data: bytes, ruleset_path: str) -> None:
-        self._queue.put((job_id, data, ruleset_path))
+    def submit(self, job_id: str, data: bytes, ruleset_path: str,
+               user_roles: UserRoles = None) -> None:
+        self._queue.put((job_id, data, ruleset_path, user_roles))
 
-    def run_now(self, job_id: str, data: bytes, ruleset_path: str) -> None:
+    def run_now(self, job_id: str, data: bytes, ruleset_path: str,
+                user_roles: UserRoles = None) -> None:
         self.db.set_running(job_id)
         if self.settings.isolate_jobs:
-            result = run_isolated(data, ruleset_path, job_id, self.settings.job_timeout_seconds)
+            result = run_isolated(data, ruleset_path, job_id, self.settings.job_timeout_seconds,
+                                  user_roles)
         else:
-            result = run_pipeline(data, ruleset_path, job_id)
+            result = run_pipeline(data, ruleset_path, job_id, user_roles)
         if self.db.get_job(job_id) is not None:  # kullanıcı bu arada silmiş olabilir
             self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"],
                                source_sha256=result["source_sha256"])
 
     def make_output(
-        self, kind: OutputKind, job_id: str, data: bytes, ruleset_path: str
+        self, kind: OutputKind, job_id: str, data: bytes, ruleset_path: str,
+        user_roles: UserRoles = None,
     ) -> OutputResult:
         """Düzeltilmiş/yorumlu kopyayı istek içinde üretir; sonuç saklanmaz."""
         if self.settings.isolate_jobs:
             return output_isolated(kind, data, ruleset_path, job_id,
-                                   self.settings.job_timeout_seconds)
-        return run_output(kind, data, ruleset_path, job_id)
+                                   self.settings.job_timeout_seconds, user_roles)
+        return run_output(kind, data, ruleset_path, job_id, user_roles)
 
     def _loop(self) -> None:
         while not self._stop.is_set():
             item = self._queue.get()
             if item is None:
                 return
-            job_id, data, ruleset_path = item
+            job_id, data, ruleset_path, user_roles = item
             try:
-                self.run_now(job_id, data, ruleset_path)
+                self.run_now(job_id, data, ruleset_path, user_roles)
             except Exception:
                 # Bir işteki beklenmeyen hata (ör. geçici veritabanı kilidi) yürütücüyü öldürmemeli;
                 # yoksa sonraki tüm işler sonsuza dek "sırada" kalır.

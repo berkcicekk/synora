@@ -52,6 +52,7 @@ class Job:
     error_code: str | None
     report: str | None
     source_sha256: str | None = None  # yeniden yüklemede "aynı dosya mı" denetimi için
+    user_roles: str | None = None  # JSON {para_id: rol}: öğrencinin kaydettiği rol seçimleri
 
 
 class Database:
@@ -67,6 +68,8 @@ class Database:
             columns = {row[1] for row in self._conn.execute("PRAGMA table_info(jobs)")}
             if "source_sha256" not in columns:
                 self._conn.execute("ALTER TABLE jobs ADD COLUMN source_sha256 TEXT")
+            if "user_roles" not in columns:
+                self._conn.execute("ALTER TABLE jobs ADD COLUMN user_roles TEXT")
             # Yeniden başlatmada yarıda kalan işler: dosya bellekteydi, artık yok.
             self._conn.execute(
                 "UPDATE jobs SET status='failed', error_code='INTERRUPTED', finished_at=? "
@@ -130,6 +133,13 @@ class Database:
 
     def set_running(self, job_id: str) -> None:
         self.execute("UPDATE jobs SET status='running' WHERE id=?", (job_id,))
+
+    def requeue(self, job_id: str) -> None:
+        """Aynı dosyayla yeniden denetim: rapor yeni sonuç gelene kadar korunur."""
+        self.execute("UPDATE jobs SET status='queued' WHERE id=?", (job_id,))
+
+    def set_user_roles(self, job_id: str, roles: str | None) -> None:
+        self.execute("UPDATE jobs SET user_roles=? WHERE id=?", (roles, job_id))
 
     def finish_job(self, job_id: str, *, report: str | None, error_code: str | None,
                    source_sha256: str | None = None) -> None:

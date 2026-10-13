@@ -19,6 +19,7 @@ from synora.errors import ErrorCode, SynoraError
 from synora.fingerprint import content_fingerprint
 from synora.fix import fix_document
 from synora.ingest import open_docx
+from synora.model import Role
 from synora.parse import parse_package
 from synora.ruleset import load_ruleset
 from synora.write import WriteError, repackage, verify_output
@@ -260,3 +261,33 @@ def test_libreoffice_opens_output(tmp_path: Path, kind: str) -> None:
     )
     pdf = tmp_path / f"{kind}.pdf"
     assert pdf.exists() and pdf.stat().st_size > 1000
+
+
+# --- Kullanıcının seçtiği roller -------------------------------------------------------------
+
+AMBIGUOUS = p(r("Araştırmanın sınırlılıkları", rpr="<w:b/>"))
+
+
+def _ambiguous_thesis() -> tuple[bytes, dict[str, Role]]:
+    data = thesis(front_matter() + main_matter(extra=AMBIGUOUS))
+    result = check(parse_package(open_docx(data)), RULES)
+    pid = next(k for k, d in result.roles.items() if d.role is Role.UNKNOWN)
+    return data, {pid: Role.HEADING_2}
+
+
+def test_fix_uses_user_roles() -> None:
+    data, roles = _ambiguous_thesis()
+    with pytest.raises(SynoraError):  # rol seçilmeden düzeltilecek bir şey yok
+        fix_document(data, RULES)
+    fixed = fix_document(data, RULES, user_roles=roles)
+    assert fixed.fixed >= 1
+    after = check(parse_package(open_docx(fixed.docx)), RULES, user_roles=roles)
+    assert [f.rule_id for f in after.findings if f.fixable] == []
+    assert content_fingerprint(open_docx(fixed.docx)) == content_fingerprint(open_docx(data))
+
+
+def test_annotation_uses_user_roles() -> None:
+    data, roles = _ambiguous_thesis()
+    out = annotate_document(data, RULES, user_roles=roles)
+    comments = zipfile.ZipFile(__import__("io").BytesIO(out)).read("word/comments.xml").decode()
+    assert "2. düzey başlık" in comments

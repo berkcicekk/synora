@@ -55,11 +55,12 @@ def test_worker_survives_unexpected_error(tmp_path) -> None:  # type: ignore[no-
     calls = {"n": 0}
     real = runner.run_now
 
-    def flaky(job_id: str, data: bytes, ruleset_path: str) -> None:
+    def flaky(job_id: str, data: bytes, ruleset_path: str,
+              user_roles: dict[str, str] | None = None) -> None:
         calls["n"] += 1
         if calls["n"] == 1:
             raise RuntimeError("geçici hata")
-        real(job_id, data, ruleset_path)
+        real(job_id, data, ruleset_path, user_roles)
 
     runner.run_now = flaky  # type: ignore[method-assign]
     runner.start()

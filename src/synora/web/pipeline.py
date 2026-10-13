@@ -11,12 +11,13 @@ import time
 from typing import Literal, TypedDict
 
 from synora.annotate import annotate_document
-from synora.check import check
+from synora.check import USER_ROLES, check
 from synora.errors import SynoraError
 from synora.fix import fix_document
 from synora.ingest import open_docx
 from synora.locate import locations
 from synora.log import log_event
+from synora.model import Role
 from synora.outline import build_outline
 from synora.parse import parse_package
 from synora.report import to_json
@@ -37,14 +38,23 @@ class OutputResult(TypedDict):
 OutputKind = Literal["fixed", "annotated"]
 
 
+def parse_user_roles(raw: dict[str, str] | None) -> dict[str, Role]:
+    """Saklanan/gelen seçimleri doğrular; izinli olmayan değerler atılır."""
+    allowed = {r.value: r for r in USER_ROLES}
+    return {pid: allowed[v] for pid, v in (raw or {}).items()
+            if isinstance(pid, str) and isinstance(v, str) and v in allowed}
+
+
 def run_output(
-    kind: OutputKind, data: bytes, ruleset_path: str, job_id: str = "job"
+    kind: OutputKind, data: bytes, ruleset_path: str, job_id: str = "job",
+    user_roles: dict[str, str] | None = None,
 ) -> OutputResult:
     """Düzeltilmiş ya da yorumlu kopyayı üretir. Sonuç doğrudan kullanıcıya akar, saklanmaz."""
     try:
         rules = load_ruleset(ruleset_path)
-        docx = (fix_document(data, rules).docx if kind == "fixed"
-                else annotate_document(data, rules))
+        roles = parse_user_roles(user_roles)
+        docx = (fix_document(data, rules, roles).docx if kind == "fixed"
+                else annotate_document(data, rules, roles))
     except SynoraError as exc:
         log_event("output.rejected", job_id=job_id, code=exc.code.value)
         return {"docx": None, "error_code": exc.code.value}
@@ -55,15 +65,19 @@ def run_output(
     return {"docx": docx, "error_code": None}
 
 
-def run_pipeline(data: bytes, ruleset_path: str, job_id: str = "job") -> PipelineResult:
+def run_pipeline(
+    data: bytes, ruleset_path: str, job_id: str = "job",
+    user_roles: dict[str, str] | None = None,
+) -> PipelineResult:
     started = time.monotonic()
     sha = hashlib.sha256(data).hexdigest()
     try:
         rules = load_ruleset(ruleset_path)
         pkg = open_docx(data)
         doc = parse_package(pkg)
-        result = check(doc, rules)
+        result = check(doc, rules, parse_user_roles(user_roles))
         report = json.loads(to_json(result, rules))
+        report["user_roles"] = {pid: r.value for pid, r in result.user_roles.items()}
         where = locations(doc, result.roles)
         blocks, finding_block = build_outline(doc, result)
         report["document"] = blocks  # editör görünümü: gövde metni içermez

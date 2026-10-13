@@ -6,8 +6,8 @@ Bulgular metin içermez: yalnızca kural kimliği, konum ve biçim değerleri (e
 from __future__ import annotations
 
 import re
-from collections.abc import Iterator
-from dataclasses import dataclass
+from collections.abc import Iterator, Mapping
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from synora.features import page_starts
@@ -43,6 +43,7 @@ class CheckResult:
     checked_paragraphs: int
     unknown_paragraphs: int
     cover_paragraphs: int = 0
+    user_roles: dict[str, Role] = field(default_factory=dict)  # uygulanan öğrenci seçimleri
 
 
 SKIPPED_ROLES = frozenset(
@@ -51,8 +52,27 @@ SKIPPED_ROLES = frozenset(
 )
 
 
-def check(doc: DocModel, rules: Ruleset) -> CheckResult:
+UserRoles = Mapping[str, Role]  # para_id → öğrencinin seçtiği rol
+
+# Öğrencinin "rolü belirsiz" paragraflar için seçebileceği roller.
+USER_ROLES = frozenset({
+    Role.HEADING_1, Role.HEADING_2, Role.HEADING_3, Role.BODY, Role.BLOCK_QUOTE, Role.LIST_ITEM,
+    Role.FIGURE_CAPTION, Role.TABLE_CAPTION, Role.REFERENCE_ENTRY, Role.FRONT_MATTER,
+})
+
+
+def check(
+    doc: DocModel, rules: Ruleset, user_roles: UserRoles | None = None
+) -> CheckResult:
+    """`user_roles`: öğrencinin seçtiği roller. Yalnızca sınıflandırıcının UNKNOWN bıraktığı
+    paragraflara ve USER_ROLES içindeki rollere uygulanır; diğerleri sessizce yok sayılır."""
     roles = assign_roles(doc)
+    applied: dict[str, Role] = {}
+    for pid, role in (user_roles or {}).items():
+        current = roles.get(pid)
+        if current is not None and current.role is Role.UNKNOWN and role in USER_ROLES:
+            roles[pid] = RoleDecision(role=role, confidence=1.0)
+            applied[pid] = role
     findings: list[Finding] = []
     findings.extend(_document_rules(doc, rules))
     findings.extend(_page_rules(doc.sections, rules))
@@ -81,7 +101,7 @@ def check(doc: DocModel, rules: Ruleset) -> CheckResult:
             findings.append(
                 _locate(f, para, decision.role, body_index.get(para.para_id))
             )
-    return CheckResult(tuple(findings), roles, checked, unknown, cover)
+    return CheckResult(tuple(findings), roles, checked, unknown, cover, applied)
 
 
 def _locate(f: Finding, para: Paragraph, role: Role, index: int | None) -> Finding:

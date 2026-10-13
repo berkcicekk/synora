@@ -96,6 +96,9 @@ def build_outline(doc: DocModel, result: CheckResult) -> tuple[Blocks, dict[int,
                 "center": p.props.alignment is Alignment.CENTER,
                 "role": role.value if role in _PARA_ROLES else "body",
             })
+        if role is Role.UNKNOWN or p.para_id in result.user_roles:
+            # Öğrenci bu paragrafın rolünü seçebilir (ya da seçimini değiştirebilir).
+            blocks[para_block[p.para_id]]["pid"] = p.para_id
         if p.has_page_break:
             add({"kind": "pagebreak"})
 

@@ -34,7 +34,7 @@
       <strong id="output-title">Düzeltilmiş kopya</strong>
       <button type="button" class="output-close" id="output-close" aria-label="Kapat">×</button>
     </div>
-    <p class="output-help">Dosyanızı sunucuda saklamıyoruz. Kopyayı hazırlamak için <strong>denetlediğiniz dosyayı</strong>
+    <p class="output-help" id="output-help">Dosyanızı sunucuda saklamıyoruz. Kopyayı hazırlamak için <strong>denetlediğiniz dosyayı</strong>
        yeniden seçin; metninize dokunulmadan hazırlanıp indirilir.</p>
     <div class="output-drop" id="output-drop">
       <button type="button" class="btn small primary" id="output-choose"><span class="lbl">Dosyayı seç</span>{{ arrow() }}</button>
@@ -99,8 +99,19 @@
     <div class="paper">
       {% for b in view.blocks %}
       {% set i = loop.index0 %}
-      <div class="blk blk-{{ b.kind }}{% if b.sev %} has-{{ b.sev }}{% endif %}{% if b.center %} is-center{% endif %}"
+      <div class="blk blk-{{ b.kind }}{% if b.sev %} has-{{ b.sev }}{% endif %}{% if b.center %} is-center{% endif %}{% if b.pid %} is-unsure{% endif %}"
            id="b{{ i }}" data-block="{{ i }}" data-cards="{{ b.cards|join(' ') }}"{% if b.cards %} tabindex="0" role="button" aria-label="{{ b.cards|length }} bulgu"{% endif %}>
+        {% if b.pid %}
+        <label class="role-pick">
+          <span>{{ "Paragraf türü" if b.pid in view.pending else "Türü belirsiz" }}</span>
+          <select data-pid="{{ b.pid }}">
+            <option value="">Seçin…</option>
+            {% for value, name in view.role_choices %}
+            <option value="{{ value }}"{% if view.pending.get(b.pid) == value %} selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        {% endif %}
         {% if b.cards %}<span class="pins" aria-hidden="true"><span class="pin">{{ b.cards[0] }}</span>{% if b.cards|length > 1 %}<span class="pin more">+{{ b.cards|length - 1 }}</span>{% endif %}</span>{% endif %}
         {% if b.kind in ("h1", "h2", "h3") %}
           <span class="blk-text">{{ b.text }}</span>
@@ -148,8 +159,16 @@
     </div>
     {% if s.unknown_paragraphs or s.cover_paragraphs %}
     <p class="info">{% if s.cover_paragraphs %}Kapak sayfası ({{ s.cover_paragraphs }} satır) denetlenmedi. {% endif %}
-      {% if s.unknown_paragraphs %}Türü belirlenemeyen {{ s.unknown_paragraphs }} paragraf denetlenmedi; Word'ün
-      “Başlık 2/3” stillerini kullanırsanız bunlar da denetlenir.{% endif %}</p>
+      {% if s.unknown_paragraphs %}Türü belirlenemeyen {{ s.unknown_paragraphs }} paragraf denetlenmedi. Belgede
+      kesikli çizgiyle gösterilen paragrafların türünü seçip yeniden denetleyebilirsiniz.{% endif %}</p>
+    {% endif %}
+    {% if view.editable %}
+    <div class="roles-bar" id="roles-bar" data-job="{{ job.id }}"{% if not view.roles_changed %} hidden{% endif %}>
+      <p><strong>Paragraf türü seçimleriniz kaydedildi.</strong> Raporun bunlara göre güncellenmesi için
+         yeniden denetleyin.</p>
+      <button type="button" class="btn small primary" data-output="recheck"><span class="lbl">Yeniden denetle</span>{{ arrow() }}</button>
+    </div>
+    <p id="roles-status" class="status small" role="status" aria-live="polite"></p>
     {% endif %}
     {% if not view.cards %}
     <p class="info ok">Kılavuza aykırı biçim bulunamadı. Tebrikler.</p>

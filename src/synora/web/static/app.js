@@ -249,10 +249,15 @@
     // Dosya sunucuda saklanmadığı için önce neden yeniden seçileceğini açıklayan panel açılır;
     // dosya seçici ancak kullanıcı "Dosyayı seç"e bastığında açılır.
     const close = () => { panel.hidden = true; kind = null; };
-    outputs.querySelectorAll("[data-output]").forEach((btn) => btn.addEventListener("click", () => {
+    const titles = { fixed: "Düzeltilmiş kopya", annotated: "Yorumlu kopya", recheck: "Yeniden denetim" };
+    const helps = {
+      copy: "Dosyanızı sunucuda saklamıyoruz. Kopyayı hazırlamak için denetlediğiniz dosyayı yeniden seçin; metninize dokunulmadan hazırlanıp indirilir.",
+      recheck: "Dosyanızı sunucuda saklamıyoruz. Seçtiğiniz paragraf türleriyle yeniden denetlemek için denetlediğiniz dosyayı yeniden seçin.",
+    };
+    document.querySelectorAll("[data-output]").forEach((btn) => btn.addEventListener("click", () => {
       kind = btn.dataset.output;
-      document.getElementById("output-title").textContent =
-        kind === "fixed" ? "Düzeltilmiş kopya" : "Yorumlu kopya";
+      document.getElementById("output-title").textContent = titles[kind];
+      document.getElementById("output-help").textContent = kind === "recheck" ? helps.recheck : helps.copy;
       say("");
       panel.hidden = false;
       choose.focus();
@@ -269,8 +274,26 @@
     picker.addEventListener("change", () => send(picker.files[0]));
     const send = async (file) => {
       if (!file || !kind) return;
-      const buttons = [...outputs.querySelectorAll("[data-output]"), choose];
+      const buttons = [...document.querySelectorAll("[data-output]"), choose];
       buttons.forEach((b) => { b.disabled = true; });
+      if (kind === "recheck") {
+        say("Yeniden denetleniyor…");
+        try {
+          const res = await fetch("/jobs/" + outputs.dataset.job + "/recheck", {
+            method: "POST",
+            headers: { "Content-Type": "application/octet-stream",
+                       "X-CSRF-Token": outputs.dataset.csrf },
+            body: file,
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok) { window.location.reload(); return; }
+          say(data.error || "Yeniden denetlenemedi. Sayfayı yenileyip yeniden deneyin.", true);
+        } catch (err) {
+          say("Bağlantı hatası. Yeniden deneyin.", true);
+        }
+        buttons.forEach((b) => { b.disabled = false; });
+        return;
+      }
       say("Hazırlanıyor… Metninizin değişmediği doğrulanıyor.");
       try {
         const res = await fetch("/jobs/" + outputs.dataset.job + "/output/" + kind, {
@@ -302,6 +325,34 @@
         buttons.forEach((b) => { b.disabled = false; });
       }
     };
+  }
+
+  // --- Rolü belirsiz paragraflar: öğrencinin tür seçimi ---------------------------------------
+  // Yalnızca paragraf kimliği ve rol adı gönderilir; metin sayfada bile yok.
+  const rolesBar = document.getElementById("roles-bar");
+  if (outputs && rolesBar) {
+    const rolesStatus = document.getElementById("roles-status");
+    document.querySelectorAll("select[data-pid]").forEach((sel) => {
+      sel.addEventListener("click", (e) => e.stopPropagation());
+      sel.addEventListener("change", async () => {
+        rolesStatus.textContent = "Kaydediliyor…";
+        rolesStatus.classList.remove("error");
+        try {
+          const res = await fetch("/jobs/" + outputs.dataset.job + "/roles", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRF-Token": outputs.dataset.csrf },
+            body: JSON.stringify({ roles: { [sel.dataset.pid]: sel.value } }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || "");
+          rolesBar.hidden = !data.changed;
+          rolesStatus.textContent = "";
+        } catch (err) {
+          rolesStatus.textContent = err.message || "Kaydedilemedi. Sayfayı yenileyip yeniden deneyin.";
+          rolesStatus.classList.add("error");
+        }
+      });
+    });
   }
 
   // --- Silme onayı (tarayıcı confirm() yerine sayfa içi) ------------------------------------

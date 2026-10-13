@@ -47,3 +47,29 @@ def test_no_consecutive_page_breaks() -> None:
     rep = report(thesis(front_matter() + main_matter(extra=brk + brk)))
     kinds = [b["kind"] for b in rep["document"]]
     assert all(not (a == b == "pagebreak") for a, b in itertools.pairwise(kinds))
+
+
+def test_unknown_paragraph_block_carries_id_and_user_role_is_applied() -> None:
+    ambiguous = p(r("Araştırmanın sınırlılıkları", rpr="<w:b/>"))
+    data = thesis(front_matter() + main_matter(extra=ambiguous))
+    rep = report(data)
+    unknown = [b for b in rep["document"] if b.get("role") == "unknown"]
+    assert len(unknown) == 1 and unknown[0]["pid"]
+    assert all("pid" not in b for b in rep["document"] if b.get("role") != "unknown")
+
+    result = run_pipeline(data, RULESET, user_roles={unknown[0]["pid"]: "heading_2"})
+    assert result["report"] is not None
+    after = json.loads(result["report"])
+    assert after["summary"]["unknown_paragraphs"] == 0
+    assert after["user_roles"] == {unknown[0]["pid"]: "heading_2"}
+    assert any(f["role"] == "heading_2" for f in after["findings"])
+
+
+def test_pipeline_ignores_roles_outside_the_allowed_set() -> None:
+    ambiguous = p(r("Araştırmanın sınırlılıkları", rpr="<w:b/>"))
+    data = thesis(front_matter() + main_matter(extra=ambiguous))
+    pid = next(b["pid"] for b in report(data)["document"] if b.get("role") == "unknown")
+    for bad in ("cover", "unknown", "<script>", ""):
+        result = run_pipeline(data, RULESET, user_roles={pid: bad})
+        assert result["report"] is not None
+        assert json.loads(result["report"])["summary"]["unknown_paragraphs"] == 1
