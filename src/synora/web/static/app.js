@@ -195,6 +195,19 @@
     fade();
   }
 
+  // Amblem, kahraman alanında imlecin yönüne hafifçe döner ve kayar.
+  const logo = document.querySelector("#hero-logo .hero-logo-inner");
+  const hero = document.querySelector(".hero");
+  if (logo && hero && !reduced && matchMedia("(hover: hover)").matches) {
+    hero.addEventListener("mousemove", (e) => {
+      const r = logo.getBoundingClientRect();
+      const dx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / 600));
+      const dy = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / 400));
+      logo.style.transform = "translate(" + (dx * 10).toFixed(1) + "px," + (dy * 8).toFixed(1) + "px) rotate(" + (dx * 6).toFixed(1) + "deg)";
+    });
+    hero.addEventListener("mouseleave", () => { logo.style.transform = ""; });
+  }
+
   // Gizlilik anlatısı: ekranın ortasına gelen adım, yapışkan sahnedeki kareyi seçer.
   const visual = document.getElementById("story-visual");
   const steps = [...document.querySelectorAll(".story-step")];

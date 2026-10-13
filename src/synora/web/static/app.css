@@ -124,6 +124,22 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 .hero-title > *, .hero-aside { animation: rise .9s cubic-bezier(.2, .7, .2, 1) both; }
 .hero h1 { animation-delay: .08s; } .hero-aside { animation-delay: .22s; }
 @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+/* Amblem: dış katman imleci izler (JS), iç katman üzerine gelince kalkar. */
+.hero-logo { width: clamp(56px, 6vw, 84px); margin-bottom: .6rem; }
+.hero-logo-inner { position: relative; cursor: pointer; transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.hero-mark { position: relative; z-index: 1; display: block; width: 100%; height: auto; color: #fff; transform-origin: 40% 60%; transition: transform .55s cubic-bezier(.34, 1.56, .64, 1), filter .4s; }
+.hero-logo-inner:hover .hero-mark { transform: translate(10px, -12px) rotate(-9deg) scale(1.06); filter: drop-shadow(0 14px 18px rgba(13, 22, 38, .35)); }
+/* Arkadan dökülen piksel izi */
+.hero-logo-inner i { position: absolute; width: 22%; aspect-ratio: 1; left: 30%; top: 45%; opacity: 0; transform: scale(.4); transition: transform .5s cubic-bezier(.2, .7, .2, 1), opacity .3s; }
+.hero-logo-inner i:nth-child(odd) { background: var(--cyan); }
+.hero-logo-inner i:nth-child(even) { background: var(--night); }
+.hero-logo-inner:hover i { opacity: 1; }
+.hero-logo-inner:hover i:nth-child(1) { transform: translate(-90%, 60%); transition-delay: .02s; }
+.hero-logo-inner:hover i:nth-child(2) { transform: translate(-190%, 160%); transition-delay: .07s; }
+.hero-logo-inner:hover i:nth-child(3) { transform: translate(-290%, 60%); transition-delay: .12s; }
+.hero-logo-inner:hover i:nth-child(4) { transform: translate(-90%, 260%); transition-delay: .17s; }
+.hero-logo-inner:hover i:nth-child(5) { transform: translate(-390%, 160%); transition-delay: .22s; }
+@media (prefers-reduced-motion: reduce) { .hero-logo-inner, .hero-mark, .hero-logo-inner i { transition: none; } }
 .scroll-cue { position: absolute; left: 50%; bottom: 1.6rem; transform: translateX(-50%); display: grid; justify-items: center; gap: .6rem; color: var(--on-blue-soft); text-decoration: none; font-family: var(--mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; }
 .cue-line { width: 1px; height: 38px; background: rgba(255, 255, 255, .25); position: relative; overflow: hidden; }
 .cue-line::after { content: ""; position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: #fff; animation: cue 1.8s ease-in-out infinite; }

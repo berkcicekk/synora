@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_marks.html" import arrow, blocks, illo %}
+{% from "_marks.html" import arrow, blocks, illo, mark %}
 {% from "_story.html" import frame %}
 {% block title %}Synora · Tez biçim denetimi{% endblock %}
 {% block body_class %}landing{% endblock %}
@@ -10,6 +10,13 @@
   <div class="hero-blocks parallax-layer" data-speed="-0.18" aria-hidden="true">{{ blocks() }}</div>
   <div class="wrap hero-bottom" id="hero-content">
     <div class="hero-title">
+      {# Amblem: imleci izler; üzerine gelince kanatlanır ve arkasından bloklar dökülür. #}
+      <div class="hero-logo" id="hero-logo" aria-hidden="true">
+        <div class="hero-logo-inner">
+          <i></i><i></i><i></i><i></i><i></i>
+          {{ mark("hero-mark") }}
+        </div>
+      </div>
       <span class="meta on-blue">Tez biçim denetimi · ZBEÜ pilotu</span>
       <h1>Biçim kusursuz,<br>tez teslime hazır.</h1>
     </div>
