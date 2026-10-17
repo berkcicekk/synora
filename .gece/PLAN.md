@@ -13,12 +13,12 @@ Faz 1 ≈ 01:40–02:20 · Faz 2 ≈ 02:20–03:50 · Faz 3 ≈ 03:50–04:40 ·
 - [x] Saatlik yeniden başlatma görevi (oturum içi cron)
 
 ## Faz 1 — Rakip analizi → `.gece/RAKIP_ANALIZI.md`
-- [ ] 1.1 Türkiye: üniversitelerin tez şablonları / biçim kontrol süreçleri / araçları (YÖK Tez, enstitü
+- [x] 1.1 Türkiye: üniversitelerin tez şablonları / biçim kontrol süreçleri / araçları (YÖK Tez, enstitü
       şablonları, varsa otomatik kontrol araçları)
-- [ ] 1.2 Yurt dışı: thesis format checker'lar (üniversite içi araçlar, ticari ürünler)
-- [ ] 1.3 Word eklentileri ve genel belge biçim denetimi (PerfectIt, Grammarly vb. biçim tarafı, şablon araçları)
-- [ ] 1.4 Arayüz gözlemleri: güven mesajı, yükleme akışı, rapor sunumu, hata ekranları
-- [ ] 1.5 Synora'nın farkı + 5–10 somut, uygulanabilir fikir (her biri: neden, nerede, korumalı modül gerekir mi)
+- [x] 1.2 Yurt dışı: thesis format checker'lar (üniversite içi araçlar, ticari ürünler)
+- [x] 1.3 Word eklentileri ve genel belge biçim denetimi (PerfectIt, Grammarly vb. biçim tarafı, şablon araçları)
+- [x] 1.4 Arayüz gözlemleri: güven mesajı, yükleme akışı, rapor sunumu, hata ekranları
+- [x] 1.5 Synora'nın farkı + 5–10 somut, uygulanabilir fikir (her biri: neden, nerede, korumalı modül gerekir mi)
 
 ## Faz 2 — Arayüz iyileştirme (yalnızca şablon, CSS, statik JS, görünen metin)
 Önce mevcut sayfaları oku: base, login, upload, job, error, auth_confirm, login_sent, pricing, _story, _marks.

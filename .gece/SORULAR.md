@@ -18,3 +18,9 @@ Gece boyunca karşılaştığım, benim vermemem gereken kararlar. En yeni en al
    gönderip göndermeyeceğinize siz karar verin.
 9. Komutta adı geçen `frontend-design` skill'i bu kurulumda yok. Arayüz işi marka kiti + WCAG ilkeleriyle
    yapıldı. Skill'i kurmak isterseniz sabah ekleyebilirsiniz.
+10. **"Resmi kontrolün yerini almaz" ifadesi:** Rapora ve tanıtım sayfasına "Synora, enstitü biçim
+    kontrolünden önce kendi denetiminiz içindir; son onay enstitünündür" anlamında bir not ekledim
+    (rakip analizi fikir 5). Hukuki veya kurumsal ifade için enstitüyle konuşulmalı; metni siz
+    onaylayın.
+11. **Resmi şablon .docx:** ZBEÜ Tıp Fakültesi'nin Word şablonu varsa "baştan doğru başlayın" diye
+    indirme bağlantısı konabilir. Şablonu kim verecek, yayınlama izni var mı?
