@@ -201,6 +201,7 @@
       <p class="digest-tally"><strong>{{ s.errors }} hata, {{ s.warnings }} uyarı.</strong>
         {% if s.fixable %}{{ s.fixable }} tanesi otomatik düzeltilebilir.{% endif %}</p>
       <ul class="buckets">
+        {% if view.cards %}
         <li class="bucket b-fix">
           <button type="button" data-apply-filter="fixable"{% if not s.fixable %} disabled{% endif %}>
             <span class="b-num">{{ s.fixable }}</span>
@@ -215,6 +216,7 @@
             <span class="b-note">Yorumlu kopyada paragrafın yanında not olarak gelir.</span>
           </button>
         </li>
+        {% endif %}
         {% if unsure %}
         <li class="bucket b-check">
           <button type="button" data-jump-unsure{% if not view.editable %} disabled{% endif %}>
@@ -248,7 +250,13 @@
     <p id="roles-status" class="status small" role="status" aria-live="polite"></p>
     {% endif %}
     {% if not view.cards %}
-    <p class="info ok">Kılavuza aykırı biçim bulunamadı. Tebrikler.</p>
+    {% if s.unknown_paragraphs %}
+    <p class="info">Denetlenen paragraflarda kılavuza aykırı biçim bulunamadı. Türü belirsiz
+       paragraflar denetlenmedi; türlerini seçip yeniden denetleyin.</p>
+    {% else %}
+    <p class="info ok">Kılavuza aykırı biçim bulunamadı. Tebrikler.{% if s.cover_paragraphs %}
+       Kapak sayfasını kılavuzla elle karşılaştırmayı unutmayın.{% endif %}</p>
+    {% endif %}
     {% endif %}
     <ol class="comments">
       {% for c in view.cards %}

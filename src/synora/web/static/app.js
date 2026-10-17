@@ -135,6 +135,11 @@
     const clearActive = () => document.querySelectorAll(".blk.active, .comment.active")
       .forEach((el) => el.classList.remove("active"));
     const scrollInto = (pane, el) => {
+      // Telefonda bölmeler kaydırılmaz (tek sütun); sayfanın kendisi kayar.
+      if (pane.scrollHeight <= pane.clientHeight + 1) {
+        el.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        return;
+      }
       const top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - 80;
       pane.scrollTo({ top, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     };
