@@ -22,37 +22,37 @@ Faz 1 ≈ 01:40–02:20 · Faz 2 ≈ 02:20–03:50 · Faz 3 ≈ 03:50–04:40 ·
 
 ## Faz 2 — Arayüz iyileştirme (yalnızca şablon, CSS, statik JS, görünen metin)
 Önce mevcut sayfaları oku: base, login, upload, job, error, auth_confirm, login_sent, pricing, _story, _marks.
-- [ ] 2.1 Envanter: her sayfanın durumu, kırık/eksik noktalar, kontrast ölçümü (CSS renk tokenları → WCAG oranı
+- [x] 2.1 Envanter: her sayfanın durumu, kırık/eksik noktalar, kontrast ölçümü (CSS renk tokenları → WCAG oranı
       hesaplayan küçük test)
-- [ ] 2.2 Erişilebilirlik temeli: "içeriğe geç" bağlantısı, `lang="tr"`, form etiketleri, odak görünürlüğü
+- [x] 2.2 Erişilebilirlik temeli: "içeriğe geç" bağlantısı, `lang="tr"`, form etiketleri, odak görünürlüğü
       (`:focus-visible`), `aria-live` ilerleme bölgesi, `prefers-reduced-motion`
-- [ ] 2.3 Akış netliği: yükle → işleniyor → rapor → kopya adımlarını gösteren adım göstergesi (rakip fikri)
-- [ ] 2.4 Boş durum: hiç denetimi olmayan kullanıcıya yol gösteren boş durum ("Henüz denetim yok")
-- [ ] 2.5 Hata ekranları: error.html (403/404/genel) → ne oldu + ne yapmalı + ana sayfa bağlantısı; iş hatası
+- [x] 2.3 Akış netliği: yükle → işleniyor → rapor → kopya adımlarını gösteren adım göstergesi (rakip fikri)
+- [x] 2.4 Boş durum: hiç denetimi olmayan kullanıcıya yol gösteren boş durum ("Henüz denetim yok")
+- [x] 2.5 Hata ekranları: error.html (403/404/genel) → ne oldu + ne yapmalı + ana sayfa bağlantısı; iş hatası
       ekranında "ne yapabilirim" listesi
-- [ ] 2.6 Rapor ekranı: özet kartı (hata/uyarı/düzeltilebilir), "sıradaki adım" kutusu, filtrelerin klavye ile
+- [x] 2.6 Rapor ekranı: özet kartı (hata/uyarı/düzeltilebilir), "sıradaki adım" kutusu, filtrelerin klavye ile
       kullanımı
-- [ ] 2.7 Mobil: 360 px'te yatay kaydırma yok, dokunma hedefleri ≥ 44 px
-- [ ] 2.8 Türkçe metin tutarlılığı (terimler: denetim/rapor/düzeltilmiş kopya/yorumlu kopya; büyük-küçük harf)
-- [ ] 2.9 Her adımın testi (`tests/web/test_ui.py`): şablon içerikleri, etiketler, kontrast, inline stil/script yok
+- [x] 2.7 Mobil: 360 px'te yatay kaydırma yok, dokunma hedefleri ≥ 44 px
+- [x] 2.8 Türkçe metin tutarlılığı (terimler: denetim/rapor/düzeltilmiş kopya/yorumlu kopya; büyük-küçük harf)
+- [x] 2.9 Her adımın testi (`tests/web/test_ui.py`): şablon içerikleri, etiketler, kontrast, inline stil/script yok
 
 ## Faz 3 — Güvenlik testleri (`tests/security/`)
 Korumalı modüllerde kod değişmez; açık → xfail test + ONERILER.md + GUVENLIK_RAPORU.md.
-- [ ] 3.1 A1 ek: iç içe zip (docx içinde zip bomb part), çok sayıda küçük part + yüksek toplam oran, boş part
+- [x] 3.1 A1 ek: iç içe zip (docx içinde zip bomb part), çok sayıda küçük part + yüksek toplam oran, boş part
       adı, NUL/denetim karakterli adlar, `TargetMode="External"` ilişkiler, `altChunk`/OLE, `.dotm` tipi,
       UTF-16/BOM'lu XXE, parametre entity, yarım kalmış zip (truncated), sahte docx (zip ama Word değil)
-- [ ] 3.2 Web — giriş bağlantısı: süresi dolmuş token, başka e-postanın token'ı, token tekrar POST, oturum
+- [x] 3.2 Web — giriş bağlantısı: süresi dolmuş token, başka e-postanın token'ı, token tekrar POST, oturum
       süresi dolması, çıkıştan sonra eski çerez
-- [ ] 3.3 Web — CSRF: tüm POST uç noktaları (login, auth, logout, jobs, delete, roles, recheck, output) CSRF'siz
+- [x] 3.3 Web — CSRF: tüm POST uç noktaları (login, auth, logout, jobs, delete, roles, recheck, output) CSRF'siz
       reddediliyor mu (parametrik test)
-- [ ] 3.4 Web — yetki: başkasının işi için tüm uç noktalar (delete dahil) 404; geçersiz job_id biçimi
-- [ ] 3.5 Web — dosya türü: `.docm` / makrolu / zip olmayan / exe başlıklı içerik → failed + doğru kod;
+- [x] 3.4 Web — yetki: başkasının işi için tüm uç noktalar (delete dahil) 404; geçersiz job_id biçimi
+- [x] 3.5 Web — dosya türü: `.docm` / makrolu / zip olmayan / exe başlıklı içerik → failed + doğru kod;
       Content-Type sahteciliği etkisiz
-- [ ] 3.6 Web — başlıklar: tüm sayfalarda (hata sayfaları, statik, JSON) CSP/nosniff/XFO; çerez bayrakları
+- [x] 3.6 Web — başlıklar: tüm sayfalarda (hata sayfaları, statik, JSON) CSP/nosniff/XFO; çerez bayrakları
       (HttpOnly, SameSite, Secure üretimde)
-- [ ] 3.7 Web — hız sınırı: günlük iş sınırı, e-posta başına giriş sınırı; IP başına sınır yoksa → bulgu
-- [ ] 3.8 XSS: e-posta alanı ve hata mesajlarında kaçış; rol seçiminde HTML enjeksiyonu
-- [ ] 3.9 `.gece/GUVENLIK_RAPORU.md`
+- [x] 3.7 Web — hız sınırı: günlük iş sınırı, e-posta başına giriş sınırı; IP başına sınır yoksa → bulgu
+- [x] 3.8 XSS: e-posta alanı ve hata mesajlarında kaçış; rol seçiminde HTML enjeksiyonu
+- [x] 3.9 `.gece/GUVENLIK_RAPORU.md`
 
 ## Faz 4 — Arayüz testi
 - [ ] 4.1 Uçtan uca: giriş → yükle → rapor → rol düzelt → yeniden denetle → kopya → sil → çıkış (tek test)
