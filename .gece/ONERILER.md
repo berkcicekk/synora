@@ -75,3 +75,29 @@ Bağımlılık önerileri de burada.
 - **Kanıt:** `tests/web/test_web_security.py::test_expired_report_is_not_served_before_purge` (xfail).
 - **Öneri:** `own_job` içinde `job.created_at < now - retention` ise 404 (ve istersen o an sil).
 - **Risk:** Çok düşük.
+
+## Ö9 — Veritabanı okumalarında yarış: işler takılı kalıyor, ara sıra yanlış 404 — EN ÖNCELİKLİ
+- **Sorun:** `db.py` `Database.execute` kilidi yalnızca `execute()` sırasında tutuyor; çağıranlar
+  `.fetchone()/.fetchall()`'u kilit dışında, tek paylaşılan `sqlite3` bağlantısında yapıyor. İş yürütücü
+  iş parçacığı ile istek iş parçacığı aynı SQL'i (ör. `SELECT * FROM jobs WHERE id=?`) aynı anda
+  çalıştırınca deyim önbelleğindeki aynı hazır deyim paylaşılıyor ve sonuçlar bozuluyor.
+- **Belirtiler (gece testlerinde görüldü):**
+  1. `worker.run_now` → `get_job()` yanlışlıkla `None` → işi "kullanıcı silmiş" sanıp `finish_job`
+     çağırmıyor → iş sonsuza dek **"denetleniyor"** (öğrenci bekler durur; eşzamanlı sınır 2 olduğu için
+     iki takılı iş yeni yüklemeyi de engeller → 429).
+  2. `own_job` → `job.email` `None` → `TypeError` → 500.
+  3. `sqlite3.InterfaceError`.
+- **Kanıt:** `tests/unit/test_db_concurrency.py` (xfail, strict değil; 4×3000 okumada ~50 hata).
+  Tam test takımı bu yüzden ~4 çalıştırmada 1 rastgele kırmızıya dönüyordu.
+- **Öneri (tek fonksiyon):**
+  ```python
+  def execute(self, sql, params=()):
+      with self._lock:
+          cur = self._conn.execute(sql, params)
+          return _Rows(cur.fetchall(), cur.rowcount)   # fetchone/fetchall/rowcount sağlayan liste
+  ```
+  ya da iş parçacığı başına bağlantı (`threading.local`) — WAL modunda okuyucular birbirini
+  engellemez. Düzeltmeden sonra **`tests/web/conftest.py` içindeki `_serialize_db_reads` ara katmanını
+  silin** (gece test takımını kararlı tutmak için eklendi; önerinin aynısı) ve
+  `test_db_concurrency.py`'deki xfail'i kaldırın.
+- **Risk:** Çok düşük; sonuçlar zaten küçük (tek iş / sayaç / son 10 iş).

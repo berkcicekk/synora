@@ -9,6 +9,7 @@
 
 | # | Bulgu | Önem | Modül | Test (xfail) | Öneri |
 |---|-------|------|-------|--------------|-------|
+| G0 | Veritabanı okumalarında yarış: işler "denetleniyor"da takılı kalabiliyor, ara sıra 500/yanlış 404 (erişilebilirlik/DoS; veri sızıntısı görülmedi: satırlar tutarlı, sahiplik e-postayla denetleniyor) | **Orta–Yüksek** (güvenilirlik) | A9 db | `tests/unit/test_db_concurrency.py` (strict değil) | Ö9 |
 | G1 | Kopya üretimi eşzamanlılık ve günlük sınıra tabi değil → bellek/CPU tüketimi (DoS) | **Orta** | A9 | `test_output_respects_concurrency_limit` | Ö6 |
 | G2 | Günlük iş sınırı rapor silinerek aşılabiliyor | Düşük–Orta | A9 db | `test_daily_job_limit_survives_deleting_reports` | Ö5 |
 | G3 | Giriş isteği sınırı yalnızca e-posta başına; tek istemci izinli alandaki tüm adreslere bağlantı yağdırabilir | Düşük–Orta | A9 | `test_login_requests_limited_per_client` | Ö7 |
@@ -16,7 +17,8 @@
 | G5 | altChunk/gömülü OLE için mimari §8'in istediği uyarı yok; gömülü içerik denetlenmeden "temiz" rapor | Düşük | A2/A6 | `test_alt_chunk_produces_warning` | Ö4 |
 | G6 | Bilinmeyen adres/yanlış yöntem ham JSON döndürüyor (bilgi sızıntısı yok, yalnızca UX) | Bilgi | A9 | `test_unknown_url_shows_friendly_page` | Ö3 |
 
-**Kritik veya yüksek önemde açık bulunmadı.** Tez metninin sızması, dosyanın diske yazılması, XXE,
+**Kritik güvenlik açığı bulunmadı.** En önemli bulgu G0, bir güvenilirlik hatası: pilotta birden çok
+öğrenci aynı anda kullanınca işler takılı kalabilir. Tez metninin sızması, dosyanın diske yazılması, XXE,
 zip bombası, yol aşımı, makro, başkasının işine erişim ve CSRF'e karşı korumalar testlerde tuttu.
 
 ## Doğrulanan korumalar (testi geçen)

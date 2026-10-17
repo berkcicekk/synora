@@ -263,3 +263,114 @@ def test_unknown_url_shows_friendly_page(client: TestClient) -> None:
     assert res.status_code == 404
     assert "text/html" in res.headers["content-type"]
     assert "Sayfa bulunamadı" in res.text
+
+
+# --- Faz 4: sayfa yapısı, akış ve JavaScript bağları -----------------------------------------
+
+
+TEMPLATES = STATIC.parent / "templates"
+
+
+def _all_pages(client: TestClient, mailer: ConsoleMailer) -> dict[str, str]:
+    pages = {"landing": client.get("/").text, "pricing": client.get("/fiyatlandirma").text}
+    page = client.get("/")
+    sent = client.post("/login", data={"email": "ogrenci@beun.edu.tr",
+                                       "csrf": _csrf(page.text)})
+    pages["login_sent"] = sent.text
+    token = mailer.sent[-1][1].split("token=")[1]
+    pages["auth_confirm"] = client.get(f"/auth?token={token}").text
+    pages["auth_invalid"] = client.get("/auth?token=gecersiz").text
+    csrf = login(client, mailer)
+    pages["upload"] = client.get("/").text
+    for name, data in (("done", bad_thesis()), ("failed", b"word degil")):
+        job_id = upload(client, csrf, data)
+        wait_done(client, job_id)
+        pages[name] = client.get(f"/jobs/{job_id}").text
+    client.app.state.db.add_job("bekleyen-is-00000002", "ogrenci@beun.edu.tr",  # type: ignore[attr-defined]
+                                "example")
+    pages["processing"] = client.get("/jobs/bekleyen-is-00000002").text
+    pages["not_found"] = client.get("/jobs/boyle-bir-is-yok-0000").text
+    return pages
+
+
+def _csrf(html: str) -> str:
+    m = re.search(r'name="csrf" value="([^"]+)"', html)
+    assert m
+    return m.group(1)
+
+
+def test_every_page_has_accessible_structure(client: TestClient, mailer: ConsoleMailer) -> None:
+    titles = set()
+    for name, html in _all_pages(client, mailer).items():
+        assert '<html lang="tr">' in html, name
+        assert html.count("<h1") == 1, f"{name}: {html.count('<h1')} adet h1"
+        assert '<main id="main">' in html, name
+        assert 'class="skip" href="#main"' in html, name
+        title = re.search(r"<title>([^<]+)</title>", html)
+        assert title and "Synora" in title.group(1), name
+        titles.add(title.group(1))
+        # Her form alanının bir etiketi olmalı (gizli alanlar ve dosya seçici hariç).
+        for field in re.findall(r"<(?:input|select)\b[^>]*>", html):
+            if 'type="hidden"' in field or "aria-hidden" in field:
+                continue
+            fid = re.search(r'id="([^"]+)"', field)
+            labelled = (fid and f'for="{fid.group(1)}"' in html) or "aria-label" in field
+            in_label = 'data-pid="' in field  # <label class="role-pick"> içinde
+            assert labelled or in_label, f"{name}: etiketsiz alan {field}"
+    assert len(titles) >= 6  # sayfalar ayırt edilebilir başlıklara sahip
+
+
+def test_landing_anchors_exist(client: TestClient) -> None:
+    html = client.get("/").text
+    for anchor in re.findall(r'href="/#([a-z]+)"', html):
+        assert f'id="{anchor}"' in html, anchor
+
+
+def test_logged_in_nav_anchor_exists(client: TestClient, mailer: ConsoleMailer) -> None:
+    login(client, mailer)
+    html = client.get("/").text
+    assert 'href="/#yeni"' in html and 'id="yeni"' in html
+
+
+def test_every_element_id_used_by_js_exists_in_templates() -> None:
+    sources = "".join(p.read_text(encoding="utf-8") for p in TEMPLATES.glob("*.html"))
+    missing = [i for i in sorted(set(re.findall(r'getElementById\("([^"]+)"\)', JS)))
+               if f'id="{i}"' not in sources]
+    assert missing == []
+
+
+def test_every_data_attribute_used_by_js_exists_in_templates() -> None:
+    sources = "".join(p.read_text(encoding="utf-8") for p in TEMPLATES.glob("*.html"))
+    attrs = set(re.findall(r"\[(data-[a-z-]+)", JS)) | {
+        "data-" + re.sub(r"([A-Z])", lambda m: "-" + m.group(1).lower(), k)
+        for k in re.findall(r"dataset\.([a-zA-Z]+)", JS)}
+    missing = sorted(a for a in attrs if a not in sources)
+    assert missing == []
+
+
+def test_full_student_journey(client: TestClient, mailer: ConsoleMailer) -> None:
+    """Giriş → yükle → rapor → rol seç → yeniden denetle → kopyalar → sil → çıkış."""
+    from test_web import output, recheck, set_roles, unknown_pid
+
+    csrf = login(client, mailer)
+    data = ambiguous_thesis()
+    job_id = upload(client, csrf, data)
+    assert wait_done(client, job_id) == "done"
+    report = client.get(f"/jobs/{job_id}").text
+    assert "Kontrol edin" in report
+    pid = unknown_pid(client, job_id)
+    assert set_roles(client, csrf, job_id, {pid: "heading_2"}).status_code == 200
+    assert recheck(client, csrf, job_id, data).status_code == 202
+    assert wait_done(client, job_id) == "done"
+    report = client.get(f"/jobs/{job_id}").text
+    assert "Kontrol edin" not in report  # belirsiz paragraf kalmadı
+    assert "Sıradaki adımlar" in report
+    assert output(client, csrf, job_id, "fixed", data).status_code == 200
+    assert output(client, csrf, job_id, "annotated", data).status_code == 200
+    home = client.get("/").text
+    assert f'href="/jobs/{job_id}"' in home and "tamamlandı" in home
+    assert client.post(f"/jobs/{job_id}/delete", data={"csrf": csrf},
+                       follow_redirects=False).status_code == 303
+    assert f'href="/jobs/{job_id}"' not in client.get("/").text
+    client.post("/logout", data={"csrf": csrf})
+    assert "Giriş bağlantısı gönder" in client.get("/").text

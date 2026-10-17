@@ -109,6 +109,7 @@
 {% else %}
 {% set s = view.summary %}
 <div class="workspace">
+  <h1 class="visually-hidden">Denetim raporu · {{ job.created_at | when }}</h1>
   {# --- Sol: ana hat --- #}
   <nav class="pane pane-outline" aria-label="Belgenin ana hattı">
     <p class="pane-title">Ana hat</p>
