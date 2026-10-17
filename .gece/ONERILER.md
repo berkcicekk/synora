@@ -101,3 +101,5 @@ Bağımlılık önerileri de burada.
   silin** (gece test takımını kararlı tutmak için eklendi; önerinin aynısı) ve
   `test_db_concurrency.py`'deki xfail'i kaldırın.
 - **Risk:** Çok düşük; sonuçlar zaten küçük (tek iş / sayaç / son 10 iş).
+- **Ek (Ö3):** `http_error` hata sayfasını `user` olmadan çiziyor; giriş yapmış kullanıcı üst menüde
+  "Giriş yap" görüyor. `render(..., user=current_user(request))` eklenmeli.

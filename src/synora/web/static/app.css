@@ -637,3 +637,23 @@ body.editor main { display: flex; min-height: 0; }
 .footer .brand { color: #fff; margin-bottom: .8rem; }
 .footer p { color: #B9C3D6; font-size: .88rem; line-height: 1.6; max-width: 32rem; }
 .footer .meta { color: var(--cyan); display: block; margin-bottom: .6rem; }
+
+/* ================================== YAZDIRMA ================================== */
+/* Rapor, danışmana ya da enstitüye götürülecek bir kontrol listesi gibi yazdırılır:
+   özet + bulgular; düğmeler, sayfa görünümü ve gezinme gizli. */
+@media print {
+  body, body.editor { background: #fff; height: auto; overflow: visible; display: block; font-size: 11pt; }
+  .site-nav, .skip, .footer, .toolbar-right, .output-panel, .filters, .pane-outline, .pane-canvas,
+  .roles-bar, .delete-form, .howto, #filter-empty, .steps, .prep, .btn, .pane-foot .textlink { display: none !important; }
+  .toolbar { display: flex; gap: 1.5rem; border: 0; border-bottom: 1px solid #000; padding: 0 0 .5rem; min-height: 0; }
+  .toolbar-mid { display: flex !important; }
+  .brand.compact, .doc-heading .back { display: none; }
+  .workspace { display: block; height: auto; }
+  .pane { overflow: visible; }
+  .pane-comments { border: 0; padding: .8rem 0 0; background: #fff; }
+  .pane-head { position: static; padding: 0; margin: 0; background: #fff; }
+  .digest, .comment, .info { break-inside: avoid; box-shadow: none; }
+  .bucket button { background: #fff; }
+  .comment[hidden] { display: grid !important; } /* süzgeç açık kalsa da hepsi yazdırılır */
+  a[href]::after { content: none; }
+}

@@ -374,3 +374,11 @@ def test_full_student_journey(client: TestClient, mailer: ConsoleMailer) -> None
     assert f'href="/jobs/{job_id}"' not in client.get("/").text
     client.post("/logout", data={"csrf": csrf})
     assert "Giriş bağlantısı gönder" in client.get("/").text
+
+
+def test_report_prints_as_checklist() -> None:
+    printing = CSS.split("@media print {", 1)[1]
+    for hidden in (".pane-canvas", ".filters", ".toolbar-right", ".delete-form"):
+        assert hidden in printing.split("display: none !important;")[0]
+    assert ".comment[hidden] { display: grid !important; }" in printing
+    assert "break-inside: avoid" in printing
