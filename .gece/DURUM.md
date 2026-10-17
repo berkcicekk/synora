@@ -1,8 +1,8 @@
 # Gece durumu
 
-**Güncellendi:** 2026-10-18 02:08
+**Güncellendi:** 2026-10-18 02:26
 **Dal:** gece/arayuz-guvenlik
-**Faz:** 4 — Arayüz testi (başlıyor). Faz 1 ✅ · Faz 2 ✅ · Faz 3 ✅
+**Faz:** 1–4 ✅. Faz 5 (son kontrol) 05:30'da. Arada: düşük riskli küçük iyileştirmeler.
 
 ## Başlangıç (01:40)
 - `python -m uv run pytest -q` → **306 passed**, 1 uyarı (starlette/httpx kullanımdan kalkma)
@@ -26,12 +26,18 @@
 - Not: tam test takımı bir kez yük altında (84 sn) 1 hata verdi, 4 tekrarda üretilemedi; zamana bağlı
   yeni testteki sınır 5→15 sn gevşetildi.
 
+- Faz 4: ddb2e0b (sayfa yapısı, JS bağları, uçtan uca akış, rapor h1). VERİTABANI YARIŞI bulundu
+  (Ö9/G0): rastgele kırmızı testlerin nedeni; tests/web/conftest.py'ye GEÇİCİ ara katman eklendi.
+- Ek: ea3fb5b (yazdırma görünümü), c18fcbd (yükleme yüzdesi). Dev sunucu durduruldu.
+- .gece/SABAH_RAPORU.md taslağı yazıldı (02:25).
+
 ## Sıradaki görev
-- Faz 4.1: uçtan uca tek akış testi (giriş → yükle → rapor → rol → yeniden denetle → kopya → sil → çıkış)
-- 4.2: her sayfada <title>, tek <h1>, <main>, lang; 4.4: app.js'in beklediği id/data-* şablonlarda var mı
-- 4.5: kalan sayfaların mobil görüntüsü (pricing, login_sent, auth_confirm, processing)
+- 05:30'a kadar: yalnızca düşük riskli işler (gerekirse). Yeni büyük değişiklik yok.
+- 05:30: Faz 5 — pytest/ruff/mypy, `git diff --name-only main.. -- 'src/**/*.py' rulesets/` boş mu,
+  SABAH_RAPORU.md'yi "taslak"tan "son" hale getir (commit listesi, test sayıları).
 
 ## Son test sonucu
 - 01:40 — 306 passed
 - 01:57 — 338 passed, 1 xfailed (Ö3: bilinmeyen adres JSON)
 - 02:07 — 393 passed, 6 xfailed (Ö3–Ö8)
+- 02:24 — 401 passed, 7 xfailed (+Ö9); 6/6 tekrar yeşil

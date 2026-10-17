@@ -55,12 +55,16 @@ Korumalı modüllerde kod değişmez; açık → xfail test + ONERILER.md + GUVE
 - [x] 3.9 `.gece/GUVENLIK_RAPORU.md`
 
 ## Faz 4 — Arayüz testi
-- [ ] 4.1 Uçtan uca: giriş → yükle → rapor → rol düzelt → yeniden denetle → kopya → sil → çıkış (tek test)
-- [ ] 4.2 Her sayfa 200/doğru durum kodu, başlık (`<title>`), tek `<h1>`, `<main>` var
-- [ ] 4.3 Bilinmeyen URL / yanlış yöntem → kullanıcı dostu hata sayfası mı?
-- [ ] 4.4 JS: app.js'in beklediği `data-*` özniteliklerinin şablonlarda var olduğunu doğrula
-- [ ] 4.5 Mobil görünüm: CSS medya sorguları; mümkünse tarayıcıda 375 px ekran görüntüsü (yerel sunucu)
-- [ ] 4.6 Bulunan kırıkları düzelt (yalnızca izinli dosyalarda) ya da ONERILER.md
+- [x] 4.1 Uçtan uca: giriş → yükle → rapor → rol düzelt → yeniden denetle → kopya → sil → çıkış (tek test)
+- [x] 4.2 Her sayfa 200/doğru durum kodu, başlık (`<title>`), tek `<h1>`, `<main>` var
+- [x] 4.3 Bilinmeyen URL / yanlış yöntem → kullanıcı dostu hata sayfası mı?
+- [x] 4.4 JS: app.js'in beklediği `data-*` özniteliklerinin şablonlarda var olduğunu doğrula
+- [x] 4.5 Mobil görünüm: CSS medya sorguları; mümkünse tarayıcıda 375 px ekran görüntüsü (yerel sunucu)
+- [x] 4.6 Bulunan kırıkları düzelt (yalnızca izinli dosyalarda) ya da ONERILER.md
+
+## Ek (zaman kaldığı için)
+- [x] Rapor yazdırma görünümü (kontrol listesi gibi)
+- [x] Yüklemede yüzde ilerleme
 
 ## Faz 5 — Son kontrol
 - [ ] 5.1 `uv run pytest -q`, `uv run ruff check .`, `uv run mypy src` temiz
