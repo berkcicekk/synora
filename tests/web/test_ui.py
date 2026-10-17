@@ -242,3 +242,24 @@ def test_mobile_editor_layout_rules() -> None:
     assert ".toolbar-right { justify-self: stretch; flex-wrap: wrap;" in mobile
     assert ".pane-comments { order: -1; }" in mobile
     assert "pane.scrollHeight <= pane.clientHeight" in JS  # tek sütunda sayfa kayar
+
+
+# --- Hata sayfaları ---------------------------------------------------------------------------
+
+
+def test_missing_job_shows_friendly_page(client: TestClient, mailer: ConsoleMailer) -> None:
+    login(client, mailer)
+    res = client.get("/jobs/boyle-bir-is-yok-0000")
+    assert res.status_code == 404
+    assert "Sayfa bulunamadı" in res.text
+    assert 'href="/"' in res.text
+
+
+@pytest.mark.xfail(strict=True, reason=(
+    "A9 backend: exception_handler fastapi.HTTPException için kayıtlı; yönlendirici bilinmeyen "
+    "adres ve yanlış yöntemde starlette HTTPException fırlatıyor → ham JSON. Öneri: ONERILER Ö3."))
+def test_unknown_url_shows_friendly_page(client: TestClient) -> None:
+    res = client.get("/boyle-bir-sayfa-yok")
+    assert res.status_code == 404
+    assert "text/html" in res.headers["content-type"]
+    assert "Sayfa bulunamadı" in res.text

@@ -18,3 +18,15 @@ Bağımlılık önerileri de burada.
   kuralları da göstermek için). A7 korumalı değil ama rapor biçimi web ve testlerle bağlantılı; gece
   dokunmadım.
 - **Risk:** Düşük. Rapor sürüm alanı artırılmalı.
+
+## Ö3 — Bilinmeyen adres ve yanlış yöntem ham JSON döndürüyor
+- **Sorun:** `GET /boyle-bir-sayfa-yok` → `{"detail":"Not Found"}` (application/json). Kullanıcı marka
+  dışında, açıklamasız bir ekran görüyor. Aynısı 405 için de geçerli.
+- **Kanıt:** `tests/web/test_ui.py::test_unknown_url_shows_friendly_page` (xfail, strict).
+- **Neden:** `app.py:560` `@app.exception_handler(HTTPException)` FastAPI'nin `HTTPException` sınıfına
+  kayıtlı. Yönlendirici eşleşme bulamayınca Starlette'in temel `HTTPException` sınıfını fırlatıyor; bu
+  sınıf FastAPI'ninkinin üst sınıfı olduğu için işleyiciye düşmüyor.
+- **Öneri:** `from starlette.exceptions import HTTPException as StarletteHTTPException` ve işleyiciyi
+  `@app.exception_handler(StarletteHTTPException)` olarak kaydetmek. Mevcut JSON dalları (POST /jobs vb.)
+  aynen çalışır. Sonra xfail işaretini kaldırın.
+- **Risk:** Çok düşük; tek satır.

@@ -2,12 +2,34 @@
 {% from "_marks.html" import arrow %}
 {% block title %}Hata · Synora{% endblock %}
 {% block content %}
+{# Sunucu yalnızca kullanıcıya gösterilecek mesajı verir; başlık ve öneriler mesajın türüne göre. #}
+{% if "bulunamadı" in message %}
+  {% set heading, kind = "Sayfa bulunamadı.", "notfound" %}
+{% elif "Oturum doğrulaması" in message %}
+  {% set heading, kind = "Oturum doğrulanamadı.", "csrf" %}
+{% else %}
+  {% set heading, kind = "Bir sorun oluştu.", "other" %}
+{% endif %}
 <section class="section simple">
   <div class="sheet-card">
-    <span class="eyebrow">Bir sorun oluştu</span>
-    <h1 class="page-title">Sayfa açılamadı.</h1>
+    <span class="eyebrow">Hata</span>
+    <h1 class="page-title">{{ heading }}</h1>
     <p>{{ message }}</p>
-    <div><a class="btn" href="/"><span class="lbl">Ana sayfaya dön</span>{{ arrow() }}</a></div>
+    <div class="help-box">
+      <h2 class="help-title">Ne yapabilirsiniz?</h2>
+      <ul class="help-steps">
+        {% if kind == "notfound" %}
+        <li>Raporlar saklama süresi dolunca kendiliğinden silinir; eski bir bağlantı açmış olabilirsiniz.</li>
+        <li>Raporlarınızı Belgelerim listesinde görebilir, gerekirse tezinizi yeniden denetleyebilirsiniz.</li>
+        {% elif kind == "csrf" %}
+        <li>Sayfa uzun süre açık kalmış olabilir. Sayfayı yenileyip işlemi tekrarlayın.</li>
+        <li>Sorun sürerse çıkış yapıp yeniden giriş yapın.</li>
+        {% else %}
+        <li>Birkaç saniye sonra yeniden deneyin.</li>
+        {% endif %}
+      </ul>
+    </div>
+    <div><a class="btn primary" href="/"><span class="lbl">Ana sayfaya dön</span>{{ arrow() }}</a></div>
   </div>
 </section>
 {% endblock %}
