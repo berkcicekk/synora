@@ -432,6 +432,12 @@ input::placeholder { color: #707482; }
 .step.now .step-n { background: var(--blue); border-color: var(--blue); color: var(--on-blue); }
 .step.now.failed .step-n { background: var(--error); border-color: var(--error); }
 .sheet-card .steps { margin: 0 0 .4rem; }
+@media (max-width: 480px) {
+  /* Dar ekranda tek satır: yalnızca bulunulan adımın adı görünür (ekran okuyucu hepsini okur). */
+  .steps { gap: .35rem 1rem; flex-wrap: nowrap; }
+  .step + .step::before { width: .8rem; margin-left: -.6rem; }
+  .step:not(.now) .step-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
 
 /* --- Yükleme: güvenceler ve hazırlık listesi --- */
 .assure { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; gap: .55rem; }
@@ -439,7 +445,11 @@ input::placeholder { color: #707482; }
 .assure li { font-size: .85rem; line-height: 1.5; color: var(--muted); padding-top: .6rem; border-top: 2px solid var(--blue); }
 .assure strong { display: block; color: var(--ink); font-weight: 600; margin-bottom: .15rem; }
 .prep { font-size: .88rem; border-top: 1px solid var(--hair); padding-top: .7rem; }
-.prep summary { cursor: pointer; font-weight: 500; min-height: 44px; display: flex; align-items: center; }
+.prep summary { cursor: pointer; font-weight: 500; min-height: 44px; display: flex; align-items: center; gap: .5rem; list-style: none; }
+.prep summary::-webkit-details-marker { display: none; }
+/* display:flex tarayıcının açılır üçgenini gizler; kendi işaretimiz: */
+.prep summary::before { content: ""; width: .45rem; height: .45rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform .15s; }
+.prep[open] summary::before { transform: rotate(45deg); }
 .prep ul { margin: .2rem 0 0; padding-left: 1.1rem; display: grid; gap: .4rem; color: var(--muted); line-height: 1.5; }
 .prep strong, .prep em { color: var(--ink); }
 
