@@ -242,20 +242,31 @@
     const choose = document.getElementById("output-choose");
     const zone = document.getElementById("output-drop");
     let kind = null;
+    let opener = null;
     const say = (msg, isError) => {
       status.textContent = msg;
       status.classList.toggle("error", Boolean(isError));
     };
+    const openers = [...document.querySelectorAll("[data-output]")];
+    openers.forEach((b) => { b.setAttribute("aria-controls", "output-panel"); b.setAttribute("aria-expanded", "false"); });
     // Dosya sunucuda saklanmadığı için önce neden yeniden seçileceğini açıklayan panel açılır;
     // dosya seçici ancak kullanıcı "Dosyayı seç"e bastığında açılır.
-    const close = () => { panel.hidden = true; kind = null; };
+    const close = () => {
+      panel.hidden = true;
+      kind = null;
+      openers.forEach((b) => b.setAttribute("aria-expanded", "false"));
+      // Klavye kullanıcısı kaldığı yere döner.
+      if (opener) { opener.focus(); opener = null; }
+    };
     const titles = { fixed: "Düzeltilmiş kopya", annotated: "Yorumlu kopya", recheck: "Yeniden denetim" };
     const helps = {
       copy: "Dosyanızı sunucuda saklamıyoruz. Kopyayı hazırlamak için denetlediğiniz dosyayı yeniden seçin; metninize dokunulmadan hazırlanıp indirilir.",
       recheck: "Dosyanızı sunucuda saklamıyoruz. Seçtiğiniz paragraf türleriyle yeniden denetlemek için denetlediğiniz dosyayı yeniden seçin.",
     };
-    document.querySelectorAll("[data-output]").forEach((btn) => btn.addEventListener("click", () => {
+    openers.forEach((btn) => btn.addEventListener("click", () => {
       kind = btn.dataset.output;
+      opener = btn;
+      openers.forEach((b) => b.setAttribute("aria-expanded", String(b === btn)));
       document.getElementById("output-title").textContent = titles[kind];
       document.getElementById("output-help").textContent = kind === "recheck" ? helps.recheck : helps.copy;
       say("");

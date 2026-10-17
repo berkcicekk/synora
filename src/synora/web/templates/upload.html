@@ -18,10 +18,11 @@
         <path d="M6 2h24l12 12v40H6z M30 2v12h12 M24 44V24 M16 32l8-8 8 8"/>
       </svg>
       <span class="drop-title">Dosyanızı buraya bırakın</span>
-      <span class="drop-sub">ya da seçmek için tıklayın · .docx · en fazla {{ max_mb }} MB</span>
-      <input id="file" name="file" type="file"
+      <span class="drop-sub" id="drop-help">ya da seçmek için tıklayın · .docx · en fazla {{ max_mb }} MB</span>
+      <input id="file" name="file" type="file" aria-describedby="drop-help"
              accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
     </label>
+    <noscript><p class="alert">Yükleme için tarayıcınızda JavaScript açık olmalı.</p></noscript>
     <div class="dropcard-row">
       {% if rulesets|length > 1 %}
       <div class="field grow">
