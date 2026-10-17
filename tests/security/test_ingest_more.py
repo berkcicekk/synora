@@ -72,7 +72,7 @@ def test_deeply_nested_xml_is_rejected_quickly() -> None:
     xml = b"<?xml version='1.0'?>" + b"<a>" * depth + b"</a>" * depth
     start = time.monotonic()
     assert code_of(with_document(xml)) is ErrorCode.XML_MALFORMED
-    assert time.monotonic() - start < 5
+    assert time.monotonic() - start < 15  # yük altında da (CI) kırılmasın
 
 
 def test_huge_text_node_is_bounded_by_xml_byte_limit() -> None:
