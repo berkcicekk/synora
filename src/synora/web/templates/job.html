@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_marks.html" import arrow, mark %}
+{% from "_steps.html" import steps %}
 {% block title %}Denetim raporu · Synora{% endblock %}
 {% block body_class %}{% if job.status == "done" %}editor{% endif %}{% endblock %}
 
@@ -52,22 +53,55 @@
 {% if job.status in ("queued", "running") %}
 <section class="section simple" data-poll="/jobs/{{ job.id }}/status">
   <div class="sheet-card">
+    {{ steps(2) }}
     <span class="eyebrow">Denetim · {{ job.created_at | when }}</span>
     <h1 class="page-title">Teziniz denetleniyor.</h1>
     <div class="progress" aria-hidden="true"><span></span></div>
     <p class="muted" role="status" aria-live="polite">Güvenlik kontrolü, biçim okuma ve kılavuz denetimi
       yapılıyor. Genellikle birkaç saniye sürer.</p>
+    <p class="muted small">Denetim bitince sayfa kendiliğinden yenilenir. Bu sayfadan ayrılırsanız
+      raporunuz <a class="textlink" href="/">Belgelerim</a> listesinde görünür.</p>
   </div>
 </section>
 
 {% elif job.status == "failed" %}
 <section class="section simple">
   <div class="sheet-card">
+    {{ steps(2, failed=true) }}
     <span class="eyebrow">Denetim · {{ job.created_at | when }}</span>
     <h1 class="page-title">Dosya denetlenemedi.</h1>
-    <p>{{ error }}</p>
+    <p role="alert">{{ error }}</p>
+    {% set code = job.error_code or "" %}
+    <div class="help-box">
+      <h2 class="help-title">Ne yapabilirsiniz?</h2>
+      <ol class="help-steps">
+        {% if code in ("NOT_A_ZIP", "NOT_DOCX", "NOT_WORDML") %}
+        <li>Dosyayı Word'de açın.</li>
+        <li><em>Dosya › Farklı Kaydet</em> deyip dosya türü olarak <strong>Word Belgesi (.docx)</strong> seçin.</li>
+        <li>PDF, .doc ya da .odt değil, kaydettiğiniz .docx dosyasını yükleyin.</li>
+        {% elif code == "ENCRYPTED" %}
+        <li>Dosyayı Word'de açın ve parolanızı girin.</li>
+        <li><em>Dosya › Bilgi › Belgeyi Koru › Parolayla Şifrele</em> bölümünde parolayı silip kaydedin.</li>
+        <li>Parolasız dosyayı yeniden yükleyin.</li>
+        {% elif code == "MACRO_ENABLED" %}
+        <li>Dosyayı Word'de açın.</li>
+        <li><em>Dosya › Farklı Kaydet</em> deyip <strong>Word Belgesi (.docx)</strong> seçin; makrolar kaldırılır, metniniz kalır.</li>
+        <li>Yeni .docx dosyasını yükleyin.</li>
+        {% elif code in ("FILE_TOO_LARGE", "TOTAL_TOO_LARGE", "COMPRESSION_RATIO", "TOO_MANY_PARTS", "XML_TOO_LARGE", "TIMEOUT") %}
+        <li>Belgedeki büyük görselleri küçültün: bir görsele tıklayıp <em>Resim Biçimi › Resimleri Sıkıştır</em> ile tüm resimlere uygulayın.</li>
+        <li>Gömülü video, ses ya da büyük ekleri kaldırın.</li>
+        <li>Kaydedip yeniden yükleyin.</li>
+        {% elif code == "INTERRUPTED" %}
+        <li>Aynı dosyayı yeniden yükleyin; dosyanızda bir sorun yok.</li>
+        {% else %}
+        <li>Dosyayı Word'de açın. Word onarmayı önerirse kabul edin.</li>
+        <li><em>Dosya › Farklı Kaydet</em> ile yeni bir <strong>.docx</strong> olarak kaydedin.</li>
+        <li>Yeni dosyayı yükleyin. Sorun sürerse aşağıdaki kodu destek ekibine iletin.</li>
+        {% endif %}
+      </ol>
+    </div>
     <p class="mono muted">Kod: {{ job.error_code }}</p>
-    <div><a class="btn" href="/"><span class="lbl">Yeni denetim başlat</span>{{ arrow() }}</a></div>
+    <div><a class="btn primary" href="/"><span class="lbl">Yeni denetim başlat</span>{{ arrow() }}</a></div>
   </div>
 </section>
 

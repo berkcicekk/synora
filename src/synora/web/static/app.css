@@ -422,6 +422,32 @@ input::placeholder { color: #707482; }
 .state-running, .state-queued { background: var(--wash); color: var(--blue); }
 .empty { color: var(--muted); padding-top: 1rem; }
 
+/* --- Akış göstergesi: Yükle → Denetim → Rapor → Kopya --- */
+.steps { list-style: none; margin: .4rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .35rem 1.4rem; }
+.step { display: flex; align-items: center; gap: .5rem; font-family: var(--mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.step + .step::before { content: ""; width: 1.4rem; border-top: 1px solid var(--border); margin-right: .1rem; margin-left: -.9rem; }
+.step-n { display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border: 1px solid var(--border); border-radius: 2px; background: var(--card); color: var(--ink); font-size: .72rem; }
+.step.done .step-n { background: var(--wash); border-color: var(--blue); color: var(--blue); }
+.step.now { color: var(--ink); font-weight: 600; }
+.step.now .step-n { background: var(--blue); border-color: var(--blue); color: var(--on-blue); }
+.step.now.failed .step-n { background: var(--error); border-color: var(--error); }
+.sheet-card .steps { margin: 0 0 .4rem; }
+
+/* --- Yükleme: güvenceler ve hazırlık listesi --- */
+.assure { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; gap: .55rem; }
+@media (min-width: 760px) { .assure { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+.assure li { font-size: .85rem; line-height: 1.5; color: var(--muted); padding-top: .6rem; border-top: 2px solid var(--blue); }
+.assure strong { display: block; color: var(--ink); font-weight: 600; margin-bottom: .15rem; }
+.prep { font-size: .88rem; border-top: 1px solid var(--hair); padding-top: .7rem; }
+.prep summary { cursor: pointer; font-weight: 500; min-height: 44px; display: flex; align-items: center; }
+.prep ul { margin: .2rem 0 0; padding-left: 1.1rem; display: grid; gap: .4rem; color: var(--muted); line-height: 1.5; }
+.prep strong, .prep em { color: var(--ink); }
+
+/* --- Hata sayfaları: ne yapabilirsiniz --- */
+.help-box { background: var(--paper); border-left: 3px solid var(--blue); padding: .9rem 1rem; display: grid; gap: .5rem; }
+.help-title { font-size: 1.05rem; font-weight: 600; letter-spacing: 0; line-height: 1.3; }
+.help-steps { margin: 0; padding-left: 1.2rem; display: grid; gap: .35rem; font-size: .92rem; line-height: 1.5; }
+
 /* --- Sade kart sayfaları --- */
 .simple { display: grid; place-items: center; padding-block: clamp(4rem, 10vw, 7rem); }
 .sheet-card { background: var(--card); border: 1px solid var(--hair); border-radius: 3px; padding: 2.2rem; display: grid; gap: 1rem; width: min(580px, calc(100% - 2.5rem)); }

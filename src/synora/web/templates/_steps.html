@@ -1,0 +1,12 @@
+{# Akış göstergesi: Yükle → Denetim → Rapor → Kopya. current: 1–4; failed: o adım başarısız. #}
+{% macro steps(current, failed=false) %}
+<ol class="steps" aria-label="Adımlar">
+  {% for label in ["Yükle", "Denetim", "Rapor", "Kopya"] %}
+  {% set n = loop.index %}
+  <li class="step{% if n < current %} done{% elif n == current %} now{% if failed %} failed{% endif %}{% endif %}"{% if n == current %} aria-current="step"{% endif %}>
+    <span class="step-n" aria-hidden="true">{{ n }}</span>
+    <span class="step-label">{{ label }}{% if n < current %}<span class="visually-hidden"> (tamamlandı)</span>{% elif n == current and failed %}<span class="visually-hidden"> (başarısız)</span>{% endif %}</span>
+  </li>
+  {% endfor %}
+</ol>
+{% endmacro %}

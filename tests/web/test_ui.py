@@ -8,8 +8,10 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
-from test_web import login
+from test_web import login, upload, wait_done
+from thesis import thesis
 
 from synora.web.mailer import ConsoleMailer
 
@@ -95,3 +97,58 @@ def test_output_panel_returns_focus_and_exposes_state() -> None:
     # Panel kapanınca odak, paneli açan düğmeye döner; düğmeler panelin açık olduğunu bildirir.
     assert "aria-expanded" in JS
     assert "opener.focus()" in JS
+
+
+# --- Akış netliği ------------------------------------------------------------------------------
+
+
+def _current_step(html: str) -> str:
+    m = re.search(
+        r'<li class="step[^"]*" aria-current="step">\s*<span class="step-n"[^>]*>(\d)</span>', html)
+    assert m, "akış göstergesi yok"
+    return m.group(1)
+
+
+def test_upload_page_shows_step_one_and_privacy(client: TestClient, mailer: ConsoleMailer) -> None:
+    login(client, mailer)
+    html = client.get("/").text
+    assert _current_step(html) == "1"
+    # Mimari §10.1: yükleme ekranında gizlilik notu
+    for promise in ("Metniniz değiştirilmez.", "Yapay zekâ tarafından okunmaz.",
+                    "Dosyanız işlem bitince silinir."):
+        assert promise in html
+    assert "Yüklemeden önce" in html
+    assert "Farklı Kaydet" in html
+
+
+def test_processing_page_shows_step_two(client: TestClient, mailer: ConsoleMailer) -> None:
+    login(client, mailer)
+    db = client.app.state.db  # type: ignore[attr-defined]
+    db.add_job("bekleyen-is-00000001", "ogrenci@beun.edu.tr", "example")
+    html = client.get("/jobs/bekleyen-is-00000001").text
+    assert _current_step(html) == "2"
+    assert "Teziniz denetleniyor." in html
+    assert 'href="/">Belgelerim</a>' in html
+
+
+def _corrupted_docx() -> bytes:
+    data = bytearray(thesis())
+    data[200] ^= 0xFF  # sıkıştırılmış veride tek bayt: zip açılır, part okunamaz
+    return bytes(data)
+
+
+@pytest.mark.parametrize(("data", "code", "hint"), [
+    (b"bu bir word belgesi degil", "NOT_A_ZIP", "Word Belgesi (.docx)"),
+    (_corrupted_docx(), "CORRUPT_ZIP", "Word onarmayı önerirse"),
+], ids=["not-a-zip", "corrupt-zip"])
+def test_failed_job_explains_what_to_do(client: TestClient, mailer: ConsoleMailer,
+                                        data: bytes, code: str, hint: str) -> None:
+    csrf = login(client, mailer)
+    job_id = upload(client, csrf, data)
+    assert wait_done(client, job_id) == "failed"
+    html = client.get(f"/jobs/{job_id}").text
+    assert f"Kod: {code}" in html
+    assert "Ne yapabilirsiniz?" in html
+    assert hint in html
+    assert "step now failed" in html
+    assert "(başarısız)" in html

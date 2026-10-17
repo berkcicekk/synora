@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_marks.html" import arrow %}
+{% from "_steps.html" import steps %}
 {% block title %}Belgelerim · Synora{% endblock %}
 {% block content %}
 <section class="app-head">
@@ -7,6 +8,7 @@
     <span class="meta">Belgelerim</span>
     <h1>Tezinizi yükleyin.</h1>
     <p>Word belgesi (.docx). Raporunuz birkaç saniye içinde, belgenizin üzerinde hazır olur.</p>
+    {{ steps(1) }}
   </div>
 </section>
 
@@ -40,6 +42,20 @@
       <button id="submit" class="btn primary" type="submit" disabled><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
     </div>
     <p id="upload-status" class="status" role="status" aria-live="polite"></p>
+    <ul class="assure" aria-label="Gizlilik">
+      <li><strong>Metniniz değiştirilmez.</strong> Yalnızca biçim düzeltilir; her kopyada metnin harfi harfine aynı kaldığı doğrulanır.</li>
+      <li><strong>Yapay zekâ tarafından okunmaz.</strong> Paragraf türü yalnızca punto, hizalama gibi ölçülerden belirlenir.</li>
+      <li><strong>Dosyanız işlem bitince silinir.</strong> Diske yazılmaz; rapor {{ retention }} saat sonra silinir.</li>
+    </ul>
+    <details class="prep">
+      <summary>Yüklemeden önce</summary>
+      <ul>
+        <li>Dosya <strong>.docx</strong> olmalı. Eski .doc dosyasını Word'de <em>Dosya › Farklı Kaydet › Word Belgesi (.docx)</em> ile kaydedin.</li>
+        <li>Parola koruması varsa kaldırın: <em>Dosya › Bilgi › Belgeyi Koru</em>.</li>
+        <li>Makro içeren belgeler (.docm) kabul edilmez.</li>
+        <li>İzlenen değişiklikler varsa önce kabul edin ya da reddedin; rapor bunları ayrıca uyarır.</li>
+      </ul>
+    </details>
   </form>
 
   <aside class="history" aria-labelledby="gecmis">
