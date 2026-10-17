@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from test_web import login, upload, wait_done
+from test_web import ambiguous_thesis, bad_thesis, login, upload, wait_done
 from thesis import thesis
 
 from synora.web.mailer import ConsoleMailer
@@ -152,3 +152,75 @@ def test_failed_job_explains_what_to_do(client: TestClient, mailer: ConsoleMaile
     assert hint in html
     assert "step now failed" in html
     assert "(başarısız)" in html
+
+
+# --- Rapor ekranı: özet, sıradaki adımlar, Word'de nasıl düzeltilir ---------------------------
+
+
+def _done_job(client: TestClient, mailer: ConsoleMailer, data: bytes) -> str:
+    csrf = login(client, mailer)
+    job_id = upload(client, csrf, data)
+    assert wait_done(client, job_id) == "done"
+    return job_id
+
+
+def test_report_digest_buckets_and_next_steps(client: TestClient, mailer: ConsoleMailer) -> None:
+    job_id = _done_job(client, mailer, bad_thesis())
+    html = client.get(f"/jobs/{job_id}").text
+    digest = html.split('class="digest"', 1)[1].split("</section>", 1)[0]
+    assert "1 hata, 0 uyarı." in digest  # telefonda araç çubuğu özeti gizli; burada görünür
+    fix = digest.split('class="bucket b-fix"', 1)[1].split("</li>", 1)[0]
+    manual = digest.split('class="bucket b-manual"', 1)[1].split("</li>", 1)[0]
+    assert '<span class="b-num">1</span>' in fix
+    assert '<span class="b-num">0</span>' in manual and "disabled" in manual
+    assert "Kontrol edin" not in digest  # belirsiz paragraf yok
+    assert "Sıradaki adımlar" in digest
+    assert "Tümünü Kabul Et" in digest
+    assert 'data-filter="manual"' in html
+    assert "Düzeltilmiş kopyada otomatik düzeltilir." in html
+    assert "Word'de nasıl düzeltilir" in html
+    assert "Satır Aralığı Seçenekleri" in html  # body.line_spacing bulgusu
+    assert "son onayı" in html  # resmi kontrolün yerini almaz
+
+
+def test_report_digest_points_to_unsure_paragraphs(client: TestClient,
+                                                   mailer: ConsoleMailer) -> None:
+    job_id = _done_job(client, mailer, ambiguous_thesis())
+    html = client.get(f"/jobs/{job_id}").text
+    check = html.split('class="bucket b-check"', 1)[1].split("</li>", 1)[0]
+    assert "Kontrol edin" in check and "data-jump-unsure" in check
+    assert "türünü seçip yeniden denetleyin" in html
+
+
+def test_clean_report_has_no_digest(client: TestClient, mailer: ConsoleMailer) -> None:
+    job_id = _done_job(client, mailer, thesis())
+    html = client.get(f"/jobs/{job_id}").text
+    assert 'class="digest"' not in html
+    assert "Kılavuza aykırı biçim bulunamadı." in html
+
+
+@pytest.mark.parametrize(("rule_id", "keyword"), [
+    ("document.tracked_changes", "Tümünü Kabul Et"),
+    ("page.size", "A4"),
+    ("page.margin.left", "Kenar Boşlukları"),
+    ("page_numbering.formats", "Sayfa Numaralarını Biçimlendir"),
+    ("page_numbering.position", "Sayfa Numarası"),
+    ("page_numbering.decoration", "parantez"),
+    ("table_caption.position", "Resim Yazısı Ekle"),
+    ("heading_1.case", "Büyük/Küçük Harf"),
+    ("body.font", "Yazı Tipi kutusundan"),
+    ("body.size_pt", "Yazı Tipi Boyutu"),
+    ("heading_1.bold", "Ctrl+B"),
+    ("body.alignment", "Ctrl+J"),
+    ("body.line_spacing", "Satır Aralığı Seçenekleri"),
+    ("body.first_line_indent_cm", "Girinti"),
+    ("body.space_after_pt", "nk = punto"),
+    ("heading_1.page_break_before", "Satır ve Sayfa Sonları"),
+])
+def test_word_howto_for_each_rule_family(rule_id: str, keyword: str) -> None:
+    from jinja2 import Environment, FileSystemLoader
+
+    env = Environment(loader=FileSystemLoader(str(STATIC.parent / "templates")), autoescape=True)
+    html = env.from_string('{% from "_howto.html" import howto %}{{ howto(r) }}').render(r=rule_id)
+    assert "Word'de nasıl düzeltilir" in html
+    assert keyword in html

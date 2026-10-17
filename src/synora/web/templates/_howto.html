@@ -1,0 +1,45 @@
+{# Bulgu kartı: "Word'de nasıl düzeltilir". Kural kimliğine göre Word (Türkçe arayüz) yolu.
+   Yalnızca biçim adımları; metin önerisi yok. #}
+{% macro howto(rule_id) %}
+{% set prop = rule_id.split(".", 1)[1] if "." in rule_id else rule_id %}
+{% set style_tip = "Aynı türdeki tüm paragrafları birden düzeltmek için stili değiştirin: Giriş › Stiller › stile sağ tıklayın › Değiştir." %}
+{% if rule_id == "document.tracked_changes" %}
+  {% set steps = ["Gözden Geçir › Değişiklikler bölümünden Tümünü Kabul Et (ya da Reddet) seçin.", "Ardından belgeyi kaydedip yeniden denetleyin."] %}
+{% elif rule_id in ("page.size", "page.orientation") %}
+  {% set steps = ["Düzen › Boyut menüsünden A4 seçin; yön için Düzen › Yönlendirme › Dikey.", "Belgede birden çok bölüm varsa Sayfa Yapısı penceresinde Uygulama yeri: Tüm belge seçin."] %}
+{% elif rule_id.startswith("page.margin.") %}
+  {% set steps = ["Düzen › Kenar Boşlukları › Özel Kenar Boşlukları açın.", "Değerleri santimetre olarak girin.", "Belgede birden çok bölüm varsa Uygulama yeri: Tüm belge seçin."] %}
+{% elif rule_id == "page_numbering.formats" %}
+  {% set steps = ["Ön sayfalarla ana metin arasında bölüm sonu olmalı: Düzen › Kesmeler › Sonraki Sayfa.", "Altbilgide numaraya sağ tıklayıp Sayfa Numaralarını Biçimlendir ile her bölümün sayı biçimini seçin.", "Ana metin bölümünde Önceki ile Bağlantılı seçeneğini kapatıp numarayı 1'den başlatın."] %}
+{% elif rule_id == "page_numbering.position" %}
+  {% set steps = ["Ekle › Sayfa Numarası menüsünden kılavuzun istediği konumu (ör. Sayfanın Altı › Ortada) seçin.", "Her bölümde numaranın göründüğünü kontrol edin."] %}
+{% elif rule_id == "page_numbering.decoration" %}
+  {% set steps = ["Altbilgiye çift tıklayın.", "Numaranın çevresindeki parantez ya da tireleri silin; yalnızca numara alanı kalsın."] %}
+{% elif prop == "position" %}
+  {% set steps = ["Başlık paragrafını kesip tablonun ya da şeklin istenen tarafına (üstüne/altına) yapıştırın.", "Yeni başlık eklerken Başvurular › Resim Yazısı Ekle penceresinde konumu seçebilirsiniz."] %}
+{% elif prop == "case" %}
+  {% set steps = ["Başlıktaki harfleri kılavuzun kuralına göre düzeltin.", "Giriş › Büyük/Küçük Harf Değiştir (Aa) düğmesi yardımcı olur; bağlaçları ve özel adları ayrıca kontrol edin."] %}
+{% elif prop == "font" %}
+  {% set steps = ["Paragrafı seçin, Giriş sekmesindeki Yazı Tipi kutusundan kılavuzdaki yazı tipini seçin.", style_tip] %}
+{% elif prop == "size_pt" %}
+  {% set steps = ["Paragrafı seçin, Giriş sekmesindeki Yazı Tipi Boyutu kutusuna değeri yazın.", style_tip] %}
+{% elif prop in ("bold", "italic", "all_caps") %}
+  {% set steps = ["Paragrafı seçin. Kalın: Ctrl+B · İtalik: Ctrl+I · Büyük harf: Giriş › Yazı Tipi penceresinde Tümü büyük harf.", style_tip] %}
+{% elif prop == "alignment" %}
+  {% set steps = ["Paragrafı seçin. İki yana yasla: Ctrl+J · Ortala: Ctrl+E · Sola yasla: Ctrl+L.", style_tip] %}
+{% elif prop == "line_spacing" %}
+  {% set steps = ["Paragrafı seçin, Giriş › Satır ve Paragraf Aralığı › Satır Aralığı Seçenekleri açın.", "Satır aralığı kutusundan kılavuzdaki değeri seçin.", style_tip] %}
+{% elif prop in ("first_line_indent_cm", "indent_left_cm") %}
+  {% set steps = ["Paragrafı seçin, Giriş › Paragraf bölümünün köşesindeki oktan Paragraf penceresini açın.", "Girinti alanında değeri santimetre olarak girin (ilk satır için Özel › İlk satır).", style_tip] %}
+{% elif prop in ("space_before_pt", "space_after_pt") %}
+  {% set steps = ["Paragrafı seçin, Paragraf penceresinde Aralık › Önce / Sonra değerini girin (Word'de nk = punto).", style_tip] %}
+{% elif prop == "page_break_before" %}
+  {% set steps = ["Başlığı seçin, Paragraf penceresinin Satır ve Sayfa Sonları sekmesinde sayfa sonu seçeneğini işaretleyin.", "Boş satırlarla ya da Enter'la sayfa atlatmayın."] %}
+{% else %}
+  {% set steps = [style_tip] %}
+{% endif %}
+<details class="howto">
+  <summary>Word'de nasıl düzeltilir</summary>
+  <ol>{% for s in steps %}<li>{{ s }}</li>{% endfor %}</ol>
+</details>
+{% endmacro %}

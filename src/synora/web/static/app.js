@@ -100,6 +100,7 @@
     document.querySelectorAll(".card").forEach((card) => {
       const show = f === "all"
         || (f === "fixable" && card.dataset.fixable === "yes")
+        || (f === "manual" && card.dataset.fixable === "no")
         || card.dataset.severity === f;
       card.hidden = !show;
     });
@@ -112,6 +113,20 @@
       blk.classList.toggle("dim", f !== "all" && cards.length > 0 && !cards.some((n) => visible.has(n)));
     });
   }));
+
+  // Özet kutuları: ilgili süzgeci uygular; "Kontrol edin" ilk belirsiz paragrafa götürür.
+  document.querySelectorAll("[data-apply-filter]").forEach((btn) => btn.addEventListener("click", () => {
+    const target = document.querySelector('.filter[data-filter="' + btn.dataset.applyFilter + '"]');
+    if (target) { target.click(); target.focus(); }
+  }));
+  const jumpUnsure = document.querySelector("[data-jump-unsure]");
+  if (jumpUnsure) jumpUnsure.addEventListener("click", () => {
+    const first = document.querySelector(".blk.is-unsure");
+    if (!first) return;
+    first.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    const sel = first.querySelector("select");
+    if (sel) sel.focus({ preventScroll: true });
+  });
 
   // --- Editör: yorum ↔ paragraf ------------------------------------------------------------
   const canvas = document.querySelector(".pane-canvas");
