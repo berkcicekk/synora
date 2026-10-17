@@ -136,8 +136,8 @@ def test_hostile_part_names(name: str) -> None:
 
 
 def test_nul_in_part_name_cannot_smuggle_a_second_name() -> None:
-    # Python zipfile adı NUL'da keser ("word/doc"); kesilen ad başka bir parçayı ezemez.
-    parts = list(minimal_parts().items()) + [("word/document.xml\x00.png", b"<x/>")]
+    # Python zipfile adı NUL'da keser; "word/document.xml\0.png" asıl belgeyi ezemez.
+    parts = [*minimal_parts().items(), ("word/document.xml\x00.png", b"<x/>")]
     with pytest.raises(IngestError) as exc:
         open_docx(zip_parts(parts))
     assert exc.value.code is ErrorCode.DUPLICATE_PART
