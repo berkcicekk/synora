@@ -42,3 +42,4 @@
 - 01:57 — 338 passed, 1 xfailed (Ö3: bilinmeyen adres JSON)
 - 02:07 — 393 passed, 6 xfailed (Ö3–Ö8)
 - 02:24 — 401 passed, 7 xfailed (+Ö9); 6/6 tekrar yeşil
+- 02:22 saatlik oturum (02 tetiklemesi) — 401 passed, 7 xfailed; değişiklik yok
