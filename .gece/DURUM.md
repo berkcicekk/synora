@@ -32,7 +32,8 @@
 - .gece/SABAH_RAPORU.md taslağı yazıldı (02:25).
 
 ## Sıradaki görev
-- 05:30'a kadar: yalnızca düşük riskli işler (gerekirse). Yeni büyük değişiklik yok.
+- Saat 05'ten önceki oturumlar (02/03/04): yalnızca `date +%H`, DUR kontrolü, `python -m uv run pytest -q`.
+  Yeşilse DURUM'a tek satır yaz ve dur. Yeni özellik/değişiklik YOK (iş bitti; riski artırmayalım).
 - 05:30: Faz 5 — pytest/ruff/mypy, `git diff --name-only main.. -- 'src/**/*.py' rulesets/` boş mu,
   SABAH_RAPORU.md'yi "taslak"tan "son" hale getir (commit listesi, test sayıları).
 
