@@ -45,32 +45,42 @@
       drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
     drop.addEventListener("drop", (e) => choose(e.dataTransfer.files[0]));
 
-    form.addEventListener("submit", async (e) => {
+    // fetch yükleme ilerlemesi vermez; büyük dosyalarda öğrenci yüzdeyi görsün diye XHR.
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (!file) return;
       submit.disabled = true;
       say("Yükleniyor…");
-      try {
-        const res = await fetch("/jobs", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/octet-stream",
-            "X-CSRF-Token": form.dataset.csrf,
-            "X-Ruleset": document.getElementById("ruleset").value,
-          },
-          body: file,
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/jobs");
+      xhr.setRequestHeader("Content-Type", "application/octet-stream");
+      xhr.setRequestHeader("X-CSRF-Token", form.dataset.csrf);
+      xhr.setRequestHeader("X-Ruleset", document.getElementById("ruleset").value);
+      let shown = -1;
+      xhr.upload.addEventListener("progress", (ev) => {
+        if (!ev.lengthComputable) return;
+        const pct = Math.floor((ev.loaded / ev.total) * 100);
+        // Ekran okuyucuyu boğmamak için yalnızca 10'luk adımlarda güncelle.
+        if (pct >= shown + 10 || pct === 100) {
+          shown = pct;
+          say(pct < 100 ? "Yükleniyor… %" + pct : "Yüklendi. Denetim başlıyor…");
+        }
+      });
+      xhr.addEventListener("load", () => {
+        let data = {};
+        try { data = JSON.parse(xhr.responseText); } catch (err) { /* boş yanıt */ }
+        if (xhr.status < 200 || xhr.status >= 300) {
           say(data.error || "Yükleme başarısız oldu. Sayfayı yenileyip yeniden deneyin.", true);
           submit.disabled = false;
           return;
         }
         window.location.href = data.url;
-      } catch (err) {
+      });
+      xhr.addEventListener("error", () => {
         say("Bağlantı hatası. İnternet bağlantınızı kontrol edip yeniden deneyin.", true);
         submit.disabled = false;
-      }
+      });
+      xhr.send(file);
     });
   }
 

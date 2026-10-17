@@ -382,3 +382,11 @@ def test_report_prints_as_checklist() -> None:
         assert hidden in printing.split("display: none !important;")[0]
     assert ".comment[hidden] { display: grid !important; }" in printing
     assert "break-inside: avoid" in printing
+
+
+def test_upload_reports_progress_without_flooding_screen_readers() -> None:
+    upload_js = JS.split("// --- Yükleme", 1)[1].split("// --- Durum takibi", 1)[0]
+    assert 'xhr.upload.addEventListener("progress"' in upload_js
+    assert "pct >= shown + 10" in upload_js  # aria-live bölgesi 10'luk adımlarla güncellenir
+    for header in ("Content-Type", "X-CSRF-Token", "X-Ruleset"):
+        assert f'xhr.setRequestHeader("{header}"' in upload_js
