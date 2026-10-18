@@ -126,6 +126,12 @@ Yapılan (2026-10-12), kullanıcı kararlarıyla:
 İşler: Türkiye'de barındırma; KVKK aydınlatma metni ve rıza; enstitüyle kapsam ve takvim; 20–30 öğrenci +
 enstitü personeli; kullanım kılavuzu; geri bildirim formu; haftalık hata/istek takibi.
 
+**Canlıya hazırlık (2026-10-19), kod tarafı bitti:** Ö3/Ö5/Ö6/Ö8/Ö9 çözüldü; üretim ayar denetimi, e-posta
+hata yönetimi, erişim kaydında giriş bağlantısı sızıntısı, gövde boyutu sınırları, gerçek `/health`;
+arayüzde UI/UX denetimi düzeltmeleri; giriş/kayıt sayfaları ve kayıt onayı; `deploy/` (systemd, nginx,
+ortam değişkenleri). **Açık (karar/dış iş):** aydınlatma metninin kesinleşmesi (veri sorumlusu, başvuru yolu),
+SMTP sağlayıcısı ve gerçek sunucuyla deneme, barındırma, yedekleme politikası, Word'de elle açılış testi.
+
 Başarı ölçütleri `[KARAR?]`: enstitü format iadelerinde azalma, kullanıcı memnuniyeti, yanlış pozitif oranı.
 
 ## F6 — Yerel model

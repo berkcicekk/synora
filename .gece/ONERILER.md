@@ -5,6 +5,7 @@ kimlik doğrulama, oturum, veritabanı). Her öneri: sorun → kanıt (varsa xfa
 Bağımlılık önerileri de burada.
 
 ## Ö1 — "Bu bulgu yanlış mı?" geri bildirimi (rakip analizi fikir 9)
+> **Durum (2026-10-19): açık** (yeni özellik; canlıya çıkış için gerekmiyor).
 - **Neden:** Pilotta yanlış bulgu oranını ölçmek için (UCSD pilotu bu ölçüyü tutuyor).
 - **Öneri:** `POST /jobs/{id}/feedback` → gövde `{rule_id, para_id|null, verdict: "wrong"|"ok"}`.
   CSRF + sahiplik kontrolü olsun. Ayrı `feedback` tablosunda **metin olmadan** saklansın; iş silinince
@@ -13,6 +14,7 @@ Bağımlılık önerileri de burada.
 - **Karar gerekli:** Geri bildirim verisinin saklama süresi (SORULAR).
 
 ## Ö2 — "Denetlenen maddeler" kontrol listesi (rakip analizi fikir 10)
+> **Durum (2026-10-19): açık** (yeni özellik).
 - **Neden:** Türk enstitülerinin kontrol formunun dijital karşılığı; danışmana gösterilebilir.
 - **Öneri:** `report.to_json` raporuna `checked_rules: [rule_id...]` eklensin (bulgu çıkmayan, yani uygun
   kuralları da göstermek için). A7 korumalı değil ama rapor biçimi web ve testlerle bağlantılı; gece
@@ -20,6 +22,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Düşük. Rapor sürüm alanı artırılmalı.
 
 ## Ö3 — Bilinmeyen adres ve yanlış yöntem ham JSON döndürüyor
+> **Durum (2026-10-19): çözüldü** — `78fe63c`.
 - **Sorun:** `GET /boyle-bir-sayfa-yok` → `{"detail":"Not Found"}` (application/json). Kullanıcı marka
   dışında, açıklamasız bir ekran görüyor. Aynısı 405 için de geçerli.
 - **Kanıt:** `tests/web/test_ui.py::test_unknown_url_shows_friendly_page` (xfail, strict).
@@ -32,6 +35,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Çok düşük; tek satır.
 
 ## Ö4 — altChunk / gömülü OLE için uyarı bulgusu (mimari §8)
+> **Durum (2026-10-19): açık** (A2 parser; xfail testi duruyor).
 - **Sorun:** Mimari §8 "altChunk, gömülü OLE: dokunulmaz, uyarı bulgusu üretilir" diyor; A6 bunu
   üretmiyor. `altChunk` başka bir belgeyi (HTML/RTF/docx) gövdeye gömer; Synora onun içini denetlemez,
   ama kullanıcı bunu bilmez ve "temiz" rapor görebilir.
@@ -42,6 +46,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Düşük; yalnızca yeni uyarı.
 
 ## Ö5 — Günlük iş sınırı rapor silinerek aşılabiliyor
+> **Durum (2026-10-19): çözüldü** — `d2ca3aa` (ayrı `job_starts` sayacı, e-posta özeti).
 - **Sorun:** `db.jobs_since()` `jobs` tablosunu sayıyor; öğrenci "Raporu şimdi sil" ile kaydı silince
   sayaç düşüyor. 20/gün sınırı fiilen sınırsız.
 - **Kanıt:** `tests/web/test_web_security.py::test_daily_job_limit_survives_deleting_reports` (xfail).
@@ -51,6 +56,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Düşük. Silme sözü (rapor içeriği hemen silinir) korunur.
 
 ## Ö6 — Kopya üretimi (output) kaynak sınırı yok — ÖNCELİKLİ
+> **Durum (2026-10-19): çözüldü** — `02e18fc` (kullanıcı ve sunucu geneli sınır, kuyruk sınırı).
 - **Sorun:** `POST /jobs/{id}/output/{kind}` `active_jobs` ve günlük sınırı kontrol etmiyor; her istek
   `run_in_threadpool` + ayrı süreç (2 GB bellek sınırı) açıyor. Oturum açmış tek kullanıcı aynı iş için
   paralel istekle sunucuda N × 2 GB bellek ve CPU tüketebilir (DoS). `recheck` de günlük sınıra tabi değil.
@@ -61,6 +67,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Düşük; kullanıcı arayüzü 429 mesajını zaten gösteriyor.
 
 ## Ö7 — Giriş isteği sınırı yalnızca e-posta başına
+> **Durum (2026-10-19): ilk katman nginx'te** (`deploy/nginx-synora.conf`, IP başına `limit_req`). Uygulama içi IP sınırı açık; xfail testi duruyor.
 - **Sorun:** Saatte 5 sınırı e-posta başına. Tek istemci `@beun.edu.tr` altında istediği kadar farklı
   adrese bağlantı gönderebilir: e-posta bombardımanı, SMTP gönderici itibarının düşmesi, maliyet.
 - **Kanıt:** `tests/web/test_web_security.py::test_login_requests_limited_per_client` (xfail).
@@ -70,6 +77,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Orta (yanlış yapılandırmada aynı NAT arkasındaki öğrenciler etkilenir).
 
 ## Ö8 — Süresi dolan rapor, temizlik görevine kadar açılabiliyor
+> **Durum (2026-10-19): çözüldü** — `a6cd11d` (okurken yaş denetimi, WAL boşaltma).
 - **Sorun:** Temizlik 10 dakikada bir çalışıyor (`worker._janitor`). Arada `own_job` raporun yaşına
   bakmıyor; rapor 24 saat + 10 dakikaya kadar görülebilir. Gizlilik metni "24 saat sonra silinir".
 - **Kanıt:** `tests/web/test_web_security.py::test_expired_report_is_not_served_before_purge` (xfail).
@@ -77,6 +85,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Çok düşük.
 
 ## Ö9 — Veritabanı okumalarında yarış: işler takılı kalıyor, ara sıra yanlış 404 — EN ÖNCELİKLİ
+> **Durum (2026-10-19): çözüldü** — `d51a572`; test ara katmanı kaldırıldı.
 - **Sorun:** `db.py` `Database.execute` kilidi yalnızca `execute()` sırasında tutuyor; çağıranlar
   `.fetchone()/.fetchall()`'u kilit dışında, tek paylaşılan `sqlite3` bağlantısında yapıyor. İş yürütücü
   iş parçacığı ile istek iş parçacığı aynı SQL'i (ör. `SELECT * FROM jobs WHERE id=?`) aynı anda

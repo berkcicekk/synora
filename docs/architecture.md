@@ -232,7 +232,12 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
    gruplu, filtre (Hata / Uyarı / Düzeltilebilir). Rolü belirsiz paragraflar için "Bu bir … mi?" düzeltmesi.
 4. **İndir:** Düzeltilmiş `.docx` ve PDF/HTML rapor. Düzeltilemeyen hatalar için Word'de nasıl düzeltileceği.
 
-### 10.2 Teknik iskelet `[KARAR?]`
+### 10.2 Teknik iskelet
+
+Uygulandı: FastAPI + Jinja2 + az JavaScript (htmx yok), SQLite (WAL), iş yürütücü aynı süreçte iş
+parçacıkları + her iş için ayrı alt süreç (Linux'ta bellek/CPU sınırı). Üretim kurulumu: `deploy/`
+(systemd, nginx, ortam değişkenleri; tek süreç). Üretimde eksik ya da güvensiz ayarla uygulama başlamaz
+(`Settings.problems`). Aşağıdaki ilk taslak tarihçe için duruyor:
 
 - Backend: FastAPI (A9), iş kuyruğu (ör. RQ + Redis ya da Postgres tabanlı), ayrı worker süreci (A10).
 - Frontend (A11): sunucu tarafı şablon + az JavaScript (htmx) ya da hafif bir SPA. Sade arayüz için htmx yeterli.
@@ -251,7 +256,9 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
   açılıp e-posta doğrulanınca `users` tablosuna yazılır. Düz girişte kullanıcı satırı açılmaz.
 - Kimlik doğrulama pilotta: üniversite e-postasına tek kullanımlık giriş bağlantısı `[KARAR?]`
   (ileride enstitünün SSO sistemi).
-- Web'e özel ek sınırlar: kullanıcı başına eşzamanlı iş ≤ 2, günlük iş ≤ 20, CSRF koruması, yükleme yalnızca
+- Web'e özel ek sınırlar: kullanıcı başına eşzamanlı iş ≤ 2 (kopya üretimi dahil), günlük iş ≤ 20 (rapor
+  silinse de düşmez), sunucu genelinde aynı anda en fazla `workers` kopya, kuyrukta en fazla 20 iş; formlar
+  yalnızca URL kodlu ≤ 8 KB. CSRF koruması, yükleme yalnızca
   `.docx` uzantısı + içerik doğrulaması (A1).
 
 ## 10a. LaTeX şablonu (A12)
@@ -267,7 +274,7 @@ eşlemesi ve LaTeX'in kendiliğinden uygulayamadığı kurallar).
   (testle zorlanır); pdfLaTeX (Times benzeri newtx) ve XeLaTeX (gerçek yazı tipi) desteklenir.
 - Yazı tipi adı LaTeX'e yazılmadan önce beyaz listeyle süzülür; üretilen dosyalarda `\input`,
   `\write18` gibi dosya/kabuk komutları bulunmaz (testle zorlanır).
-- Web: `GET /sablon/<id>/latex.zip` (girişsiz; şablonlar başlangıçta üretilir). CLI:
+- Web: `GET /sablon/<id>/latex.zip` (girişsiz; şablon ilk istendiğinde üretilip saklanır). CLI:
   `synora latex -r <kural seti> -o <klasör|.zip>`.
 - Kapsam dışı: `.tex` ya da PDF denetimi, sunucuda derleme.
 
