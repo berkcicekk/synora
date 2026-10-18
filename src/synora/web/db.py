@@ -231,4 +231,7 @@ class Database:
                                      (now - retention_seconds,))
             self._conn.execute("DELETE FROM sessions WHERE expires_at < ?", (now,))
             self._conn.execute("DELETE FROM login_tokens WHERE expires_at < ?", (now - 3600,))
+            # Silinen raporlar WAL dosyasında kalmasın: ana dosyaya işle (secure_delete sıfırlar)
+            # ve WAL'ı boşalt.
+            self._conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
             return cur.rowcount

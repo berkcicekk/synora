@@ -342,17 +342,29 @@ def test_login_requests_limited_per_client(client: TestClient, mailer: ConsoleMa
     assert len(mailer.sent) <= settings.login_requests_per_hour * 2
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "Saklama süresi dolan rapor, temizlik görevi (10 dakikada bir) çalışana kadar açılabiliyor. "
-    "Gizlilik sözü '24 saat sonra silinir'. Öneri: ONERILER Ö8 (okurken yaşı denetle)."))
 def test_expired_report_is_not_served_before_purge(client: TestClient,
                                                    mailer: ConsoleMailer) -> None:
+    # Gizlilik sözü "24 saat sonra silinir": temizlik görevi (10 dakikada bir) beklenmez (Ö8).
     csrf = login(client, mailer)
     job_id = upload(client, csrf, thesis())
     wait_done(client, job_id)
     db = client.app.state.db  # type: ignore[attr-defined]
     db.execute("UPDATE jobs SET created_at = created_at - 90000 WHERE id=?", (job_id,))
     assert client.get(f"/jobs/{job_id}/report.json").status_code == 404
+    assert client.get(f"/jobs/{job_id}").status_code == 404
+    assert f'href="/jobs/{job_id}"' not in client.get("/").text  # listede de görünmez
+
+
+def test_purge_leaves_nothing_in_the_wal_file(tmp_path: Path) -> None:
+    from synora.web.db import Database
+
+    db = Database(tmp_path / "w.db")
+    db.add_job("silinecek-is-0000000001", EMAIL, "example")
+    db.finish_job("silinecek-is-0000000001", report='{"r": "GIZLI-RAPOR"}', error_code=None)
+    assert db.purge(retention_seconds=-1) == 1
+    wal = tmp_path / "w.db-wal"
+    assert not wal.exists() or wal.stat().st_size == 0
+    assert b"GIZLI-RAPOR" not in (tmp_path / "w.db").read_bytes()
 
 
 def test_copy_of_failed_job_is_refused(client: TestClient, mailer: ConsoleMailer) -> None:

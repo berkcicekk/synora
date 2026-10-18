@@ -349,9 +349,13 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if not JOB_ID_RE.fullmatch(job_id):
             raise HTTPException(404)
         job = db.get_job(job_id)
-        if job is None or not hmac.compare_digest(job.email, user.email):
+        if job is None or not hmac.compare_digest(job.email, user.email) or expired(job):
             raise HTTPException(404)
         return job
+
+    def expired(job: Job) -> bool:
+        # Temizlik görevi 10 dakikada bir çalışır; "24 saat sonra silinir" sözü okurken de tutulur.
+        return job.created_at < time.time() - settings.retention_hours * 3600
 
     # Kopya üretimi istek içinde çalışır (ayrı süreç, 2 GB'a kadar); sayaç yalnızca olay döngüsünde
     # değişir, kontrol ile artırma arasında await olmadığından yarış yoktur (ONERILER Ö6).
@@ -380,7 +384,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         user = current_user(request)
         if user is None:
             return render(request, "login.html", page=login_page, tiles=login_tiles)
-        jobs = db.recent_jobs(user.email)
+        jobs = [j for j in db.recent_jobs(user.email) if not expired(j)]
         return render(request, "upload.html", user=user, active="docs", rulesets=ordered_rulesets,
                       ruleset_groups=ruleset_groups,
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
