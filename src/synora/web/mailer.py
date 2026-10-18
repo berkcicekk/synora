@@ -5,6 +5,7 @@ from __future__ import annotations
 import smtplib
 import ssl
 from email.message import EmailMessage
+from email.utils import formatdate, make_msgid
 from typing import Protocol
 
 from synora.web.settings import Settings
@@ -41,9 +42,17 @@ class SmtpMailer:
             "Bağlantı 15 dakika geçerlidir ve yalnızca bir kez kullanılabilir.\n\n"
             f"{link}\n\nBu isteği siz yapmadıysanız bu e-postayı yok sayabilirsiniz.\n"
         )
+        msg["Date"] = formatdate(localtime=True)
+        msg["Message-ID"] = make_msgid(domain=self.s.smtp_from.rsplit("@", 1)[-1].strip("> "))
         context = ssl.create_default_context()
-        with smtplib.SMTP(self.s.smtp_host, self.s.smtp_port, timeout=20) as smtp:
-            smtp.starttls(context=context)
+        if self.s.smtp_port == 465:  # örtük TLS (SMTPS)
+            smtp: smtplib.SMTP = smtplib.SMTP_SSL(self.s.smtp_host, self.s.smtp_port,
+                                                  timeout=20, context=context)
+        else:
+            smtp = smtplib.SMTP(self.s.smtp_host, self.s.smtp_port, timeout=20)
+        with smtp:
+            if self.s.smtp_port != 465:
+                smtp.starttls(context=context)
             if self.s.smtp_user:
                 smtp.login(self.s.smtp_user, self.s.smtp_password)
             smtp.send_message(msg)

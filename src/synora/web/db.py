@@ -145,6 +145,9 @@ class Database:
                     (row[0], now, row[3], now))
             return str(row[0])
 
+    def delete_login_token(self, token_hash: str) -> None:
+        self.execute("DELETE FROM login_tokens WHERE token_hash=?", (token_hash,))
+
     def login_token_valid(self, token_hash: str) -> bool:
         row = self.execute("SELECT expires_at, used FROM login_tokens WHERE token_hash=?",
                            (token_hash,)).fetchone()

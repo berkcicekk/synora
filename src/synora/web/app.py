@@ -11,6 +11,7 @@ import hmac
 import json
 import re
 import secrets
+import smtplib
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
@@ -29,6 +30,7 @@ from pydantic import ValidationError
 from synora.check import USER_ROLES
 from synora.errors import ErrorCode
 from synora.latex import build_zip
+from synora.log import log_event
 from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message
 from synora.ruleset import Ruleset, load_ruleset
 from synora.web.db import Database, Job
@@ -416,9 +418,17 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if db.login_requests_since(email, time.time() - 3600) >= settings.login_requests_per_hour:
             return fail("Çok fazla giriş isteği gönderildi. Bir saat sonra yeniden deneyin.")
         login_token = secrets.token_urlsafe(32)
-        db.add_login_token(_hash(login_token), email, settings.login_token_minutes * 60,
-                           consent=consent)
-        mailer.send_login_link(email, f"{settings.base_url}/auth?token={login_token}")
+        token_hash = _hash(login_token)
+        db.add_login_token(token_hash, email, settings.login_token_minutes * 60, consent=consent)
+        try:
+            # smtplib eşzamanlı ve 20 sn bekleyebilir: olay döngüsünü kilitlemesin.
+            await run_in_threadpool(mailer.send_login_link, email,
+                                    f"{settings.base_url}/auth?token={login_token}")
+        except (smtplib.SMTPException, OSError) as exc:
+            db.delete_login_token(token_hash)  # gönderilemeyen bağlantı sınırdan düşmesin
+            log_event("mail.failed", code=type(exc).__name__)
+            return auth_form(request, mode, status=503, email=email,
+                             error="E-posta gönderilemedi. Birkaç dakika sonra yeniden deneyin.")
         return render(request, "login_sent.html", email=email, mode=mode,
                       minutes=int(settings.login_token_minutes))
 
