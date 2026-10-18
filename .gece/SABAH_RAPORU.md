@@ -1,3 +1,84 @@
+# Sabah raporu — canlıya hazırlık gecesi (2026-10-19)
+
+> Gece çalışması 02:10 civarında bitti. Son durum: **1261 test geçiyor, 2 xfail** (ikisi de bilinçli
+> açık bırakıldı, aşağıda) · `ruff` temiz · `mypy src` temiz · dal `gece/arayuz-guvenlik` GitHub'a
+> push edildi (https://github.com/berkcicekk/synora). `main`'e birleştirme yapılmadı.
+
+## 1. Tek bakışta
+
+Onayladığınız planın (Faz 1 + Faz 2) tamamı bitti. Kod tarafında canlıya çıkışın önünde bildiğim engel
+yok; kalanlar **sizin kararınız ya da dış iş** (bkz. §4). Her madde önce test, sonra kod; her biri ayrı
+commit, hepsi sizin adınıza (Claude ortak yazar satırı yok).
+
+## 2. Ne yapıldı
+
+**Güvenlik ve güvenilirlik (korumalı web/iş yürütücü kodu, onayınızla)**
+- **Ö9 veritabanı yarışı** — işlerin "denetleniyor"da takılıp kalması ve ara sıra yanlış 404 bitti; testteki
+  geçici ara katman kaldırıldı.
+- **Üretim ayar denetimi** — https olmayan adres, eksik SMTP, `.local` gönderici, boş alan adı listesi ya da
+  bulunamayan kılavuzla uygulama **başlamaz**; üretimde e-posta artık konsola düşmez. Unutulmuş
+  `SYNORA_DEV=1` reddedilir.
+- **Giriş bağlantısı sızıntısı** — uvicorn erişim kaydı `/auth?token=…` yazıyordu (15 dk giriş anahtarı);
+  üretimde kapalı. Uygulama olayları artık gerçekten kaydediliyor (önceden atılıyordu).
+- **E-posta** — gönderim sunucuyu kilitlemiyor; SMTP hatası 500 yerine "E-posta gönderilemedi" mesajı.
+- **Ö6 kaynak sınırları** — kopya üretimi eşzamanlı sınıra sayılıyor, sunucu genelinde sınırlı, kuyruk
+  sınırlı; paralel isteklerle sınır aşılamıyor.
+- **Ö8** — 24 saati geçen rapor temizlik görevini beklemeden kapanıyor; silinen veri WAL'da kalmıyor.
+- **Ö3** — bilinmeyen adres/yanlış yöntem düzgün sayfa; beklenmeyen hata güvenlik başlıklı 500 sayfası,
+  ayrıntı kayda bile gitmiyor; arayüze giden hatalar Türkçe.
+- **Ö5** — günlük sınır rapor silinerek aşılamıyor (yalnızca yeni yüklemeyi sayar).
+- **Gövde sınırları** — oturumsuz formlardan disk doldurulamıyor (çok parçalı gövde Starlette'te diske
+  yazılıyordu).
+- **İşletim** — gerçek `/health`, bozuk kılavuz dosyası açılışı çökertmiyor, statik dosya önbelleği.
+- **Kayıt onayı** — onay kutusunu adres sahibi bağlantının onay sayfasında işaretliyor (başkası sizin
+  adresinizle kayıt formunu doldurursa sizin adınıza onay oluşmuyor).
+
+**Arayüz (UI/UX Pro Max kurallarıyla denetlendi)**
+- Rapor: özet ve süzgeç sayıları artık aynı (bulgu); telefonda karta dokununca sayfa sıçramıyor; yatay
+  telefonda tek sütun; paragraf türü seçimi telefonda büyük; silmede "Vazgeç".
+- İşleniyor ekranı oturum düşünce sonsuza dek beklemiyor.
+- Yükleme: dokunmatikte "dokunun" metni, kısa alan, düğme ilk ekranda.
+- Formlar: hata alana bağlı; aydınlatma metni yeni sekmede (yazdığınız adres kaybolmaz).
+- Kontrast ve dokunma alanları düzeltildi (yer tutucu, kenarlıklar, gizlilik anlatısı, küçük bağlantılar).
+
+**Dağıtım** — `deploy/`: systemd birimi, nginx yapılandırması (tezin diske yazılmaması için tampon kapalı,
+sorgu dizesiz kayıt, giriş/kayıt için IP sınırı), ortam değişkenleri örneği, kurulum notu.
+
+**Bağımsız gözden geçirme** — gece sonunda tüm değişiklikleri ayrı bir ajanla gözden geçirttim; bulduğu
+7 sorunun hepsi düzeltildi (günlük sınırın kopya indirmeyi engellemesi, başkası adına onay, 500 iz kaydı,
+405 Allow başlığı, nginx sürüm uyumu, kampüs NAT'ında hız sınırı, kurulum izinleri).
+
+## 3. Testlerde değiştirdiklerim (beklenti gevşetilmedi)
+
+Onaylı davranış değişikliği yüzünden şu testlerin **kurulumu** ya da hedefi değişti; hiçbir güvenlik
+denetimi gevşetilmedi:
+- Giriş öncesi CSRF anahtarı artık `/giris` sayfasından alınıyor (ana sayfada form yok).
+- Güvenlik testlerindeki üretim fikstürüne SMTP ayarı eklendi (artık zorunlu).
+- Telefon düzeni testi, genişletilmiş medya sorgusunu buluyor (kurallar aynı).
+- İki kayıt testi, onay kutusunun onay sayfasında da işaretlenmesini bekliyor (gözden geçirmede bulunan
+  açığın düzeltmesi).
+- Beş xfail (Ö3, Ö5, Ö6, Ö8, Ö9) gerçek teste dönüştü ve geçiyor.
+
+## 4. Sizi bekleyenler (kod dışı)
+
+1. **Aydınlatma metni** — `/aydinlatma` taslak; veri sorumlusu, başvuru yolu, barındırma yeri boş.
+   Kesinleşince `TERMS_VERSION` artırılmalı. Pilotun tek gerçek engeli bu.
+2. **SMTP sağlayıcısı** — giriş e-postaları için; gerçek sunucuyla hiç denenmedi.
+3. **Barındırma** — Linux sunucu (Windows'ta iş yürütücünün bellek sınırı çalışmaz). Kurulum `deploy/README.md`.
+4. **Yedekleme politikası** — kalıcı veri yalnızca kayıt onayları.
+5. **Word'de elle açılış testi** — düzeltilmiş/yorumlu kopya LibreOffice'te otomatik test ediliyor.
+6. **`main`'e birleştirme** — tüm iş `gece/arayuz-guvenlik` dalında; isterseniz birleştiririm.
+
+Bilinçli açık bırakılanlar: **Ö7** uygulama içi IP sınırı (ilk katmanı nginx'te), **Ö4** gömülü belge
+uyarısı ve **Ö1/Ö2** (yeni özellikler) — canlıya çıkış için gerekmiyor.
+
+## 5. Nasıl bakılır
+
+- Geliştirme sunucusu açık: http://127.0.0.1:8765 (giriş için `/giris`, bağlantı konsol kaydına düşer).
+- Commit listesi: `git log --oneline dc01dc4..HEAD` (bu gecenin ve dünkü giriş/kayıt işinin tamamı).
+
+---
+
 # Sabah raporu — gece/arayuz-guvenlik (2026-10-18)
 
 > Durum: **son**. Gece çalışması 02:26'da bitti. 05:33'teki son kontrol bilgisayar uykudayken kaçtı;
