@@ -239,7 +239,9 @@ def test_no_congratulations_while_paragraphs_unchecked(client: TestClient,
 
 def test_mobile_editor_layout_rules() -> None:
     # Telefonda araç çubuğu düğmeleri başlığın üstüne binmesin; özet ve bulgular önce gelsin.
-    mobile = CSS.split("@media (max-width: 760px) {\n  body.editor", 1)[1].split("\n}", 1)[0]
+    # Blok yatay telefonu da kapsar: (max-width: 760px), (max-height: 500px)
+    mobile = CSS.split("@media (max-width: 760px), (max-height: 500px) {\n  body.editor",
+                       1)[1].split("\n}", 1)[0]
     assert ".toolbar { grid-template-columns: minmax(0, 1fr);" in mobile
     assert ".toolbar-right { justify-self: stretch; flex-wrap: wrap;" in mobile
     assert ".pane-comments { order: -1; }" in mobile

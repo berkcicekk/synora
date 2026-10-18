@@ -19,8 +19,8 @@
       <svg class="drop-ico" viewBox="0 0 48 56" aria-hidden="true">
         <path d="M6 2h24l12 12v40H6z M30 2v12h12 M24 44V24 M16 32l8-8 8 8"/>
       </svg>
-      <span class="drop-title">Dosyanızı buraya bırakın</span>
-      <span class="drop-sub" id="drop-help">ya da seçmek için tıklayın · .docx · en fazla {{ max_mb }}&nbsp;MB</span>
+      <span class="drop-title"><span class="t-pointer">Dosyanızı buraya bırakın</span><span class="t-touch">Tezinizi seçmek için dokunun</span></span>
+      <span class="drop-sub" id="drop-help"><span class="t-pointer">ya da seçmek için tıklayın · </span>.docx · en fazla {{ max_mb }}&nbsp;MB</span>
       <input id="file" name="file" type="file" aria-describedby="drop-help"
              accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
     </label>
@@ -44,7 +44,7 @@
       {% else %}
       <p class="alert grow">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
       {% endif %}
-      <button id="submit" class="btn primary" type="submit" disabled><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
+      <button id="submit" class="btn primary" type="submit" disabled aria-describedby="upload-status"><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
     </div>
     <p id="upload-status" class="status" role="status" aria-live="polite"></p>
     <ul class="assure" aria-label="Gizlilik">

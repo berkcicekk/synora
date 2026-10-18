@@ -22,16 +22,16 @@
 {% endif %}
 <form method="post" action="{{ '/kayit' if register else '/login' }}" class="auth-form">
   <input type="hidden" name="csrf" value="{{ csrf }}">
-  {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
+  {% if error %}<p class="alert" role="alert" id="auth-error">{{ error }}</p>{% endif %}
   <label for="email">Üniversite e-postası</label>
   <input id="email" name="email" type="email" required autocomplete="email"
-         {% if domains %}aria-describedby="email-hint"{% endif %}
+         {% if error %}aria-invalid="true" {% endif %}{% if error or domains %}aria-describedby="{{ 'auth-error ' if error }}{{ 'email-hint' if domains }}"{% endif %}
          placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
   {% if domains %}<p class="auth-hint" id="email-hint">Kabul edilen adresler: {% for d in domains %}@{{ d }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
   {% if register %}
   <label class="check" for="kvkk">
     <input id="kvkk" name="kvkk" type="checkbox" value="1" required>
-    <span><a class="textlink" href="/aydinlatma">Aydınlatma metnini</a> okudum. Tezimin yalnızca biçim
+    <span><a class="textlink" href="/aydinlatma" target="_blank" rel="noopener">Aydınlatma metnini</a> okudum. Tezimin yalnızca biçim
       denetimi için, metni okunmadan işlenmesini kabul ediyorum.</span>
   </label>
   {% endif %}

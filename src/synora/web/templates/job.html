@@ -141,7 +141,7 @@
       {% for b in view.blocks %}
       {% set i = loop.index0 %}
       <div class="blk blk-{{ b.kind }}{% if b.sev %} has-{{ b.sev }}{% endif %}{% if b.center %} is-center{% endif %}{% if b.pid %} is-unsure{% endif %}"
-           id="b{{ i }}" data-block="{{ i }}" data-cards="{{ b.cards|join(' ') }}"{% if b.cards %} tabindex="0" role="button" aria-label="{{ b.cards|length }} bulgu"{% endif %}>
+           id="b{{ i }}" data-block="{{ i }}" data-cards="{{ b.cards|join(' ') }}"{% if b.cards %} tabindex="0" role="button" aria-label="{% if b.text %}{{ b.text }}: {% endif %}{{ b.cards|length }} bulgu"{% endif %}>
         {% if b.pid %}
         <label class="role-pick">
           <span>{{ "Paragraf türü" if b.pid in view.pending else "Türü belirsiz" }}</span>
@@ -253,9 +253,11 @@
     {% endif %}
     {% endif %}
     {% if view.cards %}
-    {% set n_err = view.cards | selectattr("severity", "equalto", "error") | list | length %}
-    {% set n_warn = view.cards | selectattr("severity", "equalto", "warning") | list | length %}
-    {% set n_fix = view.cards | selectattr("fixable") | list | length %}
+    {# Süzgeç sayıları özetle aynı birimde: bulgu (bir yorum aynı türden birkaç bulguyu toplar). #}
+    {% set n_err = view.cards | selectattr("severity", "equalto", "error") | sum(attribute="count") %}
+    {% set n_warn = view.cards | selectattr("severity", "equalto", "warning") | sum(attribute="count") %}
+    {% set n_fix = view.cards | selectattr("fixable") | sum(attribute="count") %}
+    {% set n_all = view.cards | sum(attribute="count") %}
     <div class="pane-head">
       <div class="pane-head-row">
         <h2 class="pane-title">Yorumlar <span class="muted">({{ view.cards|length }})</span></h2>
@@ -269,11 +271,11 @@
       <p class="muted small">{{ view.finding_count }} bulgu; aynı türdekiler tek yorumda toplandı.</p>
       {% endif %}
       <div class="filters" role="group" aria-label="Bulguları süz">
-        <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü <span class="fc">{{ view.cards|length }}</span></button>
+        <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü <span class="fc">{{ n_all }}</span></button>
         {% if n_err %}<button type="button" class="filter" data-filter="error" aria-pressed="false">Hatalar <span class="fc">{{ n_err }}</span></button>{% endif %}
         {% if n_warn %}<button type="button" class="filter" data-filter="warning" aria-pressed="false">Uyarılar <span class="fc">{{ n_warn }}</span></button>{% endif %}
         {% if n_fix %}<button type="button" class="filter" data-filter="fixable" aria-pressed="false">Düzeltilebilir <span class="fc">{{ n_fix }}</span></button>{% endif %}
-        {% if view.cards|length - n_fix %}<button type="button" class="filter" data-filter="manual" aria-pressed="false">Elle <span class="fc">{{ view.cards|length - n_fix }}</span></button>{% endif %}
+        {% if n_all - n_fix %}<button type="button" class="filter" data-filter="manual" aria-pressed="false">Elle <span class="fc">{{ n_all - n_fix }}</span></button>{% endif %}
       </div>
     </div>
     {% endif %}
@@ -310,6 +312,7 @@
         <input type="hidden" name="csrf" value="{{ user.csrf }}">
         <button type="button" class="linkbtn" data-confirm>Raporu şimdi sil</button>
         <button type="submit" class="btn small danger" hidden><span class="lbl">Evet, sil</span>{{ arrow() }}</button>
+        <button type="button" class="linkbtn" data-cancel-delete hidden>Vazgeç</button>
       </form>
       <p class="fineprint">Bu rapor {{ retention }} saat sonra kendiliğinden silinir.</p>
       <p class="fineprint">Synora, teslimden önce kendi denetiminiz içindir; biçim kontrolünün son onayı

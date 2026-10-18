@@ -80,6 +80,7 @@
     const choose = (f) => {
       file = null;
       submit.disabled = true;
+      drop.classList.remove("has-file");
       if (!f) return;
       if (!/\.docx$/i.test(f.name)) {
         say("Yalnızca Word belgesi (.docx) yükleyebilirsiniz. .doc dosyalarını Word'de .docx olarak kaydedin.", true);
@@ -148,15 +149,32 @@
   const poller = document.querySelector("[data-poll]");
   if (poller) {
     const url = poller.dataset.poll;
+    const started = Date.now();
+    const live = poller.querySelector("[role=status]");
+    const stop = (msg) => {
+      const bar = poller.querySelector(".progress");
+      if (bar) bar.hidden = true;
+      if (live) live.textContent = msg;
+    };
     const tick = async () => {
+      let res;
       try {
-        const res = await fetch(url, { headers: { Accept: "application/json" } });
-        const data = await res.json();
-        if (data.status !== "queued" && data.status !== "running") {
-          window.location.reload();
-          return;
-        }
-      } catch (err) { /* geçici hata: yeniden dene */ }
+        res = await fetch(url, { headers: { Accept: "application/json" } });
+      } catch (err) { setTimeout(tick, 2500); return; } // geçici ağ hatası: yeniden dene
+      // Oturum düşmüş ya da iş silinmişse yönlendirme HTML döner: sessizce sonsuza dek bekleme.
+      if (!res.ok || !(res.headers.get("content-type") || "").includes("application/json")) {
+        stop("Durum alınamadı: oturumunuz sona ermiş ya da denetim silinmiş olabilir. Sayfayı yenileyin.");
+        return;
+      }
+      const data = await res.json();
+      if (data.status !== "queued" && data.status !== "running") {
+        window.location.reload();
+        return;
+      }
+      if (Date.now() - started > 180000) {
+        stop("Denetim beklenenden uzun sürüyor. Birkaç dakika sonra sayfayı yenileyin ya da Belgelerim listesine bakın.");
+        return;
+      }
       setTimeout(tick, 1200);
     };
     setTimeout(tick, 800);
@@ -216,6 +234,8 @@
       const top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - 80;
       pane.scrollTo({ top, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     };
+    // Tek sütunda sayfa görünümü yorumların altında kalır; karta dokununca oraya kaydırılmaz.
+    const singleColumn = () => matchMedia("(max-width: 760px), (max-height: 500px)").matches;
     const activateCard = (comment, scrollCanvas) => {
       clearActive();
       comment.classList.add("active");
@@ -245,7 +265,7 @@
     document.querySelectorAll("[data-step-card]").forEach((b) =>
       b.addEventListener("click", () => step(Number(b.dataset.stepCard))));
     document.querySelectorAll(".comment").forEach((c) => {
-      c.addEventListener("click", (e) => { if (!e.target.closest("summary")) activateCard(c, true); });
+      c.addEventListener("click", (e) => { if (!e.target.closest("summary")) activateCard(c, !singleColumn()); });
       c.addEventListener("keydown", (e) => {
         if (e.target !== c) return; // kart içindeki "Word'de nasıl düzeltilir" vb. kendi tuşlarını kullanır
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activateCard(c, true); }
@@ -484,10 +504,20 @@
   }
 
   // --- Silme onayı (tarayıcı confirm() yerine sayfa içi) ------------------------------------
-  document.querySelectorAll("[data-confirm]").forEach((btn) => btn.addEventListener("click", () => {
-    btn.hidden = true;
+  document.querySelectorAll("[data-confirm]").forEach((btn) => {
     const real = btn.parentElement.querySelector("button[type=submit]");
-    real.hidden = false;
-    real.focus();
-  }));
+    const cancel = btn.parentElement.querySelector("[data-cancel-delete]");
+    btn.addEventListener("click", () => {
+      btn.hidden = true;
+      real.hidden = false;
+      if (cancel) cancel.hidden = false;
+      real.focus();
+    });
+    if (cancel) cancel.addEventListener("click", () => {
+      real.hidden = true;
+      cancel.hidden = true;
+      btn.hidden = false;
+      btn.focus();
+    });
+  });
 })();
