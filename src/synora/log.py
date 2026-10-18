@@ -9,6 +9,8 @@ from __future__ import annotations
 import json
 import logging
 import re
+import sys
+from typing import TextIO
 
 LOGGER_NAME = "synora"
 
@@ -34,3 +36,21 @@ def log_event(event: str, **fields: str | int) -> None:
             raise ValueError(f"izinsiz değer biçimi: {key}")
         record[key] = value
     _logger.info(json.dumps(record, ensure_ascii=True))
+
+
+def configure_logging(stream: TextIO | None = None) -> None:
+    """Sunucu için: synora olaylarını INFO düzeyinde standart çıktıya yazar (journald toplar).
+
+    Yapılandırılmazsa kayıtlar atılıyordu. Tekrar çağrılınca tek işleyici kalır.
+    """
+    logger = logging.getLogger(LOGGER_NAME)
+    for handler in logger.handlers[:]:
+        if getattr(handler, "_synora", False):
+            logger.removeHandler(handler)
+    handler = logging.StreamHandler(stream or sys.stdout)
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s",
+                                           datefmt="%Y-%m-%dT%H:%M:%S%z"))
+    handler._synora = True  # type: ignore[attr-defined]
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    logger.propagate = False

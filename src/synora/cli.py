@@ -130,6 +130,11 @@ def serve_command(
     if dev:
         os.environ.setdefault("SYNORA_DEV", "1")
         os.environ.setdefault("SYNORA_BASE_URL", f"http://{host}:{port}")
+    from synora import log
     from synora.web.app import create_app
 
-    uvicorn.run(create_app(), host=host, port=port, proxy_headers=True, server_header=False)
+    log.configure_logging()
+    # Erişim kaydı yalnızca geliştirmede: uvicorn yolu sorgu dizesiyle yazar ve /auth?token=…
+    # bağlantısı 15 dakika boyunca giriş demektir; ayrıca istemci IP'si kişisel veridir.
+    uvicorn.run(create_app(), host=host, port=port, proxy_headers=True, server_header=False,
+                access_log=dev)
