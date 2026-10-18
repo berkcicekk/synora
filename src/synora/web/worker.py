@@ -118,6 +118,9 @@ class JobRunner:
         for _ in range(self.settings.workers):
             self._queue.put(None)
 
+    def alive(self) -> bool:
+        return all(t.is_alive() for t in self._threads)
+
     def queued(self) -> int:
         return self._queue.qsize()
 

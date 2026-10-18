@@ -12,6 +12,7 @@ import json
 import re
 import secrets
 import smtplib
+import sqlite3
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
@@ -21,6 +22,7 @@ from http import HTTPStatus
 from pathlib import Path
 from typing import Any, Literal
 
+import yaml
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
@@ -102,8 +104,8 @@ def discover_rulesets(directory: Path) -> dict[str, RulesetInfo]:
     for path in sorted(directory.glob("*.yaml")):
         try:
             rules = load_ruleset(path)
-        except (ValidationError, OSError, ValueError):
-            continue
+        except (ValidationError, OSError, ValueError, yaml.YAMLError):
+            continue  # bozuk bir kılavuz dosyası diğerlerini ve açılışı etkilemesin
         found[rules.ruleset] = RulesetInfo(rules.ruleset, rules.name, path, rules)
     return found
 
@@ -316,6 +318,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         h["Cross-Origin-Opener-Policy"] = "same-origin"
         if not request.url.path.startswith("/static"):
             h["Cache-Control"] = "no-store"
+        elif request.query_params.get("v") and response.status_code == 200:
+            # Sürüm damgalı adres içerik değişince değişir: tarayıcı bir yıl saklayabilir.
+            h["Cache-Control"] = "public, max-age=31536000, immutable"
         if settings.secure_cookies:
             h["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
         return response
@@ -703,8 +708,15 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             "Content-Disposition": f'attachment; filename="{OUTPUT_FILES[kind]}"'})
 
     @app.get("/health")
-    def health() -> dict[str, str]:
-        return {"status": "ok"}
+    def health() -> JSONResponse:
+        """İzleme için: veritabanı yanıt veriyor ve iş yürütücü iş parçacıkları çalışıyor mu."""
+        try:
+            db.execute("SELECT 1")
+            healthy = runner.alive()
+        except (sqlite3.Error, OSError):
+            healthy = False
+        return JSONResponse({"status": "ok" if healthy else "degraded"},
+                            status_code=200 if healthy else 503)
 
     def api_request(request: Request) -> bool:
         """Arayüzün fetch ile çağırdığı uçlar JSON hata alır; diğerleri hata sayfası."""
