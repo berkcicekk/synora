@@ -14,11 +14,12 @@ uygun değildir: iş yürütücüsünün bellek ve CPU sınırları (A10) yalnı
 ## Kurulum
 
 ```sh
+# uv'yi sistem geneline kurun (ör. /usr/local/bin/uv); servis kullanıcısının PATH'i boştur.
 sudo useradd --system --home /opt/synora --shell /usr/sbin/nologin synora
 sudo mkdir -p /opt/synora /var/lib/synora /etc/synora
-sudo chown synora:synora /var/lib/synora && sudo chmod 700 /var/lib/synora
-# Kodu /opt/synora'ya alın (git clone ya da arşiv), sonra:
-cd /opt/synora && sudo -u synora uv sync --no-dev --frozen
+# Kodu /opt/synora'ya alın (git clone ya da arşiv), sonra sahipliği verin:
+sudo chown -R synora:synora /opt/synora /var/lib/synora && sudo chmod 700 /var/lib/synora
+cd /opt/synora && sudo -u synora -H /usr/local/bin/uv sync --no-dev --frozen
 sudo cp deploy/synora.env.example /etc/synora/synora.env && sudo chmod 600 /etc/synora/synora.env
 sudo cp deploy/synora.service /etc/systemd/system/ && sudo systemctl daemon-reload
 sudo systemctl enable --now synora
@@ -33,7 +34,11 @@ curl -s http://127.0.0.1:8000/health
   dosyayı geçici dosyaya yazar. Uygulama dosyayı bellekte işler.
 - **Kayıtlar.** Uygulama olayları (`job.done`, `retention.purged`…) standart çıktıya JSON olarak yazılır,
   `journalctl -u synora` ile okunur; tez metni içermez. Üretimde uvicorn erişim kaydı kapalıdır, nginx
-  erişim kaydı sorgu dizesini yazmaz (giriş bağlantısı sızmasın).
+  erişim kaydı sorgu dizesini yazmaz ve hata kaydı yalnızca ciddi hataları tutar (giriş bağlantısı
+  sızmasın).
+- **Sağlık.** `/health` veritabanı ya da iş yürütücü sorunluysa 503 döner; izleme bunu denetlemeli.
+- **Yükseltme.** Günlük iş sayacı (Ö5) yükseltmeden sonra boş başlar; ilk 24 saatte herkesin günlük
+  kotası yenilenmiş olur.
 - **Yedek.** Veritabanında kalıcı olan yalnızca kayıt onaylarıdır (`users` tablosu). İşler ve raporlar
   24 saatte silinir; yedekler bu silmeyi geri getirmemeli. Yedekleme politikası `[KARAR?]`.
 - **SMTP.** Giriş bağlantıları için gerçek bir SMTP hesabı gerekir (sağlayıcı `[KARAR?]`); kurulumdan

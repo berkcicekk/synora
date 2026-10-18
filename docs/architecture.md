@@ -252,8 +252,9 @@ parçacıkları + her iş için ayrı alt süreç (Linux'ta bellek/CPU sınırı
   koşulda üçüncü tarafa gitmez.
 - KVKK aydınlatma metni ve açık rıza (rol düzeltmelerinin eğitim verisi olarak kullanımı için ayrı onay).
 - Giriş (`/giris`) ve kayıt (`/kayit`) ayrı sayfalar; ikisi de parolasız bağlantı gönderir. Kayıt,
-  aydınlatma metni (`/aydinlatma`, **taslak**) onayı ister; onay (metin sürümü + zaman) yalnızca bağlantı
-  açılıp e-posta doğrulanınca `users` tablosuna yazılır. Düz girişte kullanıcı satırı açılmaz.
+  aydınlatma metni (`/aydinlatma`, **taslak**) onayı ister. Kayıt formunu başkası doldurmuş olabileceği
+  için onay kutusu bağlantının açıldığı onay sayfasında yeniden işaretlenir; onay (metin sürümü + zaman)
+  ancak o zaman `users` tablosuna yazılır. Düz girişte kullanıcı satırı açılmaz.
 - Kimlik doğrulama pilotta: üniversite e-postasına tek kullanımlık giriş bağlantısı `[KARAR?]`
   (ileride enstitünün SSO sistemi).
 - Web'e özel ek sınırlar: kullanıcı başına eşzamanlı iş ≤ 2 (kopya üretimi dahil), günlük iş ≤ 20 (rapor
