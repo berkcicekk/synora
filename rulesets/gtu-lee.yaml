@@ -1,0 +1,82 @@
+# Gebze Teknik Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (2026)
+# Kaynak: https://www.gtu.edu.tr/fileman/Files/UserFiles/fbe/GTU%20Tez%20Yazim%20Kilavuzu%2028.07.2026.docx
+# (LEE "Tez Yazım Formatı" sayfasında .docx olarak yayımlanıyor; "Son güncelleme: 24 Temmuz 2026")
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: gtu-lee
+version: 1
+name: "Gebze Teknik Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "GTÜ Lisansüstü Tez Yazım Kılavuzu, 2026"
+institution: "Gebze Teknik Üniversitesi"
+source_url: https://www.gtu.edu.tr/fileman/Files/UserFiles/fbe/GTU%20Tez%20Yazim%20Kilavuzu%2028.07.2026.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 3.2
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 3.3
+
+fonts:
+  allowed: [Times New Roman]                # 3.4 "aynı fontta Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                             # 3.4
+    line_spacing: 1.5                       # 3.4, 3.5 "1.5 tam satır aralık"
+    alignment: justify                      # 3.5 "iki yana yaslanmış"
+    space_before_pt: 6                      # 3.5 "Paragraflardan önce ve sonra 6 nk"
+    space_after_pt: 6                       # 3.5
+  heading_1:
+    size_pt: 18                             # 3.8
+    bold: true                              # 3.4, 3.8
+    all_caps: true                          # 3.8 "BÜYÜK HARF ile"
+    alignment: left                         # 3.5 "sola dayalı olarak yazılmalıdır"
+    page_break_before: true                 # 3.5 "sayfa başından (yeni sayfadan) başlamalıdır"
+    space_before_pt: 24                     # 3.5 "önce 24"
+    space_after_pt: 18                      # 3.5 "sonrasında ise 18 nk"
+    # ÇELİŞKİ: 3.8 özel sayfalar dışındaki "diğer bütün başlıklar" için iki yana yaslı diyor; 3.5'teki açık "sola dayalı" esas alındı
+  heading_2:
+    size_pt: 16                             # 3.8
+    bold: true                              # 3.8
+    case: title                             # 3.8 "her sözcüğün ilk harfi büyük", bağlaçlar küçük
+    alignment: justify                      # 3.8 "iki yana yaslanmış"
+    space_before_pt: 18                     # 3.5
+    space_after_pt: 12                      # 3.5
+  heading_3:
+    size_pt: 14                             # 3.8
+    bold: true                              # 3.8
+    case: title                             # 3.8
+    alignment: justify                      # 3.8
+    space_before_pt: 18                     # 3.5
+    space_after_pt: 12                      # 3.5
+  figure_caption:
+    line_spacing: 1.0                       # 3.5 "Şekil altı ... 1 tam satır aralıkla"
+    case: sentence                          # 3.9.5 "yalnızca baştaki sözcüğün ilk harfi büyük"
+    position: below                         # 3.9.5 "şeklin altına"
+    # 3.9.5: tek satırsa ortalı, uzunsa iki yana yaslı → hizalama denetlenmez
+  table_caption:
+    line_spacing: 1.0                       # 3.5
+    case: sentence                          # 3.9.5
+    position: above                         # 3.9.5 "tablonun/çizelgenin üstüne"
+  block_quote:
+    size_pt: 10                             # 4.x Alıntılar "yazı karakteri 2 punto küçültülerek" (12 − 2)
+    italic: true                            # Alıntılar "italik"
+    line_spacing: 1.0                       # Alıntılar "1 tam satır aralıklı"
+  reference_entry:
+    line_spacing: 1.0                       # 3.5 "Kaynaklar ... 1 tam satır aralıklı"
+  footnote:
+    font: [Calibri]                         # 3.4 "Dipnot, Calibri yazı karakteri kullanılarak"
+    size_pt: 10                             # 3.4, Dipnotlar
+    line_spacing: 1.0                       # 3.5, Dipnotlar
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 3.6
+  position: bottom_center                   # 3.6 "ortalanmış biçimde sayfanın altında"
+  forbid_decoration: true                   # 3.6 "ayraç, çizgi vb. işaretler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

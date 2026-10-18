@@ -1,0 +1,76 @@
+# Bursa Teknik Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (Haziran 2022)
+# Kaynak: https://depo.btu.edu.tr/dosyalar/enstitu/Dosyalar/BT%C3%9C%20LEE%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu_Son_v2.pdf
+# (bağlantı sayfası: https://enstitu.btu.edu.tr/tr/sayfa/detay/163/tez-yazim-kilavuzu-ve-sablonu)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Times New Roman 12 ya da (tüm tez boyunca) Arial 11 serbest; metin puntosu yazı tipine bağlı olduğundan
+# denetlenmez (2.3).
+ruleset: btu-lee
+version: 1
+name: "Bursa Teknik Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "BTÜ Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2022"
+institution: "Bursa Teknik Üniversitesi"
+source_url: https://depo.btu.edu.tr/dosyalar/enstitu/Dosyalar/BT%C3%9C%20LEE%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu_Son_v2.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 (21x29,7 cm)"
+  orientation: portrait         # 2.2.2 Şekil 2.1 "Dikey"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }  # 2.2.2 Şekil 2.1 (Word sayfa yapısı ekran görüntüsü)
+
+fonts:
+  allowed: [Times New Roman, Arial]  # 2.3
+
+roles:
+  body:
+    line_spacing: 1.5           # 2.4 "Tez metni 1,5 satır aralıklı"
+    alignment: justify          # 2.4 "iki yana yaslanmış"
+    space_before_pt: 6          # 2.4 "Paragraflardan önce ve sonra 6 punto aralık"
+    space_after_pt: 6           # 2.4
+  heading_1:
+    bold: true                  # 3.1 "büyük ve koyu harflerle"
+    all_caps: true              # 3.1
+    alignment: justify          # 3.1 "diğer başlıklar ise iki yana yaslanmış"
+    page_break_before: true     # 3.1 "sağ sayfadan başlamalı"
+    space_before_pt: 72         # 2.4 "Birinci derece başlıklardan önce 72 punto"
+    space_after_pt: 18          # 2.4 "sonra 18 punto"
+  heading_2:
+    bold: true                  # 3.1
+    case: title                 # 3.1 "kelimelerin ilk harfleri büyük"
+    alignment: justify          # 3.1
+    space_before_pt: 18         # 2.4
+    space_after_pt: 12          # 2.4
+  heading_3:
+    bold: true                  # 3.1
+    case: sentence              # 3.1 "sadece ilk harfi büyük"
+    alignment: justify          # 3.1
+    space_before_pt: 12         # 2.4
+    space_after_pt: 6           # 2.4
+  figure_caption:
+    line_spacing: 1.0           # 2.4, 2.6 "bir aralık"
+    position: below             # 2.6 "şeklin altına"
+    space_before_pt: 6          # 2.6 "önce 6 punto"
+    space_after_pt: 12          # 2.6 "sonra 12 punto"
+  table_caption:
+    line_spacing: 1.0           # 2.4, 2.6 "bir satır aralığı"
+    position: above             # 2.6 "çizelgenin üstüne"
+    space_before_pt: 12         # 2.6 "yazıdan önce 12 punto"
+    space_after_pt: 6           # 2.6 "sonra 6 punto"
+  reference_entry:
+    line_spacing: 1.0           # 2.4, 3.7 "Kaynaklar 1 satır aralığı"
+  footnote:
+    size_pt: 10                 # 2.3 "kısa notlar 10 punto olarak sayfa altında"
+    line_spacing: 1.0           # 2.4 "dipnotlar ... 1 satır aralıklı"
+
+page_numbering:
+  # 2.5: onay sayfasından metne kadar Romen, metin bölümü Arap rakamı
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.5 "sayfanın alt-ortasına"
+
+document:
+  forbid_tracked_changes: true

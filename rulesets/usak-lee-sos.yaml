@@ -1,0 +1,67 @@
+# Uşak Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Sosyal Alanlar) (2026)
+# Kaynak: https://lisansustu.usak.edu.tr/menu/58792  (enstitü sitesi "Tez Yazım Kılavuzları" menüsü; .docx dosyası;
+#   2026-2027 öğretim yılından itibaren geçerli)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: usak-lee-sos
+version: 1
+name: "Uşak Üniversitesi · Lisansüstü Eğitim Enstitüsü (Sosyal Alanlar)"
+source: "Uşak Üniversitesi Lisansüstü Eğitim Enstitüsü Lisansüstü Tez Yazım Kılavuzu (Sosyal Alanlar), 2026"
+institution: "Uşak Üniversitesi"
+source_url: https://lisansustu.usak.edu.tr/menu/58792
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.1.1 "A4 standardındaki kâğıtlara"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 1.1.4 sol 4 cm; sağ, alt ve üst 2,5 cm
+
+fonts:
+  allowed: [Times New Roman]    # 1.1.2 (farklı karakter gereken çalışmalarda uygun yazı tipi seçilebilir)
+
+roles:
+  body:
+    size_pt: 12                 # 1.1.2
+    line_spacing: 1.5           # 1.1.3
+    alignment: justify          # 1.1.4 "sol ve sağ sınırlara göre (blok metin olarak) hizalanır"
+  heading_1:
+    bold: true                  # 1.1.6.1 Not
+    all_caps: true              # 1.1.6.1 Not "büyük harflerle"
+    page_break_before: true     # 1.1.4 "her ana bölüm yeni bir sayfayla başlar"
+  heading_2:
+    bold: true                  # 1.1.6.1 Not
+    all_caps: true              # 1.1.6.1 Not "bütün sözcükler büyük harflerle"
+    alignment: left             # 1.1.6.1 Not "sol kenardan itibaren hizalanır"
+  heading_3:
+    bold: true                  # 1.1.6.1 Not
+    case: title                 # 1.1.6.1 Not "bütün sözcüklerin ilk harfleri büyük"
+  figure_caption:
+    line_spacing: 1.0           # 1.1.3
+    alignment: left             # 1.1.11 "sola dayalı"
+    case: title                 # 1.1.11 "ilk harfler büyük diğerleri küçük" (örnek: Yıllara Göre Enflasyon Oranları)
+    position: below             # 1.1.11 "şekillerde altta"
+  table_caption:
+    line_spacing: 1.0           # 1.1.3
+    alignment: left             # 1.1.11
+    case: title                 # 1.1.11
+    position: above             # 1.1.11 "tablolarda üstte"
+  block_quote:
+    size_pt: 10                 # 1.1.12.1 "yazı boyutu 10 punto"
+    line_spacing: 1.0           # 1.1.3 "alıntılar ... 1 satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # 1.1.3, 1.1.13.2.2 "tek aralık"
+  footnote:
+    size_pt: 10                 # 1.1.2
+    line_spacing: 1.0           # 1.1.3
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.1.5 Giriş'e kadar küçük Romen, sonra 1, 2, 3
+  position: top_right           # 1.1.5 "sayfanın sağ üst kısmına"
+  forbid_decoration: true       # 1.1.5 "nokta, parantez, çizgi vb. hiçbir işaret kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

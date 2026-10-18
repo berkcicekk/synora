@@ -1,0 +1,75 @@
+# Gümüşhane Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (2026; 26.06.2026'dan itibaren zorunlu)
+# Kaynak: https://sdapi.gumushane.edu.tr/uploads/pages/enstitu/tez-yazim-kilavuzu/attachments/9eac11bf-e397-447a-b30c-1cd0f867d383.docx
+# (Enstitü sayfası: https://enstitu.gumushane.edu.tr/sayfa/tez-yazim-kilavuzu)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: gumushane-lee
+version: 1
+name: "Gümüşhane Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Gümüşhane Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2026"
+institution: "Gümüşhane Üniversitesi"
+source_url: https://sdapi.gumushane.edu.tr/uploads/pages/enstitu/tez-yazim-kilavuzu/attachments/9eac11bf-e397-447a-b30c-1cd0f867d383.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.12
+  margins_cm: { top: 2.0, bottom: 2.0, left: 4.0, right: 2.0 }   # 2.14
+
+fonts:
+  allowed: [Times New Roman]    # 2.1
+
+roles:
+  body:
+    size_pt: 12                 # 2.1
+    line_spacing: 1.5           # 2.1, 2.3
+    first_line_indent_cm: 1.0   # 2.3 "ilk satır girintisi 1 cm"
+  heading_1:
+    bold: true                  # 2.4 "koyu büyük harfler"
+    all_caps: true              # 2.4
+    alignment: justify          # 2.4 "tüm başlıklar, iki yana yaslı"
+    first_line_indent_cm: 1.0   # 2.4 "1 cm ilk satır girintisi"
+    line_spacing: 1.5           # 2.3
+    page_break_before: true     # 2.4 "yeni bir sayfadan"
+  heading_2:
+    bold: true                  # 2.4
+    case: title                 # 2.4 "her sözcüğün ilk harfi büyük"
+    alignment: justify          # 2.4
+    first_line_indent_cm: 1.0   # 2.4 "paragraf girintisi hizasında"
+    line_spacing: 1.5           # 2.3
+  heading_3:
+    bold: true                  # 2.4
+    case: title                 # 2.4
+    alignment: justify          # 2.4
+    first_line_indent_cm: 1.0   # 2.4
+    line_spacing: 1.5           # 2.3
+  table_caption:
+    position: above             # 2.5 "Tablo başlığı ile tablonun kendisi arasında … sonrası 6 nk"
+    alignment: left             # 2.5 "sola hizalı"
+    case: sentence              # 2.5 "cümle gibi yazılır"
+    line_spacing: 1.0           # 2.3, 2.5 "tek satır aralığı"
+    space_before_pt: 0          # 2.5 "öncesi 0 nk"
+    space_after_pt: 6           # 2.5 "sonrası 6 nk"
+  figure_caption:
+    position: below             # 2.6 "şeklin altında"
+    size_pt: 12                 # 2.6
+    case: sentence              # 2.6 "ilk kelimenin ilk harfi … hariç diğer tüm kelimeler küçük"
+    line_spacing: 1.0           # 2.3, 2.6
+  table_cell:
+    line_spacing: 1.0           # 2.3 "tablo içleri tek satır aralıklı"
+  footnote:
+    line_spacing: 1.0           # 2.3
+  reference_entry:
+    size_pt: 12                 # 1.x Kaynakça
+    line_spacing: 1.5           # 1.x Kaynakça "1.5 satır aralıklı"
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # 2.2 "büyük Roma rakamları (I, II, …)"; giriş ile Arap
+  position: bottom_center       # 2.2 "alt orta kısmına"
+
+document:
+  forbid_tracked_changes: true

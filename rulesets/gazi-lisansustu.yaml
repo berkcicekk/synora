@@ -1,0 +1,65 @@
+# Gazi Üniversitesi — Lisansüstü Eğitim-Öğretim Tez Yazım Kılavuzu (Mart 2014; Sağlık Bilimleri Enstitüsü sayfasında 2022'de yayımlanan PDF)
+# Kaynak: https://webupload.gazi.edu.tr/upload/54/2022/9/27/f2192525-de91-4e61-b4c3-d90b0794c458-tez-yazim-kilavuzu.pdf
+# Sayfa: https://saglikb.gazi.edu.tr/view/page/1505
+# Not: Üniversite geneli kılavuz; Eğitim Bilimleri Enstitüsü'nün ayrı (2016) kılavuzu var, ona bakılmadı.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: gazi-lisansustu
+version: 1
+name: "Gazi Üniversitesi · Lisansüstü Enstitüler (genel kılavuz)"
+source: "Gazi Üniversitesi Lisansüstü Eğitim-Öğretim Tez Yazım Kılavuzu, 2014"
+institution: "Gazi Üniversitesi"
+source_url: https://webupload.gazi.edu.tr/upload/54/2022/9/27/f2192525-de91-4e61-b4c3-d90b0794c458-tez-yazim-kilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 4.1 "A4 (21 x 29,7 cm)"
+  margins_cm: { top: 3.0, bottom: 2.0, left: 2.75, right: 2.75 }   # 4.2
+
+fonts:
+  allowed: [Times New Roman, Arial, Calibri]   # 4.4 "Times New Roman (12), Arial (12) veya Calibri (12)"
+
+roles:
+  body:
+    size_pt: 12                 # 4.4
+    line_spacing: 1.5           # 4.6 "Tez metninin yazımda 1,5 satır aralığı"
+    first_line_indent_cm: 0     # 4.6 "sol kenarından ve girinti verilmeden başlamalıdır"
+  heading_1:
+    size_pt: 14                 # 4.11 tablo "Büyük harf, koyu ve 14 punto"
+    bold: true                  # 4.11
+    all_caps: true              # 4.11
+    page_break_before: true     # 4.6 "Ana bölümlerin yazımına daima yeni ve tek numaralı bir sayfadan"
+  heading_2:
+    size_pt: 12                 # 4.11 "tamamı koyu ve 12 punto"
+    bold: true                  # 4.11
+    case: title                 # 4.11 "Her sözcüğün ilk harfi büyük"
+  heading_3:
+    size_pt: 12                 # 4.11
+    bold: true                  # 4.11
+    case: sentence              # 4.11 "Yalnızca birinci sözcüğün ilk harfi büyük"
+  table_caption:
+    line_spacing: 1.0           # 4.6 "Çizelge üst yazıları tek satır aralığı"
+    position: above             # 4.6, 4.18 "Çizelge üst yazıları"
+  figure_caption:
+    line_spacing: 1.0           # 4.6 "Şekil, Resim, Harita alt yazıları ... tek satır aralığı"
+    position: below             # 4.6, 4.18 "alt yazıları"
+  block_quote:
+    line_spacing: 1.0           # 4.6 "alıntı ... tek satır aralığı"
+  footnote:
+    size_pt: 10                 # 4.4 "dipnot yazımında 10 punto"
+    line_spacing: 1.0           # 4.6
+  reference_entry:
+    line_spacing: 1.0           # 4.6 "kaynak listesinin yazımında tek satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 4.7 "küçük romen rakamları" / Giriş'ten "1, 2, 3"
+  position: top_right           # 4.7 tek numaralı sayfalarda "üstten 2,0 cm ve sağdan 2,75 cm" (çift sayfalarda solda)
+  forbid_decoration: true       # 4.7 "ayraç, çizgi gibi bir işaret kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

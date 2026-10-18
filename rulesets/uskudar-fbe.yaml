@@ -1,0 +1,70 @@
+# Üsküdar Üniversitesi Fen Bilimleri Enstitüsü — Thesis Writing Guide / Tez Yazım Kılavuzu (2020; İngilizce metin)
+# Kaynak: https://cdn.uskudar.edu.tr/uploads/files/2022/12/16/thesis-writing-guide-tez-yazim-klavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Yayımlanmış metin İngilizce çeviridir; madde numaraları "2. General Assembly and Writing Plan" altındaki alt maddelerdir.
+ruleset: uskudar-fbe
+version: 1
+name: "Üsküdar Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Uskudar University Institute of Sciences Thesis Writing Guide, 2020"
+institution: "Üsküdar Üniversitesi"
+source_url: https://cdn.uskudar.edu.tr/uploads/files/2022/12/16/thesis-writing-guide-tez-yazim-klavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 standard"
+  # 2.4: sol 3,5 cm (doktora tezlerinde 4 cm), üst/alt 2,5 cm; sağ yalnızca Şekil 2.1'de 2,5 cm
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3
+    line_spacing: 1.5           # 2.5 "standard line spacing ... 1.5"
+    alignment: justify          # 2.4 "aligned to both sides of the page"
+    # 2.5: girinti "7 karakter", paragraf arası "yarım satır (0.5 cm)" — birim belirsiz, denetlenmez
+  heading_1:
+    bold: true                  # 2.6 "in dark color"
+    all_caps: true              # 2.6 "written in capital letters"
+    page_break_before: true     # 2.5 "first-degree chapter titles should start from a new page"
+    # ÇELİŞKİ: 2.6 "the same as the font size used in the writing of the thesis" ile "Chapter headings should be 14"; punto denetlenmez
+  heading_2:
+    size_pt: 12                 # 2.6 "all other titles must be 12 points"
+    bold: true                  # 2.6
+    case: title                 # 2.6 "first letter of each word ... capitalized"
+  heading_3:
+    size_pt: 12                 # 2.6
+    bold: true                  # 2.6
+    case: title                 # 2.6
+  figure_caption:
+    size_pt: 10                 # 2.9 "Times New Roman size of 10 points"
+    bold: true                  # 2.9 "written in bold"
+    line_spacing: 1.0           # 2.5, 2.9 "single line spacing"
+    alignment: left             # 2.9 "leaning to the left"
+    case: sentence              # 2.9 "only the first letter of the first word capitalized"
+    position: above             # 2.9 "at the top" (tablo ve şekil için aynı kural)
+  table_caption:
+    size_pt: 10                 # 2.9
+    bold: true                  # 2.9
+    line_spacing: 1.0           # 2.9
+    alignment: left             # 2.9
+    case: sentence              # 2.9
+    position: above             # 2.9 "at the top"
+  footnote:
+    size_pt: 10                 # 2.10 "size of 10 points"
+    line_spacing: 1.0           # 2.10 "1 line spacing"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.12
+  position: bottom_center       # 2.12 "in the middle of the block of text at the bottom"
+  forbid_decoration: true       # 2.12 "Marks such as separator and line should not be used"
+
+document:
+  forbid_tracked_changes: true

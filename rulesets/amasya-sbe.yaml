@@ -1,0 +1,71 @@
+# Amasya Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Senato 26.02.2018)
+# Kaynak: https://sbe.amasya.edu.tr/media/22972/1-lisansustu-tez-yazim-kilavuzu-1-1.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# 2.4: ön bölüm "romen rakamlarıyla" (küçük/büyük belirtilmemiş) → formats_in_order verilmedi.
+# 2.7: "I.BÖLÜM" satırı ortalı, diğer ana başlıklar (GİRİŞ, SONUÇ...) sola hizalı → heading_1 hizası verilmedi.
+ruleset: amasya-sbe
+version: 1
+name: "Amasya Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Amasya Üniversitesi SBE Lisansüstü Tez Yazım Kılavuzu, 2018"
+institution: "Amasya Üniversitesi"
+source_url: https://sbe.amasya.edu.tr/media/22972/1-lisansustu-tez-yazim-kilavuzu-1-1.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "DIN-A4 normuna uygun (21x29,7 cm)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.0, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3 "12 punto"
+    line_spacing: 1.5           # 2.6 "Bütün metin 1,5 satır aralıkla"
+    first_line_indent_cm: 1.0   # 2.6 "1 cm paragraf girintisi"
+    alignment: justify          # 2.6 "iki yana yasla ile hizalanır"
+  heading_1:
+    size_pt: 12                 # 2.3, 2.7 "bold 12 punto"
+    bold: true                  # 2.7
+    all_caps: true              # 2.7 "büyük harflerle" / "büyük karakterlerle"
+    page_break_before: true     # 2.2, 2.7 "Tezin her bölümü yeni bir sayfada başlar"
+    space_before_pt: 6          # 2.6 "Ana ve alt başlıklardan önce ve sonra 6 nk"
+    space_after_pt: 6           # 2.6
+  heading_2:
+    size_pt: 12                 # 2.7 "12 punto büyüklükte ve sola yaslı"
+    bold: true                  # 2.7 "Koyu (Kalın/Bold)"
+    alignment: left             # 2.7
+    space_before_pt: 6          # 2.6
+    space_after_pt: 6           # 2.6
+  heading_3:
+    size_pt: 12                 # 2.7
+    bold: true                  # 2.7
+    alignment: left             # 2.7
+    space_before_pt: 6          # 2.6
+    space_after_pt: 6           # 2.6
+  table_caption:
+    bold: false                 # 2.8 "başlıklar koyu veya italik olmaz"
+    italic: false               # 2.8
+    case: title                 # 2.8 "sadece kelimelerin ilk harfi büyük"
+    position: above             # 2.8 "Tablo isimleri tablonun üstüne"
+    space_after_pt: 6           # 2.8 "ismi ile tablo ... arasında 6 nk"
+  figure_caption:
+    bold: false                 # 2.8
+    italic: false               # 2.8
+    position: below             # 2.8 "şekil ve benzerlerinin isimleri çizim alanının altına"
+    space_before_pt: 6          # 2.8
+  footnote:
+    size_pt: 10                 # 2.3 "(dipnotlar 10 punto)", 2.9 "iki punto küçük"
+
+page_numbering:
+  # 2.4: ön bölüm sağ altta, ana bölümden itibaren sağ üstte; burada ana bölüm konumu denetlenir
+  position: top_right           # 2.4 "metin yazım alanının sağ üst köşesine"
+
+document:
+  forbid_tracked_changes: true

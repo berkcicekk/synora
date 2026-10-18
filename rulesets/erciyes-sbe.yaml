@@ -1,0 +1,84 @@
+# Erciyes Üniversitesi Sosyal Bilimler Enstitüsü — Yazım Kılavuzu (Temmuz 2023)
+# Kaynak: https://sbe.erciyes.edu.tr/EditorUpload/Files/cc8aa012-c679-454e-8b44-2ad1062c7372.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: erciyes-sbe
+version: 1
+name: "Erciyes Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Erciyes Üniversitesi Sosyal Bilimler Enstitüsü Yazım Kılavuzu, 2023"
+institution: "Erciyes Üniversitesi"
+source_url: https://sbe.erciyes.edu.tr/EditorUpload/Files/cc8aa012-c679-454e-8b44-2ad1062c7372.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 1.2
+  margins_cm: { top: 3.0, bottom: 3.0, left: 3.0, right: 3.0 }   # 1.3 "tüm kenarlarından 3'er cm"
+
+fonts:
+  allowed: [Times New Roman]                # 1.5
+
+roles:
+  body:
+    size_pt: 12                             # 1.5
+    line_spacing: 1.5                       # 1.5 "Metin 1,5 satır aralıklı"
+    alignment: justify                      # 1.5, 1.6 "iki yana yaslı"
+    first_line_indent_cm: 0                 # 1.6 "paragraflarda girinti olmamalıdır"
+    space_before_pt: 6                      # 1.6 "metin içinde önce 6 nk"
+    space_after_pt: 12                      # 1.6 "sonra 12 nk"
+  heading_1:
+    size_pt: 14                             # 1.5 "Bölüm başlıklarının tamamı büyük harflerle, 14 punto"
+    bold: true                              # 1.5
+    all_caps: true                          # 1.5
+    alignment: center                       # 1.5 "ortalı"
+    page_break_before: true                 # 1.4 "her bir bölüm ... yeni bir sayfada başlamalıdır"
+  heading_2:
+    size_pt: 12                             # 1.5 "Ana başlıklar ve alt başlıklar ... 12 punto"
+    bold: true                              # 1.5
+    alignment: left                         # 1.5 "sola dayalı"
+    case: title                             # 1.5 "her kelimesinin ilk harfi büyük"
+  heading_3:
+    size_pt: 12                             # 1.5
+    bold: true                              # 1.5
+    alignment: left                         # 1.5
+    case: title                             # 1.5
+  figure_caption:
+    line_spacing: 1.0                       # 1.5 "şekil altı ... 1 satır aralıklı"
+    space_before_pt: 0                      # 1.6
+    space_after_pt: 0                       # 1.6
+    alignment: left                         # 1.7 "açıklamaları sola hizalı"
+    position: below                         # 2.1.14 "alt yazı"
+  table_caption:
+    line_spacing: 1.0                       # 1.5 "tabloların açıklamaları ... 1 satır aralıklı"
+    space_before_pt: 0                      # 1.6
+    space_after_pt: 0                       # 1.6
+    alignment: left                         # 1.7
+    position: above                         # 2.1.13 "üst yazı"
+  block_quote:
+    size_pt: 10                             # 1.12
+    italic: true                            # 1.12 "Alıntı italik yazılmalı"
+    indent_left_cm: 1.25                    # 1.12 "her iki kenardan 1,25 cm içeride"
+  reference_entry:
+    size_pt: 12                             # 1.5 "kaynakça dahil ... 12 punto"
+    line_spacing: 1.0                       # 2.3.1 "tek satır aralığında"
+    space_before_pt: 6                      # 2.3.1 "önce 6 nk"
+    space_after_pt: 6                       # 2.3.1 "sonra 6 nk"
+    # 2.3.1: 1 cm asılı girinti (şemada karşılığı yok)
+  footnote:
+    size_pt: 10                             # 1.5, 1.10
+    line_spacing: 1.0                       # 1.10 "satır aralığı tek"
+    alignment: justify                      # 1.5 "iki yana yaslanmalıdır"
+    space_before_pt: 0                      # 1.10
+    space_after_pt: 0                       # 1.10
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.4
+  position: bottom_center                   # 1.4 "sayfanın altına ... ortalanarak"
+  forbid_decoration: true                   # 1.4 "parantez, çizgi vb. işaretler kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

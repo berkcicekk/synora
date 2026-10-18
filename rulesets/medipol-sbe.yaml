@@ -1,0 +1,61 @@
+# İstanbul Medipol Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Kılavuzu (Enstitü Kurulu 21.12.2020, 2020/08-01)
+# Kaynak: https://www.medipol.edu.tr/sites/default/files/document/tez-yazim-kilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: 3.2 iki yazı tipine izin veriyor (Times New Roman 12 / Arial 11); gövde puntosu tek değer
+# olarak denetlenmez. Bölüm başlıkları ortalı, birinci düzey başlıklar sola hizalı (3.5): hizalama denetlenmez.
+ruleset: medipol-sbe
+version: 1
+name: "İstanbul Medipol Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Sosyal Bilimler Enstitüsü Tez Yazım Kılavuzu, 2020"
+institution: "İstanbul Medipol Üniversitesi"
+source_url: https://www.medipol.edu.tr/sites/default/files/document/tez-yazim-kilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.1 "A4 (21x29.7 cm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 3.3
+
+fonts:
+  allowed: [Times New Roman, Arial]   # 3.2
+
+roles:
+  body:
+    line_spacing: 1.5           # 3.3 "standart satır aralığı 1,5"
+    alignment: justify          # 3.3 "Metin iki yana yaslı olmalıdır"
+    space_before_pt: 0          # 3.3 "Önce: 0 nk"
+    space_after_pt: 24          # 3.3 "Sonra: 24 nk"
+  heading_1:
+    size_pt: 14                 # 3.5
+    bold: true                  # 3.5 "koyu"
+    all_caps: true              # 3.5 "Bütün sözcükler büyük harf"
+    page_break_before: true     # 3.5 "yeni bir sayfadan başlar"
+  heading_2:
+    bold: true                  # 3.5
+    alignment: left             # 3.5 "sol kenardan hizalanır"
+    case: title                 # 3.5 "bütün sözcüklerin ilk harfleri büyük"
+  heading_3:
+    bold: true                  # 3.5
+    alignment: left             # 3.5
+    case: title                 # 3.5
+  table_caption:
+    line_spacing: 1.0           # 3.3 "Şekil, resim ve tablo yazıları ... 1 tam aralık"
+  figure_caption:
+    line_spacing: 1.0           # 3.3
+  footnote:
+    line_spacing: 1.0           # 3.3 "dipnotlar ... 1 tam aralık"
+  block_quote:
+    line_spacing: 1.0           # 3.3 "alıntılar ... 1 tam aralık"
+
+page_numbering:
+  # 3.4: Giriş öncesi küçük Romen (i, ii…), Giriş'ten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_right        # 3.4 "sayfanın sağ alt kısmında"
+
+document:
+  forbid_tracked_changes: true

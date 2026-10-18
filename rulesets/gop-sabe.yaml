@@ -1,0 +1,61 @@
+# Tokat Gaziosmanpaşa Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (Sağlık Bilimleri) (Tokat 2022; TOGÜ.FRM.051 RV:00)
+# Kaynak: https://lisansustu.gop.edu.tr/depo/menuler/birim_12112/formlar_ve_belgeler_v2_955/dosya_icerik/9598676/formlar_ve_belgeler_v2_20241008165248.docx
+#   (enstitü "Formlar ve Belgeler > Kılavuzlar" sayfası)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Kılavuz bölümleri numarasız; yorumlarda bölüm adları kullanıldı.
+ruleset: gop-sabe
+version: 1
+name: "Tokat Gaziosmanpaşa Üniversitesi · Lisansüstü Eğitim Enstitüsü (Sağlık Bilimleri)"
+source: "TOGÜ Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu (Sağlık Bilimleri), 2022"
+institution: "Tokat Gaziosmanpaşa Üniversitesi"
+source_url: https://lisansustu.gop.edu.tr/depo/menuler/birim_12112/formlar_ve_belgeler_v2_955/dosya_icerik/9598676/formlar_ve_belgeler_v2_20241008165248.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Tez Metni "A4 (210 x 297 mm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 3.5, right: 2.5 }   # Tez Metni: üst ve alt 3 cm, sağ 2,5 cm, sol 3,5 cm
+
+fonts:
+  allowed: [Times New Roman]    # Tez Metni
+
+roles:
+  body:
+    size_pt: 12                 # Tez Metni "12 punto Times New Roman"
+    line_spacing: 2.0           # Tez Metni "çift satır aralığında"
+    first_line_indent_cm: 1.25  # Paragraf Başı "ilk satır 1,25 cm içeriden"
+  heading_1:
+    all_caps: true              # Başlıklar "büyük harfle"
+    alignment: center           # Başlıklar "sayfaya ortalı"
+    page_break_before: true     # Başlıklar "her bölüm başlığı yeni bir sayfadan"
+  heading_2:
+    all_caps: true              # Başlıklar "bölüm başlığından sonra gelen ilk başlığın tamamı" büyük
+  heading_3:
+    case: title                 # Başlıklar "ikinci kademe başlığın yalnızca ilk harfleri büyük"
+  figure_caption:
+    size_pt: 12                 # Şekiller "12 punto"
+    line_spacing: 1.5           # Şekiller "1,5 satır aralığı"
+    case: title                 # Şekiller "her sözcüğün ilk harfi büyük"
+    position: below             # Şekiller "şeklin altına"
+    # ÇELİŞKİ: aynı bölümde hem "ortalı olarak şeklin altına" hem "şeklin altında ve sola dayalı"; hizalama denetlenmez.
+  table_caption:
+    line_spacing: 1.5           # Tablolar "tablo başlıklarında 1,5"
+    alignment: left             # Tablolar "tablonun üstünde ve sola dayalı"
+    case: title                 # Tablolar "her sözcüğün ilk harfi büyük"
+    position: above             # Tablolar "tablonun üstünde"
+  block_quote:
+    indent_left_cm: 1.5         # Alıntılar "sağdan ve soldan 1,5 cm içeriden"
+  footnote:
+    line_spacing: 1.0           # Dipnotlar "tek satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Sayfa Numaraları: girişe kadar küçük Roma, sonra 1, 2, 3
+  position: top_right           # Sayfa Numaraları "sayfanın sağ üst köşesinde"
+
+document:
+  forbid_tracked_changes: true

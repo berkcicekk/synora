@@ -1,0 +1,77 @@
+# Ankara Müzik ve Güzel Sanatlar Üniversitesi Müzik ve Güzel Sanatlar Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Word belgesi, 2026-09)
+# Kaynak: https://www.mgu.edu.tr/wp-content/uploads/2026/10/Muzik-ve-Guzel-Sanatlar-Enstitusu-Tez-Yazim-Kilavuzu.docx
+# Sayfa: https://www.mgu.edu.tr/muzik-ve-guzel-sanatlar-enstitusu-tez-yazim-kilavuzu/
+# Belgede başlık numaraları otomatik; yorumlar 2. bölümün alt başlık adlarını ve çizelge numaralarını anar.
+# 2. bölüm "Sayfa Numaraları": ön kısımlar "Romen" (küçük/büyük belirtilmemiş) → formats_in_order verilmedi.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: mgu-mgse
+version: 1
+name: "Ankara Müzik ve Güzel Sanatlar Üniversitesi · Müzik ve Güzel Sanatlar Enstitüsü"
+source: "MGÜ Müzik ve Güzel Sanatlar Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2026"
+institution: "Ankara Müzik ve Güzel Sanatlar Üniversitesi"
+source_url: https://www.mgu.edu.tr/wp-content/uploads/2026/10/Muzik-ve-Guzel-Sanatlar-Enstitusu-Tez-Yazim-Kilavuzu.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kâğıt Standardı "A4 (21x29,7 cm)"
+  # Sayfa Kenar Boşlukları: yansıtmalı düzen, iç 4 cm, diğerleri 2,5 cm (iç kenar = Word'de "sol/iç")
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }
+
+fonts:
+  allowed: [Times New Roman]    # Yazı Karakteri "yalnızca bu font"
+
+roles:
+  body:
+    size_pt: 12                 # Çizelge 2.1 "Gövde Metni ve Başlıklar 12 / 1,5"
+    line_spacing: 1.5           # Çizelge 2.1, Paragraf ve Başlık Düzeni
+    alignment: justify          # Paragraf ve Başlık Düzeni "iki yana yaslanmış"
+    space_before_pt: 6          # Paragraf ve Başlık Düzeni, Çizelge 2.2 "önce ve sonra 6 nk"
+    space_after_pt: 6           # Çizelge 2.2
+  heading_1:
+    size_pt: 12                 # Çizelge 2.1
+    bold: true                  # Paragraf ve Başlık Düzeni "koyu karakterle"
+    all_caps: true              # "Birinci derece başlıkların tümü büyük harflerle"
+    page_break_before: true     # "1. Derece ana başlıklar yeni sayfada başlamalıdır"
+    space_before_pt: 36         # Çizelge 2.2
+    space_after_pt: 18          # Çizelge 2.2
+  heading_2:
+    size_pt: 12                 # Çizelge 2.1
+    bold: true                  # Paragraf ve Başlık Düzeni
+    case: title                 # "diğer başlıklarda tüm kelimelerin ilk harfleri büyük"
+    space_before_pt: 18         # Çizelge 2.2
+    space_after_pt: 12          # Çizelge 2.2
+  heading_3:
+    size_pt: 12                 # Çizelge 2.1
+    bold: true                  # Paragraf ve Başlık Düzeni
+    case: title                 # Paragraf ve Başlık Düzeni
+    space_before_pt: 12         # Çizelge 2.2
+    space_after_pt: 6           # Çizelge 2.2
+  table_caption:
+    alignment: center           # Çizelge ve Şekiller "gövde metne ortalanmış"
+    position: above             # Çizelge ve Şekiller "çizelgelerde üstte"
+    line_spacing: 1.0           # Çizelge 2.1 "Çizelge ve Şekiller ... 12 / 1"
+  figure_caption:
+    alignment: center           # Çizelge ve Şekiller
+    position: below             # Çizelge ve Şekiller "şekillerde ise altta ve ortalanmış"
+    line_spacing: 1.0           # Çizelge 2.1
+  block_quote:
+    size_pt: 10                 # Çizelge 2.1 "Blok Alıntı ve Dipnotlar 10 / 1"
+    line_spacing: 1.0           # Çizelge 2.1
+  footnote:
+    size_pt: 10                 # Çizelge 2.1
+    line_spacing: 1.0           # Çizelge 2.1
+  reference_entry:
+    size_pt: 12                 # Çizelge 2.1 "Kaynakça ... 12 / 1"
+    line_spacing: 1.0           # Çizelge 2.1
+
+page_numbering:
+  position: bottom_center       # Sayfa Numaraları "sayfa alt-orta kesiminde"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,34 @@
+# Ankara Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Yönergesi (PDF tarihi 2025-03)
+# Kaynak: https://sosbilens.ankara.edu.tr/wp-content/uploads/sites/271/2025/03/tezyazim.yeni1_.pdf
+# Sayfa: https://sosbilens.ankara.edu.tr/tez-yazim-kilavuzu/
+# Not: Yönerge çok az biçim değeri içeriyor (yalnız sayfa düzeni); diğer alanlar boş bırakıldı.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ankara-sbe
+version: 1
+name: "Ankara Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Ankara Üniversitesi SBE Tez Yazım Yönergesi, 2025"
+institution: "Ankara Üniversitesi"
+source_url: https://sosbilens.ankara.edu.tr/wp-content/uploads/sites/271/2025/03/tezyazim.yeni1_.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1 "A4 standardında"
+  margins_cm: { top: 2.0, bottom: 2.0, left: 3.0, right: 3.0 }   # 1 Sayfa Düzeni
+
+roles:
+  body:
+    size_pt: 12                 # 1 "iki aralıkla ve 12 puntoyla"
+    line_spacing: 2.0           # 1 "iki aralıkla"
+  heading_1:
+    page_break_before: true     # 1 "Her yeni bölüm için yeni bir sayfa açılmalıdır"
+  heading_2:
+    bold: true                  # 1 "Alt bölüm başlıkları ... koyu puntolarla"
+
+document:
+  forbid_tracked_changes: true

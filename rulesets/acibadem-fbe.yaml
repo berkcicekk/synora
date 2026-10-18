@@ -1,0 +1,76 @@
+# Acıbadem Mehmet Ali Aydınlar Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (FBE.01, İstanbul 2025; son güncelleme Ocak 2025)
+# Kaynak: https://acibadem.edu.tr/sites/default/files/document/fen-bilimleri-enstitusu-tez-yazim-kilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: acibadem-fbe
+version: 1
+name: "Acıbadem Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Acıbadem Mehmet Ali Aydınlar Üniversitesi Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2025"
+institution: "Acıbadem Üniversitesi"
+source_url: "https://acibadem.edu.tr/sites/default/files/document/fen-bilimleri-enstitusu-tez-yazim-kilavuzu.pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 6.1.1 "birinci hamur, beyaz A4 kağıt"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 6.1.4
+
+fonts:
+  allowed: [Times New Roman]    # 6.1.3
+
+roles:
+  body:
+    size_pt: 12                 # 6.1.3 "Ana metin için 12 puntoluk"
+    line_spacing: 1.5           # 6.1.5 "standart satır aralığı 1,5"
+    alignment: justify          # 6.1.4 "iki yana yaslanmış"
+    first_line_indent_cm: 0.75  # 6.1.5 "Paragraf girintisi 0,75 cm"
+  heading_1:
+    size_pt: 14                 # 6.1.6 "bölüm başlıkları ... 14"
+    bold: true                  # 6.1.6
+    all_caps: true              # 6.1.6 "Ana başlıkların tamamı ... büyük harflerle"
+    alignment: left             # 6.1.6 "satır başına dayalı"
+    page_break_before: true     # 6.1.6 "her bölüm ayrı sayfadan başlamalı"
+  heading_2:
+    size_pt: 12                 # 6.1.6 "diğer bütün başlıklar 12 punto"
+    bold: true                  # 6.1.6
+    case: title                 # 6.1.6 "birinci alt başlıklarda bütün kelimelerin ilk harfleri büyük"
+    alignment: left             # 6.1.6
+  heading_3:
+    size_pt: 12                 # 6.1.6
+    bold: true                  # 6.1.6
+    case: sentence              # 6.1.6 "ikinci alt başlıklarda sadece birinci kelimenin ilk harfi büyük"
+    alignment: left             # 6.1.6
+  figure_caption:
+    size_pt: 12                 # 6.1.9 "ana metin ile aynı ... büyüklüğünde (12 punto)"
+    bold: false                 # 6.1.9 "düz (bold ya da italik değil)"
+    italic: false               # 6.1.9
+    alignment: left             # 6.1.9 "sayfanın soluna hizalanarak"
+    line_spacing: 1.0           # 6.1.5 "şekil altı açıklamaları ... 1 tam aralık"
+    position: below             # 6.1.9 "şekil ve/veya resmin alt kenarının ... altına"
+  table_caption:
+    size_pt: 12                 # 6.1.9
+    bold: false                 # 6.1.9
+    italic: false               # 6.1.9
+    alignment: left             # 6.1.9 "tablonun üstüne, sayfanın soluna hizalanarak"
+    line_spacing: 1.0           # 6.1.5 "Tablo üstü ... 1 tam aralık"
+    position: above             # 6.1.9
+  block_quote:
+    line_spacing: 1.0           # 6.1.5 "alıntıların ... 1 tam aralık"
+  footnote:
+    size_pt: 9                  # 6.1.12 "Dipnotlar 9 punto"
+    line_spacing: 1.0           # 6.1.12 "1 satır aralığı"
+  reference_entry:
+    size_pt: 10                 # 6.3.x "Kaynaklar listesi ... 10 punto"
+
+page_numbering:
+  # 6.1.20: ön sayfalar küçük Romen (i, ii, iii…), sonrası Arabik (1, 2, 3)
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_right        # 6.1.20 "alt kısmına, metin bloğunun sağ kenar hizasında"
+  forbid_decoration: true       # 6.1.20 "ayraç, çizgi gibi işaretler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

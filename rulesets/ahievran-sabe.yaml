@@ -1,0 +1,78 @@
+# Kırşehir Ahi Evran Üniversitesi Sağlık Bilimleri Enstitüsü — Yüksek Lisans ve Doktora Tezleri Yazım Kılavuzu
+# Kaynak: https://saglikbe.ahievran.edu.tr/uploads/6893/tyk_sgbe.pdf
+# (Kılavuzda yıl yazmıyor; PDF oluşturma tarihi Ocak 2020)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ahievran-sabe
+version: 1
+name: "Kırşehir Ahi Evran Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Kırşehir Ahi Evran Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2020"
+institution: "Kırşehir Ahi Evran Üniversitesi"
+source_url: https://saglikbe.ahievran.edu.tr/uploads/6893/tyk_sgbe.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 3.1
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 2.5 }   # 3.4
+
+fonts:
+  allowed: [Times New Roman]                # 3.3
+
+roles:
+  body:
+    size_pt: 12                             # 3.3
+    line_spacing: 1.5                       # 3.5 "1.5 satır aralığıyla"
+    alignment: justify                      # 3.4 "Tez metni ... her iki yana yaslı"
+    first_line_indent_cm: 0                 # 3.5 "paragraf başlangıcında girinti kullanılmaz"
+    space_before_pt: 10                     # 3.5 "öncesinde 10nk"
+    space_after_pt: 2                       # 3.5 "sonrasında 2nk"
+  heading_1:
+    size_pt: 14                             # 3.6
+    bold: true                              # 3.6
+    all_caps: true                          # 3.6 "BÜYÜK"
+    alignment: left                         # 3.6 "sola yanaşık" (3.4: 1. derece hariç başlıklar iki yana yaslı)
+    page_break_before: true                 # 3.6 "her zaman sayfa başlarında"
+    space_before_pt: 60                     # 3.6 "önce 60 nk"
+    space_after_pt: 24                      # 3.6 "sonra 24 nk"
+  heading_2:
+    size_pt: 12                             # 3.6
+    bold: true                              # 3.6
+    case: title                             # 3.6 "Kelimelerin Baş Harfleri Büyük"
+    alignment: justify                      # 3.4
+    space_before_pt: 24                     # 3.6
+    space_after_pt: 6                       # 3.6
+  heading_3:
+    size_pt: 12                             # 3.6
+    bold: true                              # 3.6
+    case: title                             # 3.6
+    alignment: justify                      # 3.4
+    space_before_pt: 12                     # 3.6
+    space_after_pt: 6                       # 3.6
+  figure_caption:
+    size_pt: 11                             # 3.8
+    line_spacing: 1.0                       # 3.8 "1.0 satır aralığı"
+    space_before_pt: 6                      # 3.8 "Şekil başlığından önce 6nk"
+    space_after_pt: 12                      # 3.8 "sonra ise 12nk"
+    position: below                         # 3.8 "şeklin alt kısmına"
+  table_caption:
+    size_pt: 11                             # 3.8
+    line_spacing: 1.0                       # 3.8
+    space_before_pt: 12                     # 3.8 "Tablo başlığından önce 12nk"
+    space_after_pt: 6                       # 3.8 "sonra ise 6nk"
+    position: above                         # 3.8 "tablonun üst kısmına"
+  footnote:
+    size_pt: 8                              # 3.10
+    line_spacing: 1.0                       # 3.10 "1 satır aralıklı"
+    alignment: justify                      # 3.10 "iki yana dayalı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 3.7
+  position: bottom_center                   # 3.7 "sayfanın alt ortası"
+
+document:
+  forbid_tracked_changes: true

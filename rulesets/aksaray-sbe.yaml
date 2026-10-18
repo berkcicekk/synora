@@ -1,0 +1,72 @@
+# Aksaray Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez ve Tez Önerisi Yazım Kılavuzu (2024, Word belgesi; son değişiklik 2026-01)
+# Kaynak: https://sbe.aksaray.edu.tr/indir/ceac60a6-28a7-46b2-94ea-5059ed303cd3.docx
+# Sayfa: https://sbe.aksaray.edu.tr/tez-yazim-klavuzlari
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: aksaray-sbe
+version: 1
+name: "Aksaray Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Aksaray Üniversitesi SBE Lisansüstü Tez ve Tez Önerisi Yazım Kılavuzu, 2024"
+institution: "Aksaray Üniversitesi"
+source_url: https://sbe.aksaray.edu.tr/indir/ceac60a6-28a7-46b2-94ea-5059ed303cd3.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.1 "A4 (210 x 297 mm)"
+  margins_cm: { top: 3.0, bottom: 2.0, left: 2.75, right: 2.75 }   # 1.2
+
+fonts:
+  allowed: [Times New Roman]    # 1.3
+
+roles:
+  body:
+    size_pt: 12                 # 1.3 "12 punto"
+    line_spacing: 1.5           # 1.5 "1.5 satır aralığı"
+    alignment: justify          # 1.5 "iki yana yaslanmış"
+    first_line_indent_cm: 0     # 1.5 "Paragraflarda girinti verilmeden"
+    space_before_pt: 6          # 1.5 "önce 6nk, sonra 0nk"
+    space_after_pt: 0           # 1.5
+  heading_1:
+    size_pt: 14                 # 1.10 Tablo 1 düzey 1 "14 PUNTO"
+    bold: true                  # 1.10 Tablo 1 "KALIN"
+    all_caps: true              # 1.10 Tablo 1 "SÖZCÜKLERİN HER HARFİ BÜYÜK"
+    alignment: center           # 1.10 Tablo 1 "ORTALI"
+    page_break_before: true     # 1.6, 1.10 yeni sayfadan
+  heading_2:
+    size_pt: 12                 # 1.10 Tablo 1 düzey 2
+    bold: true                  # 1.10 Tablo 1
+    case: title                 # 1.10 Tablo 1 "Sözcüklerin İlk Harfi Büyük"
+    alignment: left             # 1.10 Tablo 1 "Sola Dayalı"
+  heading_3:
+    size_pt: 12                 # 1.10 Tablo 1 düzey 3
+    bold: true                  # 1.10 Tablo 1
+    case: title                 # 1.10 Tablo 1
+    alignment: left             # 1.10 Tablo 1
+  block_quote:
+    # 40 kelimeyi aşan doğrudan alıntı
+    size_pt: 11                 # 1.3 "doğrudan alıntılarda yazı boyutu 11 punto" — ÇELİŞKİ: 3.1.3(b) "10 punto"
+    line_spacing: 1.0           # 1.5 "tek satır aralığı"
+    indent_left_cm: 1.0         # 1.5, 3.1.3(b) "soldan ve sağdan 1 cm girinti"
+  table_caption:
+    line_spacing: 1.0           # 1.5 "tablo, şekil ... yazıları ... tek satır aralığı"
+    position: above             # 3.1.4 "tablonun bir satır üstünde"
+    case: title                 # 3.1.4 "Tablo adındaki her sözcüğün ilk harfi büyük"
+  figure_caption:
+    line_spacing: 1.0           # 1.5
+    position: below             # 3.1.4 "şeklin altında"
+  footnote:
+    size_pt: 10                 # 1.3 "dipnotta ise 10 punto"
+  reference_entry:
+    line_spacing: 1.0           # 3.3.1 (İSNAD genel ilkeler) "tek satır aralığı ve asılı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.7 "i, ii, iii" / GİRİŞ'ten "1, 2, 3"
+  position: bottom_center       # 1.7 "sayfanın altında ve ortalanarak"
+
+document:
+  forbid_tracked_changes: true

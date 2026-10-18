@@ -1,0 +1,71 @@
+# Sivas Cumhuriyet Üniversitesi Sosyal Bilimler Enstitüsü — Yüksek Lisans ve Doktora/Sanatta Yeterlik Tez Yazım Kılavuzu (2019)
+# Kaynak: https://sosyalbilenst.cumhuriyet.edu.tr/webdosya/6243_tez_yazim_kilavuzuf361e3b77bf445e97500f7a8fb934753.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Notlar:
+# - Kılavuz birden çok yazı tipine izin veriyor (Times New Roman 12, Arial 11, Palatino Linotype 11; 2.1);
+#   punto yazı tipine bağlı olduğundan gövde ve başlık puntoları denetlenmez.
+# - 2.2 "en fazla 1,5 satır aralıklı" diyor (üst sınır); satır aralığı denetlenmez.
+# - Kenar boşlukları çift sayfa düzenine göre (1.2.2); burada sağdaki (tek numaralı) sayfa değerleri kullanıldı.
+ruleset: cumhuriyet-sbe
+version: 1
+name: "Sivas Cumhuriyet Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Sivas Cumhuriyet Üniversitesi Sosyal Bilimler Enstitüsü Tez Yazım Kılavuzu, 2019"
+institution: "Sivas Cumhuriyet Üniversitesi"
+source_url: https://sosyalbilenst.cumhuriyet.edu.tr/webdosya/6243_tez_yazim_kilavuzuf361e3b77bf445e97500f7a8fb934753.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.1 "A4 (20.99 x 29,7 cm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 1.2.2 sağdaki sayfa: sol 4, üst 3, sağ 2,5, alt 3 cm
+
+fonts:
+  allowed: [Times New Roman, Arial, Palatino Linotype]   # 2.1
+
+roles:
+  body:
+    alignment: justify          # 2.2 "iki yana yaslanmış"
+    first_line_indent_cm: 1.25  # 2.2 "1,25 cm paragraf başı"
+    space_after_pt: 6           # 2.2 "paragraflar arasında 6 nk"
+  heading_1:
+    bold: true                  # 2.3
+    all_caps: true              # 2.3 "tümü büyük harflerle"
+    space_before_pt: 24         # 2.3 "üstten 24 nk"
+    space_after_pt: 12          # 2.3 "alttan 12 nk"
+    page_break_before: true     # 2.3 "sağ sayfadan başlatılır"
+    # ÇELİŞKİ: metin "2 punto (14 punto) daha büyük", örnek "1. GİRİŞ (16 punto)".
+  heading_2:
+    bold: true                  # 2.3
+    case: title                 # 2.3 "kelimelerin ilk harfleri büyük" (Şekil 3 örneğinde tamamı büyük: ÇELİŞKİ)
+    space_before_pt: 18         # 2.3 "üstten 18 punto"
+    space_after_pt: 12          # 2.3 "alttan 12 punto"
+  heading_3:
+    bold: true                  # 2.3
+    case: sentence              # 2.3 "sadece ilk harfi büyük" (örnekte her sözcük büyük: ÇELİŞKİ)
+    space_before_pt: 12         # 2.3 "üstten 12 punto"
+    space_after_pt: 6           # 2.3 "alttan 6 punto"
+  figure_caption:
+    alignment: left             # 2.4 "sola dayalı"
+    position: below             # 2.4 "şeklin altına"
+    space_before_pt: 12         # 2.4 "üstten 12, alttan 6 nk"
+    space_after_pt: 6           # 2.4
+  table_caption:
+    alignment: left             # 2.4 "sola dayalı"
+    line_spacing: 1.0           # 2.4 "bir satır aralığı kullanılarak"
+    position: above             # 2.4 "tablonun üstüne"
+    space_before_pt: 12         # 2.4 "üstten 12 nk, alttan 6 nk"
+    space_after_pt: 6           # 2.4
+  block_quote:
+    indent_left_cm: 1.0         # 2.1 "uzun alıntılar kenarlardan birer cm çekilerek"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5 GİRİŞ'ten önce küçük Roma, GİRİŞ'ten itibaren 1, 2, 3
+  position: bottom_center       # 2.5 "sayfanın alt-ortasına"
+
+document:
+  forbid_tracked_changes: true

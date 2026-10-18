@@ -1,0 +1,66 @@
+# İstanbul Rumeli Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (2025)
+# Kaynak: https://rumeli.edu.tr/uploads/belgeler/enstit%C3%BC/tez-yazim-kilavuzu-2025.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: rumeli-lee
+version: 1
+name: "İstanbul Rumeli Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Tez Yazım Kılavuzu, 2025"
+institution: "İstanbul Rumeli Üniversitesi"
+source_url: https://rumeli.edu.tr/uploads/belgeler/enstit%C3%BC/tez-yazim-kilavuzu-2025.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "“A4” (210x297 mm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.0 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3
+    line_spacing: 1.5           # 2.3 "1.5 açıklıkta"
+    alignment: justify          # 2.3 "iki yana yaslanmış"
+    first_line_indent_cm: 1.0   # 2.3 "Paragrafın ilk satırı 1 cm içeriden"
+    space_before_pt: 0          # 2.3 "paragraflar arasında ... boşluk bırakılmamalıdır (0 nk)"
+    space_after_pt: 0           # 2.3
+  heading_1:
+    size_pt: 12                 # 2.4, 2.5
+    bold: true                  # 2.5 "koyu"
+    all_caps: true              # 2.5 "büyük harf"
+    alignment: center           # 2.5 "ortalı"
+    page_break_before: true     # 2.3 "Ana bölümler daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 2.5
+    bold: true                  # 2.5
+    first_line_indent_cm: 1.0   # 2.5 "1 cm içerden"
+    space_after_pt: 0           # 2.5 "Başlıkla altındaki paragraf arasında ... (0 nk)"
+    case: title                 # 2.5 "kelime baş harfleri büyük"
+  heading_3:
+    size_pt: 12                 # 2.5
+    bold: true                  # 2.5
+    first_line_indent_cm: 1.0   # 2.5
+    space_after_pt: 0           # 2.5
+    case: title                 # 2.5
+  table_caption:
+    size_pt: 12                 # 2.7 "tablo üst yazısı 12 punto"
+    alignment: justify          # 2.7 "iki yana yaslı"
+    position: above             # 2.7 "tablo üst yazısı"
+  figure_caption:
+    size_pt: 12                 # 2.7 "Şekil alt yazısı ... 12 punto"
+    alignment: justify          # 2.7
+    position: below             # 2.7 "şekil alt yazısı"
+
+page_numbering:
+  # 2.6: ön bölümler küçük Romen, Giriş'ten itibaren 1, 2, 3…; Ekler ve Özgeçmiş büyük Romen (I, II…)
+  formats_in_order: [lowerRoman, decimal, upperRoman]
+  position: bottom_center       # 2.6 "sayfanın alt ortasına"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,65 @@
+# Kahramanmaraş Sütçü İmam Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez/Proje Yazım Yönergesi (2022)
+# Kaynak: https://sbe.ksu.edu.tr/depo/belgeler/KSUSBE_Tez_proje%20yaz%C4%B1m%20y%C3%B6nergesi_2022_2203221054219888.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ksu-sbe
+version: 1
+name: "Kahramanmaraş Sütçü İmam Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "KSÜ Sosyal Bilimler Enstitüsü Lisansüstü Tez/Proje Yazım Yönergesi, 2022"
+institution: "Kahramanmaraş Sütçü İmam Üniversitesi"
+source_url: https://sbe.ksu.edu.tr/depo/belgeler/KSUSBE_Tez_proje%20yaz%C4%B1m%20y%C3%B6nergesi_2022_2203221054219888.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Madde 3 "A4 boyutunda (210X297mm)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.5, right: 2.5 }   # Madde 6
+
+fonts:
+  allowed: [Times New Roman]    # Madde 6
+
+roles:
+  body:
+    size_pt: 12                 # Madde 6
+    line_spacing: 1.25          # Madde 7 "1.25 satır aralığı"
+    first_line_indent_cm: 1.25  # Madde 6 "1 (bir) tab (1,25cm) içeriden"
+    space_after_pt: 0           # Madde 7 "paragraflar arasında aralık bırakılmamalıdır"
+  heading_1:
+    all_caps: true              # Madde 9 "Ana bölüm başlıklarının tümü" (büyük harf; örnek "1. BİRİNCİ BÖLÜM")
+    alignment: left             # Madde 9 "satır kenarından başlayacak"
+    page_break_before: true     # Madde 8 "Ana bölümler daima yeni bir sayfadan başlamalıdır"
+  heading_2:
+    alignment: left             # Madde 9
+    case: title                 # Madde 9 "alt başlıklarda her kelimenin ilk harfi büyük"
+  heading_3:
+    alignment: left             # Madde 9
+    case: title                 # Madde 9
+  figure_caption:
+    size_pt: 12                 # Madde 12
+    italic: true                # Madde 12 "şeklin alt tarafında italik"
+    alignment: left             # Madde 12 "sola dayalı"
+    line_spacing: 1.0           # Madde 7 "Şekil ve Tabloların açıklamaları ... tek satır aralığı"
+    position: below             # Madde 12 "şeklin alt tarafında"
+  table_caption:
+    size_pt: 12                 # Madde 12
+    alignment: left             # Madde 12 "tabloya göre sola dayalı"
+    line_spacing: 1.0           # Madde 7
+    position: above             # Madde 12 "tablonun üstünde"
+    # Madde 12: "tablo adı ... kalın" ama aynı maddede "başlıklar (italik)" — ÇELİŞKİ: kalın/italik denetlenmez
+  block_quote:
+    line_spacing: 1.0           # Madde 7 "alıntılar ... tek satır aralığı"
+  footnote:
+    line_spacing: 1.0           # Madde 7 "dipnotların yazımında tek satır aralığı"
+
+page_numbering:
+  # Madde 10: ön sayfalar "I, II, III, IV, V,..." büyük Romen, GİRİŞ'ten itibaren "1, 2, 3"
+  formats_in_order: [upperRoman, decimal]
+  position: bottom_center       # Madde 10 "sayfa altında orta kısma"
+  forbid_decoration: true       # Madde 10 "ayıraç, çizgi vb gibi bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,74 @@
+# Siirt Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Tez ve Seminer Yazım Kılavuzu, Mayıs 2014
+# (Senato 14.05.2014, 2014-09; .doc dosyası son kayıt 2023-01)
+# Kaynak: https://fbe.siirt.edu.tr/dosya/personel/tez-yazim-klavuzu-siirt-202319102250763.doc
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# ÇELİŞKİ: 2.4 "Tablo açıklaması (başlık) ... sayfayı ortalayacak şekilde"; 3.1 "açıklamaları ... sola dayalı". Hizalama kodlanmadı.
+ruleset: siirt-fbe
+version: 1
+name: "Siirt Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Siirt Üniversitesi Fen Bilimleri Enstitüsü Lisansüstü Tez ve Seminer Yazım Kılavuzu, 2014"
+institution: "Siirt Üniversitesi"
+source_url: https://fbe.siirt.edu.tr/dosya/personel/tez-yazim-klavuzu-siirt-202319102250763.doc
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.3
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3
+    line_spacing: 1.5           # 2.4
+    first_line_indent_cm: 1.25  # 2.4
+    space_after_pt: 0           # 2.4 "Paragraflar arasında boşluk bırakılmamalıdır"
+  heading_1:
+    size_pt: 12                 # 2.4 "Bütün başlıklar ... 12 punto"
+    bold: true                  # 2.4 "koyu"
+    alignment: left             # 2.4 "sola dayalı"
+    all_caps: true              # 2.5 "büyük harf ile"
+    page_break_before: true     # 2.5 "sayfa başına"
+    space_after_pt: 12          # 2.4 "sonra 12 punto boşluk"
+  heading_2:
+    size_pt: 12                 # 2.4
+    bold: true                  # 2.4
+    alignment: left             # 2.4
+    case: title                 # 2.5 "her kelimenin ilk harfi büyük"
+    space_after_pt: 6           # 2.4 "Alt bölüm başlıklarından ... sonra 6 punto"
+  heading_3:
+    size_pt: 12                 # 2.4
+    bold: true                  # 2.4
+    alignment: left             # 2.4
+    case: sentence              # 2.5 "ilk kelimenin ilk harfi dışında tüm kelimeler küçük"
+    space_after_pt: 6           # 2.4
+  figure_caption:
+    size_pt: 10                 # 2.4
+    line_spacing: 1.0           # 2.4
+    case: sentence              # 3.3
+    position: below             # 3.3 "şeklin ise altına"
+  table_caption:
+    size_pt: 10                 # 2.4
+    line_spacing: 1.0           # 2.4
+    case: sentence              # 3.3
+    position: above             # 3.3 "Açıklama tablonun üstüne"
+  footnote:
+    line_spacing: 1.0           # 2.4
+  reference_entry:
+    size_pt: 12                 # 2.4
+    line_spacing: 1.0           # 2.4
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.6
+  # Ön sayfalar "alt orta" (2.3), Giriş'ten itibaren "alt sağ" (2.3, 2.6); metin sayfaları kodlandı.
+  position: bottom_right        # 2.6
+  forbid_decoration: true       # 2.6 "çizgi veya benzeri bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

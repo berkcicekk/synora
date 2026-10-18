@@ -1,0 +1,72 @@
+# Bilecik Şeyh Edebali Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez/Dönem Projesi Yazım Kılavuzu (2024)
+# Kaynak: https://www.bilecik.edu.tr/dosya/13851_1a22_TEZ%20D%C3%96NEM%20PROJES%C4%B0%20KILAVUZU.docx
+# (bağlantı sayfası: https://bilecik.edu.tr/lisansustu/Icerik/Tez_Donem_Projesi_Yazim_Kilavuzu)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Bölüm adları kılavuzun başlıklarıdır ("Genel Biçim ve Yazım İlkeleri" = GBYİ).
+ruleset: bilecik-lee
+version: 1
+name: "Bilecik Şeyh Edebali Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "BŞEÜ Lisansüstü Eğitim Enstitüsü Tez/Dönem Projesi Yazım Kılavuzu, 2024"
+institution: "Bilecik Şeyh Edebali Üniversitesi"
+source_url: https://www.bilecik.edu.tr/dosya/13851_1a22_TEZ%20D%C3%96NEM%20PROJES%C4%B0%20KILAVUZU.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # GBYİ "standart A4 boyutunda (21x29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 2.5, right: 2.5 }  # GBYİ "her yönden 2,5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # GBYİ "yazı tipi Times New Roman'dır"
+
+roles:
+  body:
+    size_pt: 12                 # GBYİ "12 punto yazı boyutu"
+    line_spacing: 1.5           # GBYİ "1,5 satır aralığı"
+    alignment: justify          # GBYİ "iki yana yaslı"
+    first_line_indent_cm: 1.25  # GBYİ "Paragraf girintisi (satır başı) 1,25 cm"
+    space_before_pt: 6          # GBYİ "önce ve sonra (6nk)"
+    space_after_pt: 6           # GBYİ "önce ve sonra (6nk)"
+  heading_1:
+    bold: true                  # GBYİ "koyu (bold)"
+    all_caps: true              # GBYİ "tamamı büyük harf"
+    page_break_before: true     # GBYİ "her biri yeni sayfadan başlamalıdır"
+    # GBYİ: başlıklar "paragraf girintisi ile aynı hizada hizalanır" (1,25 cm) — girinti türü belirsiz, denetlenmez
+  heading_2:
+    bold: true                  # GBYİ "Alt düzey başlıklar bold"
+  heading_3:
+    bold: true                  # GBYİ "Alt düzey başlıklar bold"
+  figure_caption:
+    size_pt: 10                 # Tablolar/Şekiller Listesi "10 punto" (2 satırı aşarsa 8'e kadar)
+    alignment: center           # Tablolar/Şekiller Listesi "ortalanarak verilir"
+    position: below             # Tablolar/Şekiller Listesi "şekil açıklamaları şeklin altında"
+  table_caption:
+    size_pt: 10                 # Tablolar/Şekiller Listesi "10 punto"
+    alignment: center           # Tablolar/Şekiller Listesi "ortalanarak verilir"
+    position: above             # Tablolar/Şekiller Listesi "Tablo açıklamaları tablonun üstünde"
+  block_quote:
+    size_pt: 10                 # GBYİ "10 punto italik"
+    italic: true                # GBYİ "10 punto italik"
+    indent_left_cm: 1.25        # GBYİ "her iki kenardan 1,25 cm içeride"
+  reference_entry:
+    line_spacing: 1.0           # Kaynakça "satır aralığı 1"
+    space_before_pt: 0          # Kaynakça "önce ve sonra 0 nk"
+    space_after_pt: 0           # Kaynakça "önce ve sonra 0 nk"
+    indent_left_cm: 1.25        # Kaynakça: ikinci ve sonraki satırlar 1,25 cm içeriden (asılı girinti)
+    first_line_indent_cm: -1.25 # Kaynakça "sol kenar boşluğundan başlanarak"
+  footnote:
+    size_pt: 10                 # Kaynakça (dipnotlu sistem) "10 punto yazı boyutunda"
+    line_spacing: 1.0           # Kaynakça (dipnotlu sistem) "1 satır aralığı"
+
+page_numbering:
+  # GBYİ: birinci kısım numarasız; ikinci kısım "i"den başlayarak Romen; üçüncü kısım 1'den başlayarak
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_right        # GBYİ "sağ alt köşeye hizalanacak şekilde"
+
+document:
+  forbid_tracked_changes: true

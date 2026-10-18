@@ -1,0 +1,62 @@
+# Ankara Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Enstitü Kurulu 04.11.2013; sitede 2024-01 yüklenen PDF)
+# Kaynak: https://fenbilimleri.ankara.edu.tr/wp-content/uploads/sites/79/2024/01/Tez_Yazim_Kilavuzu.pdf
+# Not: Kenar boşlukları yalnızca 2.3'teki şekilde (üst 3, sol 4, sağ 2, alt 3 cm) gösterildiği için eklenmedi.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ankara-fbe
+version: 1
+name: "Ankara Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Ankara Üniversitesi FBE Tez Yazım Kılavuzu, 2013"
+institution: "Ankara Üniversitesi"
+source_url: https://fenbilimleri.ankara.edu.tr/wp-content/uploads/sites/79/2024/01/Tez_Yazim_Kilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 boyutunda (210 x 297 mm)"
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2 "Yazı büyüklüğü 12 punto"
+    line_spacing: 1.5           # 2.6 "1.5 satır aralığı"
+    alignment: justify          # 2.4 "paragraflar iki yana yaslı"
+  heading_1:
+    bold: true                  # 2.4 "Tüm başlıklar koyu"
+    all_caps: true              # 2.8 "Birinci derece bölüm başlıkları büyük harf"
+    alignment: justify          # 2.4 "Bölüm ve alt bölüm başlıkları ... iki yana yaslı"
+    page_break_before: true     # 2.6 "Her bölüm yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    bold: true                  # 2.4
+    case: title                 # 2.8 "her kelimenin ilk harfi büyük"
+    alignment: justify          # 2.4
+  heading_3:
+    bold: true                  # 2.4
+    case: sentence              # 2.8 "birinci kelimenin ilk harfi büyük, diğer tüm kelimeler ... küçük"
+    alignment: justify          # 2.4
+  table_caption:
+    line_spacing: 1.0           # 2.6, 3.3 "bir satır aralığı"
+    position: above             # 3.3 "Çizelge adı, çizelgenin üstüne"
+  figure_caption:
+    line_spacing: 1.0           # 2.6 "Şekillerin ... açıklamaları ... 1 satır aralığı"
+  block_quote:
+    line_spacing: 1.0           # 2.6 "alıntılar ... 1 satır aralığı"
+  footnote:
+    size_pt: 10                 # 2.11 "10 punto ve 1 satır aralığı"
+    line_spacing: 1.0           # 2.11
+  reference_entry:
+    size_pt: 12                 # 5.6 "Yazım büyüklüğü 12 punto ve 1 satır aralığı"
+    line_spacing: 1.0           # 2.6, 5.6
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.7
+  position: bottom_center       # 2.7 "sayfa altında orta kısma"
+
+document:
+  forbid_tracked_changes: true

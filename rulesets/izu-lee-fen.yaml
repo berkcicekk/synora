@@ -1,0 +1,67 @@
+# İstanbul Sabahattin Zaim Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Fen ve Mühendislik Bilimleri), İstanbul 2020
+# Kaynak: https://www.izu.edu.tr/docs/default-source/enstituler/sosyal-bilimler-enstit%C3%BCs%C3%BC-formlar%C4%B1/tez-proje-haz%C4%B1rlama-k%C4%B1lavuzu/k%C4%B1lavuzlar/fen-ve-m%C3%BChendislik-bilimleri-tez-yaz%C4%B1m-k%C4%B1lavuzu.pdf?sfvrsn=e0d29263_2
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: izu-lee-fen
+version: 1
+name: "İstanbul Sabahattin Zaim Üniversitesi · Lisansüstü Eğitim Enstitüsü (Fen ve Mühendislik Bilimleri)"
+source: "Lisansüstü Tez Yazım Kılavuzu (Fen ve Mühendislik Bilimleri), 2020"
+institution: "İstanbul Sabahattin Zaim Üniversitesi"
+source_url: "https://www.izu.edu.tr/docs/default-source/enstituler/sosyal-bilimler-enstit%C3%BCs%C3%BC-formlar%C4%B1/tez-proje-haz%C4%B1rlama-k%C4%B1lavuzu/k%C4%B1lavuzlar/fen-ve-m%C3%BChendislik-bilimleri-tez-yaz%C4%B1m-k%C4%B1lavuzu.pdf?sfvrsn=e0d29263_2"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.4 "A4 boyutunda"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 3.5
+
+fonts:
+  allowed: [Times New Roman]    # 3.1
+
+roles:
+  body:
+    size_pt: 12                 # 3.1
+    line_spacing: 1.5           # 3.2
+    alignment: justify          # 3.5 "Metin iki kenara yaslanarak hizalanır"
+    space_before_pt: 6          # 3.2 "yukarıdan 6, aşağıdan da 6"
+    space_after_pt: 6           # 3.2
+  heading_1:
+    size_pt: 14                 # 3.1 "Ana bölüm başlıkları 14 punto"
+    bold: true                  # 3.1
+    all_caps: true              # 3.1 "büyük harflerle"
+    alignment: center           # 3.7 "Bölüm başlığı, sayfa ortalanarak verilir"
+    page_break_before: true     # 3.5 "Ana bölümler yeni bir sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # 3.1 "Diğer alt başlıklar ise 12 punto ve koyu"
+    bold: true                  # 3.1, 3.7
+  heading_3:
+    size_pt: 12                 # 3.1
+    bold: true                  # 3.1, 3.7
+  table_caption:
+    position: above             # 3.7 "Başlıklar, tabloların üzerinde"
+  figure_caption:
+    position: below             # 3.7 "ve şekillerin altında yer alır"
+  footnote:
+    size_pt: 10                 # 3.1 "Dipnotlarda ise 10 punto"
+    # ÇELİŞKİ: 3.2 dipnot satır aralığı 1.5; 3.9 "kullanılan aralıktan daha az bir aralıkla" → satır aralığı denetlenmez
+    space_before_pt: 6          # 3.2 "alttan ve üstten 6 boşluk"
+    space_after_pt: 6           # 3.2
+  block_quote:
+    italic: true                # 3.3 "italik olarak verilir"
+    line_spacing: 1.5           # 3.3
+  reference_entry:
+    line_spacing: 1.5           # 3.2
+    space_before_pt: 6          # 3.2
+    space_after_pt: 6           # 3.2
+
+page_numbering:
+  # 3.6: Giriş'e kadar küçük Roma (i, ii…), Giriş'ten itibaren 1, 2, 3
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 3.6 "her sayfanın altında ortalanarak"
+
+document:
+  forbid_tracked_changes: true

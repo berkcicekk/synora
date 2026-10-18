@@ -1,0 +1,80 @@
+# İstanbul Medipol Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (2023; 21.08.2022 tarihli yönetmeliğe dayanır)
+# Kaynak: https://www.medipol.edu.tr/sites/default/files/2023-03/75693.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: medipol-fbe
+version: 1
+name: "İstanbul Medipol Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2023"
+institution: "İstanbul Medipol Üniversitesi"
+source_url: https://www.medipol.edu.tr/sites/default/files/2023-03/75693.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 boyutunda (21x29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.3, Şekil 2.1
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2 "Times New Roman 12 ... tüm bölümlerinde"
+    line_spacing: 1.5           # 2.4
+    alignment: justify          # 2.4 "iki yana yaslanmış"
+    space_before_pt: 6          # 2.4 "Her paragraftan önce ve sonra 6 punto"
+    space_after_pt: 6           # 2.4
+  heading_1:
+    size_pt: 12                 # 2.6
+    bold: true                  # 2.6
+    all_caps: true              # 2.6 "büyük harfler ile"
+    alignment: justify          # 2.6 "iki yana yaslanır"
+  heading_2:
+    size_pt: 12                 # 2.6
+    bold: true                  # 2.6
+    alignment: justify          # 2.6 "Bütün başlıklar iki yana yaslı"
+    case: title                 # 2.6 "her sözcüğün ilk harfi büyük"
+    space_before_pt: 18         # 2.6
+    space_after_pt: 12          # 2.6
+  heading_3:
+    size_pt: 12                 # 2.6
+    bold: true                  # 2.6
+    alignment: justify          # 2.6
+    case: sentence              # 2.6 "ilk kelimesi büyük harfle ... takip eden kelimeler küçük"
+    line_spacing: 1.0           # 2.4 "alt düzey başlıklar tek satır aralığında"
+    space_before_pt: 12         # 2.6
+    space_after_pt: 6           # 2.6
+  table_caption:
+    size_pt: 12                 # 2.2
+    line_spacing: 1.0           # 2.4, 2.7
+    alignment: justify          # 2.7
+    position: above             # 2.7 "çizelge başlığı çizelgenin üzerine"
+  figure_caption:
+    size_pt: 12                 # 2.2
+    line_spacing: 1.0           # 2.7 "bir satır aralığı"
+    alignment: justify          # 2.7 "şekillerin altında iki yana yaslı"
+    space_before_pt: 6          # 2.7 "6 punto (önce)"
+    space_after_pt: 12          # 2.7 "12 punto (sonra)"
+    position: below             # 2.7
+  footnote:
+    size_pt: 12                 # 2.2 "dipnotlar ... aynı yazı tipi ve boyutunda"
+    line_spacing: 1.0           # 2.4
+    space_after_pt: 8           # 2.4 "her referans sonrasında 8 punto aralık"
+  block_quote:
+    line_spacing: 1.0           # 2.4 "40 kelimeyi aşan uzun alıntılar ... tek satır"
+  reference_entry:
+    line_spacing: 1.0           # 2.4 "bibliyografi ... tek satır"
+    space_after_pt: 8           # 2.4
+
+page_numbering:
+  # 2.5: onaydan ana metne kadar küçük Romen, girişten itibaren Arap
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.5 "sayfanın alt ortasına"
+
+document:
+  forbid_tracked_changes: true

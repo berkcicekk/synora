@@ -1,0 +1,66 @@
+# Bursa Uludağ Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Mayıs 2024)
+# Kaynak: https://uludag.edu.tr/dosyalar/fenbilimleri/guncel_tez_yazim_kilavuzu_mayis_20244.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Konumlar kılavuzun "Genel Biçim ve Yazım Planı" ile "Şekiller ve Çizelgeler" bölümlerindeki alt başlıklardır.
+ruleset: uludag-fbe
+version: 1
+name: "Bursa Uludağ Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "BUÜ Fen Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2024"
+institution: "Bursa Uludağ Üniversitesi"
+source_url: https://uludag.edu.tr/dosyalar/fenbilimleri/guncel_tez_yazim_kilavuzu_mayis_20244.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kağıt Özelliği "A4 (210 x 297)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }  # Sayfa Düzeni "sol 4 cm, alt ve üst 3 cm, sağ 2 cm"
+
+fonts:
+  allowed: [Times New Roman]    # Yazı Özelliği "Times New Roman seçilmeli"
+
+roles:
+  body:
+    size_pt: 12                 # Yazı Özelliği "Yazı büyüklüğü 12 punto"
+    line_spacing: 1.5           # Satır Aralıkları "1,5 satır aralığı"
+    alignment: justify          # Yazım Planı "justified = iki yana yasla"
+    first_line_indent_cm: 0     # Yazım Planı "Paragraf başı içeriden başlamamalıdır"
+    # Satır Aralıkları: paragraflar arasında "1 satır boşluk" (nk değeri verilmemiş, denetlenmez)
+  heading_1:
+    size_pt: 12                 # Bölüm Başlıkları "yazımda kullanılan puntoda (12 punto)"
+    bold: true                  # Bölüm Başlıkları "Tüm bölüm başlıkları koyu (bold)"
+    all_caps: true              # Bölüm Başlıkları "tümüyle büyük harf"
+    alignment: left             # Bölüm Başlıkları "sola hizalı" (Yazım Planı'ndaki "iki yana yasla" metin için)
+    page_break_before: true     # Satır Aralıkları "Bölümler daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    bold: true                  # Bölüm Başlıkları
+    case: title                 # Bölüm Başlıkları "her kelimenin ilk harfi büyük", bağlaçlar küçük
+    alignment: left             # Bölüm Başlıkları "sola hizalı"
+  heading_3:
+    bold: true                  # Bölüm Başlıkları
+    case: sentence              # Bölüm Başlıkları "birinci kelimenin ilk harfi büyük, diğer tüm kelimeler küçük"
+    alignment: left             # Bölüm Başlıkları "sola hizalı"
+  figure_caption:
+    line_spacing: 1.0           # Satır Aralıkları; Şekil ve Çizelge Açıklamaları "bir satır aralığı"
+    position: below             # Şekil ve Çizelge Açıklamaları "şeklin altına"
+  table_caption:
+    line_spacing: 1.0           # Satır Aralıkları; Şekil ve Çizelge Açıklamaları
+    position: above             # Şekil ve Çizelge Açıklamaları "Çizelge açıklamaları ise çizelgenin üstüne"
+  reference_entry:
+    line_spacing: 1.0           # Satır Aralıkları "kaynaklar dizini ... 1 satır aralığı"
+  footnote:
+    size_pt: 10                 # Dipnotlar "10 punto"
+    line_spacing: 1.0           # Dipnotlar "1 satır aralığı"
+
+page_numbering:
+  # Sayfa Numaraları: ön sayfalar küçük Romen (i, ii…), girişten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # Sayfa Numaraları "sayfa altında ortada"
+  forbid_decoration: true       # Sayfa Numaraları "önünde ve arka yanında ayıraç, çizgi vb. ... kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

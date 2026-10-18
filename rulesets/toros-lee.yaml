@@ -1,0 +1,72 @@
+# Toros Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez/Proje/Seminer Yazım Kılavuzu
+# (Haziran 2020; Senato kabulü 23/07/2020-12/32; sitedeki dosya adı "25.01.2023")
+# Kaynak: https://toros.edu.tr/storage/files/93/TEZ%20YAZIM%20KILAVUZU/Lisans%C3%BCst%C3%BC%20E%C4%9Fitim%20Enstit%C3%BCs%C3%BC%20Tez-Seminer-Proje%20Yaz%C4%B1m%20K%C4%B1lavuzu-25.01.2023.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: 2.2.d "iki paragraf arasında 1,5 satır aralığı boşluk" nk cinsinden verilmediği için kodlanmadı.
+ruleset: toros-lee
+version: 1
+name: "Toros Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Toros Üniversitesi Lisansüstü Eğitim Enstitüsü Tez/Proje/Seminer Yazım Kılavuzu, 2020 (dosya 25.01.2023)"
+institution: "Toros Üniversitesi"
+source_url: https://toros.edu.tr/storage/files/93/TEZ%20YAZIM%20KILAVUZU/Lisans%C3%BCst%C3%BC%20E%C4%9Fitim%20Enstit%C3%BCs%C3%BC%20Tez-Seminer-Proje%20Yaz%C4%B1m%20K%C4%B1lavuzu-25.01.2023.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 3.0, left: 3.0, right: 2.5 }   # 2.2.a
+
+fonts:
+  allowed: [Times New Roman]    # 2.2.c
+
+roles:
+  body:
+    size_pt: 12                 # 2.2.c
+    line_spacing: 1.5           # 2.2.d
+    alignment: justify          # 2.2.d "iki yana yaslanmış (Justified)"
+    first_line_indent_cm: 1.25  # 2.2.d
+  heading_1:
+    bold: true                  # 2.3, 4.2 "koyu"
+    all_caps: true              # 2.3, 4.2 "büyük harf"
+    # ÇELİŞKİ: 2.3 ve 4.2 "sayfa üst ortasında"; 4.1 "GİRİŞ başlığı ... sola yaslı". 2.3 değeri kullanıldı.
+    alignment: center           # 2.3, 4.2
+    page_break_before: true     # 2.2.a, 2.2.d "daima yeni bir sayfadan"
+  heading_2:
+    bold: true                  # 2.3 birinci derece alt başlık
+    all_caps: true              # 2.3 "BİRİNCİ DERECE ALT BAŞLIKTA tüm harfler büyük"
+    alignment: left             # 2.3 "tüm rakamlı başlıklar sola yaslı"
+  heading_3:
+    bold: true                  # 2.3 ikinci derece alt başlık "koyu"
+    alignment: left             # 2.3
+  figure_caption:
+    size_pt: 12                 # Şekiller bölümü
+    line_spacing: 1.0           # 2.2.d, Şekiller bölümü
+    alignment: left             # Şekiller bölümü "başlıkları ise şekil altında sola yaslı"
+    case: title                 # Şekiller bölümü "sözcüklerin ilk harfleri büyük"
+    position: below             # 2.2.d, Şekiller bölümü
+  table_caption:
+    size_pt: 12                 # Tablolar bölümü
+    line_spacing: 1.0           # 2.2.d, Tablolar bölümü
+    alignment: left             # Tablolar bölümü "tablo üstünde sola yaslı"
+    case: title                 # Tablolar bölümü
+    position: above             # 2.2.d, Tablolar bölümü
+  block_quote:
+    line_spacing: 1.0           # 2.2.d "Alıntı ... tek satır aralığı"
+  footnote:
+    size_pt: 10                 # 2.2.c
+    line_spacing: 1.0           # 2.2.d
+  reference_entry:
+    # ÇELİŞKİ: 2.2.d "kaynak listesinin yazımında tek satır aralığı"; Kaynakça bölümü "1,5 satır aralıkları". 2.2.d kullanıldı.
+    line_spacing: 1.0           # 2.2.d
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.2.b
+  position: bottom_right        # 2.2.b "sağ alt köşede"
+  forbid_decoration: true       # 2.2.b "ayraç, çizgi gibi bir işaret kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

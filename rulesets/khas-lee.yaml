@@ -1,0 +1,76 @@
+# Kadir Has Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Programlar için Tez ve Bitirme Projesi Yazım Kılavuzu (2025)
+# Kaynak: https://sgs.khas.edu.tr/wp-content/uploads/sites/76/2025/04/tez-ve-bitirme-projesi-yazim-kilavuzu-z.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Kılavuzda madde numarası yok; kaynak olarak bölüm başlıkları verildi.
+ruleset: khas-lee
+version: 1
+name: "Kadir Has Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Lisansüstü Programlar için Tez ve Bitirme Projesi Yazım Kılavuzu, 2025"
+institution: "Kadir Has Üniversitesi"
+source_url: https://sgs.khas.edu.tr/wp-content/uploads/sites/76/2025/04/tez-ve-bitirme-projesi-yazim-kilavuzu-z.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kâğıt Özellikleri "A4 (21x29,7 cm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }   # Sayfa Düzeni / Kenar Boşlukları
+
+fonts:
+  allowed: [Times New Roman]    # Sayfa Düzeni / Yazı Tipi ve Boyutu
+
+roles:
+  body:
+    size_pt: 12                 # Yazı Tipi ve Boyutu
+    line_spacing: 1.5           # Satır Araları "1,5 satır (18 punto)"
+    alignment: justify          # Paragraflar "soldan ve sağdan bloklanmış"
+    first_line_indent_cm: 0     # Paragraflar "girinti yapılmamalıdır"
+    space_after_pt: 18          # Paragraflar "paragraflar arası 1,5 satır (18 punto)"
+  heading_1:
+    size_pt: 14                 # Bölüm Başlıkları
+    bold: true                  # Bölüm Başlıkları
+    all_caps: true              # Bölüm Başlıkları "bütün sözcükler büyük harfle"
+    alignment: center           # Bölüm Başlıkları "metin ortalanır"
+    page_break_before: true     # Bölüm Başlıkları "yeni bir sayfadan başlar"
+    space_before_pt: 36         # Bölüm Başlıkları "3 satır (36 nokta)" — ÇELİŞKİ: aynı bölümde "bütün başlıklardan önce 2 satır (24 punto)"
+    space_after_pt: 18          # Bölüm Başlıkları "1.5 satır (18 nokta)"
+  heading_2:
+    bold: true                  # Bölüm Başlıkları (İkinci düzey)
+    case: title                 # "bütün sözcüklerin ilk harfleri büyük"
+    alignment: left             # "sol kenardan hizalanır"
+    space_before_pt: 24         # "başlıklardan önce 2 satır (24 punto)"
+    space_after_pt: 18          # "sonra 1,5 satır (18 punto)"
+  heading_3:
+    bold: true                  # Bölüm Başlıkları (Üçüncü düzey)
+    case: sentence              # "yalnızca başlığın ilk harfi büyük"
+    alignment: left             # "sol kenardan hizalanır"
+    space_before_pt: 24         # "başlıklardan önce 2 satır (24 punto)"
+    space_after_pt: 18          # "sonra 1,5 satır (18 punto)"
+  figure_caption:
+    line_spacing: 1.0           # Satır Araları "şekil ve tablo açıklamalarında 1 satır"
+    alignment: center           # Tablo ve Şekiller "ortalanmış biçimde"
+    position: below             # Tablo ve Şekiller "şeklin altına"
+  table_caption:
+    line_spacing: 1.0           # Satır Araları
+    alignment: center           # Tablo ve Şekiller
+    position: above             # Tablo ve Şekiller "çizelgenin üstüne"
+  block_quote:
+    line_spacing: 1.0           # Satır Araları "bloklanmış alıntılarda 1 satır"
+    indent_left_cm: 1.27        # Alıntılar "soldan 1 sekme (1,27 cm)" — ÇELİŞKİ: Paragraflar bölümünde "soldan ve sağdan 1 cm girinti"
+  reference_entry:
+    line_spacing: 1.0           # Kaynaklar "1 satır aralığı" (aralarındaki boşluk "1,5 satır (12 punto)" kendi içinde çelişkili; denetlenmez)
+  footnote:
+    size_pt: 10                 # Dipnotlar "metinden 2 karakter küçük"
+    line_spacing: 1.0           # Satır Araları "dipnotlarda 1 satır (12 punto)"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Numaralandırma: Giriş'e kadar küçük Romen, sonra 1, 2, 3
+  position: bottom_right        # Sayfa Numaraları "sağ alt köşesine"
+  forbid_decoration: true       # Sayfa Numaraları "parantez, çizgi vb. işaretler kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

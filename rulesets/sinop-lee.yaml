@@ -1,0 +1,85 @@
+# Sinop Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez/Proje/Seminer Yazım Kılavuzu (2021; Senato 11.11.2021, 2021/186)
+# Kaynak: https://lisansustu.sinop.edu.tr/wp-content/uploads/sites/137/2026/07/Tez-Yazim-Kilavuzu.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: sinop-lee
+version: 1
+name: "Sinop Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Sinop Üniversitesi Lisansüstü Eğitim Enstitüsü Tez/Proje/Seminer Yazım Kılavuzu, 2021"
+institution: "Sinop Üniversitesi"
+source_url: https://lisansustu.sinop.edu.tr/wp-content/uploads/sites/137/2026/07/Tez-Yazim-Kilavuzu.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 standardında"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.2 sol 3,5 cm; alt, üst ve sağ 2,5 cm
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3 "tezin tamamında 12 punto"
+    line_spacing: 1.5           # 2.4
+    alignment: justify          # 2.2 "sağ kenarda tüm satırlar aynı hizada bitirilmelidir"
+    first_line_indent_cm: 0     # 2.4 "paragraf başı için girinti olmayacak şekilde"
+    space_before_pt: 6          # 2.4 "paragraflar ... arasında önce ve sonra 6 nk"
+    space_after_pt: 6           # 2.4
+  heading_1:
+    size_pt: 12                 # 2.8, Tablo 2.4
+    bold: true                  # 2.8
+    all_caps: true              # 2.8 "BÜYÜK HARF"
+    alignment: justify          # 2.8 "iki yana dayalı"
+    space_after_pt: 24          # 2.4 "ana bölüm başlığından sonra 24 nk"
+    page_break_before: true     # 2.4, 2.8 "yeni bir sayfadan başlamalı"
+  heading_2:
+    size_pt: 12                 # 2.8
+    bold: true                  # 2.8
+    case: title                 # 2.8 "her kelimenin ilk harfi Büyük Harf", bağlaçlar küçük
+    alignment: justify          # 2.8
+    space_before_pt: 12         # 2.4 "alt başlıklardan önce ve sonra 12 nk"
+    space_after_pt: 12          # 2.4
+  heading_3:
+    size_pt: 12                 # 2.8
+    bold: true                  # 2.8
+    case: sentence              # 2.8 "ilk kelimenin ilk harfi Büyük harf, diğerleri küçük"
+    alignment: justify          # 2.8, Tablo 2.4
+    space_before_pt: 12         # 2.4
+    space_after_pt: 12          # 2.4
+  figure_caption:
+    alignment: left             # 2.12 "paragraf girintisi yapılmadan sola dayalı"
+    first_line_indent_cm: 0     # 2.12
+    position: below             # 2.12 "şeklin veya görselin altına"
+    space_before_pt: 6          # 2.4 "şekil tanıtım yazılarından önce 6 sonra 12 nk"
+    space_after_pt: 12          # 2.4
+  table_caption:
+    alignment: left             # 2.12
+    first_line_indent_cm: 0     # 2.12
+    position: above             # 2.12 "tablonun üstüne"
+    space_before_pt: 12         # 2.4 "tablo tanıtım yazılarından önce 12 sonra 6 nk"
+    space_after_pt: 6           # 2.4
+  block_quote:
+    line_spacing: 1.0           # 2.4 "doğrudan alıntılar ... tek satır aralığında"
+    space_before_pt: 6          # 2.4
+    space_after_pt: 6           # 2.4
+  reference_entry:
+    size_pt: 11                 # 2.3 "Kaynaklar listesi 11 punto"
+    line_spacing: 1.0           # 2.4 "kaynaklar ... tek satır aralığında"
+    space_before_pt: 6          # 2.4 "kaynaklar arasında önce ve sonra 6 nk"
+    space_after_pt: 6           # 2.4
+  footnote:
+    size_pt: 10                 # 2.9 "ideal olarak 10 punto"
+    line_spacing: 1.0           # 2.4, 2.9 "1 tam aralıkla"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5 ön kısım Romen (i, ii, iii), Giriş'ten itibaren 1, 2, 3
+  position: bottom_center       # 2.5 "sayfa altında ve ortada"
+  forbid_decoration: true       # 2.5 "önünde ve arkasında herhangi bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

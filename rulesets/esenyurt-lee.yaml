@@ -1,0 +1,62 @@
+# İstanbul Esenyurt Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Tez ve Proje Yazım Kılavuzu (İstanbul, 2021)
+# Kaynak: https://esenyurt.edu.tr/uploads/2024/07/6emtaf51zpxqt-proje-tez-yazim-kilavuzu.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: esenyurt-lee
+version: 1
+name: "İstanbul Esenyurt Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Lisansüstü Tez ve Proje Yazım Kılavuzu, 2021"
+institution: "İstanbul Esenyurt Üniversitesi"
+source_url: https://esenyurt.edu.tr/uploads/2024/07/6emtaf51zpxqt-proje-tez-yazim-kilavuzu.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "standart 80 gram A-4 kağıdı"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.2.1
+
+roles:
+  body:
+    size_pt: 12                 # 2.2.1
+    line_spacing: 1.5           # 2.2.3
+    alignment: justify          # 2.2.3 "sayfanın iki yanına yaslanmış"
+    first_line_indent_cm: 1.25  # 2.2.3 "bir “Tab” (1,25 cm) içeride"
+  heading_1:
+    size_pt: 12                 # 5.1
+    bold: true                  # 5.1
+    all_caps: true              # 5.1 "büyük harflerle"
+    page_break_before: true     # 5.1 "yeni bir sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # 5.1
+    bold: true                  # 5.1 "TNR, koyu yazı tipi ile"
+  heading_3:
+    size_pt: 12                 # 5.1
+    bold: true                  # 5.1
+  table_caption:
+    bold: true                  # 4.9 "koyu harflerle"
+    alignment: center           # 4.9 "ortalanmış"
+    position: above             # 4.9 "tablonun üstünde"
+  figure_caption:
+    bold: true                  # 4.9
+    alignment: center           # 4.9 "ortalanarak"
+    position: below             # 4.9 "şeklin altında"
+  footnote:
+    size_pt: 10                 # 6.2
+    line_spacing: 1.0           # 6.2 "tek satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # 6.1.1 "tümü tek satır aralığında"
+
+page_numbering:
+  # 3: ön kısım küçük Romen (i, ii, iii…), GİRİŞ'ten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 3 "sayfanın altına ortalanarak"
+
+document:
+  forbid_tracked_changes: true

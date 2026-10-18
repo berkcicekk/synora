@@ -1,0 +1,62 @@
+# Ankara Yıldırım Beyazıt Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Ankara, 2019)
+# Kaynak: https://aybu.edu.tr/GetFile?id=3f1b7d9f-0cbf-4f9a-b4c9-4d64793bfa42.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# ÇELİŞKİ: başlık girintisi 1.1'de "sol kenar çizgisinden (satır başına dayalı)", 1.9'da "sol taraftan 1 tab içeriden" → başlık girintisi verilmedi.
+ruleset: aybu-sbe
+version: 1
+name: "Ankara Yıldırım Beyazıt Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "AYBÜ Sosyal Bilimler Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2019"
+institution: "Ankara Yıldırım Beyazıt Üniversitesi"
+source_url: https://aybu.edu.tr/GetFile?id=3f1b7d9f-0cbf-4f9a-b4c9-4d64793bfa42.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.2, 1.8 "A4"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 2.5 }   # 1.4, 1.8 "sol (cilt) kenarında 3 cm, üst, alt ve sağ ... 2.5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 1.1.1
+
+roles:
+  body:
+    size_pt: 12                 # 1.1.2 "12 punto"
+    line_spacing: 1.5           # 1.8 "1.5 satır aralığı"
+    alignment: justify          # 1.4, 1.8 "her iki yana yaslanmış"
+    first_line_indent_cm: 1.0   # 1.1 "1 tab 10 mm içeriden"
+  heading_1:
+    size_pt: 14                 # 1.9 "ana bölüm başlıkları 14 punto boyutunda koyu" — ÇELİŞKİ: 1.1.2 "tüm yazılarda ... 12 punto"
+    bold: true                  # 1.1, 1.9
+    all_caps: true              # 1.1, 1.9 "büyük harfle"
+    page_break_before: true     # 1.1, 1.9 "Bütün ana bölümler yeni bir sayfadan"
+  heading_2:
+    size_pt: 12                 # 1.9 "alt bölüm başlıkları ise 12 punto boyutunda koyu"
+    bold: true                  # 1.9
+    case: title                 # 1.1, 1.9 "sözcüklerin ilk harfleri büyük"
+  heading_3:
+    size_pt: 12                 # 1.9
+    bold: true                  # 1.9
+    case: title                 # 1.1 "ikinci ve daha ileri derece ... her sözcüğün ilk harfi büyük"
+  table_caption:
+    line_spacing: 1.0           # 1.7 "açıklama yazımında 1 satır aralığı"
+    case: sentence              # 1.7 "yalnızca baştaki sözcüğün ilk harfi büyük"
+    position: above             # 1.7 "tabloların ise üst kısmına"
+    indent_left_cm: 1.0         # 1.7 "1 tab içeri" (1 tab = 10 mm, 1.1)
+  figure_caption:
+    line_spacing: 1.0           # 1.7
+    case: sentence              # 1.7
+    alignment: center           # 1.7 "şeklin altında, metin içerisinde ortalı"
+    position: below             # 1.7
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.5 "küçük Roma rakamlarıyla" / Giriş'ten 1, 2, 3
+  position: bottom_center       # 1.5 "sayfanın altında ve ortalanmış"
+  forbid_decoration: true       # 1.5 "parantez veya çizgi gibi işaretler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,72 @@
+# İstinye Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (ENS-KLV-01, Senato 01.02.2023/10-01; dosya Aralık 2025)
+# Kaynak: https://www.istinye.edu.tr/sites/default/files/docs/2025-12/ens-klv-01-lee-tez-yazim-kilavuzu_1.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: istinye-lee
+version: 1
+name: "İstinye Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Tez Yazım Kılavuzu (ENS-KLV-01), 2023"
+institution: "İstinye Üniversitesi"
+source_url: https://www.istinye.edu.tr/sites/default/files/docs/2025-12/ens-klv-01-lee-tez-yazim-kilavuzu_1.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 standardında (21 x 29,7 cm)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3, 3.3
+    line_spacing: 1.5           # 3.3
+    alignment: justify          # 3.3 "her iki yana yaslanmalıdır (justify)"
+    first_line_indent_cm: 1.2   # 3.3 "1,2 cm sekme ile içerden"
+    space_before_pt: 6          # 3.3 "paragrafın üstünde altında 6 nokta (nk)"
+    space_after_pt: 6           # 3.3
+  heading_1:
+    size_pt: 12                 # 3.3 "Koyu büyük harf 12 punto"
+    bold: true                  # 3.3
+    all_caps: true              # 3.3
+    alignment: center           # 3.3 "ortalanır"
+    space_before_pt: 24         # 3.3 "Başlıktan önce 24 nokta (nk)"
+    space_after_pt: 18          # 3.3 "sonra 18 nokta (nk)"
+    page_break_before: true     # 3.3 "yeni bir sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # 3.3
+    bold: true                  # 3.3
+    alignment: left             # 3.3 "sol kenarına yaslanılarak"
+    case: title                 # 3.3 "kelimelerin baş harfleri büyük"
+    space_before_pt: 12         # 3.3 "önce 12"
+    space_after_pt: 6           # 3.3 "sonra 6 nokta"
+  heading_3:
+    size_pt: 12                 # 3.3
+    bold: true                  # 3.3
+    alignment: left             # 3.3
+    case: title                 # 3.3
+    space_before_pt: 12         # 3.3
+    space_after_pt: 6           # 3.3
+  table_caption:
+    alignment: left             # 3.3.7 "sola yaslanarak"
+    position: above             # 3.3.7 "Tablo adı tabloların üstüne"
+  figure_caption:
+    alignment: left             # 3.3.7
+    position: below             # 3.3.7 "şekil adı ise şeklin altına"
+  reference_entry:
+    line_spacing: 1.5           # 3.4 "1,5 satır aralığında"
+    alignment: justify          # 3.4 "her iki yana yaslı"
+    first_line_indent_cm: 1.2   # 3.4 "ilk satır 1,2 cm sekme ile içerden"
+
+page_numbering:
+  # 2.4: ön sayfalar küçük Romen (i, ii…), ana metinden itibaren 1, 2…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.4 "sayfanın altının ortasına"
+
+document:
+  forbid_tracked_changes: true

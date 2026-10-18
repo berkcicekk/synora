@@ -1,0 +1,44 @@
+# Orta Doğu Teknik Üniversitesi Fen Bilimleri Enstitüsü (Graduate School of Natural and Applied Sciences) — Thesis Manual v2 (PDF 2020-09)
+# Kaynak: https://fbe.metu.edu.tr/sites/fbe.metu.edu.tr/files/Belgeler/thesis_manual_v2.pdf
+# Sayfa: https://fbe.metu.edu.tr/en/thesis-writing-process
+# Not: Kılavuz İngilizce. Kenar boşlukları alt sınır olarak verilmiş ("binding side at least 4 cm, other three at least 2.5 cm") → kesin değer olmadığı için eklenmedi.
+# Not: Sayfa numarası konumu belirtilmemiş ("All page numbers must appear in the same location").
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: odtu-fbe
+version: 1
+name: "Orta Doğu Teknik Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "METU Graduate School of Natural and Applied Sciences Thesis Manual v2, 2020"
+institution: "Orta Doğu Teknik Üniversitesi"
+source_url: https://fbe.metu.edu.tr/sites/fbe.metu.edu.tr/files/Belgeler/thesis_manual_v2.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "210 by 297 mm (A4)"
+
+fonts:
+  allowed: [Times New Roman]    # 2.3 "Only Times New Roman font is acceptable"
+
+roles:
+  body:
+    size_pt: 12                 # 2.3 "The font size should be 12-point"
+    line_spacing: 1.5           # 2.4 "The general text of the manuscript must use 1.5 spacing"
+  heading_1:
+    all_caps: true              # 3.2 "CHAPTER I in all capitals ... title ... in all capital letters"
+    alignment: center           # 3.2 "centered between the text margins"
+    page_break_before: true     # 3.2 "Only new chapters should begin with a new right page"
+  table_caption:
+    position: above             # 3.2 "Table numbers and captions are placed one space above"
+  figure_caption:
+    position: below             # 3.2 "figure numbers and captions are placed one space below"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.7 "small Roman numerals" / "Arabic numerals beginning with 1"
+
+document:
+  forbid_tracked_changes: true

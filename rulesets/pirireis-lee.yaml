@@ -1,0 +1,67 @@
+# Piri Reis Üniversitesi Lisansüstü Eğitim Enstitüsü — Format for Theses / LEE Tez Yazım Kılavuzu (İngilizce; kapakta 2021, dosya adında 2022)
+# Kaynak: https://graduate.pirireis.edu.tr/wp-content/uploads/2024/02/LEE-Tez-Yazim-Kilavuzu-Ing-2022s.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: pirireis-lee
+version: 1
+name: "Piri Reis Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Format for Theses, The Institute for Graduate Studies, Piri Reis University, 2021"
+institution: "Piri Reis Üniversitesi"
+source_url: https://graduate.pirireis.edu.tr/wp-content/uploads/2024/02/LEE-Tez-Yazim-Kilavuzu-Ing-2022s.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.3 "A4 (21x29.7 cm)"
+  margins_cm: { top: 3.5, bottom: 2.0, left: 3.5, right: 2.0 }   # 2.2.1
+
+fonts:
+  allowed: [Times New Roman]    # 2.2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2.2
+    line_spacing: 1.5           # 2.2.3 "1.5 line spacing"
+    alignment: justify          # 2.2.3 "Paragraphs must be justified aligned" (aynı maddede "uniformly aligned left" — ÇELİŞKİ)
+  heading_1:
+    size_pt: 14                 # 2.3.1 a)
+    bold: true                  # 2.3.1 a)
+    all_caps: true              # 2.3.1 a) "in capital letters"
+    alignment: left             # 2.3.1 a) "aligned left"
+    page_break_before: true     # 2.3.1 a) "They should begin a new page"
+  heading_2:
+    size_pt: 12                 # 2.3.2 a)
+    bold: true                  # 2.3.2 a)
+    alignment: left             # 2.3.2 a)
+    case: title                 # 2.3.2 a) "title case letters"
+  heading_3:
+    size_pt: 12                 # 2.3.3 b)
+    bold: true                  # 2.3.3 b)
+    alignment: left             # 2.3.3 a) "beginning at the left margin"
+    case: title                 # 2.3.3 b)
+  figure_caption:
+    size_pt: 12                 # 2.2.2 "Figure captions"
+    line_spacing: 1.0           # 2.2.3 "Captions for Tables and Figures ... 1 line spacing"
+    position: below             # 2.4 "Figure captions are placed below"
+  table_caption:
+    size_pt: 12                 # 2.2.2 "Table headings"
+    line_spacing: 1.0           # 2.2.3
+    position: above             # 2.4 "Table captions are located above"
+  block_quote:
+    size_pt: 10                 # 2.2.2 "extensive quotations should be 10 points"
+  reference_entry:
+    line_spacing: 1.0           # 2.2.3 "References ... 1 line spacing"
+  footnote:
+    size_pt: 10                 # 2.2.2
+    line_spacing: 1.0           # 2.2.3
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.2.4
+  position: bottom_center       # 2.2.4 "at the bottom center"
+
+document:
+  forbid_tracked_changes: true

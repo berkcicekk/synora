@@ -1,0 +1,73 @@
+# Lokman Hekim Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu (2024-2025 bahar yarıyılından itibaren geçerli)
+# Kaynak: https://kolay.lokmanhekim.edu.tr/uploads/2025-02/tez-yazim-kilavuzu-2024-25-bahar-donemi-itibariyle-kullanilacaktir_67ab518167fee.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: lokmanhekim-sabe
+version: 1
+name: "Lokman Hekim Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Lokman Hekim Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2025"
+institution: "Lokman Hekim Üniversitesi"
+source_url: https://kolay.lokmanhekim.edu.tr/uploads/2025-02/tez-yazim-kilavuzu-2024-25-bahar-donemi-itibariyle-kullanilacaktir_67ab518167fee.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 4.1
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 4.2.1.1
+
+fonts:
+  allowed: [Times New Roman]    # 4.2
+
+roles:
+  body:
+    size_pt: 12                 # 4.2
+    line_spacing: 1.5           # 4.2.1.2
+    alignment: justify          # 4.2 "her iki yana yaslanmalıdır"
+    first_line_indent_cm: 0     # 4.2.1.3 "ilk satırında girinti uygulanmamalıdır"
+    space_before_pt: 0          # 4.2.1.2 önce (before) sıfır
+    space_after_pt: 0           # 4.2.1.2, 4.2.1.3 "paragraflar arasında boşluk bırakılmamalıdır"
+  heading_1:
+    size_pt: 14                 # 4.2.1.4
+    bold: true                  # 4.2.1.4
+    all_caps: true              # 4.2.1.4 "tüm harflerde büyük harf"
+    alignment: center           # 4.2.1.4 "metni ortalar"
+    page_break_before: true     # 4.2.1.4 "yeni bir sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # 4.2.1.4
+    bold: true                  # 4.2.1.4
+    alignment: left             # 4.2.1.4 "sol kenardan hizalanır"
+    case: title                 # 4.2.1.4 bütün sözcüklerin ilk harfleri büyük
+  heading_3:
+    size_pt: 12                 # 4.2.1.4
+    bold: true                  # 4.2.1.4
+    alignment: left             # 4.2.1.4
+    case: title                 # 4.2.1.4
+  figure_caption:
+    position: below             # 4.2.5 "görselin altında"
+    case: title                 # 4.2.5 "ve" hariç tüm kelimelerin ilk harfi büyük
+  table_caption:
+    position: above             # 4.2.5 "tablonun üstünde"
+    alignment: left             # 4.2.5 "sayfa kenarına hizalanmalıdır"
+    case: title                 # 4.2.5
+  block_quote:
+    italic: true                # 5.1.18 (Alıntılar) "İtalik yazı karakteri"
+    line_spacing: 1.0           # 5.1.18 "tek satır aralıkla"
+    indent_left_cm: 1.0         # 5.1.18 "soldan ve sağdan 1 cm girinti"
+    first_line_indent_cm: 0     # 5.1.18 "paragraf girintisi yapılmasına gerek yoktur"
+  reference_entry:
+    line_spacing: 1.0           # 4.2.1.2
+    space_after_pt: 12          # 4.2.1.2 "her kaynak arasında 1 satır (12 nk) boşluk"
+  footnote:
+    size_pt: 10                 # 4.2, Dipnotlar
+    line_spacing: 1.0           # Dipnotlar "tek satır aralıkla"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 4.2.4.1, 4.2.4.2
+  position: bottom_center       # 4.2.4 "sayfanın alt ortasında"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,82 @@
+# Afyon Kocatepe Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez Hazırlama, Yazım ve Basım Kılavuzu (2023)
+# Kaynak: https://sosbil.aku.edu.tr/wp-content/uploads/sites/25/2023/12/SBE-TEZ-YAZIM-KILAVUZU.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: aku-sbe
+version: 1
+name: "Afyon Kocatepe Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "AKÜ SBE Lisansüstü Tez Hazırlama Yazım ve Basım Kılavuzu, 2023"
+institution: "Afyon Kocatepe Üniversitesi"
+source_url: https://sosbil.aku.edu.tr/wp-content/uploads/sites/25/2023/12/SBE-TEZ-YAZIM-KILAVUZU.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 5.1 "A4 (210x297 mm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 3.0 }   # 5.1 sayfa yapısı
+
+fonts:
+  allowed: [Times New Roman]    # 5.2 "Times New Roman ve 12 punto"
+
+roles:
+  body:
+    size_pt: 12                 # 5.2
+    line_spacing: 1.5           # 5.2 "1,5 satır aralıklı"
+    space_before_pt: 6          # 5.2 "önce 6nk, sonra 6nk"
+    space_after_pt: 6           # 5.2
+    first_line_indent_cm: 1.25  # 5.2 "soldan 1,25 cm içeriden"
+    alignment: justify          # 5.2 "İki yana yaslanmış"
+  heading_1:
+    # Bölüm başlığı ("BİRİNCİ BÖLÜM" + bölüm adı)
+    all_caps: true              # 5.5.1, 2.6(iii) "büyük harflerle"
+    bold: true                  # 2.6(iii) "koyu (bold)"
+    alignment: center           # 5.5.1 "yazı alanı ortalanarak"
+    space_before_pt: 12         # 5.2 "Bölüm Başlıkları: Önce 12nk ve sonra 12nk"
+    space_after_pt: 12          # 5.2
+  heading_2:
+    # Ana başlık (1., 2., 3.)
+    all_caps: true              # 5.5.2(i) "büyük harflerle"
+    bold: true                  # 5.5.2(i) "koyu (bold)"
+    alignment: left             # 5.5.2(i) "Sola dayalı" — ÇELİŞKİ: 2.6 notu "iki yana yaslı (sola dayalı)" diyor
+    line_spacing: 1.0           # 2.6 not "tüm başlıklar ... tek satır aralığı ile"
+  heading_3:
+    # Yan başlık (1.1, 1.2)
+    all_caps: true              # 5.5.2(ii) "büyük harflerle"
+    bold: false                 # 5.5.2(ii) "açık (koyu değil)"
+    alignment: left             # 5.5.2(ii) "Sola dayalı"
+    line_spacing: 1.0           # 2.6 not
+  block_quote:
+    # 10 satırdan uzun doğrudan alıntı
+    size_pt: 10                 # 6.3.1(xiv) "yazı boyutu 10 punto"
+    line_spacing: 1.0           # 6.3.1(xiv) "tek satır aralığı"
+  table_caption:
+    size_pt: 11                 # 6.5.3 "11 punto olmalıdır"
+    line_spacing: 1.0           # 6.5.3 "satır aralıkları (başlıklar da dâhil) tek"
+    alignment: center           # 6.5.3 "tablonun üstünde (ortalanarak)"
+    position: above             # 6.5.3
+    case: title                 # 6.5.3 "Başlığın her kelimesinin ilk harfi büyük"
+  figure_caption:
+    size_pt: 11                 # 6.5.3 "(Başlıklar tek satır aralıklı, 11 punto)"
+    line_spacing: 1.0           # 6.5.3
+    alignment: center           # 6.5.3 "(ortalanarak)"
+    position: above             # 6.5.3 "Şekil başlığı da şeklin üstünde"
+  reference_entry:
+    # 4.1: ikinci ve sonraki satırlar 0,5 cm içeriden (asılı girinti) — şemada karşılığı yok
+    line_spacing: 1.0           # 4.1 "tek satır aralığı"
+    space_before_pt: 0          # 4.1 "üst:0nk ve alt:0nk"
+    space_after_pt: 0           # 4.1
+  footnote:
+    size_pt: 9                  # 6.4 "9 punto"
+    line_spacing: 1.0           # 6.4 "tek satır aralığıyla"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 5.3 ön bölüm küçük Romen, GİRİŞ'ten itibaren 1,2,3
+  position: bottom_center       # 5.3 "sayfaların alt ortasına"
+  forbid_decoration: true       # 5.3 "nokta, çizgi ve benzeri hiçbir işaret konulmamalıdır"
+
+document:
+  forbid_tracked_changes: true

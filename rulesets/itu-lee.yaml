@@ -1,0 +1,77 @@
+# İstanbul Teknik Üniversitesi — Lisansüstü Tez Yazım Kılavuzu (Kasım 2021; Senato 18.11.2021/788)
+# Kaynak: https://lee.itu.edu.tr/docs/librariesprovider66/ogrenci-belgeleri/tez-yazim-belgeleri/itu-lisansustu-tez-yazim-kilavuzu-pdf.pdf
+# (Enstitü sayfası: https://lee.itu.edu.tr/belgeler)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: itu-lee
+version: 1
+name: "İstanbul Teknik Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "İTÜ Lisansüstü Tez Yazım Kılavuzu, 2021"
+institution: "İstanbul Teknik Üniversitesi"
+source_url: https://lee.itu.edu.tr/docs/librariesprovider66/ogrenci-belgeleri/tez-yazim-belgeleri/itu-lisansustu-tez-yazim-kilavuzu-pdf.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.2.1
+  # 2.2.2: kenar boşlukları yalnızca Şekil 2.1a/2.1b görsellerinde (ayna kenar boşlukları) → denetlenmez
+
+fonts:
+  allowed: [Times New Roman, Arial]   # 2.3 "12 Times New Roman (veya … 11 Arial)"
+
+roles:
+  body:
+    # 2.3: punto yazı tipine bağlı (TNR 12 / Arial 11) → punto denetlenmez
+    line_spacing: 1.5           # 2.4
+    alignment: justify          # 2.4 "iki yana yaslanmış"
+    space_before_pt: 6          # 2.4 "önce ve sonra 6 punto"
+    space_after_pt: 6           # 2.4
+  heading_1:
+    bold: true                  # 3.1
+    all_caps: true              # 3.1 "büyük ve koyu harflerle"
+    alignment: justify          # 3.1 "diğer başlıklar ise iki yana yaslanmış"
+    space_before_pt: 72         # 2.4 "önce 72 punto"
+    space_after_pt: 18          # 2.4 "sonra 18 punto"
+    page_break_before: true     # 3.1 "sağ sayfadan başlamalı"
+  heading_2:
+    bold: true                  # 3.1
+    case: title                 # 3.1 "kelimelerin ilk harfleri büyük"
+    alignment: justify          # 3.1
+    space_before_pt: 18         # 2.4
+    space_after_pt: 12          # 2.4
+  heading_3:
+    bold: true                  # 3.1
+    case: sentence              # 3.1 "sadece ilk harfi büyük"
+    alignment: justify          # 3.1
+    space_before_pt: 12         # 2.4
+    space_after_pt: 6           # 2.4
+  table_caption:
+    position: above             # 2.6 "çizelgenin üstüne"
+    alignment: center           # 2.6 "tüm satırları ortalı"
+    line_spacing: 1.0           # 2.4, 2.6 "bir satır aralığı"
+    space_before_pt: 12         # 2.6 "yazıdan önce 12 punto"
+    space_after_pt: 6           # 2.6 "sonra 6 punto"
+  figure_caption:
+    position: below             # 2.6 "şeklin altına"
+    alignment: center           # 2.6
+    line_spacing: 1.0           # 2.4, 2.6
+    space_before_pt: 6          # 2.6 "önce 6 punto"
+    space_after_pt: 12          # 2.6 "sonra 12 punto"
+  block_quote:
+    indent_left_cm: 1.27        # 3.7.1 "soldan 1 sekme (1,27 cm) içerden"
+  footnote:
+    size_pt: 8                  # 2.3 "kısa notlar 8 punto"
+    line_spacing: 1.0           # 2.4
+  reference_entry:
+    line_spacing: 1.0           # 2.4 "kaynaklar … 1 satır aralıklı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5 "İç kapak (i), arkası (ii)", metin Arap rakamı
+  position: bottom_center       # 2.5 "sayfanın alt-ortasına"
+
+document:
+  forbid_tracked_changes: true

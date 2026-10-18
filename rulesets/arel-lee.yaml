@@ -1,0 +1,49 @@
+# İstanbul Arel Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (2022; şablonlu Word kılavuzu)
+# Kaynak: https://arel.edu.tr/wp-content/uploads/2022/10/Tez-Yazim-Kilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: paragraf girintisi "1 tab" (cm verilmemiş) ve dipnot puntosu "8pt-10pt" aralık olarak
+# verildiği için denetlenmez. Ana metin sayfa numarası biçimi açıkça yazılmamış.
+ruleset: arel-lee
+version: 1
+name: "İstanbul Arel Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Tez Yazım Kılavuzu, 2022"
+institution: "İstanbul Arel Üniversitesi"
+source_url: https://arel.edu.tr/wp-content/uploads/2022/10/Tez-Yazim-Kilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.3 "A4 standardında (210 x 297 mm.)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 3.13 "sol kenarından 4cm diğer kenarlardan ise 2,5cm"
+
+fonts:
+  allowed: [Times New Roman]    # 3.4
+
+roles:
+  body:
+    size_pt: 12                 # 3.4 "12 punto"
+    line_spacing: 1.5           # 3.14
+    alignment: justify          # 3.13 "iki yana yasla düzeninde"
+  heading_1:
+    all_caps: true              # 4.2.2 "Bölüm başlıklarının tamamı büyük harf"
+    page_break_before: true     # 4.2.2 "Ana bölümler daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    case: title                 # 4.2.2 "alt bölümlerin ise her sözcüğün ilk harfi büyük"
+  heading_3:
+    case: title                 # 4.2.2
+  table_caption:
+    line_spacing: 1.0           # 3.15 "açıklama yazımında 1 satır aralığı"
+    position: above             # 3.15 "tabloların ise üst kısmına"
+  figure_caption:
+    line_spacing: 1.0           # 3.15
+    position: below             # 3.15 "şekil ve resimlerin altına"
+  footnote:
+    line_spacing: 1.0           # 3.17 "Yazımda 1 satır aralığı kullanılmalıdır"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,61 @@
+# Ankara Medipol Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Ankara, 2019)
+# Kaynak: https://www.ankaramedipol.edu.tr/sites/default/files/document/SaglikBilimleriEnstitusuTezYazimKilavuzu.pdf
+# Not: Sosyal Bilimler Enstitüsü kılavuzunun (2024) eski adresi 404 veriyor; yeni adresi bulunamadı.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ankaramedipol-sabe
+version: 1
+name: "Ankara Medipol Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Ankara Medipol Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2019"
+institution: "Ankara Medipol Üniversitesi"
+source_url: https://www.ankaramedipol.edu.tr/sites/default/files/document/SaglikBilimleriEnstitusuTezYazimKilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.1 "A4 (21x29.7 cm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 3.4 "sol kenarında ... 4 cm, sağ kenarında 2,5 cm, üst ve alt kenarlarında ise 3 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 3.3 "Ana metinde Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 3.3 "12 puntoluk yazı karakteri"
+    line_spacing: 1.5           # 3.4 "standart satır aralığı 1,5"
+    alignment: justify          # 3.4 "sol kenar ve sağ kenarda bloklanmalıdır"
+  heading_1:
+    size_pt: 14                 # 3.5 "Bölüm başlıkları büyük harf, 14 punto ve bold"
+    bold: true                  # 3.5
+    all_caps: true              # 3.5
+    page_break_before: true     # 3.4 "bölüm başlıkları sayfa başından başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 3.5 "birinci alt başlık; büyük harf 12 punto ve bold"
+    bold: true                  # 3.5
+    all_caps: true              # 3.5
+  heading_3:
+    size_pt: 12                 # 3.5 "ikinci alt başlık küçük harf 12 punto ve bold"
+    bold: true                  # 3.5
+  table_caption:
+    line_spacing: 1.0           # 3.4 "Şekil, resim ve tablo yazıları ... 1 tam aralık"
+    position: above             # 2.5 "Tablo başlıkları tablonun üstüne"
+  figure_caption:
+    line_spacing: 1.0           # 3.4
+    position: below             # 2.5 "şekil açıklamaları ise şeklin altına"
+  block_quote:
+    line_spacing: 1.0           # 3.4 "alıntılar ... 1 tam aralık"
+    italic: true                # 3.7 "Üç satırdan fazla olan alıntılar ... italik"
+  footnote:
+    line_spacing: 1.0           # 3.4, 3.7 "bir satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 3.8 ÖZET öncesi "i, ii, iii", ÖZET'ten itibaren "1, 2, 3"
+  position: bottom_right        # 3.8 "alt kısmına, metin bloğunun sağ kenar hizasında"
+  forbid_decoration: true       # 3.8 "ayıraç, çizgi gibi işaretler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

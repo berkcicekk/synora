@@ -1,0 +1,94 @@
+# Atatürk Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Ocak 2020)
+# Kaynak: https://atauni.edu.tr/yuklemeler/ec3ed61d0acf694c98023096cf3f70a8.docx
+# (bağlantı sayfası: https://atauni.edu.tr/fen-bilimleri-enstitusu/oneri-ve-tez-yazim-kilavuzlari/)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Konumlar kılavuzdaki alt başlıklardır (Kenar Boşlukları, Yazı Özelliği, Başlıklar vb.).
+ruleset: ataturk-fbe
+version: 1
+name: "Atatürk Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Atatürk Üniversitesi Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2020"
+institution: "Atatürk Üniversitesi"
+source_url: https://atauni.edu.tr/yuklemeler/ec3ed61d0acf694c98023096cf3f70a8.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kağıt Özelliği "A4 boyutunda"
+  margins_cm: { top: 2.0, bottom: 2.0, left: 3.0, right: 2.0 }  # Kenar Boşlukları "üst, alt ve sağdan 2 cm, soldan 3 cm"
+
+fonts:
+  allowed: [Times New Roman]    # Yazı Özelliği "Times New Roman yazı tipi"
+
+roles:
+  body:
+    size_pt: 12                 # Yazı Özelliği "bütün yazılar 12 punto"
+    line_spacing: 1.5           # Normal metinler "1,5 satır aralığı"
+    alignment: justify          # Normal metinler "her iki yana yaslı"
+    first_line_indent_cm: 1.25  # Normal metinler "ilk satır soldan 1,25 cm girintili"
+    space_before_pt: 0          # Normal metinler "paragraf öncesi 0 nk"
+    space_after_pt: 6           # Normal metinler "sonrasında 6 nk"
+  heading_1:
+    size_pt: 12                 # Başlıklar "1. Düzey ... 12 punto"
+    bold: true                  # Başlıklar "kalın"
+    all_caps: true              # Başlıklar "tamamı büyük harflerle"
+    alignment: center           # Başlıklar "ortalı"
+    line_spacing: 1.0           # Başlıklar "tek satır"
+    space_before_pt: 48         # Başlıklar "öncesinde 48 nk"
+    space_after_pt: 24          # Başlıklar "sonrasında 24 nk"
+    page_break_before: true     # Yazı Özelliği "Bölümler daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    bold: true                  # Başlıklar "2. Düzey ... kalın"
+    case: title                 # Başlıklar "her sözcüğün ilk harfi büyük (bağlaçlar hariç)"
+    alignment: left             # Başlıklar "sola yaslı"
+    first_line_indent_cm: 0     # Başlıklar "Paragraf girintisi olmadan"
+    line_spacing: 1.0           # Başlıklar "tek satır aralığı"
+    space_before_pt: 12         # Başlıklar "öncesinde 12 nk"
+    space_after_pt: 12          # Başlıklar "sonrasında 12 nk"
+  heading_3:
+    bold: true                  # Başlıklar "3. Düzey ... kalın"
+    case: sentence              # Başlıklar "Normal tümce düzeninde"
+    first_line_indent_cm: 1.25  # Başlıklar "ilk satır soldan 1.25 cm içeriden"
+    line_spacing: 1.0           # Başlıklar "tek satır aralığı"
+    space_before_pt: 12         # Başlıklar "2. Düzey ve sonrasındaki ... öncesinde 12 nk"
+    space_after_pt: 12          # Başlıklar "sonrasında 12 nk"
+  figure_caption:
+    size_pt: 12                 # Şekiller "12 punto"
+    line_spacing: 1.0           # Şekiller "tek satır aralıklı"
+    alignment: left             # Şekiller "soldan hizalı"
+    first_line_indent_cm: 0     # Şekiller "paragraf girintisi olmadan"
+    case: sentence              # Şekiller "normal tümce kuralları"
+    space_before_pt: 6          # Şekiller "öncesinde 6 nk"
+    space_after_pt: 6           # Şekiller "sonrasında 6 nk"
+    position: below             # Şekiller "şeklin numarası ve adı şeklin altına"
+  table_caption:
+    size_pt: 12                 # Tablolar "12 punto"
+    line_spacing: 1.0           # Tablolar "tek satır aralığı"
+    alignment: left             # Tablolar "soldan hizalı"
+    first_line_indent_cm: 0     # Tablolar "paragraf girintisi olmadan"
+    case: title                 # Tablolar "her sözcüğün ilk harfi büyük (bağlaçlar hariç)"
+    space_before_pt: 6          # Tablolar "öncesinde 6 nk"
+    space_after_pt: 6           # Tablolar "sonrasında 6 nk"
+  block_quote:
+    line_spacing: 1.0           # "tek satır aralıklı"
+    indent_left_cm: 1.25        # "soldan 1,25 cm ve sağdan 1 cm girintili"
+    first_line_indent_cm: 0     # "ilk satır girintisi verilmeden"
+  reference_entry:
+    line_spacing: 1.0           # Kaynaklar "1 tam aralık"
+    indent_left_cm: 1.25        # Kaynaklar "ikinci ve daha sonraki satırlar ... 1,25 cm içeriden"
+    first_line_indent_cm: -1.25 # Kaynaklar "sol kenar boşluğundan başlanarak"
+  footnote:
+    line_spacing: 1.0           # Yazı Özelliği "dipnotlar ... 1 tam aralık"
+
+page_numbering:
+  # Sayfa Numaraları: ön sayfalar "i, ii, iii…", Giriş'ten itibaren "1, 2, 3…"
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # Sayfa Numaraları "sayfa altında ... ortaya"
+  forbid_decoration: true       # Sayfa Numaraları "ayıraç, çizgi vb gibi bir karakter bulunmamalıdır"
+
+document:
+  forbid_tracked_changes: true

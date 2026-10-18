@@ -1,0 +1,55 @@
+# Niğde Ömer Halisdemir Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Programlar Tez/Dönem Projesi/Seminer Yazım Kılavuzu
+# Belgede yıl yok; örnek sayfalarda "Ocak, 2017" geçiyor (2017 civarı sürüm).
+# Kaynak: https://static.ohu.edu.tr/uniweb/media/portallar/uluslararasiticaret//sayfalar/38871/e4jx5gwt.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: uzun alıntı, dipnot ve kaynakça için "ya 1 satır aralığı ya da 11 punto" seçimli; kodlanmadı.
+ruleset: ohu-sbe
+version: 1
+name: "Niğde Ömer Halisdemir Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "NÖHÜ Sosyal Bilimler Enstitüsü Tez/Dönem Projesi/Seminer Yazım Kılavuzu, tarihsiz (2017 civarı)"
+institution: "Niğde Ömer Halisdemir Üniversitesi"
+source_url: https://static.ohu.edu.tr/uniweb/media/portallar/uluslararasiticaret//sayfalar/38871/e4jx5gwt.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kâğıt "önerilen kâğıt ... A4"
+  margins_cm: { top: 2.54, bottom: 2.54, left: 3.81, right: 2.54 }   # Sayfa Düzeni
+
+fonts:
+  allowed: [Times New Roman]    # Sayfa Düzeni ve Yazı Biçimi
+
+roles:
+  body:
+    size_pt: 12                 # Sayfa Düzeni ve Yazı Biçimi
+    line_spacing: 1.5           # Sayfa Düzeni ve Yazı Biçimi "normal satır aralığında (1,5 satır)"
+  heading_1:
+    bold: true                  # Bölüm Başlıkları "koyu puntolarla"
+    all_caps: true              # Bölüm Başlıkları "büyük harflerle"
+    alignment: center           # Bölüm Başlıkları "ortada"
+  heading_2:
+    bold: true                  # Alt Başlıklar, orta başlık "koyu"
+    alignment: center           # Alt Başlıklar, orta başlık "ortalanarak"
+    case: title                 # Alt Başlıklar "sözcüklerinin başlangıç harfleri büyük"
+  heading_3:
+    bold: true                  # Alt Başlıklar, yan başlık "koyu"
+    alignment: left             # Alt Başlıklar, yan başlık "sol kenarından başlayarak"
+    case: title                 # Alt Başlıklar
+  figure_caption:
+    case: title                 # 1.8 "sadece kelimelerin ilk harfleri büyük"
+    position: below             # 1.8 "şeklin altında"
+  table_caption:
+    case: title                 # 1.8
+    position: above             # 1.8 "Şekillerin numara ve ismi tablodan farklı olarak şeklin altında" (tablo: üstte)
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Sayfa Numarası
+  position: bottom_center       # Sayfa Numarası "sayfanın altına, ortaya" / "alt orta kısmına"
+
+document:
+  forbid_tracked_changes: true

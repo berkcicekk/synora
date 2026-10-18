@@ -17,6 +17,8 @@ def _env(name: str, default: str) -> str:
 class Settings:
     db_path: Path = ROOT / "var" / "synora.db"
     rulesets_dir: Path = ROOT / "rulesets"
+    # Yükleme ekranında seçili gelen ve giriş sayfasında tanıtılan kılavuz
+    default_ruleset: str = "zbeu-tip"
     base_url: str = "http://127.0.0.1:8000"
     # Yalnızca bu alan adlarındaki e-postalar giriş yapabilir. Boş = herkes (yalnızca dev).
     allowed_domains: tuple[str, ...] = ("beun.edu.tr", "ogrenci.beun.edu.tr")
@@ -48,6 +50,7 @@ class Settings:
         return cls(
             db_path=Path(_env("DB_PATH", str(cls.db_path))),
             rulesets_dir=Path(_env("RULESETS_DIR", str(cls.rulesets_dir))),
+            default_ruleset=_env("DEFAULT_RULESET", cls.default_ruleset),
             base_url=_env("BASE_URL", cls.base_url).rstrip("/"),
             allowed_domains=domains or cls.allowed_domains,
             dev=_env("DEV", "0") == "1",

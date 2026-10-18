@@ -1,0 +1,67 @@
+# Uşak Üniversitesi Lisansüstü Eğitim Enstitüsü — Fen ve Sağlık Alanları İçin Tez Yazım Kılavuzu (Uşak 2021)
+# Kaynak: https://lisansustu.usak.edu.tr/menu/8233  (enstitü sitesi "Tez Yazım Kılavuzları" menüsü; .docx dosyası)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: usak-lee-fen
+version: 1
+name: "Uşak Üniversitesi · Lisansüstü Eğitim Enstitüsü (Fen ve Sağlık Alanları)"
+source: "Uşak Üniversitesi Lisansüstü Eğitim Enstitüsü Fen ve Sağlık Alanları İçin Tez Yazım Kılavuzu, 2021"
+institution: "Uşak Üniversitesi"
+source_url: https://lisansustu.usak.edu.tr/menu/8233
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 standardında"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 3.5, right: 2.5 }   # 2.2 sol 3,5, alt ve üst 3, sağ 2,5 cm
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2 "12 punto"
+    line_spacing: 1.5           # 2.2 "1,5 satır aralığı"
+    alignment: justify          # 2.2 "iki yana yasla"
+    first_line_indent_cm: 1.27  # 2.2 "girinti bir tab (1,27 cm)"
+  heading_1:
+    size_pt: 14                 # 2.2 "birinci derece bölüm başlıkları ... 14 punto"
+    bold: true                  # 2.4 "büyük harflerle ve koyu"
+    all_caps: true              # 2.4
+    alignment: left             # 2.4 "sol sayfa boşluğuna dayalı"
+    page_break_before: true     # 2.4 "daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 2.2 "ikinci derece ve sonraki alt başlıklar ... 12 punto"
+    case: title                 # 2.4 "baş harfi büyük", bağlaçlar küçük
+    alignment: left             # 2.4
+  heading_3:
+    size_pt: 12                 # 2.2
+    case: title                 # 2.4
+    alignment: left             # 2.4
+  figure_caption:
+    # ÇELİŞKİ: 2.2 açıklamalar için 1,5 satır aralığı diyor, 2.12 çok satırlı açıklamalarda tek satır aralığı; satır aralığı denetlenmez.
+    case: sentence              # 2.12 "birinci kelimenin baş harfi büyük, diğerleri küçük"
+    alignment: center           # 2.12 "altına ortalı"
+    position: below             # 2.12
+  table_caption:
+    case: sentence              # 2.12
+    alignment: left             # 2.12 "çizelgenin üstüne sola dayalı"
+    position: above             # 2.12
+  reference_entry:
+    line_spacing: 1.5           # 2.2 "kaynak listesinin yazımında ise 1,5 satır aralığı"
+    first_line_indent_cm: -1.25 # 3.17 "2. ve daha sonraki satırlar 1.25 cm girintili"
+  footnote:
+    size_pt: 10                 # 2.6
+    line_spacing: 1.5           # 2.2 "dipnotlar ... 1,5 satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.3 ön kısım küçük Romen, Giriş'ten itibaren 1, 2, 3
+  position: bottom_right        # 2.3 "sayfanın sağ alt köşesinde"
+  forbid_decoration: true       # 2.3 "ayıraç, çizgi gibi karakterler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

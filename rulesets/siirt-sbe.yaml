@@ -1,0 +1,73 @@
+# Siirt Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Kılavuzu (.docx)
+# Belgede yıl yok; dosya son değişiklik 2025-01 (sitedeki dosya adı "...siirt-2025...").
+# Kaynak: https://sbe.siirt.edu.tr/dosya/personel/tez-yazim-klavuzu-siirt-202512916817488.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: siirt-sbe
+version: 1
+name: "Siirt Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Siirt Üniversitesi Sosyal Bilimler Enstitüsü Tez Yazım Kılavuzu, tarihsiz (dosya 2025)"
+institution: "Siirt Üniversitesi"
+source_url: https://sbe.siirt.edu.tr/dosya/personel/tez-yazim-klavuzu-siirt-202512916817488.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kâğıt Özelliği
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }   # Sayfa Düzeni
+
+fonts:
+  allowed: [Times New Roman]    # Yazım Özelliği
+
+roles:
+  body:
+    size_pt: 12                 # Yazım Özelliği "Metin kısmı 12 punto"
+    line_spacing: 1.5           # Yazım Özelliği "1,5 satır aralığı"
+    first_line_indent_cm: 1.5   # Başlık ve paragraf girintisi "1.5 cm içerden"
+    space_after_pt: 6           # Satır aralığı "paragraflar arasındaki boşluk 6 nk"
+  heading_1:
+    size_pt: 12                 # Yazım Özelliği
+    bold: true                  # Yazım Özelliği "BOLD"
+    all_caps: true              # Yazım Özelliği "BÜYÜK HARFLERLE"
+    line_spacing: 1.5           # Yazım Özelliği
+    alignment: left             # Başlık girintisi "sol kenardan"
+    space_before_pt: 18         # Satır aralığı "başlıkları öncesi 18 nk"
+    page_break_before: true     # "Özet, Bölümler, Sonuç, Kaynakça yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    size_pt: 12                 # Yazım Özelliği (birinci derece alt başlık)
+    bold: true                  # Yazım Özelliği
+    all_caps: true              # Yazım Özelliği "birinci derece alt başlıklar BÜYÜK HARFLERLE"
+    line_spacing: 1.5           # Yazım Özelliği
+    alignment: left             # Başlık girintisi "sol kenardan"
+    space_before_pt: 18         # Satır aralığı
+  heading_3:
+    size_pt: 12                 # Yazım Özelliği (ikinci derece alt başlık)
+    bold: true                  # Yazım Özelliği
+    case: title                 # Yazım Özelliği "ilk harfleri büyük diğerleri küçük"
+    line_spacing: 1.5           # Yazım Özelliği
+  figure_caption:
+    size_pt: 12                 # Tablolar, Şekiller "12 punto"
+    line_spacing: 1.0           # Tablolar, Şekiller "1 satır aralığı"
+    position: above             # Tablolar, Şekiller "Tablo, şekil ve resim başlıkları üstte"
+  table_caption:
+    size_pt: 12                 # Tablolar, Şekiller
+    line_spacing: 1.0           # Tablolar, Şekiller
+    position: above             # Tablolar, Şekiller
+  block_quote:
+    italic: true                # Alıntılar "italik"
+    line_spacing: 1.0           # Alıntılar "tek satır aralığıyla"
+    indent_left_cm: 1.0         # Alıntılar "sağdan ve soldan 1 cm içeriden"
+  footnote:
+    size_pt: 10                 # Yazım Özelliği
+    line_spacing: 1.0           # Yazım Özelliği
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # Numaralandırma "(I, II, III,…)" ve "1, 2, 3"
+  position: top_center          # Numaralandırma "üst ortaya"
+
+document:
+  forbid_tracked_changes: true

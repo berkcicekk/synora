@@ -1,0 +1,72 @@
+# Sabancı Üniversitesi — Thesis and Dissertation Format and Submission Handbook (Fall 2025, 11th Revision)
+# Kapsam: Graduate School of Engineering and Natural Sciences, Graduate School of Social Sciences,
+#         Sabancı Graduate Business School (handbook §1; enstitü şablonları önceliklidir)
+# Kaynak: https://fens.sabanciuniv.edu/sites/fens.sabanciuniv.edu/files/2026-01/handbook-11th-revision-fall-2025_eng.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: "4 x 1.5 spaces" gibi satır cinsinden boşluklar punto karşılığı verilmediği için kodlanmadı.
+ruleset: sabanci-gs
+version: 1
+name: "Sabancı Üniversitesi · Lisansüstü Okullar (FENS, FASS, SBS)"
+source: "Thesis and Dissertation Format and Submission Handbook, 11th Revision, 2025"
+institution: "Sabancı Üniversitesi"
+source_url: https://fens.sabanciuniv.edu/sites/fens.sabanciuniv.edu/files/2026-01/handbook-11th-revision-fall-2025_eng.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 paper"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.3
+
+fonts:
+  allowed: [Times New Roman, Latin Modern Roman]   # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2
+    line_spacing: 1.5           # 2.4 "One-and-a-half (1.5) spacing is preferred"
+    alignment: justify          # 2.3 "The text should be 'justified'"
+    first_line_indent_cm: 0     # 2.5 "Do not indent the first line of your paragraph"
+  heading_1:                    # bölüm (chapter) başlığı
+    size_pt: 12                 # 4.2 "Use a 12-point font size in all headings"
+    all_caps: true              # 4.1 "ALL CAPS"
+    alignment: center           # 4.1 "centered"
+    page_break_before: true     # 4.1 "Each chapter begins on a new page"
+  heading_2:                    # first-level subheading
+    size_pt: 12                 # 4.2
+    bold: true                  # 4.2
+    alignment: center           # 4.2 "Must be centered"
+    case: title                 # 4.2 "first letters of principal words capitalized"
+  heading_3:                    # second-level subheading
+    size_pt: 12                 # 4.2
+    bold: true                  # 4.2
+    alignment: left             # 4.2 "left justified"
+    case: title                 # 4.2 "first letters of principal words capitalized"
+  figure_caption:
+    size_pt: 12                 # 2.2 "figure captions ... 12-point"
+    line_spacing: 1.0           # 2.4 "Single spacing ... figure and table captions"
+    position: below             # 4.4 "Figure titles must be placed below the figure"
+  table_caption:
+    size_pt: 12                 # 2.2 "table headings ... 12-point"
+    line_spacing: 1.0           # 2.4
+    position: above             # 4.4 "Table titles must be placed above the table"
+  block_quote:
+    size_pt: 12                 # 2.2 "extensive quotations should be 12-point"
+    line_spacing: 1.0           # 2.4 "Single spacing ... block quotations"
+    indent_left_cm: 1.0         # 2.5 "indented one centimeter on the left and right margins"
+  reference_entry:
+    line_spacing: 1.0           # 2.4 "Single spacing ... the bibliography"
+  footnote:
+    size_pt: 9                  # 2.2 "Nine-point (9) font ... footnotes"
+    line_spacing: 1.0           # 2.4
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.6
+  position: bottom_center       # 2.6 "at the bottom of the page, centered"
+
+document:
+  forbid_tracked_changes: true

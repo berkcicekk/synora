@@ -1,0 +1,72 @@
+# İzmir Ekonomi Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (2019; Enstitü Kurulu 06/12/2019)
+# Kaynak: https://phoenix.ieu.edu.tr/betanix/uploads/cms/lisansustu.ieu.edu.tr/8156_1713251063.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ieu-lee
+version: 1
+name: "İzmir Ekonomi Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "İzmir Ekonomi Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2019"
+institution: "İzmir Ekonomi Üniversitesi"
+source_url: https://phoenix.ieu.edu.tr/betanix/uploads/cms/lisansustu.ieu.edu.tr/8156_1713251063.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 boyutunda (21x29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.3
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2, Tablo 1 "Metin (Tez ana metin) 12"
+    line_spacing: 1.5           # 2.2, Tablo 1
+    alignment: justify          # 2.4 "sağa ve sola yaslanarak"
+    # 2.2: paragraf aralığı/girinti serbest ("tutarlı bir şekilde"); denetlenmez
+  heading_1:
+    size_pt: 14                 # Tablo 1 "Bölüm Başlıkları 14 ... Koyu"
+    bold: true                  # Tablo 1
+    line_spacing: 1.5           # Tablo 1
+    page_break_before: true     # 2.2, 3.2 "Bölümler yeni sayfalarda başlamalıdır"
+  heading_2:
+    size_pt: 12                 # Tablo 1 "Alt bölüm Başlıkları 12 ... Koyu ve Eğik"
+    bold: true                  # Tablo 1
+    italic: true                # Tablo 1
+    line_spacing: 1.5           # Tablo 1
+  heading_3:
+    size_pt: 12                 # Tablo 1 (alt bölüm başlıkları)
+    bold: true                  # Tablo 1
+    italic: true                # Tablo 1
+    line_spacing: 1.5           # Tablo 1
+  figure_caption:
+    size_pt: 12                 # Tablo 1 "Şekil (Başlık) 12"
+    line_spacing: 1.5           # Tablo 1
+    position: below             # 3.2.1 "görselin altındaki satıra"
+  table_caption:
+    size_pt: 12                 # Tablo 1 "Tablo (Başlık) 12"
+    line_spacing: 1.5           # Tablo 1
+    position: above             # 3.2.1 "görselin üzerindeki satıra"
+  block_quote:
+    size_pt: 12                 # Tablo 1 "Alıntı 12 1,5 Eğik"
+    italic: true                # Tablo 1
+    line_spacing: 1.5           # Tablo 1
+  reference_entry:
+    size_pt: 12                 # Tablo 1 "Kaynaklar 12 1,5 Normal"
+    line_spacing: 1.5           # Tablo 1
+    alignment: justify          # 3.3 "sağa-sola hizalanmış"
+    first_line_indent_cm: 0     # 3.3 "girintisiz"
+  footnote:
+    size_pt: 10                 # Tablo 1 "Metin (Dipnot) 10"
+    line_spacing: 1.0           # Tablo 1, 3.2.4 "tek satır aralığında"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.6 a), b)
+  position: bottom_center       # 2.6 "alt orta bölgesinde"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,74 @@
+# Kırıkkale Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Yazım Kılavuzu (2026)
+# Kaynak: https://panel.kku.edu.tr/Content/sgbe/Lisans%C3%BCst%C3%BC%20Tez%20Yaz%C4%B1m%20Klavuzu%2014.08.2026.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: kirikkale-sabe
+version: 1
+name: "Kırıkkale Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Kırıkkale Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2026"
+institution: "Kırıkkale Üniversitesi"
+source_url: https://panel.kku.edu.tr/Content/sgbe/Lisans%C3%BCst%C3%BC%20Tez%20Yaz%C4%B1m%20Klavuzu%2014.08.2026.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 1.1
+  # 1.2: kenar boşlukları yalnızca Şekil 1.1/1.2 görsellerinde → denetlenmez
+
+fonts:
+  allowed: [Times New Roman]                # 1.3 "sadece Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                             # 1.3
+    line_spacing: 1.5                       # 1.5 "Tez metni 1,5 satır aralıklı"
+    alignment: justify                      # 1.2 "iki yana yasla"
+    space_before_pt: 6                      # 1.5 "Paragraflardan önce ve sonra 6 nk"
+    space_after_pt: 6                       # 1.5
+  heading_1:
+    size_pt: 16                             # 1.5
+    bold: true                              # 1.5 "hepsi koyu"
+    all_caps: true                          # 1.5 "tümü büyük harfle"
+    page_break_before: true                 # 1.5 "yeni sayfa başında olmalıdır"
+  heading_2:
+    size_pt: 14                             # 1.5
+    bold: true                              # 1.5
+    case: title                             # 1.5 "baş harfleri büyük", bağlaçlar küçük
+  heading_3:
+    size_pt: 12                             # 1.5
+    bold: true                              # 1.5
+    case: sentence                          # 1.5 "ilk harfler büyük diğerleri küçük"
+  figure_caption:
+    size_pt: 10                             # 1.7 "şeklin altına 10 punto ile"
+    line_spacing: 1.0                       # 1.5 "yine 1 satır aralığı"
+    alignment: center                       # 1.7 "ortalanmalıdır"
+    case: sentence                          # 1.7 "yalnızca baştaki sözcüğün ilk harfi büyük"
+    position: below                         # 1.7
+    space_before_pt: 6                      # 1.5 "Öğe yazısı altta ise ... öncesi 6 nk"
+    space_after_pt: 12                      # 1.5 "sonrasında 12 nk"
+  table_caption:
+    size_pt: 10                             # 1.7 "çizelgenin üstüne 10 punto ile"
+    line_spacing: 1.0                       # 1.5
+    alignment: center                       # 1.7
+    case: sentence                          # 1.7
+    position: above                         # 1.7
+    space_before_pt: 6                      # 1.5
+    space_after_pt: 12                      # 1.5
+  reference_entry:
+    size_pt: 12                             # 1.5 "kaynaklar ... 12 punto"
+    line_spacing: 1.0                       # 1.5 "1 satır aralığı"
+  footnote:
+    size_pt: 8                              # 1.10 "8 punto"
+    line_spacing: 1.0                       # 1.10 "bir satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.6 "küçük harf Roma rakamlarıyla", Girişten itibaren Latin
+  position: bottom_center                   # 1.6 "sayfanın alt orta kısmına"
+  forbid_decoration: true                   # 1.6 "nokta, parantez, çizgi vb. hiçbir işaret kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

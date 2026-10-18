@@ -1,0 +1,74 @@
+# İstanbul Aydın Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (Aralık 2021)
+# Kaynak: https://www.aydin.edu.tr/tr-tr/akademik/lisansustu-egitim-enstitusu/Documents/Tez%20ve%20Proje%20Yaz%C4%B1m%20K%C4%B1lavuzu%20(T%C3%BCrk%C3%A7e).pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Madde harfleri kılavuzun "Şekil Şartları" kısmındaki A–F alt başlıklarıdır.
+ruleset: aydin-lee
+version: 1
+name: "İstanbul Aydın Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Tez Yazım Kılavuzu, Aralık 2021"
+institution: "İstanbul Aydın Üniversitesi"
+source_url: "https://www.aydin.edu.tr/tr-tr/akademik/lisansustu-egitim-enstitusu/Documents/Tez%20ve%20Proje%20Yaz%C4%B1m%20K%C4%B1lavuzu%20(T%C3%BCrk%C3%A7e).pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # A "A4 boyutunda (21 x 29.7 cm)"
+  # A: alt, üst ve dış 2,5 cm, iç 4 cm (çift yüz basımda karşılıklı kenar boşlukları)
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }
+
+fonts:
+  allowed: [Times New Roman]    # B
+
+roles:
+  body:
+    size_pt: 12                 # B (Arapça tezlerde 14 punto)
+    line_spacing: 1.5           # B, E
+    alignment: justify          # B, E "iki yana yaslanmış"
+    first_line_indent_cm: 1.0   # E "soldan bir 1 cm. içeriden"
+    space_before_pt: 6          # E "paragraflardan önce ve sonra 6 punto boşluk"
+    space_after_pt: 6           # E
+  heading_1:
+    size_pt: 14                 # C
+    bold: true                  # C "koyu renk"
+    all_caps: true              # C "tüm kelimeler büyük harflerle"
+    alignment: left             # C "sola dayalı"
+    space_before_pt: 72         # C "her başlıktan önce 72 nk"
+    space_after_pt: 18          # C "sonra 18 nk"
+  heading_2:
+    size_pt: 12                 # C
+    bold: true                  # C
+    alignment: left             # C
+    case: title                 # C "her kelimenin ilk harfi büyük ... bağlaçlar küçük"
+    space_before_pt: 18         # C
+    space_after_pt: 12          # C
+  heading_3:
+    size_pt: 12                 # C
+    bold: true                  # C
+    alignment: left             # C
+    case: title                 # C
+    space_before_pt: 12         # C
+    space_after_pt: 6           # C
+  table_caption:
+    position: above             # Şekil ve Çizelgeler "çizelgenin üstüne"
+    space_before_pt: 6          # "Yazıdan önce 6 nk"
+    space_after_pt: 6           # "sonra 6 nk"
+  figure_caption:
+    position: below             # Şekil ve Çizelgeler "şeklin altına"
+    space_before_pt: 6
+    space_after_pt: 6
+  footnote:
+    size_pt: 10                 # D
+    line_spacing: 1.0           # D "tek satır aralığı"
+
+page_numbering:
+  # F: başlangıç bölümü küçük Romen (i, ii…), Girişten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_right        # F "sağ alt köşede"
+
+document:
+  forbid_tracked_changes: true

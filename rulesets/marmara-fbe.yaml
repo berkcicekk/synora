@@ -1,0 +1,63 @@
+# Marmara Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Programlarda Tez Yazım Kılavuzu (İstanbul, 2012)
+# Enstitünün öğrenci formları sayfasında hâlâ güncel kılavuz olarak bağlantılı (şablon 10.03.2026 tarihli).
+# Kaynak: http://dosya.marmara.edu.tr/fbe/tez_formlari/FBE_Tez_Yaz_m_K_lavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: marmara-fbe
+version: 1
+name: "Marmara Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Marmara Üniversitesi Fen Bilimleri Enstitüsü Lisansüstü Programlarda Tez Yazım Kılavuzu, 2012"
+institution: "Marmara Üniversitesi"
+source_url: "http://dosya.marmara.edu.tr/fbe/tez_formlari/FBE_Tez_Yaz_m_K_lavuzu.pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.2 "A4 standardında (21 x 29,7 cm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 3.0, right: 3.0 }   # 4.1 "alt, üst, sağ ve sol kenarından 3 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 4.2
+
+roles:
+  body:
+    size_pt: 12                 # 4.2 "12 punto Times New Roman"
+    line_spacing: 1.5           # 4.2 "1.5 satır aralığında"
+    alignment: justify          # 4.1, 4.2 "iki yana yaslanmış"
+    space_before_pt: 6          # 4.2 "Paragraflardan önce ve sonra 6 nk"
+    space_after_pt: 6           # 4.2
+  heading_1:
+    bold: true                  # 3 "büyük ve koyu harflerle"
+    all_caps: true              # 3
+    alignment: left             # 4.2 "Tüm başlıklar sola dayalı"
+    space_before_pt: 12         # 4.2 "başlıklardan önce ve sonra 12 nk"
+    space_after_pt: 12          # 4.2
+    page_break_before: true     # 3 "okuma yönünde, sağ sayfadan başlamalı"
+  heading_2:
+    bold: true                  # 3 "koyu"
+    case: title                 # 3 "kelimelerin ilk harfleri büyük"
+    alignment: left             # 4.2
+    space_before_pt: 12         # 4.2
+    space_after_pt: 12          # 4.2
+  heading_3:
+    bold: true                  # 3 "koyu ve sadece ilk harfi büyük"
+    case: sentence              # 3
+    alignment: left             # 4.2
+    space_before_pt: 12         # 4.2
+    space_after_pt: 12          # 4.2
+  figure_caption:
+    position: below             # 4.3 "şeklin altına"
+  table_caption:
+    position: above             # 4.3 "tablonun üstüne"
+
+page_numbering:
+  # 1 (sayfa numarası tablosu): ön sayfalar küçük Romen (i, ii, iii), Bölüm 1'den itibaren Arap rakamı
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 1 tablo "alt orta"
+
+document:
+  forbid_tracked_changes: true

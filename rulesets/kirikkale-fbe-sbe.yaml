@@ -1,0 +1,79 @@
+# Kırıkkale Üniversitesi Fen Bilimleri / Sosyal Bilimler Enstitüsü — Tez Yazım Kılavuzu (2021; SBE "2025 güncel" kopyası)
+# Kaynak: https://panel.kku.edu.tr/Content/sbe/1DENEME/Lisansu%CC%88stu%CC%88%20Tez%20Yaz%C4%B1m%20Klavuzu_2025%20g%C3%BCncel.pdf
+# (Kapak "FEN BİLİMLERİ / SAĞLIK BİLİMLERİ / SOSYAL BİLİMLER ENSTİTÜSÜ, KIRIKKALE-2021". Aynı metin FBE
+#  sitesinde ve rektörlük mevzuat sayfasında da var. Sağlık Bilimleri 2026'da ayrı kılavuz yayımladı → kirikkale-sabe.)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: kirikkale-fbe-sbe
+version: 1
+name: "Kırıkkale Üniversitesi · Fen Bilimleri ve Sosyal Bilimler Enstitüleri"
+source: "Kırıkkale Üniversitesi Lisansüstü Tez Yazım Kılavuzu, 2021 (SBE 2025 güncel)"
+institution: "Kırıkkale Üniversitesi"
+source_url: https://panel.kku.edu.tr/Content/sbe/1DENEME/Lisansu%CC%88stu%CC%88%20Tez%20Yaz%C4%B1m%20Klavuzu_2025%20g%C3%BCncel.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 1.1
+  # 1.2: kenar boşlukları yalnızca Şekil 1.1/1.2 (tek/çift sayfa düzeni) görsellerinde → denetlenmez
+
+fonts:
+  allowed: [Times New Roman]                # 1.3 "sadece Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                             # 1.3
+    line_spacing: 1.5                       # 1.5 "Tez metni 1,5 satır aralıklı"
+    alignment: justify                      # 1.2 "iki yana yasla"
+    space_before_pt: 6                      # 1.5 "Paragraflardan önce ve sonra 6 nk"
+    space_after_pt: 6                       # 1.5
+  heading_1:
+    size_pt: 16                             # 1.5
+    bold: true                              # 1.5 "başlıklarının hepsi koyudur"
+    all_caps: true                          # 1.5 "büyük harfle"
+    page_break_before: true                 # 1.5 "yeni sayfa başında olmalıdır"
+    space_before_pt: 72                     # 1.5 "önce 72 nk"
+    space_after_pt: 18                      # 1.5 "sonra 18 nk"
+  heading_2:
+    size_pt: 14                             # 1.5
+    bold: true                              # 1.5
+    case: title                             # 1.5 "her sözcüğün ilk harfi büyük"
+    space_before_pt: 18                     # 1.5
+    space_after_pt: 12                      # 1.5
+  heading_3:
+    size_pt: 12                             # 1.5
+    bold: true                              # 1.5
+    case: title                             # 1.5
+    space_before_pt: 12                     # 1.5
+    space_after_pt: 6                       # 1.5
+  figure_caption:
+    line_spacing: 1.0                       # 1.5 "şekillerin isim ve açıklamaları ... 1 satır aralıklı"
+    alignment: center                       # 1.7 "altına yazılmalı ve ortalanmalıdır"
+    case: sentence                          # 1.7 "yalnızca baştaki sözcüğün ilk harfi büyük"
+    position: below                         # 1.7
+    space_before_pt: 6                      # 1.5 "Öğe yazısı altta ise ... öncesi 6 nk"
+    space_after_pt: 12                      # 1.5 "sonrasında 12 nk"
+  table_caption:
+    line_spacing: 1.0                       # 1.5
+    alignment: center                       # 1.7 "üstüne yazılmalı ve ortalanmalıdır"
+    case: sentence                          # 1.7
+    position: above                         # 1.7
+    space_before_pt: 6                      # 1.5
+    space_after_pt: 12                      # 1.5
+  reference_entry:
+    line_spacing: 1.0                       # 1.5 "kaynaklar ... 1 satır aralıklı"
+  footnote:
+    size_pt: 8                              # 1.10 "8 punto"
+    line_spacing: 1.0                       # 1.5, 1.10
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # 1.6 Romen (örnek "I", "IV"), Girişten itibaren Latin rakamı
+  position: bottom_center                   # 1.6 "kâğıdın alt orta kısmına"
+  forbid_decoration: true                   # 1.6 "nokta, parantez, çizgi vb. hiçbir işaret kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,83 @@
+# Beykoz Üniversitesi Lisansüstü Programlar Enstitüsü — Yüksek Lisans Tezi Yazım Kılavuzu (İstanbul 2026; .docx şablon-kılavuz)
+# Kaynak: https://www.beykoz.edu.tr/uploads/2026/07/bnffrvse6xf1m-tez-yazim-kilavuzu-1-1-1.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: beykoz-lpe
+version: 1
+name: "Beykoz Üniversitesi · Lisansüstü Programlar Enstitüsü"
+source: "Beykoz Üniversitesi Lisansüstü Programlar Enstitüsü Yüksek Lisans Tezi Yazım Kılavuzu, 2026"
+institution: "Beykoz Üniversitesi"
+source_url: "https://www.beykoz.edu.tr/uploads/2026/07/bnffrvse6xf1m-tez-yazim-kilavuzu-1-1-1.docx"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  # 2.4: kağıt boyutu açıkça belirtilmemiş
+  margins_cm: { top: 3.5, bottom: 2.0, left: 3.5, right: 2.0 }   # 2.4 Kenar Boşlukları
+
+fonts:
+  allowed: [Times New Roman]    # 2.1
+
+roles:
+  body:
+    size_pt: 12                 # 2.1 "metinde yazı tipi boyutu 12 punto"
+    line_spacing: 1.5           # 2.2 "Satır aralığı 1,5"
+    alignment: justify          # 2.3 "iki yana yaslı"
+    space_before_pt: 0          # 2.2 "paragraftan önce 0 nk"
+    space_after_pt: 10          # 2.2 "sonra 10 nk"
+  heading_1:
+    size_pt: 14                 # 2.6.1 "14 puntoyla"
+    bold: true                  # 2.6.1 "kalın"
+    all_caps: true              # 2.6.1 "büyük harflerle"
+    line_spacing: 1.5           # 2.6.1
+    space_after_pt: 24          # 2.6.1 "başlık sonrası 24 nk"
+    page_break_before: true     # 2.6.1 "yeni bir sayfada başlamalılar"
+  heading_2:
+    size_pt: 12                 # 2.6.2
+    bold: true                  # 2.6.2
+    alignment: left             # 2.6.2 "sola yaslı"
+    case: title                 # 2.6.2 "Her kelimenin ilk harfi büyük"
+    line_spacing: 1.5           # 2.6.2
+    space_before_pt: 24         # 2.6.2 "Önce 24 nk"
+    space_after_pt: 24          # 2.6.2 "Sonra 24 nk"
+  heading_3:
+    size_pt: 12                 # 2.6.3
+    bold: true                  # 2.6.3
+    alignment: left             # 2.6.3
+    case: title                 # 2.6.3
+    line_spacing: 1.5           # 2.6.3
+    space_before_pt: 24         # 2.6.3
+    space_after_pt: 24          # 2.6.3
+  table_caption:
+    size_pt: 12                 # 2.1, Tablo ve Şekiller "başlıkları 12 punto"
+    alignment: left             # Tablo ve Şekiller "sola dayalı"
+    case: sentence              # Tablo ve Şekiller "sadece ilk harf büyük"
+    line_spacing: 1.5           # Tablo ve Şekiller
+    space_before_pt: 12         # Tablo ve Şekiller "12 nk önce"
+    space_after_pt: 12          # Tablo ve Şekiller "12 nk sonra"
+  figure_caption:
+    size_pt: 12                 # 2.1
+    alignment: left             # Tablo ve Şekiller
+    case: sentence              # Tablo ve Şekiller
+    line_spacing: 1.5           # Tablo ve Şekiller
+    space_before_pt: 12         # Tablo ve Şekiller
+    space_after_pt: 12          # Tablo ve Şekiller
+  block_quote:
+    size_pt: 12                 # 2.1 "kapsamlı alıntılar da 12 punto"
+    line_spacing: 2.0           # 2.2 "Uzun blok alıntılar - çift aralık"
+    indent_left_cm: 1.0         # 2.8.1 "sol kenardan 1 cm girintili"
+  footnote:
+    size_pt: 10                 # 2.7 "10 punto" — ÇELİŞKİ: 2.1 "Dipnotlar ... da 12 punto olmalıdır"
+    line_spacing: 1.0           # 2.2, 2.7 "tek satır aralığı"
+
+page_numbering:
+  # 2.5: Giriş'e kadar küçük Romen (i, ii, iii), sonrası 1, 2, 3; konum "şablonun varsayılan konumu" (açıkça yazılmamış)
+  formats_in_order: [lowerRoman, decimal]
+  forbid_decoration: true       # 2.5 "tire veya nokta gibi noktalama işaretleri eşlik etmemelidir"
+
+document:
+  forbid_tracked_changes: true

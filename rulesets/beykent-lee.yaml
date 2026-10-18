@@ -1,0 +1,68 @@
+# İstanbul Beykent Üniversitesi Fen Bilimleri / Sosyal Bilimler Enstitüsü — Lisansüstü Tez ve Proje Yazım Kılavuzu (İstanbul, 2013)
+# Kılavuz bugün Lisansüstü Eğitim Enstitüsü sitesinde yayımlanıyor.
+# Kaynak: https://lisansustu.beykent.edu.tr/docs/librariesprovider5/tez-formlari/lisansustu-tez-ve-proje-yazim-kilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: beykent-lee
+version: 1
+name: "İstanbul Beykent Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Lisansüstü Tez ve Proje Yazım Kılavuzu, 2013"
+institution: "İstanbul Beykent Üniversitesi"
+source_url: https://lisansustu.beykent.edu.tr/docs/librariesprovider5/tez-formlari/lisansustu-tez-ve-proje-yazim-kilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 3.0, bottom: 3.0, left: 3.5, right: 3.0 }   # 2.1.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.1.1 "Yazı tipi tüm yazım boyunca Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 2.1.1
+    line_spacing: 1.5           # 2.1.3
+    alignment: justify          # 2.1.3 "iki yanına yaslanmış"
+    first_line_indent_cm: 1.25  # 2.1.3 "Özel (ilk satır) Değer (1,25cm)"
+    space_before_pt: 0          # 2.1.3 "Önce (0nk)"
+    space_after_pt: 12          # 2.1.3 "Sonra (12nk)"
+  heading_1:
+    size_pt: 12                 # 3.1 ii
+    bold: true                  # 3.1 ii
+    all_caps: true              # 3.1 ii "büyük harflerle"
+    page_break_before: true     # 3.1 i "yeni bir sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # 3.1 iii
+    alignment: left             # 3.1 iv "sola yaslı"
+  heading_3:
+    size_pt: 12                 # 3.1 iii
+    alignment: left             # 3.1 iv
+  table_caption:
+    bold: true                  # 2.9 "koyu harflerle"
+    alignment: center           # 2.9 "ortalanmış"
+    position: above             # 2.9 "tablonun üstünde"
+  figure_caption:
+    bold: true                  # 2.9
+    alignment: center           # 2.9 "ortalanarak"
+    position: below             # 2.9 "şeklin altında"
+  footnote:
+    size_pt: 10                 # 2.1.3, 3.4.1 iii
+    line_spacing: 1.0           # 2.1.3 "satır aralığı (tek)"
+  reference_entry:
+    size_pt: 12                 # 3.7.1 ii
+    alignment: justify          # 3.7.1 v
+    line_spacing: 1.5           # 3.7.1 v
+    space_before_pt: 12         # 3.7.1 v "Önce (12nk)"
+    space_after_pt: 12          # 3.7.1 v "Sonra (12nk)"
+
+page_numbering:
+  # 2.2: ön kısım küçük Romen (i, ii, iii…), GİRİŞ'ten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.2 "sayfanın altına ortalanarak"
+
+document:
+  forbid_tracked_changes: true

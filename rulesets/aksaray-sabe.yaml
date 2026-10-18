@@ -1,0 +1,65 @@
+# Aksaray Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Enstitü Kurulu 18.09.2025)
+# Kaynak: https://saglikbe.aksaray.edu.tr/dosya/63cc2c3d-587f-4949-8c4d-5ee40abbf72e.pdf
+# Madde numarası yok; yorumlar kılavuzun sayfa numarasını anar.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: aksaray-sabe
+version: 1
+name: "Aksaray Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Aksaray Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2025"
+institution: "Aksaray Üniversitesi"
+source_url: https://saglikbe.aksaray.edu.tr/dosya/63cc2c3d-587f-4949-8c4d-5ee40abbf72e.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # s.5 Kenar Boşlukları
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # s.5 "sol (cilt) kenarında 4 cm, üst, alt ve sağ ... 2.5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # s.4 Yazım Ortamı (a)
+
+roles:
+  body:
+    size_pt: 12                 # s.4 (a) "metin kısmı dahil 12 punto"
+    line_spacing: 1.5           # s.5, s.8 "bir buçuk (1,5) satır aralıklı"
+    alignment: justify          # s.8 "Paragraf iki yana yaslı"
+  heading_1:
+    size_pt: 12                 # s.4 (a) "Ana bölüm başlıkları ... 12 punto"
+    bold: true                  # s.4 (c) "Tüm bölüm başlıklarında kalın"
+    all_caps: true              # s.4 (c) "Ana bölüm başlıkları büyük harf"
+    alignment: left             # s.8 "Ana bölüm başlıkları sola yaslı"
+    page_break_before: true     # s.8 "daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    size_pt: 12                 # s.4 (a)
+    bold: true                  # s.4 (c)
+    case: title                 # s.4 (c) "her kelimenin ilk harfi büyük"
+    alignment: left             # s.8 "Alt bölüm başlıkları ... sola dayalı"
+  heading_3:
+    size_pt: 12                 # s.4 (a)
+    bold: true                  # s.4 (c)
+    case: title                 # s.4 (c)
+    alignment: left             # s.8
+  table_caption:
+    size_pt: 12                 # s.4 (d) "Tablo ve şekil adları / başlıkları 12 punto"
+    line_spacing: 1.0           # s.8 "Şekil ve tablo başlık yazıları ... tek (1) satır aralığı"
+    position: above             # s.10 "Tablo başlıkları tabloların üstüne"
+  figure_caption:
+    size_pt: 12                 # s.4 (d)
+    line_spacing: 1.0           # s.8
+    position: below             # s.10 "şekil açıklamaları ise şeklin altına"
+  footnote:
+    size_pt: 10                 # s.4 (b), s.12 "10 punto"
+    line_spacing: 1.0           # s.8, s.12 "1 satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # s.6 ön sayfalar "i, ii, iii", GİRİŞ'ten "1, 2, 3"
+  position: bottom_center       # s.6 "sayfa altında orta kısma"
+  forbid_decoration: true       # s.6 "ayıraç, çizgi vb. gibi bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

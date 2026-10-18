@@ -1,0 +1,51 @@
+# Yüksek İhtisas Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Eğitim-Öğretim Tez Yazım Kılavuzu
+# (15.03.2019 Enstitü Yönetim Kurulu kabulü; ek örnekleri Ağustos 2024 tarihli)
+# Kaynak: https://yuksekihtisasuniversitesi.edu.tr/Uploads/akademik_view/enstitu_view/icerik_yonetimi_view/2f88769d686faeb93ee338ac3a11ca5e.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Punto yazı tipine bağlı (TNR 12, Verdana 10, Arial 10, Bookman 11, Palatino 12) → size_pt yazılmadı (2.4).
+# Paragraf girintisi serbest (1,5 cm girinti VEYA paragraflar arası 1 satır, 2.6) → yazılmadı.
+ruleset: yuksekihtisas-lee
+version: 1
+name: "Yüksek İhtisas Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Yüksek İhtisas Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2019"
+institution: "Yüksek İhtisas Üniversitesi"
+source_url: https://yuksekihtisasuniversitesi.edu.tr/Uploads/akademik_view/enstitu_view/icerik_yonetimi_view/2f88769d686faeb93ee338ac3a11ca5e.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1
+  margins_cm: { top: 3.5, bottom: 2.0, left: 4.0, right: 2.0 }   # 2.2
+
+fonts:
+  # 2.4: tercihen Times New Roman; diğer standart yazı tipleri Verdana, Arial, Bookman, Palatino
+  allowed: [Times New Roman, Verdana, Arial, Bookman Old Style, Palatino Linotype]
+
+roles:
+  body:
+    line_spacing: 1.5           # 2.4, 2.6
+  heading_1:
+    bold: true                  # 2.4 "Ana başlıklar ... koyu (bold)"
+  heading_2:
+    bold: true                  # 2.4 "alt başlıklar koyu (bold)"
+  heading_3:
+    bold: true                  # 2.4
+  figure_caption:
+    line_spacing: 1.0           # 2.4, 2.9 "1 tam aralıkla"
+    position: below             # 2.9 "şekil altına"
+  table_caption:
+    line_spacing: 1.0           # 2.4, 2.9
+    alignment: center           # 2.9 "tablonun üstüne ortalanarak"
+    position: above             # 2.9
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.3
+  position: top_right           # 2.3 "sağ üst kısmına"
+
+document:
+  forbid_tracked_changes: true

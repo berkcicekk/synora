@@ -1,0 +1,71 @@
+# Kütahya Dumlupınar Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez ve Rapor Yazım Kılavuzu (2026)
+# Kaynak: https://birimler.dpu.edu.tr/app/views/panel/ckfinder/userfiles/183/files/k_lavuz.docx
+# (LEE "Tez Yazım Kılavuzu" sayfasında .docx olarak yayımlanıyor; dosya tarihi Haziran 2026. Aynı sayfada eski
+#  FBE/SBE/EBE kılavuzları da duruyor; LEE kılavuzu esas alındı. Madde numarası yok, kaynak yerleri alt başlık adıyla.)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: dpu-lee
+version: 1
+name: "Kütahya Dumlupınar Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "KDPÜ Lisansüstü Eğitim Enstitüsü Tez ve Rapor Yazım Kılavuzu, 2026"
+institution: "Kütahya Dumlupınar Üniversitesi"
+source_url: https://birimler.dpu.edu.tr/app/views/panel/ckfinder/userfiles/183/files/k_lavuz.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # Kağıt Ölçüsü ve Gramajı
+  # Kenar Boşlukları: tek yönlü baskı değerleri (çift yönlü baskıda arka sayfalarda sol 2 / sağ 4 cm)
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.0 }
+
+fonts:
+  allowed: [Times New Roman]                # Yazı Tipi ve Boyutu
+
+roles:
+  body:
+    size_pt: 12                             # Yazı Tipi ve Boyutu
+    line_spacing: 1.5                       # Satır Araları "Satır aralığı ise 1,5"
+    alignment: justify                      # Paragraflar "iki yana yasla"
+    first_line_indent_cm: 1.5               # Paragraflar "sol kenarından 1,5 cm içeriden başlar"
+    space_before_pt: 6                      # Satır Araları "yukarıdan 6 nk"
+    space_after_pt: 6                       # Satır Araları "aşağıdan da 6 nk"
+  heading_1:
+    # "Bölüm başlıkları" ayrı bölüm kapağı sayfasında → heading_1
+    size_pt: 12                             # Başlıklar
+    bold: true                              # Başlıklar
+    all_caps: true                          # "bütün sözcükler büyük harfle"
+    alignment: center                       # "metin ortalanır"
+    page_break_before: true                 # "tek sayfada (bölüm kapağı)"
+  heading_2:
+    # "Birinci düzey başlıklar" → heading_2
+    size_pt: 12                             # Başlıklar
+    bold: true                              # Başlıklar
+    all_caps: true                          # "bütün sözcükler büyük harfle"
+    alignment: left                         # "sol kenardan hizalanır"
+  heading_3:
+    # "İkinci ve daha alt düzeylerdeki başlıklar" → heading_3
+    size_pt: 12                             # Başlıklar
+    bold: true                              # Başlıklar
+    case: title                             # "bütün sözcüklerin ilk harfleri büyük"
+    alignment: left                         # Başlıklar
+  block_quote:
+    size_pt: 10                             # Yazı Tipi ve Boyutu; Alıntılar "10 punto"
+    italic: true                            # Alıntılar "italik"
+    indent_left_cm: 1.0                     # Paragraflar, Alıntılar "soldan ve sağdan 1 cm"
+    # ÇELİŞKİ: satır aralığı bir yerde 1.5 ("Alıntılar"), başka yerde 1 ("Satır Araları", "Doğrudan alıntı") → denetlenmez
+  reference_entry:
+    space_before_pt: 6                      # Satır Araları "Kaynakçada ... alttan ve üstten 6 nk"
+    space_after_pt: 6                       # Satır Araları
+    # ÇELİŞKİ: satır aralığı "Satır Araları"nda 1,5; "Kaynakça" bölümünde kaynak içi 1 → denetlenmez
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Sayfa Numaraları
+  position: top_right                       # Sayfa Numaraları "yazı çerçevesinin sağ üst köşesine"
+  forbid_decoration: true                   # Sayfa Numaraları "parantez, çizgi vb. işaretler kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

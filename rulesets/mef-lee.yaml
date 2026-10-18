@@ -1,0 +1,68 @@
+# MEF Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez ve Proje Yazım Kılavuzu (2026)
+# Kaynak: https://www.datocms-assets.com/99182/1791108957-mef_tez_proje_yazim_kilavuzu_lee_2026.pdf
+#   (mef.edu.tr "Tez / Proje Yazım Kılavuzu" sayfasından bağlantılı; MEF web sitesinin içerik CDN'i)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: mef-lee
+version: 1
+name: "MEF Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "MEF Üniversitesi Lisansüstü Eğitim Enstitüsü Tez ve Proje Yazım Kılavuzu, 2026"
+institution: "MEF Üniversitesi"
+source_url: https://www.datocms-assets.com/99182/1791108957-mef_tez_proje_yazim_kilavuzu_lee_2026.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "297 mm X 210 mm boyutunda, A4"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3
+    line_spacing: 1.5           # 2.4 "1,5 satır aralığı"
+    alignment: justify          # 2.8 "iki yana yaslanmalıdır"
+    first_line_indent_cm: 1.27  # 2.4 "soldan 1,27 cm (0,5 inç) girintili"
+    space_before_pt: 0          # 2.4 "Önce ... 0 nk"
+    space_after_pt: 0           # 2.4 "Sonra ... 0 nk"
+  heading_1:
+    size_pt: 12                 # 2.3, 3.2.1 "12 punto (bold)"
+    bold: true                  # 2.3, 3.2.1
+    all_caps: true              # 3.2.1 "kalın ve büyük harflerle"
+    page_break_before: true     # 3.2.1 "Yeni bir bölüm yeni bir sayfada başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 2.3 "alt başlıklar ... 12 punto (bold)"
+    bold: true                  # 2.3
+  heading_3:
+    size_pt: 12                 # 2.3
+    bold: true                  # 2.3
+  figure_caption:
+    size_pt: 12                 # 3.2.2 "metnin geri kalanında kullanılan yazı boyutu ve tipiyle aynı"
+    bold: false                 # 3.2.2 "kalın harfle yazılmamalıdır"
+    line_spacing: 1.0           # 2.4 "tablo/resim etiketleri tek satır aralığı"
+    position: below             # 3.2.2 "şeklin en alt sınırının ... altına"
+  table_caption:
+    size_pt: 12                 # 3.2.2
+    bold: false                 # 3.2.2
+    line_spacing: 1.0           # 2.4
+    position: above             # 3.2.2 "tablonun en üst sınırının ... üstüne"
+  block_quote:
+    line_spacing: 1.0           # 2.4, 3.2.4 "girintili ve tek satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # 2.4 "kaynakça/referanslar ... tek satır aralığı" — ÇELİŞKİ: 3.3 "tek satır (1,5 satır) aralığı"
+  footnote:
+    size_pt: 10                 # 2.3, 2.5 "10 punto"
+    line_spacing: 1.0           # 2.4, 2.5 "tek (1) satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.10
+  position: bottom_right        # 2.2 "sayfanın sağ alt kenarında"; 2.10 "sağ tarafında"
+
+document:
+  forbid_tracked_changes: true

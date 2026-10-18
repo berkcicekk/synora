@@ -1,0 +1,66 @@
+# Boğaziçi Üniversitesi Sosyal Bilimler Enstitüsü — Guidelines for the Preparation of Theses and Dissertations (Nisan 2026)
+# Kaynak: https://mediastore.cc.bogazici.edu.tr/web/userfiles/files/guidelines_2026_revised.pdf
+# (Enstitü sayfası: https://sbe.bogazici.edu.tr/en/pages/style-guide-for-theses/2914)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: boun-sbe
+version: 1
+name: "Boğaziçi Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Boğaziçi University SBE Guidelines for the Preparation of Theses and Dissertations, 2026"
+institution: "Boğaziçi Üniversitesi"
+source_url: https://mediastore.cc.bogazici.edu.tr/web/userfiles/files/guidelines_2026_revised.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # s.15 Margins "Page size should be A4"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # s.15 Margins
+
+fonts:
+  allowed: [Times New Roman, Times]   # s.15 "Use Times or Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # s.15 "size 12 throughout"
+    line_spacing: 2.0           # s.16 "must be double-spaced"
+    alignment: left             # s.16 "aligned left, not justified"
+    bold: false                 # s.15 "Do not use bold or underlining anywhere"
+    # s.16 paragraf girintisi "approximately 1.25–1.50 cm" → aralık olduğu için denetlenmez
+  heading_1:
+    all_caps: true              # s.17 "must be capitalized"
+    alignment: center           # s.17 "centered at the top of the page"
+    bold: false                 # s.15
+    page_break_before: true     # s.17 "must begin at the top margin of a new page"
+  heading_2:
+    alignment: left             # s.18 "aligned with the left margin, not indented or centered"
+    bold: false                 # s.18 "not bold or underlined"
+    case: sentence              # s.18 "sentence-case"
+  heading_3:
+    alignment: left             # s.18
+    bold: false                 # s.18
+    case: sentence              # s.18
+  table_caption:
+    position: above             # s.22 "immediately above the table, aligned to the left"
+    alignment: left             # s.22
+    case: title                 # s.22 "Table titles must use title case"
+  figure_caption:
+    position: below             # s.22 "immediately below the figure"
+  block_quote:
+    line_spacing: 1.0           # s.16 "block quotations, which must be single-spaced"
+  footnote:
+    size_pt: 10                 # s.15, s.18
+    line_spacing: 1.0           # s.16, s.18
+    alignment: left             # s.18 "should not be justified"
+  reference_entry:
+    line_spacing: 1.0           # s.14 "Individual entries are to be single-spaced"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # s.16-17 Pagination
+  position: bottom_center       # s.16 "bottom of the page, centered"
+
+document:
+  forbid_tracked_changes: true

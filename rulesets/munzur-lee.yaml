@@ -1,0 +1,71 @@
+# Munzur Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (Tunceli 2020)
+# Kaynak: https://cdn.munzur.edu.tr/lee/lisansustu-egitim-enstitusu-tez-yazim-kilavuzu.doc
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: munzur-lee
+version: 1
+name: "Munzur Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Munzur Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2020"
+institution: "Munzur Üniversitesi"
+source_url: https://cdn.munzur.edu.tr/lee/lisansustu-egitim-enstitusu-tez-yazim-kilavuzu.doc
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "DIN-A4 normuna uygun (210×297 mm)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.0, right: 2.5 }   # 2.1 "üst ve sol 3 cm, alt ve sağ 2,5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2 "12 punto"
+    line_spacing: 1.5           # 2.4 "bütün metin 1,5 satır aralıkla"
+    first_line_indent_cm: 1.25  # 2.4 "1,25 tab boşluk (1,25 cm)"
+  heading_1:
+    bold: true                  # 2.5
+    all_caps: true              # 2.5 "büyük harflerle"
+    first_line_indent_cm: 1.25  # 2.5 "tüm başlıklar 1,25 cm girintili"
+    page_break_before: true     # 2.5 "daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    bold: true                  # 2.5
+    case: title                 # 2.5 birinci düzey alt başlık: kelimelerin ilk harfleri büyük, bağlaçlar küçük
+    first_line_indent_cm: 1.25  # 2.5
+  heading_3:
+    bold: true                  # 2.5
+    case: sentence              # 2.5 ikinci düzey ve sonrası: yalnız ilk kelimenin ilk harfi büyük
+    first_line_indent_cm: 1.25  # 2.5
+  figure_caption:
+    size_pt: 12                 # 4.2.3
+    line_spacing: 1.0           # 2.4, 4.2.3
+    case: sentence              # 4.2.3 "(ilk kelime hariç) ilk harfleri küçük"
+    alignment: left             # 4.2.3 "sola yaslı"
+    position: below             # 4.2.3 "şeklin altına"
+  table_caption:
+    size_pt: 12                 # 4.2.4
+    line_spacing: 1.0           # 2.4, 4.2.4
+    case: sentence              # 4.2.4
+    alignment: left             # 4.2.4 "sayfanın sol kenarına dayalı"
+    position: above             # 4.2.4 "tablonun üstüne"
+  block_quote:
+    size_pt: 10                 # 4.2.2 "10 punto"
+    italic: true                # 4.2.2 "italik yazılmalıdır"
+    line_spacing: 1.0           # 4.2.2 "tek satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # 2.4 "kaynaklar ... 1 satır aralıkta"
+  footnote:
+    size_pt: 10                 # 2.2
+    line_spacing: 1.0           # 2.4
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # 2.6 ön sayfalar "Romen rakamları ile (I, II, III, IV...)", metin 1, 2, 3
+  position: bottom_center       # 2.6 "sayfanın alt orta kısmında"
+  forbid_decoration: true       # 2.6 "parantez veya iki çizgi gibi işaretler arasında yazılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

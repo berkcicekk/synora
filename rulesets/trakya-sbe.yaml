@@ -1,0 +1,52 @@
+# Trakya Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez Yazım İlke ve Kuralları (yaklaşık 2009)
+# Kaynak: https://bys.trakya.edu.tr/file/open/59584498/
+# (bağlantı sayfası: https://sobe.trakya.edu.tr/ "Tez Yazım Kuralları")
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Belgede yayım yılı yazmaz; kapak örneğindeki "EDİRNE 2009"a göre yaklaşık yıl verildi. Eski bir belge.
+# Metin puntosu yazı tipine bağlıdır (TNR 12 / Arial 11, Madde 6a); bu nedenle gövde puntosu denetlenmez.
+ruleset: trakya-sbe
+version: 1
+name: "Trakya Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Trakya Üniversitesi SBE Lisansüstü Tez Yazım İlke ve Kuralları, ~2009"
+institution: "Trakya Üniversitesi"
+source_url: https://bys.trakya.edu.tr/file/open/59584498/
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 4.0, bottom: 2.5, left: 4.0, right: 2.5 }  # Madde 5 "Üst 4, Sol 4, Alt 2.5, Sağ 2.5 cm"
+
+fonts:
+  allowed: [Times New Roman, Arial]  # Madde 6, 6a "Times New Roman 12 punto veya Arial 11 punto"
+
+roles:
+  body:
+    line_spacing: 1.5           # Madde 7 "satırlar arasında 1.5 tam aralık"
+    first_line_indent_cm: 1.5   # Madde 7 "beş harf (veya 1.5 cm) içeriden"
+  heading_1:
+    size_pt: 14                 # Madde 6a "bölüm, kısım, başlık ve altbaşlıkları için 14 punto"
+    bold: true                  # Madde 8 "Ana başlıklar büyük koyu harflerle"
+    all_caps: true              # Madde 8
+  heading_2:
+    size_pt: 14                 # Madde 6a
+    bold: true                  # Madde 8 "ara başlıklar ... küçük koyu harflerle"
+    case: sentence              # Madde 8 "ilk harfi büyük olmak üzere küçük ... harflerle"
+  heading_3:
+    size_pt: 14                 # Madde 6a
+    bold: true                  # Madde 8
+    case: sentence              # Madde 8
+  footnote:
+    size_pt: 10                 # Madde 6a "dipnotlar için 10 punto"
+
+page_numbering:
+  # Madde 5: Önsöz'den Giriş'e Romen (büyük/küçük belirtilmemiş), Giriş'ten itibaren 1, 2, 3… — biçim denetlenmez
+  position: top_right           # Madde 5 "sayfanın sağ üst köşesine"
+  forbid_decoration: true       # Madde 5 "parantez, tire veya çizgi kullanmadan"
+
+document:
+  forbid_tracked_changes: true

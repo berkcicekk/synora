@@ -1,0 +1,63 @@
+# Koç Üniversitesi — Thesis Manual for MA / MS Students (şablon biçiminde kılavuz; GSSSH sitesinde 2023/12 yüklemesi)
+# Kaynak: https://gsssh.ku.edu.tr/wp-content/uploads/2023/12/MSc.pdf
+#   (Sosyal Bilimler Enstitüsü "Tez Yazım Kılavuzu" sayfasından bağlantılı; belge metni Graduate School of
+#    Sciences and Engineering örneği üzerinden yazılmış, aynı belge vpri.ku.edu.tr'de de yayımlanıyor)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: koc-gs
+version: 1
+name: "Koç Üniversitesi · Lisansüstü Enstitüler (MA/MS Thesis Manual)"
+source: "Koç University Thesis Manual for MA / MS Students, 2023"
+institution: "Koç Üniversitesi"
+source_url: https://gsssh.ku.edu.tr/wp-content/uploads/2023/12/MSc.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.2 "International A4 size paper"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.2, Table 2.1
+
+fonts:
+  allowed: [Times New Roman]    # 2.3, 2.5
+
+roles:
+  body:
+    size_pt: 12                 # 2.3
+    line_spacing: 1.5           # 2.2 "one and a half spacing"
+    alignment: justify          # 2.2 "All text pages should be justified"
+  heading_1:                    # chapter heading
+    size_pt: 14                 # 2.5
+    bold: true                  # 2.5
+    all_caps: true              # 2.5 "all capital"
+    alignment: center           # 2.5 "centered"
+  heading_2:                    # section heading
+    size_pt: 12                 # 2.5
+    bold: true                  # 2.5
+    italic: true                # 2.5 "section headings must be slanted"
+    alignment: left             # 2.5 "left adjusted"
+  heading_3:                    # first subsection heading
+    size_pt: 12                 # 2.5
+    bold: true                  # 2.5
+    italic: true                # 2.5 "first and second subsection headings must be italic"
+    alignment: left             # 2.5
+  figure_caption:
+    size_pt: 12                 # 2.3 "Table and Figure captions"
+    position: below             # 2.7 "Figure captions should be placed below"
+  table_caption:
+    size_pt: 12                 # 2.3
+    position: above             # 2.7 "Table captions should be located above"
+  block_quote:
+    size_pt: 10                 # 2.3 "extensive quotations should be 10-point"
+  footnote:
+    size_pt: 10                 # 2.3 "Footnotes ... 10-point"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.4
+  # 2.4: Roma rakamları "bottom center", Arap rakamları "top right" → tek konum alanıyla ifade edilemez, denetlenmez
+
+document:
+  forbid_tracked_changes: true

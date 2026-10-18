@@ -1,0 +1,71 @@
+# Eskişehir Osmangazi Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Mart 2023; Senato 22.06.2022)
+# Kaynak: https://fbe.ogu.edu.tr/Storage/FenBilimleriEnstitusu/Uploads/TEZ-YAZIM-KILAVUZU_Mart2023.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: esogu-fbe
+version: 1
+name: "Eskişehir Osmangazi Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "ESOGÜ Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2023"
+institution: "Eskişehir Osmangazi Üniversitesi"
+source_url: https://fbe.ogu.edu.tr/Storage/FenBilimleriEnstitusu/Uploads/TEZ-YAZIM-KILAVUZU_Mart2023.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.1
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.0, right: 2.5 }   # 1.3
+
+fonts:
+  allowed: [Times New Roman]    # 1.2 MS Word için; "Palatino" yalnızca LaTeX için
+
+roles:
+  body:
+    size_pt: 12                 # 1.2
+    line_spacing: 1.5           # 1.5
+    alignment: justify          # 1.3 "sağ ve sol kenara dayalı (justified)"
+    # ÇELİŞKİ: 1.5 "Paragraflara 1 tab (1,25 cm) boşluktan sonra başlanır" ama "Girinti ayarları 0 cm"
+    first_line_indent_cm: 1.25  # 1.5
+    space_before_pt: 0          # 1.5 "aralık ayarları 0 nk"
+    space_after_pt: 0           # 1.5
+  heading_1:
+    bold: true                  # 1.7 "Tüm başlıklar koyu"
+    all_caps: true              # 1.7 "harflerin tamamı büyük"
+    # ÇELİŞKİ: 1.3 "Tez metni ve başlıklar sağ ve sol kenara dayalı"; 1.7 birinci derece "ortalanmış"
+    alignment: center           # 1.7
+    page_break_before: true     # 1.7 "her zaman sayfa başlarında"
+  heading_2:
+    bold: true                  # 1.7
+    alignment: left             # 1.7 "Alt bölüm başlıkları sola dayalı"
+    case: title                 # 1.7 "her sözcüğün sadece ilk harfi büyük"
+  heading_3:
+    bold: true                  # 1.7
+    alignment: left             # 1.7
+    case: sentence              # 1.7 "ilk sözcüğün baş harfi hariç tüm sözcükler küçük"
+  table_caption:
+    position: above             # 2.3 "Çizelge açıklamaları çizelgenin üstünde"
+    alignment: left             # 1.3 "çizelgeye göre sola dayalı"
+    line_spacing: 1.0           # 1.5, 2.3 "1 tam aralık"
+    space_after_pt: 6           # 2.3 "6 nk satır sonra"
+  figure_caption:
+    position: below             # 2.3 "Şekil açıklamaları şeklin altında"
+    alignment: left             # 1.3 "şekle göre sola dayalı"
+    line_spacing: 1.0           # 1.5, 2.3
+    space_before_pt: 6          # 2.3 "6 nk satır önce"
+  block_quote:
+    line_spacing: 1.0           # 1.5, 1.10 "1 tam aralık"
+  footnote:
+    line_spacing: 1.0           # 1.5, 1.11
+  reference_entry:
+    line_spacing: 1.0           # 1.5, Kaynaklar Dizini "1 tam aralık"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.6
+  position: top_right           # 1.6 "sağ üst kenarına 2 cm uzaklıkta"
+  forbid_decoration: true       # 1.6 "parantez veya çizgi gibi işaretler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

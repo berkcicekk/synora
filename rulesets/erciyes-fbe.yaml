@@ -1,0 +1,53 @@
+# Erciyes Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (2026)
+# Kaynak: https://fbe.erciyes.edu.tr/Dosya/MainContent/tezyazmakilavuzu.pdf
+# (Senato 12.03.2026, 08 sayılı toplantı)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: erciyes-fbe
+version: 1
+name: "Erciyes Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Erciyes Üniversitesi Fen Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2026"
+institution: "Erciyes Üniversitesi"
+source_url: https://fbe.erciyes.edu.tr/Dosya/MainContent/tezyazmakilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 1.1
+  margins_cm: { top: 3.5, bottom: 2.0, left: 4.0, right: 2.0 }   # 1.2
+
+fonts:
+  # 1.4: Times New Roman 12 punto "veya istenirse tüm tez boyunca 11 yazı boyutunda Arial"
+  allowed: [Times New Roman, Arial]
+
+roles:
+  body:
+    # punto yazı tipine bağlı (TNR 12 / Arial 11) → denetlenmez
+    line_spacing: 1.5                       # 1.4, 1.6 "1,5 satır aralıkla"
+    alignment: justify                      # 1.6 "iki yana yaslı"
+  heading_1:
+    bold: true                              # 1.4 "Ana başlıklar ve alt başlıklar koyu"
+    # 1.4 "Ana başlıklar 2 punto büyük" (TNR'de 14, Arial'de 13) → punto denetlenmez
+  heading_2:
+    bold: true                              # 1.4
+  heading_3:
+    bold: true                              # 1.4
+  figure_caption:
+    line_spacing: 1.0                       # 1.4, 1.10 "1 tam aralıkla"
+    alignment: center                       # 1.10 "satırı ortalayacak şekilde"
+    position: below                         # 1.10 "şekil altına"
+  table_caption:
+    line_spacing: 1.0                       # 1.4, 1.10
+    alignment: center                       # 1.10 "tablonun üstüne ortalanarak"
+    position: above                         # 1.10
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.3 ön kısım küçük Romen, Giriş'ten itibaren 1, 2, 3
+  position: top_right                       # 1.3 "sayfanın sağ üst kısmına"
+
+document:
+  forbid_tracked_changes: true

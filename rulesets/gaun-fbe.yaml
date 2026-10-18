@@ -1,0 +1,82 @@
+# Gaziantep Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Güncelleme 07.04.2026)
+# Kaynak: https://fbe.gaziantep.edu.tr/upload/files/FORMLAR%202026/Genel%20Formlar/KILAVUZ%20(TEZ%20YAZIMI)%20(G%C3%BCncelleme%207_4_2026)(1).docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: gaun-fbe
+version: 1
+name: "Gaziantep Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Gaziantep Üniversitesi Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2026"
+institution: "Gaziantep Üniversitesi"
+source_url: https://fbe.gaziantep.edu.tr/upload/files/FORMLAR%202026/Genel%20Formlar/KILAVUZ%20(TEZ%20YAZIMI)%20(G%C3%BCncelleme%207_4_2026)(1).docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.2 Kâğıt
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.3 Kenar Boşlukları
+
+fonts:
+  allowed: [Times New Roman]    # 2.4 Yazı Tipi
+
+roles:
+  body:
+    size_pt: 12                 # 2.4; Tablo 2.1 "Metin (Tez ana metni)"
+    line_spacing: 1.5           # 2.5; Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    # ÇELİŞKİ: Tablo 2.1 ard boşluk 12 punto; 2.5 metni "paragraflar arasında ilave aralık bırakılmamalıdır" → denetlenmez
+  heading_1:
+    size_pt: 12                 # Tablo 2.1 "Bölüm Başlıkları"
+    bold: true                  # Tablo 2.1
+    line_spacing: 1.5           # Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 12          # Tablo 2.1
+    all_caps: true              # 3.x "Büyük harflerle yazılmış olan BÖLÜM 1 başlığı"
+    alignment: center           # 3.x "sayfanın ortasında"
+    page_break_before: true     # 2.5 "Ana bölümler daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    size_pt: 12                 # Tablo 2.1 "Bölüm Alt Başlıkları"
+    bold: true                  # Tablo 2.1
+    line_spacing: 1.5           # Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+  heading_3:
+    size_pt: 12                 # Tablo 2.1 "Bölüm Alt Başlıkları"
+    bold: true                  # Tablo 2.1
+    line_spacing: 1.5           # Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+  table_caption:
+    position: above             # 3.x "Tablo başlıkları ise tablonun üstünde"
+    size_pt: 12                 # Tablo 2.1 "Başlıklar (Resimlemeler)"
+    bold: false                 # Tablo 2.1 "Normal"
+    line_spacing: 1.5           # Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+  figure_caption:
+    position: below             # 3.x "Şekil başlığı, şekillerin hemen altında"
+    size_pt: 12                 # Tablo 2.1
+    bold: false                 # Tablo 2.1
+    line_spacing: 1.5           # Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+  reference_entry:
+    size_pt: 12                 # Tablo 2.1 "Metin- Kaynaklar"
+    line_spacing: 1.5           # Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+  footnote:
+    size_pt: 10                 # Tablo 2.1 "Metin (Dipnot/Footnote)"
+    line_spacing: 1.0           # Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.7 ön sayfalar küçük Roma, metin 1, 2, 3…
+  position: bottom_center       # 2.7 "sayfanın alt orta hizasında"
+
+document:
+  forbid_tracked_changes: true

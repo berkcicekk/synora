@@ -1,0 +1,57 @@
+# Karabük Üniversitesi Lisansüstü Eğitim Enstitüsü — Sosyal Bilimler Alanı Tez Yazım Kılavuzu (2023)
+# Kaynak: https://lisansustu.karabuk.edu.tr/yuklenen/dosyalar/12614092026110629.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: karabuk-lee-sosyal
+version: 1
+name: "Karabük Üniversitesi · Lisansüstü Eğitim Enstitüsü (Sosyal Bilimler Alanı)"
+source: "Karabük Üniversitesi Lisansüstü Eğitim Enstitüsü Sosyal Bilimler Alanı Tez Yazım Kılavuzu, 2023"
+institution: "Karabük Üniversitesi"
+source_url: https://lisansustu.karabuk.edu.tr/yuklenen/dosyalar/12614092026110629.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 5.5 a)
+  margins_cm: { top: 2.7, bottom: 2.7, left: 3.5, right: 2.7 }   # 5.5 e)
+
+fonts:
+  allowed: [Times New Roman]    # 5.5 b)
+
+roles:
+  body:
+    size_pt: 12                 # 5.5 b)
+    line_spacing: 1.5           # 5.5 b) "Bir buçuk (1,5) satır aralığı"
+    alignment: justify          # 5.5 g) "sayfanın iki yanına yaslanmış"
+    first_line_indent_cm: 1.25  # 5.5 c) "1,25 cm içerden"
+  heading_1:
+    size_pt: 14                 # 5.5 b), 5.7 a)
+    alignment: center           # 5.5 g), 5.7 a) "ortalanarak"
+  heading_2:
+    size_pt: 13                 # 5.7 a) "iki ve üç haneli başlıklar ... 13 punto"
+    alignment: left             # 5.7 a) "sola yaslı"
+    indent_left_cm: 0.5         # 5.5 g), 5.7 a) "0,5 cm girinti"
+  heading_3:
+    size_pt: 13                 # 5.7 a)
+    alignment: left             # 5.7 a)
+    indent_left_cm: 0.5         # 5.7 a)
+  block_quote:
+    size_pt: 10                 # 5.2 a), 5.5 d) "10 nk"
+    line_spacing: 1.0           # 5.2 a) "tek (1,0) satır aralığı"
+    indent_left_cm: 1.25        # 5.2 a) "paragraf başından (1,25 cm girinti)"
+  footnote:
+    size_pt: 10                 # 5.5 d)
+    line_spacing: 1.0           # 5.5 d)
+
+page_numbering:
+  # 5.6 c): İçindekiler'den başlayarak tüm sayfalar arap rakamıyla (1, 2, 3)
+  formats_in_order: [decimal]
+  position: bottom_center       # 5.6 a) "alt kısmının ortasında"
+  # 5.6 a) "... işaretlemelere yer verilmelidir" (muhtemelen "verilmemelidir" yazım hatası) → denetlenmez
+
+document:
+  forbid_tracked_changes: true

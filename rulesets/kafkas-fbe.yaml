@@ -1,0 +1,68 @@
+# Kafkas Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Eğitim Öğretim Tez Yazım Kılavuzu (Ekim 2022)
+# Kaynak: https://www.kafkas.edu.tr/dosyalar/febe/file/Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu%202025.docx
+# (.docx olarak yayımlanıyor; dosya adı "2025", kapak "EKİM 2022")
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: kafkas-fbe
+version: 1
+name: "Kafkas Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Kafkas Üniversitesi Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2022"
+institution: "Kafkas Üniversitesi"
+source_url: https://www.kafkas.edu.tr/dosyalar/febe/file/Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu%202025.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 3.1
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }   # 3.3
+
+fonts:
+  allowed: [Times New Roman]                # 3.9, 3.11, 4.x dizinler (metin için ayrıca belirtilmemiş)
+
+roles:
+  body:
+    line_spacing: 1.5                       # 3.4 "1,5 tam satır aralığı"
+    alignment: justify                      # 3.4 "iki yana yaslı"
+    # metin puntosu açıkça belirtilmemiş
+  heading_1:
+    size_pt: 14                             # 3.2
+    bold: true                              # 3.2 "BÜYÜK ve KALIN"
+    all_caps: true                          # 3.2, 3.7
+    alignment: center                       # 3.7 "ortaya hizalanarak"
+    page_break_before: true                 # 3.6 "daima yeni bir sayfadan başlamalıdır"
+  heading_2:
+    size_pt: 12                             # 3.2
+    bold: true                              # 3.2
+    case: title                             # 3.2 "Her Kelimenin İlk Harfi Büyük"
+    alignment: left                         # 3.7 "sola hizalanmış"
+  heading_3:
+    size_pt: 12                             # 3.2
+    bold: true                              # 3.2
+    case: sentence                          # 3.2 "Cümlenin ilk harfi büyük"
+    alignment: left                         # 3.7
+  figure_caption:
+    size_pt: 12                             # 3.11
+    line_spacing: 1.0                       # 3.4 "şekil ve resim altı yazılarda 1 tam satır"
+    alignment: justify                      # 3.11 "iki yana yaslı"
+    position: below                         # 3.11 "şeklin ... altına"
+  table_caption:
+    size_pt: 12                             # 3.11
+    line_spacing: 1.0                       # 3.4 "tablo üstü ... 1 tam satır"
+    alignment: justify                      # 3.11
+    position: above                         # 3.11 "tablonun üstüne"
+  reference_entry:
+    line_spacing: 1.0                       # 4.2 Kaynaklar "tek satır aralıkları"
+    # 4.2: ikinci ve sonraki satırlar 1 cm içeriden (asılı girinti; şemada karşılığı yok)
+  footnote:
+    line_spacing: 1.0                       # 3.4 "Dipnot ... 1 tam satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 3.5
+  position: bottom_center                   # 3.5 "alt orta kısmına"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,68 @@
+# Marmara Üniversitesi Eğitim Bilimleri Enstitüsü — Tez Yazım Kılavuzu (İstanbul, 2019)
+# Kaynak: https://ebe.marmara.edu.tr/dosya/ebe/Tez_Yaz%C4%B1m_K%C4%B1lavuzu%20(1).pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: marmara-ebe
+version: 1
+name: "Marmara Üniversitesi · Eğitim Bilimleri Enstitüsü"
+source: "Marmara Üniversitesi Eğitim Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2019"
+institution: "Marmara Üniversitesi"
+source_url: "https://ebe.marmara.edu.tr/dosya/ebe/Tez_Yaz%C4%B1m_K%C4%B1lavuzu%20(1).pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.3 "A4 boyutlarında (21 cm × 29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 2.5 }   # 3.4
+
+fonts:
+  allowed: [Times New Roman]    # 3.5 "Tezin tamamında Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 3.5
+    line_spacing: 1.5           # 3.6 "Metnin tümünde 1,5 satır aralığı"
+    alignment: justify          # 3.4 "iki yana yasla"
+    first_line_indent_cm: 0.75  # 3.6 "0,75 cm soldan girinti"
+    space_after_pt: 12          # 3.6 "Paragraf aralıkları 12 nokta" (önce/sonra belirtilmemiş)
+  heading_1:
+    bold: true                  # 3.10 "1. düzey: Ortada, kalın"
+    alignment: center           # 3.10
+    case: title                 # 3.10 "Sözcükler büyük harfle başlar küçük harfle sürer"
+  heading_2:
+    bold: true                  # 3.10 "2. düzey: Sola yaslı, kalın"
+    alignment: left             # 3.10
+    case: title                 # 3.10
+  heading_3:
+    bold: true                  # 3.10 "3. düzey: Girintili, kalın"
+    case: sentence              # 3.10 "Başlığın ilk sözcüğü büyük harfle başlar"
+  table_caption:
+    size_pt: 12                 # 3.7
+    alignment: center           # 3.7 "Tablo başlığı ortalı"
+    space_before_pt: 12         # 3.7 "üstten 12 nokta"
+    space_after_pt: 6           # 3.7 "alttan 6 nokta"
+    line_spacing: 1.0           # 3.7 "tek satır aralıklı"
+  figure_caption:
+    size_pt: 12                 # 3.8
+    alignment: left             # 3.8 "sola dayalı"
+    space_before_pt: 6          # 3.8 "üstten 6 nokta"
+    space_after_pt: 18          # 3.8 "alttan 18 nokta"
+    line_spacing: 1.0           # 3.8 "satır aralığı tek"
+    position: below             # 3.8 "Şekil başlığı şeklin altında yer alır"
+  block_quote:
+    size_pt: 10                 # 2.6.1 "40 sözcükten uzun alıntılar ... (10 punto)"
+    line_spacing: 1.0           # 2.6.1 "tek satır aralığı verilerek"
+  reference_entry:
+    line_spacing: 1.5           # 2.6 "Kaynakça, 1,5 satır aralıklı olmalıdır"
+
+page_numbering:
+  # 3.9: ön sayfalar küçük Roma rakamı, alt orta; metin sayfaları için rakam türü açıkça belirtilmemiş.
+  position: top_right           # 3.9 "sayfanın sağ üst köşesine" — ÇELİŞKİ: ön sayfalar için "alt ortasına"
+  forbid_decoration: true       # 3.9 "önüne ya da sonuna çizgi, tire gibi işaretler konulmamalıdır"
+
+document:
+  forbid_tracked_changes: true

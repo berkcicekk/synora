@@ -1,0 +1,85 @@
+# İstanbul Atlas Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (KL-002, Ocak 2022)
+# Kaynak: https://lisansustu.atlas.edu.tr/uploads/kilavuzlar/KL-002_Tez_Yaz%C4%B1m_K%C4%B1lavuzu.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Kılavuzda madde numarası yok; yorumlar alt başlık adlarını verir.
+ruleset: atlas-lee
+version: 1
+name: "İstanbul Atlas Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Tez Yazım Kılavuzu (KL-002), Ocak 2022"
+institution: "İstanbul Atlas Üniversitesi"
+source_url: https://lisansustu.atlas.edu.tr/uploads/kilavuzlar/KL-002_Tez_Yaz%C4%B1m_K%C4%B1lavuzu.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kağıt "A4 boyutunda"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.0, right: 2.0 }   # Kenar Boşlukları
+
+fonts:
+  allowed: [Times New Roman]    # Yazı Karakteri
+
+roles:
+  body:
+    size_pt: 12                 # Yazı Karakteri "12 punto"
+    line_spacing: 1.5           # Satır Aralıkları "1.5 aralık"
+    alignment: justify          # Satır Aralıkları "iki yana yaslanmış"
+    first_line_indent_cm: 1.2   # Paragraflar "1.2 cm uzaklıkta sekme"
+    space_before_pt: 0          # Satır Aralıkları "satır aralık değeri 0 nk"
+    space_after_pt: 0           # Satır Aralıkları
+  heading_1:
+    size_pt: 14                 # Başlıklar "ana bölüm başlıkları 14"
+    bold: true                  # Başlıklar
+    all_caps: true              # Başlıklar "1. derece başlıklar BÜYÜK"
+    alignment: center           # Başlıklar "Ana başlıklar sayfa ortalanarak"
+    space_before_pt: 60         # Başlıklar "önce 60 nk"
+    space_after_pt: 24          # Başlıklar "sonra 24 nk"
+    page_break_before: true     # Başlıklar "Her bir bölüm ayrı sayfadan başlamalıdır"
+  heading_2:
+    size_pt: 12                 # Başlıklar
+    bold: true                  # Başlıklar
+    all_caps: true              # Başlıklar "2. derece başlıklar BÜYÜK"
+    alignment: left             # Başlıklar "satır başına dayalı"
+    space_before_pt: 24         # Başlıklar "önce 24 nk"
+    space_after_pt: 12          # Başlıklar "sonra 12 nk"
+  heading_3:
+    size_pt: 12                 # Başlıklar
+    bold: true                  # Başlıklar
+    alignment: left             # Başlıklar
+    case: title                 # Başlıklar "Kelimelerin Baş Harfleri Büyük"
+    space_before_pt: 12         # Başlıklar "önce 12 nk"
+    space_after_pt: 6           # Başlıklar "sonra 6 nk"
+  table_caption:
+    size_pt: 11                 # Şekil ve Tablolar "11 punto"
+    line_spacing: 1.0           # Şekil ve Tablolar "1.0 satır aralığı"
+    space_before_pt: 12         # "Tablo başlığından önce 12 punto"
+    space_after_pt: 6           # "sonrasında ise 6 punto"
+    position: above             # Satır Aralıkları "Tablo üstü ... açıklamaları"
+  figure_caption:
+    size_pt: 11                 # Şekil ve Tablolar
+    line_spacing: 1.0           # Şekil ve Tablolar
+    space_before_pt: 6          # "Şekil başlığından önce 6 punto"
+    space_after_pt: 12          # "sonrasında ise 12 punto"
+    position: below             # Satır Aralıkları "resim ve şekil altı açıklamaları"
+  footnote:
+    size_pt: 8                  # Dipnotlar "8 punto"
+    line_spacing: 1.0           # Dipnotlar "bir satır aralıklı"
+    alignment: justify          # Dipnotlar "iki yana dayalı"
+  block_quote:
+    size_pt: 11                 # Alıntılar "11 punto"
+    line_spacing: 1.0           # Alıntılar "tek satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # Satır Aralıkları "her bir kaynak tek satır aralığı ile"
+
+page_numbering:
+  # Sayfa Numaralandırılması: ön sayfalar Romen (i, ii, iii…), ana metinden itibaren 1, 2, 3
+  # Konum ("alt orta") yalnızca ön sayfalar için yazılmış; konum denetlenmez.
+  formats_in_order: [lowerRoman, decimal]
+  forbid_decoration: true       # "önünde ve arkasında ayıraç, çizgi gibi işaretler kullanılmamalı"
+
+document:
+  forbid_tracked_changes: true

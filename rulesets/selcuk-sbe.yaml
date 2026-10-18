@@ -1,0 +1,67 @@
+# Selçuk Üniversitesi Sosyal Bilimler Enstitüsü — Tez Hazırlama ve Yazma Kılavuzu (2023)
+# Kaynak: https://www.selcuk.edu.tr/contents/sosyal_bilimler_ens/icerik/41770/Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu_638139509295587872.pdf
+# (Kılavuzda yıl yazmıyor; dosya Mart 2023'te yüklenmiş. Punto değerleri kılavuzda "(tercihen)" diye geçiyor.)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: selcuk-sbe
+version: 1
+name: "Selçuk Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Selçuk Üniversitesi Sosyal Bilimler Enstitüsü Tez Hazırlama ve Yazma Kılavuzu, 2023"
+institution: "Selçuk Üniversitesi"
+source_url: https://www.selcuk.edu.tr/contents/sosyal_bilimler_ens/icerik/41770/Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu_638139509295587872.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 3.5, bottom: 3.0, left: 3.5, right: 3.0 }   # 4.1.15
+
+fonts:
+  allowed: [Times New Roman]                # 4.1.14/3
+
+roles:
+  body:
+    size_pt: 12                             # 4.1.14/3 "12 punto (tercihen)"
+    line_spacing: 1.5                       # 4.1.14/3 "1.5 satır aralıkla"
+    alignment: justify                      # 4.1.14/3 "iki yana yaslı"
+    first_line_indent_cm: 1.0               # 4.1.14/3 "ilk satır girintisi 1 cm"
+  heading_1:
+    # 4.1.14/4 "Ana başlıklar" → heading_1 olarak eşlendi (alt başlıklar için ayrı kural yok)
+    size_pt: 12                             # 4.1.14/4 "12 punto (tercihen)"
+    bold: true                              # 4.1.14/4 "Koyu"
+    line_spacing: 1.0                       # 4.1.14/4 "1 satır aralıkla"
+    alignment: justify                      # 4.1.14/4 "iki yana yaslı"
+    first_line_indent_cm: 1.0               # 4.1.14/4 "İlk satır girintisi 1 cm"
+    space_before_pt: 12                     # 4.1.14/4 "önce 12 nk"
+    space_after_pt: 6                       # 4.1.14/4 "sonra 6 nk"
+  figure_caption:
+    size_pt: 11                             # 4.1.14/8 "11 punto (tercihen)"
+    bold: true                              # 4.1.14/8 "Koyu"
+    line_spacing: 1.0                       # 4.1.14/8
+    alignment: justify                      # 4.1.14/8 "iki yana yaslı"
+    space_before_pt: 12                     # 4.1.14/8
+    space_after_pt: 6                       # 4.1.14/8
+    position: above                         # 4.1.14/8 "Görsel nesnelerin (tablo, şekil, resim, fotoğraf) başlıkları ... üstüne"
+  table_caption:
+    size_pt: 11                             # 4.1.14/8
+    bold: true                              # 4.1.14/8
+    line_spacing: 1.0                       # 4.1.14/8
+    alignment: justify                      # 4.1.14/8
+    space_before_pt: 12                     # 4.1.14/8
+    space_after_pt: 6                       # 4.1.14/8
+    position: above                         # 4.1.14/8
+  # reference_entry: 4.3.2 taşan satırlar 0,4 cm asılı girinti (şemada karşılığı yok)
+  footnote:
+    size_pt: 10                             # 4.1.14/7 "10 punto (tercihen)"
+    line_spacing: 1.0                       # 4.1.14/7
+    alignment: justify                      # 4.1.14/7
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 4.1.16
+  position: top_right                       # 4.1.16 "Sayfa üstünde (Üst bilgi) ve sağda"
+
+document:
+  forbid_tracked_changes: true

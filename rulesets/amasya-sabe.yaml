@@ -1,0 +1,76 @@
+# Amasya Üniversitesi Sağlık Bilimleri Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (2020)
+# Kaynak: https://sabe.amasya.edu.tr/media/15093/tez-yazim-kilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Tablo 5.1 (punto tablosu) PDF metninde sütunları kaymış olarak çıktığından yalnızca düz metindeki değerler kullanıldı.
+ruleset: amasya-sabe
+version: 1
+name: "Amasya Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Amasya Üniversitesi Sağlık Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2020"
+institution: "Amasya Üniversitesi"
+source_url: https://sabe.amasya.edu.tr/media/15093/tez-yazim-kilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 5.1 "DIN-A4 (21 x29,7cm)", 5.2
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.0, right: 2.5 }   # 5.2
+
+fonts:
+  allowed: [Times New Roman]    # 5.3.2
+
+roles:
+  body:
+    size_pt: 12                 # 5.3.2 "12 punto"
+    line_spacing: 1.5           # 5.3.2, 5.3.3 "1,5 satır aralıkla"
+    first_line_indent_cm: 1.0   # 5.3.2, 5.3.3 "1 cm paragraf girintisi"
+    alignment: justify          # 5.3.2 "iki yana yasla ile hizalanır"
+    space_before_pt: 0          # 5.3.3 "önce ve sonra 0 nk"
+    space_after_pt: 0           # 5.3.3
+  heading_1:
+    size_pt: 14                 # 5.3.5 "14 punto tamamı büyük harflerle bold"
+    bold: true                  # 5.3.5
+    all_caps: true              # 5.3.5
+    page_break_before: true     # 5.3.3, 5.3.5 "yeni bir sayfada başlar"
+  heading_2:
+    size_pt: 12                 # 5.3.5 Tablo 5.2
+    bold: true                  # 5.3.5 Tablo 5.2 "tamamı koyu"
+    case: title                 # 5.3.5 Tablo 5.2 "Her sözcüğün ilk harfi büyük"
+  heading_3:
+    size_pt: 12                 # 5.3.5 Tablo 5.2
+    bold: true                  # 5.3.5 Tablo 5.2
+    case: sentence              # 5.3.5 Tablo 5.2 "Yalnızca birinci sözcüğün ilk harfi büyük"
+  table_caption:
+    line_spacing: 1.0           # 5.3.3 "Çizelge, Tablo üst yazıları tek satır aralığı"
+    alignment: justify          # 5.3.7 "iki yana yaslayarak"
+    case: title                 # 5.3.7 "sadece kelimelerin ilk harfi büyük"
+    position: above             # 5.3.7 "Tablo isimleri tablonun üstüne"
+    space_after_pt: 6           # 5.3.3, 5.3.7 "ismi ile tablo ... arasında 6 nk"
+  figure_caption:
+    line_spacing: 1.0           # 5.3.3 "Şekil, Resim alt yazıları ... tek satır aralığı"
+    alignment: justify          # 5.3.7
+    case: title                 # 5.3.7
+    position: below             # 5.3.7 "çizim alanının altına"
+    space_before_pt: 6          # 5.3.3, 5.3.7
+  block_quote:
+    # 40 sözcüğü geçen doğrudan alıntı
+    size_pt: 10                 # 5.3.9 "1 satır aralığında, 10 punto"
+    line_spacing: 1.0           # 5.3.9
+    indent_left_cm: 1.0         # 5.3.9 "sol ve sağ tarafından 1 cm içerden"
+  footnote:
+    size_pt: 10                 # 5.3.10 "font büyüklüğünden iki punto küçük"
+    line_spacing: 1.0           # 5.3.10 "tek aralıklı"
+  reference_entry:
+    # Kaynaklar: ikinci satır 0,5 cm içeriden (asılı) — şemada karşılığı yok
+    line_spacing: 1.0           # 5.3.3, Kaynaklar "tek satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 5.3.1 "(i, ii, iii....)" / GİRİŞ'ten "1, 2, 3"
+  position: top_right           # 5.3.1 "sayfanın sağ üst köşesinde"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,76 @@
+# Yıldız Teknik Üniversitesi Fen Bilimleri Enstitüsü — Yüksek Lisans ve Doktora Tezleri Yazım Kılavuzu (12.01.2026)
+# Kaynak: https://fbe.yildiz.edu.tr/sites/fbe.yildiz.edu.tr/media/files/YTU%20FBE%20Tez%20Yazim%20Kilavuzu-12_01_2026.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ytu-fbe
+version: 1
+name: "Yıldız Teknik Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "YTÜ FBE Yüksek Lisans ve Doktora Tezleri Yazım Kılavuzu, 2026"
+institution: "Yıldız Teknik Üniversitesi"
+source_url: "https://fbe.yildiz.edu.tr/sites/fbe.yildiz.edu.tr/media/files/YTU%20FBE%20Tez%20Yazim%20Kilavuzu-12_01_2026.pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.2 "A4 standardında (21 x 29.7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 3.5 }   # 1.2 "soldan ve sağdan 35 mm, üstten 25 mm ve alttan 25 mm"
+
+fonts:
+  allowed: [Times New Roman]    # 1.2
+
+roles:
+  body:
+    line_spacing: 1.5           # 2.6 "tez içeriğinin tamamı 1,5 satır aralığı"
+    alignment: justify          # 1.2 "iki yana yasla"
+    first_line_indent_cm: 0     # 2.11 "Satır ve paragraflar sayfanın sol kenarından başlamalı, girinti olmamalıdır"
+    space_before_pt: 6          # 2.6 "paragraf öncesi ve sonrasında 6nk"
+    space_after_pt: 6           # 2.6
+  heading_1:
+    size_pt: 17.5               # 2.2 "Ana bölüm başlığı 17,5 punto" (başlık numarası 30 punto)
+    bold: true                  # 2.2 "hepsi koyudur"
+    all_caps: true              # 2.2 "Ana bölüm başlıkları büyük harfle"
+    page_break_before: true     # 2.2 "yeni sayfa başında olmalıdır"
+  heading_2:
+    size_pt: 14                 # 2.2 "Birinci seviye alt başlık (1.1) 14 punto"
+    bold: true                  # 2.2
+    case: title                 # 2.2 "her sözcüğün ilk harfi büyük", bağlaçlar küçük
+  heading_3:
+    size_pt: 12                 # 2.2 "İkinci seviye alt başlık (1.1.1) 12 punto"
+    bold: true                  # 2.2
+    case: title                 # 2.2
+  figure_caption:
+    alignment: center           # 2.7 "şeklin altına yazılmalı ve ortalanmalıdır"
+    position: below             # 2.7
+    line_spacing: 1.0           # 2.6 "öge yazıları 1 satır aralığıyla"
+    space_before_pt: 6          # 2.6, 2.7 "önce 6 nk"
+    space_after_pt: 12          # 2.6, 2.7 "sonra 12 nk"
+  table_caption:
+    alignment: center           # 2.8 "tablonun üstüne yazılmalı ve ortalanmalıdır"
+    position: above             # 2.8
+    line_spacing: 1.0           # 2.6
+    space_before_pt: 12         # 2.8 "önce 12 nk" — ÇELİŞKİ: 2.6 üstteki öge yazısı için "öncesi 6nk"
+    space_after_pt: 6           # 2.8 "sonra 6 nk" — ÇELİŞKİ: 2.6 "sonrasında 12 nk"
+  block_quote:
+    size_pt: 10                 # 2.11 "10 punto ve sıkıştırılmış paragraf"
+    indent_left_cm: 1.0         # 2.11 "soldan bir santim boşluk bırakılarak"
+  footnote:
+    size_pt: 10                 # 2.3 "10 punto"
+    line_spacing: 1.0           # 2.3 "bir satır aralığında"
+  reference_entry:
+    alignment: justify          # 3.3.1 "Kaynakça iki yana yaslı"
+    line_spacing: 1.0           # 3.3.1, 2.10 "1 satır aralığı"
+    space_before_pt: 6          # 2.10 "önce 6 nk"
+    space_after_pt: 6           # 2.10 "sonra 6 nk"
+
+page_numbering:
+  # 2.5: Giriş'ten önceki sayfalar küçük Romen, Giriş'ten itibaren Latin (Arap) rakamları
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.5 "kağıdın alt orta kısmına"
+  forbid_decoration: true       # 2.5 "nokta, parantez, çizgi vb. hiçbir işaret kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

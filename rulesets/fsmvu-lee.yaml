@@ -1,0 +1,63 @@
+# Fatih Sultan Mehmet Vakıf Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Tez ve Proje Yazım Kılavuzu (v01, İstanbul 2019)
+# Kaynak: https://www.fsm.edu.tr/resim/Dosya/LEE_Tez_Yazim_Kilavuzu_v012019-11-15-04-43-54pm.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: fsmvu-lee
+version: 1
+name: "Fatih Sultan Mehmet Vakıf Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "FSMVÜ Lisansüstü Eğitim Enstitüsü Lisansüstü Tez ve Proje Yazım Kılavuzu, 2019"
+institution: "Fatih Sultan Mehmet Üniversitesi"
+source_url: "https://www.fsm.edu.tr/resim/Dosya/LEE_Tez_Yazim_Kilavuzu_v012019-11-15-04-43-54pm.pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.1.1 "A4 boyutunda (21cm x 29,7cm)"
+  margins_cm: { top: 4.0, bottom: 2.5, left: 4.0, right: 2.5 }   # 3.1.2.1 iç sayfalar (dış/iç kapak farklı)
+
+fonts:
+  # 3.1.2.3: Times New Roman (metin 12 pt) veya Arial (metin 11 pt) → metin puntosu yazı tipine bağlı, denetlenmez
+  allowed: [Times New Roman, Arial]
+
+roles:
+  body:
+    line_spacing: 1.5           # 3.1.2.4 "Satır Aralığı (1,5 satır)"
+    alignment: justify          # 3.1.2.4 "iki yana yasla"
+    first_line_indent_cm: 1.25  # 3.1.2.4 "Özel (İlk Satır) Değer (1,25 cm)"
+    space_before_pt: 6          # 3.1.2.4 "Önce (6nk)"
+    space_after_pt: 6           # 3.1.2.4 "Sonra (6nk)"
+  heading_1:
+    size_pt: 14                 # 3.1.2.3/a "kısım, bölüm, altbölümlerinin başlıkları için 14 punto"
+  heading_2:
+    size_pt: 14                 # 3.1.2.3/a
+  heading_3:
+    size_pt: 14                 # 3.1.2.3/a
+  table_caption:
+    alignment: center           # 3.2.7.1 "çizelgenin üstüne satırda ortalı"
+    position: above             # 3.2.7.1 — ÇELİŞKİ: 3.1.2.2/c "Numaralar bu ögelerin alt kısımlarında yer alır"
+    line_spacing: 1.0           # 3.2.7.1 "bir satır aralığı kullanılarak"
+    space_before_pt: 12         # 3.2.7.1 "yazıdan önce 12 punto"
+    space_after_pt: 6           # 3.2.7.1 "sonra 6 punto"
+  figure_caption:
+    alignment: center           # 3.2.7.1 "şeklin altına ... ortalı"
+    position: below             # 3.2.7.1
+    line_spacing: 1.0           # 3.2.7.1 "bir aralık boşlukla"
+    space_before_pt: 6          # 3.2.7.1 "önce 6 punto"
+    space_after_pt: 12          # 3.2.7.1 "sonra 12 punto"
+  block_quote:
+    line_spacing: 1.0           # 3.1.2.4 "uzun aktarmalar ... tek aralıklı"
+  footnote:
+    size_pt: 10                 # 3.1.2.3/a "dipnotlar için 10 punto"
+    line_spacing: 1.0           # 3.1.2.4
+
+page_numbering:
+  # 3.1.2.2: ön kısım küçük Romen (i, ii…), Giriş'ten itibaren Arap rakamı
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_right        # 3.1.2.2/d "sayfaların sağ alt kenarına"
+
+document:
+  forbid_tracked_changes: true

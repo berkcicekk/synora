@@ -1,0 +1,58 @@
+# Galatasaray Üniversitesi Sosyal Bilimler Enstitüsü — Yüksek Lisans ve Doktora Tezi Yazım Kılavuzu (Haziran 2024)
+# Kaynak: https://dosya2.gsu.edu.tr/page/2024/8/15/gsu_sbe_-yeni-tez-yazim-kilavuzu_2024-767.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: gsu-sbe
+version: 1
+name: "Galatasaray Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Galatasaray Üniversitesi Sosyal Bilimler Enstitüsü Yüksek Lisans ve Doktora Tezi Yazım Kılavuzu, 2024"
+institution: "Galatasaray Üniversitesi"
+source_url: https://dosya2.gsu.edu.tr/page/2024/8/15/gsu_sbe_-yeni-tez-yazim-kilavuzu_2024-767.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.1
+  margins_cm: { top: 2.5, bottom: 2.0, left: 4.0, right: 2.5 }   # 3.3
+
+fonts:
+  allowed: [Times New Roman]    # 3.2
+
+roles:
+  body:
+    size_pt: 12                 # 3.2
+    line_spacing: 1.5           # 3.3, 3.4
+    alignment: justify          # 3.3 "sağ ve sol sınırlara göre hizalanır"
+    first_line_indent_cm: 1.0   # 3.4 "1 cm içeriden"
+  heading_1:
+    bold: true                  # 3.3 "tümü büyük ve koyu harfle"
+    all_caps: true              # 3.3
+  heading_2:
+    bold: true                  # 3.3 "Alt başlıklarda koyu ancak küçük harfler"
+    all_caps: false             # 3.3
+  heading_3:
+    bold: true                  # 3.3
+    all_caps: false             # 3.3
+  table_caption:
+    position: above             # 3.6 "tablonun üstüne"
+    line_spacing: 1.0           # 3.4 "tablo ve şekillerin isim ve açıklamaları … 1 aralıkla"
+  figure_caption:
+    position: below             # 3.6 "şeklin altına"
+    line_spacing: 1.0           # 3.4
+  footnote:
+    size_pt: 10                 # 3.2
+    line_spacing: 1.0           # 3.4
+  reference_entry:
+    line_spacing: 1.0           # 3.4 "kaynakça … 1 aralıkla"
+
+page_numbering:
+  # ÇELİŞKİ: Bölüm 2 tablosunda Şekil Listesi'nden itibaren "Arap Rakamları" yazıyor; 3.5 metni esas alındı
+  formats_in_order: [lowerRoman, decimal]   # 3.5
+  position: top_center          # 3.5 "sayfanın üst-orta kısmında"
+
+document:
+  forbid_tracked_changes: true

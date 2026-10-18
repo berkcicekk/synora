@@ -1,0 +1,77 @@
+# Ankara Yıldırım Beyazıt Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Ocak 2017)
+# Kaynak: https://aybu.edu.tr/GetFile?id=3c83aaac-6b39-402d-98c7-82fae6dc4c8f.pdf
+# Not: Enstitü sayfasındaki "Tez Yazım Klavuzu (08.08.2023'de Güncellendi)" bağlantısı aynı kılavuzun İngilizce
+#      sürümüne (Guideline for Thesis Writing, Ekim 2017) gidiyor: https://aybu.edu.tr/GetFile?id=Upload/204a78e1-e73b-4cb8-8a17-5f90e9634a25.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: aybu-fbe
+version: 1
+name: "Ankara Yıldırım Beyazıt Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "AYBÜ FBE Lisansüstü Tez Yazım Kılavuzu, 2017"
+institution: "Ankara Yıldırım Beyazıt Üniversitesi"
+source_url: https://aybu.edu.tr/GetFile?id=3c83aaac-6b39-402d-98c7-82fae6dc4c8f.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 (210x297 mm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3 "yazı büyüklüğü 12 puntodur"
+    line_spacing: 1.5           # 2.4 "1.5 aralık"
+    alignment: justify          # 2.4 "iki yanına yaslanmış"
+    first_line_indent_cm: 0     # 2.4 "satır girintisi kullanılmamalıdır"
+    space_before_pt: 12         # 2.4 "öncesi ve sonrası 12 punto"
+    space_after_pt: 12          # 2.4
+  heading_1:
+    # Bölüm başlığı ("Chapter No" satırının altındaki başlık satırı; "Chapter No" 24 punto)
+    size_pt: 16                 # 3.3.2 "bölüm başlığıysa 16 punto, 1,5 satır aralıklı, öncesi 12 ve sonrası sıfır nk"
+    line_spacing: 1.5           # 3.3.2
+    space_before_pt: 12         # 3.3.2
+    space_after_pt: 0           # 3.3.2
+  heading_2:
+    size_pt: 14                 # 3.3.2 "2. Derece başlık sola dayalı, 14 punto, kelime baş harfleri büyük, koyu"
+    bold: true                  # 3.3.2
+    case: title                 # 3.3.2
+    alignment: left             # 3.3.2
+    line_spacing: 1.5           # 3.3.2 örnek "(14 punto, 1,5 satır aralığı, öncesi ve sonrası 12 punto)"
+    space_before_pt: 12         # 3.3.2 örnek
+    space_after_pt: 12          # 3.3.2 örnek
+  heading_3:
+    size_pt: 12                 # 3.3.2 "3. Derece başlık sola dayalı, 12 punto, kelime baş harfleri büyük, koyu"
+    bold: true                  # 3.3.2
+    case: title                 # 3.3.2
+    alignment: left             # 3.3.2
+    line_spacing: 1.5           # 3.3.2 örnek
+    space_before_pt: 12         # 3.3.2 örnek
+    space_after_pt: 12          # 3.3.2 örnek
+  table_caption:
+    size_pt: 10                 # 3.3.3 "Tablo üst yazısı ise 10 punto"
+    case: sentence              # 3.3.3 "ilk kelimenin baş harfi büyük, diğer kelimelerin baş harfleri küçük"
+    position: above             # 3.3.3 "Tablo üst yazıları"
+    line_spacing: 1.5           # 3.3.3 "1,5 satır aralığında öncesi 12 punto sonrası 6 punto"
+    space_before_pt: 12         # 3.3.3
+    space_after_pt: 6           # 3.3.3
+  figure_caption:
+    size_pt: 10                 # 3.3.3 "Şekil ... altyazısı 10 punto"
+    case: sentence              # 3.3.3
+    position: below             # 3.3.3 "şekil altyazıları"
+    line_spacing: 1.5           # 3.3.3 "1,5 satır aralığında öncesi 12 punto sonrası 24 punto"
+    space_before_pt: 12         # 3.3.3
+    space_after_pt: 24          # 3.3.3
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5 "küçük roma rakamları" / Bölüm 1'den itibaren 1
+  position: top_right           # 2.5 "sayfanın sağ üst köşesine"
+
+document:
+  forbid_tracked_changes: true

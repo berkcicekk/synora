@@ -1,0 +1,69 @@
+# Ankara Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Senato 28.12.2023; PDF 08.10.2025)
+# Kaynak: https://sagbilens.ankara.edu.tr/wp-content/uploads/sites/766/2025/10/Tez-Yazim-Kilavuzu-08.10.2025.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ankara-sabe
+version: 1
+name: "Ankara Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Ankara Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2023"
+institution: "Ankara Üniversitesi"
+source_url: https://sagbilens.ankara.edu.tr/wp-content/uploads/sites/766/2025/10/Tez-Yazim-Kilavuzu-08.10.2025.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.1 "A4 standardında (21 cm x 29,7 cm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 1.4
+
+fonts:
+  allowed: [Times New Roman]    # 1.3 "sadece Times New Roman"
+
+roles:
+  body:
+    size_pt: 11                 # 1.3 "metin içeriği 11 punto"
+    line_spacing: 1.5           # 1.3, 1.5 "1,5 aralık"
+    space_after_pt: 12          # 1.5 "paragraflardan sonra 1,5 aralık (12 punto)"
+  heading_1:
+    size_pt: 14                 # 1.3, 1.5 "14 punto"
+    bold: true                  # 1.5 "büyük koyu harflerle", 1.8
+    all_caps: true              # 1.5, 1.8
+    alignment: center           # 1.5 "ortaya hizalanarak", 1.8 "ortalı"
+    page_break_before: true     # 1.5 "Her ana başlık ayrı sayfadan başlamalı"
+    space_after_pt: 12          # 1.5 "Başlıklardan ... sonra 1,5 aralık (12 punto)"
+  heading_2:
+    size_pt: 12                 # 1.5 "12 punto ve koyu"
+    bold: true                  # 1.5, 1.8
+    case: title                 # 1.5, 1.8 "her sözcüğün sadece ilk harfi büyük"
+    alignment: left             # 1.5 "sola hizalanarak"
+    space_after_pt: 12          # 1.5
+  heading_3:
+    size_pt: 12                 # 1.5
+    bold: true                  # 1.5, 1.8
+    case: title                 # 1.8
+    alignment: left             # 1.5
+    space_after_pt: 12          # 1.5
+  table_caption:
+    size_pt: 10                 # 1.3, 2.10 "Şekil ve çizelge başlığı ve içeriği 10 punto"
+    alignment: justify          # 2.10 "bloklama (iki yana yasla)"
+    position: above             # 2.10 "Çizelge başlığı ise çizelgenin üstüne"
+  figure_caption:
+    size_pt: 10                 # 1.3, 2.10
+    alignment: justify          # 2.10
+    position: below             # 2.10 "Şekil başlığı şeklin altına"
+  reference_entry:
+    size_pt: 10                 # 1.3 "kaynaklar ... 10 punto"
+  footnote:
+    size_pt: 9                  # 1.3, 1.5 "9 punto"
+    line_spacing: 1.0           # 1.5 "1,0 satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.7 "küçük harf Roma rakamları" / girişten 1, 2, 3
+  position: bottom_right        # 1.7 "alt kısmına metin bloğunun sağ kenar hizasında"
+  forbid_decoration: true       # 1.7 "parantez, çizgi gibi işaretler olmamalıdır"
+
+document:
+  forbid_tracked_changes: true

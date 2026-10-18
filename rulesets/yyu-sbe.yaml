@@ -1,0 +1,84 @@
+# Van Yüzüncü Yıl Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Kılavuzu (2021 - Van; dosya: Haziran 2023)
+# Kaynak: https://www.yyu.edu.tr/images/files/kilavuz_2023_Haziran_A_compressed.pdf
+#   (SBE "Öğrenci Formları" sayfasındaki "Tez Yazım Kuralları" bağlantısı)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: yyu-sbe
+version: 1
+name: "Van Yüzüncü Yıl Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Van YYÜ Sosyal Bilimler Enstitüsü Tez Yazım Kılavuzu, 2021"
+institution: "Van Yüzüncü Yıl Üniversitesi"
+source_url: https://www.yyu.edu.tr/images/files/kilavuz_2023_Haziran_A_compressed.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "standart A4 (20,99 cm x 29,7 cm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 2.5 sol 4, üst 3, alt 3, sağ 2,5 cm
+
+fonts:
+  allowed: [Times New Roman]    # 2.4
+
+roles:
+  body:
+    size_pt: 12                 # 2.4 "tezin ana metni ... 12 punto"
+    line_spacing: 1.5           # 2.5.4 "ana metinde satır aralığı 1,5 satır"
+    alignment: justify          # 2.4, 2.5.3 "iki yana yaslanarak"
+    first_line_indent_cm: 1.25  # 2.5.3 "1,25 cm girinti yapılarak"
+  heading_1:
+    size_pt: 12                 # 2.5.1 "bölüm başlıkları 12 punto"
+    bold: true                  # 2.5.1 "koyu"
+    all_caps: true              # 2.5.1 "bütün sözcükler BÜYÜK HARFLE"
+    space_before_pt: 24         # 2.5.1 "önce 24 nk, sonra 12 nk"
+    space_after_pt: 12          # 2.5.1
+    page_break_before: true     # 2.5.1 "ana bölümler daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 2.5.1
+    bold: true                  # 2.5.1
+    case: title                 # 2.5.1 "bütün sözcüklerin ilk harfleri büyük", bağlaçlar küçük
+    space_before_pt: 18         # 2.5.1 "önce 18 nk, sonra 12 nk"
+    space_after_pt: 12          # 2.5.1
+  heading_3:
+    size_pt: 12                 # 2.5.1
+    bold: true                  # 2.5.1
+    case: title                 # 2.5.1
+    space_before_pt: 12         # 2.5.1 "önce 12 nk, sonra 6 nk"
+    space_after_pt: 6           # 2.5.1
+  figure_caption:
+    size_pt: 12                 # 2.4, 2.8 "Tablo ve Şekil başlıkları 12 punto ve koyu"
+    bold: true                  # 2.8
+    line_spacing: 1.0           # 2.5.4, 2.8 "1 (tek) satır aralığında"
+    alignment: center           # 2.8 "sol ve sağ kenarları arasında ortalanmalıdır"
+    position: below             # 2.8 "şeklin altında"
+    space_before_pt: 6          # 2.8 "şekil altı açıklaması ile şeklin alt kenarı arasında 6 nk"
+  table_caption:
+    size_pt: 12                 # 2.4, 2.8
+    bold: true                  # 2.8
+    line_spacing: 1.0           # 2.5.4, 2.8
+    alignment: left             # 2.8 "metin alanı satır başından başlatılmalıdır"
+    position: above             # 2.8 "tablonun üstüne"
+    space_after_pt: 6           # 2.8 "tablo başlığının son satırı ile tablonun üst kenarı arasında 6 nk"
+  block_quote:
+    size_pt: 10                 # 2.4 "bloklanmış alıntılar ... 10 punto"
+    line_spacing: 1.0           # 2.5.4, 4.1.1 "tek satır aralığı"
+    italic: true                # 4.1.1 "blok alıntılar italik olmalıdır"
+    indent_left_cm: 1.25        # 4.1.1 "soldan girinti oluşturulacak şekilde 1.25 cm içeriden"
+  reference_entry:
+    line_spacing: 1.0           # 2.5.4 "kaynaklar dizininin yazımında tek (1,0)"
+    space_before_pt: 6          # 2.5.4 "kaynaklar arasında önce ve sonrasında 6 nk"
+    space_after_pt: 6           # 2.5.4
+  footnote:
+    size_pt: 10                 # 2.4
+    line_spacing: 1.0           # 2.5.4 "dipnot metinlerinde satır aralığı tek (1,0)"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5.5 ön sayfalar küçük Romen, Giriş'ten itibaren 1, 2, 3
+  position: bottom_center       # 2.5.5 "sayfanın alt orta kısmına"
+  forbid_decoration: true       # 2.5.5 "parantez, çizgi gibi işaretler" kullanılmamalı
+
+document:
+  forbid_tracked_changes: true

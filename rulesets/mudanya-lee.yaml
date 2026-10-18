@@ -1,0 +1,61 @@
+# Mudanya Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Formatı (açıklamalı tez şablonu, 2026)
+# Kaynak: https://best.mudanya.edu.tr/files/web_icerikler/crawler_assets/681/38c82b44.pdf
+# (bağlantı sayfası: https://mudanya.edu.tr/fakulte/lisansustu-egitim-enstitusu-556860/icerik/626)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Belge, kuralları şablon metni ve Word açıklamaları ([NAxx]) olarak verir; konumlar şablon bölüm no / açıklama no'dur.
+# Kenar boşlukları ve tablo/şekil başlığının yeri metin olarak belirtilmemiştir.
+ruleset: mudanya-lee
+version: 1
+name: "Mudanya Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Mudanya Üniversitesi LEE Tez Yazım Formatı (şablon), 2026"
+institution: "Mudanya Üniversitesi"
+source_url: https://best.mudanya.edu.tr/files/web_icerikler/crawler_assets/681/38c82b44.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+fonts:
+  allowed: [Times New Roman]    # Kapak açıklamaları [NA1]-[NA18] "yazı karakteri olarak Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 2. ve [NA38] "Tez boyunca paragraflar 12 punto"
+    line_spacing: 1.5           # 2. "1.5 cm satır aralıklı" (yazım hatası; 1,5 satır)
+    space_before_pt: 6          # 2. "önce ve sonra kısmı 6 nk"
+    space_after_pt: 6           # 2.
+    first_line_indent_cm: 0     # 2. "Paragraf başında girinti verilmemelidir"
+  heading_1:
+    size_pt: 18                 # 2. "Birinci derece başlıklar 18 punto"
+    all_caps: true              # 2. "tamamı büyük harfle"
+    line_spacing: 1.5           # 2. "1.5 cm satır aralığı"
+    space_before_pt: 24         # 2. "önce kısmı 24 nk"
+    space_after_pt: 18          # 2. "sonra kısmı 18 nk"
+    page_break_before: true     # 2. ve [NA39] "Her yeni bölüm yeni bir sayfadan başlatılmalıdır"
+  heading_2:
+    size_pt: 16                 # 2. "İkinci derece başlıklar 16 punto"
+    case: title                 # 2. "her sözcüğün ilk harfi büyük"
+    line_spacing: 1.5           # 2.
+    space_before_pt: 18         # 2. "önce kısmı 18 nk"
+    space_after_pt: 12          # 2. "sonra kısmı 12 nk"
+  heading_3:
+    size_pt: 14                 # 2. "Üçüncü ve daha büyük derecedeki başlıklar ... 14 punto"
+    case: title                 # 2. "her sözcüğün ilk harfi büyük"
+    line_spacing: 1.5           # 2.
+    space_before_pt: 18         # 2.
+    space_after_pt: 12          # 2.
+  reference_entry:
+    size_pt: 12                 # [NA43] "Metin 12 punto ile"
+    line_spacing: 1.0           # [NA43] "1 tek satır aralıklı"
+    space_before_pt: 0          # [NA43] "Önce ve sonra kısmı 0 nk"
+    space_after_pt: 0           # [NA43]
+
+page_numbering:
+  # İçindekiler açıklaması: Romen rakamlı bölümden Arap rakamlı bölüme geçiş; [NA32] "Giriş sayfa numarası 1'den"
+  formats_in_order: [lowerRoman, decimal]
+
+document:
+  forbid_tracked_changes: true

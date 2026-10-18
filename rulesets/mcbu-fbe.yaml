@@ -1,0 +1,51 @@
+# Manisa Celal Bayar Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Tez Yazım Kılavuzu, Manisa 2021
+# Kaynak: https://enerjisistemlerimuh.mcbu.edu.tr/db_images/site_118/file/tez-yazim-kilavuzu-3652TR.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: ana metin puntosu kılavuzda açıkça verilmiyor ("şablonda", madde 5); kodlanmadı.
+ruleset: mcbu-fbe
+version: 1
+name: "Manisa Celal Bayar Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Manisa Celal Bayar Üniversitesi Fen Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2021"
+institution: "Manisa Celal Bayar Üniversitesi"
+source_url: https://enerjisistemlerimuh.mcbu.edu.tr/db_images/site_118/file/tez-yazim-kilavuzu-3652TR.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # madde 2
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # madde 4 (kapakta sol 3 cm)
+
+fonts:
+  allowed: [Times New Roman]    # madde 5
+
+roles:
+  body:
+    line_spacing: 1.5           # madde 24 "ana bölümleri 1,5 satır aralığı ile yazılır"
+    first_line_indent_cm: 1.25  # madde 14
+  heading_1:
+    bold: true                  # madde 25 "koyu renk"
+    all_caps: true              # madde 25 "tamamı büyük harf"
+  heading_2:
+    bold: true                  # madde 25
+    case: title                 # madde 25 "sadece kelimelerin ilk harfleri büyük"
+  heading_3:
+    bold: true                  # madde 25
+    case: title                 # madde 25
+  figure_caption:
+    case: sentence              # madde 26 "ilk kelimenin ilk harfi büyük"
+    position: below             # madde 26 "şeklin altına"
+  table_caption:
+    case: sentence              # madde 26
+    position: above             # madde 26 "tabloların üzerine"
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # madde 17 "büyük Romen Rakamı", madde 24
+  position: bottom_center       # madde 17, 24 "sayfanın alt ortasına"
+
+document:
+  forbid_tracked_changes: true

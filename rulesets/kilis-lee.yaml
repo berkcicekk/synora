@@ -1,0 +1,70 @@
+# Kilis 7 Aralık Üniversitesi Lisansüstü Eğitim Enstitüsü — Yüksek Lisans/Doktora Tez-Seminer-Dönem Projesi Yazım Kılavuzu (2025)
+# Kaynak: https://enstitu.kilis.edu.tr/subdomain_files/enstitu1/files/73/Formlar/Tez%20Yaz%C4%B1m/Tez_Yazim_Kilavuzu%20(1).pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: kilis-lee
+version: 1
+name: "Kilis 7 Aralık Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Kilis 7 Aralık Üniversitesi LEE Tez-Seminer-Dönem Projesi Yazım Kılavuzu, 2025"
+institution: "Kilis 7 Aralık Üniversitesi"
+source_url: https://enstitu.kilis.edu.tr/subdomain_files/enstitu1/files/73/Formlar/Tez%20Yaz%C4%B1m/Tez_Yazim_Kilavuzu%20(1).pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 2.1
+  margins_cm: { top: 3.0, bottom: 3.0, left: 3.5, right: 2.5 }   # 2.3
+
+fonts:
+  allowed: [Times New Roman]                # 2.2
+
+roles:
+  body:
+    size_pt: 12                             # 2.2
+    line_spacing: 1.5                       # 2.4 "1,5 satır aralığında"
+    alignment: justify                      # 2.4 "iki yana yaslanmış biçimde (blok)"
+    first_line_indent_cm: 0                 # 2.3 "Paragraf başı içeriden başlamamalıdır"
+    space_after_pt: 10                      # 2.4, 2.6 "İki paragraf arasında da 10 nk"
+  heading_1:
+    bold: true                              # 2.6 Tablo 1 düzey 1
+    all_caps: true                          # 2.6 "tamamı büyük harf"
+    alignment: left                         # 2.6 "Sola dayalı"
+    page_break_before: true                 # 2.6 "sayfa başından başlamalıdır"
+    space_after_pt: 10                      # 2.4, 2.6 "başlıklarından sonra 10 nk"
+  heading_2:
+    bold: true                              # 2.6 düzey 2
+    case: title                             # 2.6 "her sözcüğün baş harfi büyük"
+    alignment: left                         # 2.6
+    space_before_pt: 10                     # 2.4 "paragraftan sonra gelen alt bölüm başlığı ile paragraf arasında 10 nk"
+    space_after_pt: 10                      # 2.4
+  heading_3:
+    bold: true                              # 2.6 düzey 3
+    case: sentence                          # 2.6 "sadece ilk sözcüğün baş harfi büyük"
+    alignment: left                         # 2.6
+    space_before_pt: 10                     # 2.4
+    space_after_pt: 10                      # 2.4
+  figure_caption:
+    alignment: center                       # 3.1.9 "şeklin ve görselin altına ortalı"
+    case: sentence                          # 3.1.9 "yalnız ilk harfi büyük"
+    position: below                         # 3.1.9
+    # ÇELİŞKİ: 3.1.9'da ayrıca "hem kendileri hem de başlıkları sola yaslanacak" deniyor; metindeki iki açık "ortalı" ifadesi esas alındı
+  table_caption:
+    alignment: left                         # 3.1.9 "tablo/çizelgenin üstüne sola dayalı"
+    case: sentence                          # 3.1.9
+    position: above                         # 3.1.9
+  reference_entry:
+    line_spacing: 1.0                       # 2.4 "kaynak listesinin yazımında 1 satır aralığı"; 3.2 Kaynaklar
+  footnote:
+    size_pt: 10                             # 2.2 "dipnotlar ... 10 punto"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.7
+  position: bottom_center                   # 2.7 "alt ve ortada"
+  forbid_decoration: true                   # 2.7 "parantez ve çizgi kullanmadan"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,80 @@
+# Hasan Kalyoncu Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım-Basım Kılavuzu (Gaziantep 2022)
+# Kaynak: https://enstitu.hku.edu.tr/wp-content/uploads/2025/02/TZ1_TezYazimKilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: hku-lee
+version: 1
+name: "Hasan Kalyoncu Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Hasan Kalyoncu Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım-Basım Kılavuzu, 2022"
+institution: "Hasan Kalyoncu Üniversitesi"
+source_url: https://enstitu.hku.edu.tr/wp-content/uploads/2025/02/TZ1_TezYazimKilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.1
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2
+    line_spacing: 1.5           # 2.3
+    first_line_indent_cm: 1.25  # 2.3 "1,25 cm'lik girinti"
+    space_after_pt: 0           # 2.3 "Paragraflar arasında boşluk bırakılmamalıdır"
+  heading_1:
+    size_pt: 12                 # 4 birinci düzey
+    bold: true                  # 4
+    all_caps: true              # 2.5, 4 "Bütün harfleri büyük"
+    alignment: left             # 2.4, 4 "Sola dayalı"
+    line_spacing: 1.5           # 4
+    space_after_pt: 6           # 4 "sonrası 6 nk"
+    page_break_before: true     # 2.5, 4 "Yeni bir sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # 4 ikinci düzey
+    bold: true                  # 4
+    # ÇELİŞKİ: 4 genel paragraf alt başlıkları "iki yana yaslı"; ikinci düzey tarifi "Sola dayalı"
+    alignment: left             # 2.4, 4
+    case: title                 # 2.5, 4 "Tüm kelimelerin ilk harfleri büyük"
+    line_spacing: 1.5           # 4
+    space_after_pt: 6           # 4
+  heading_3:
+    size_pt: 12                 # 4 üçüncü düzey
+    bold: true                  # 4
+    case: sentence              # 2.5, 4 "ilk kelimenin baş harfi büyük"
+    line_spacing: 1.5           # 4
+    space_after_pt: 6           # 4
+    # 2.4, 4: "bir tab içerde (1,25 cm)" — girinti türü belirsiz, denetlenmez
+  table_caption:
+    position: above             # 5.1 "çizelgenin üzerinde"
+    size_pt: 12                 # 2.4, 5.1
+    alignment: justify          # 5.1 "iki yana dayalı"
+    # ÇELİŞKİ: 2.4 başlıklarda 1,0 satır aralığı; 5.1 "1,5 satır" → satır aralığı denetlenmez
+  figure_caption:
+    position: below             # 5.2 "şeklin altında"
+    size_pt: 12                 # 2.4, 5.2
+    alignment: justify          # 5.2 "iki yana dayalı"
+    # ÇELİŞKİ: 2.4 1,0 satır aralığı; 5.2 "1,5 satır" → satır aralığı denetlenmez
+  block_quote:
+    size_pt: 10                 # 6 "italik ve 10 punto"
+    italic: true                # 6
+  footnote:
+    line_spacing: 1.0           # 2.3
+  reference_entry:
+    line_spacing: 1.0           # 2.4, 3.x Kaynakça
+    space_after_pt: 6           # 2.4 "metin sonu 6 nk"
+    # ÇELİŞKİ: 2.4 "11 punto"; Kaynakça bölümü "12 punto" → punto denetlenmez
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.6
+  position: bottom_center       # 2.6 "alt-orta boşluğa"
+  forbid_decoration: true       # 2.6 "çizgi veya benzeri bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

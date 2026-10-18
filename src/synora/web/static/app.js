@@ -2,6 +2,66 @@
 "use strict";
 
 (function () {
+  // --- Kılavuz seçimi: arama kutusu ve seçime göre LaTeX bağlantısı -------------------------
+  const rulesetSelect = document.getElementById("ruleset");
+  if (rulesetSelect && rulesetSelect.tagName === "SELECT") {
+    const filter = document.getElementById("ruleset-filter");
+    const count = document.getElementById("ruleset-count");
+    const latexLink = document.getElementById("latex-link");
+    const latexName = document.getElementById("latex-name");
+    // Türkçe büyük/küçük harf: "Iğdır" → "ığdır", "İzmir" → "izmir".
+    const fold = (s) => s.replace(/I/g, "ı").replace(/İ/g, "i").toLocaleLowerCase("tr");
+    const groups = Array.from(rulesetSelect.querySelectorAll("optgroup")).map((g) => ({
+      label: g.label,
+      options: Array.from(g.children).map((o) => ({
+        value: o.value, text: o.textContent, key: fold(o.textContent + " " + g.label),
+      })),
+    }));
+    const total = groups.reduce((n, g) => n + g.options.length, 0);
+
+    const syncLatex = () => {
+      const opt = rulesetSelect.selectedOptions[0];
+      if (!opt || !latexLink) return;
+      latexLink.href = "/sablon/" + encodeURIComponent(opt.value) + "/latex.zip";
+      latexName.textContent = opt.textContent;
+    };
+
+    const show = (words) => {
+      const current = rulesetSelect.value;
+      rulesetSelect.textContent = "";
+      let shown = 0;
+      groups.forEach((g) => {
+        const opts = g.options.filter((o) => words.every((w) => o.key.includes(w)));
+        if (!opts.length) return;
+        const og = document.createElement("optgroup");
+        og.label = g.label;
+        opts.forEach((o) => og.appendChild(new Option(o.text, o.value, false, o.value === current)));
+        rulesetSelect.appendChild(og);
+        shown += opts.length;
+      });
+      return shown;
+    };
+
+    if (filter && total > 8) {
+      filter.hidden = false;
+      filter.addEventListener("input", () => {
+        const words = fold(filter.value).split(/\s+/).filter(Boolean);
+        let shown = show(words);
+        if (words.length && !shown) {
+          // Seçim hiç boş kalmasın: eşleşme yoksa tüm liste geri gelir.
+          shown = show([]);
+          count.textContent = "Eşleşen kılavuz yok; tüm liste gösteriliyor.";
+        } else {
+          count.textContent = words.length ? shown + " kılavuz" : "";
+        }
+        syncLatex();
+      });
+      // Arama kutusunda Enter formu göndermesin.
+      filter.addEventListener("keydown", (e) => { if (e.key === "Enter") e.preventDefault(); });
+    }
+    rulesetSelect.addEventListener("change", syncLatex);
+  }
+
   // --- Yükleme ---------------------------------------------------------------------------
   const form = document.getElementById("upload");
   if (form) {

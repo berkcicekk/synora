@@ -1,0 +1,66 @@
+# Aydın Adnan Menderes Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Seminer, Tez ve Dönem Projesi Yazım Kılavuzu (Aydın, 2023)
+# Kaynak: https://enstitu.adu.edu.tr/fen/webfolders/topics/20231222143104-ZMKLAVUZU22ARALK2023-000075578442804020574208.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: adu-fbe
+version: 1
+name: "Aydın Adnan Menderes Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "ADÜ Fen Bilimleri Enstitüsü Lisansüstü Seminer, Tez ve Dönem Projesi Yazım Kılavuzu, 2023"
+institution: "Aydın Adnan Menderes Üniversitesi"
+source_url: https://enstitu.adu.edu.tr/fen/webfolders/topics/20231222143104-ZMKLAVUZU22ARALK2023-000075578442804020574208.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.2
+  margins_cm: { top: 3.0, bottom: 2.0, left: 3.0, right: 3.0 }   # 2.5
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3
+    line_spacing: 1.5           # 2.4
+    alignment: justify          # 2.4 "İki Yana Yasla", 2.5
+    first_line_indent_cm: 1.0   # 2.4 "İlk satır 1 cm", 2.6
+    space_before_pt: 0          # 2.4 "Önce (0 nk)"
+    space_after_pt: 6           # 2.4 "Sonra (6 nk)"
+  heading_1:
+    size_pt: 14                 # 2.9
+    bold: true                  # 2.9
+    all_caps: true              # 2.9 "başlıklarının tamamı" büyük harf
+    alignment: center           # 2.4 "satır ortasına hizalı", 2.6 "metin bloğunun ortasına"
+    page_break_before: true     # 2.4, 2.9 "daima yeni bir sayfada başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 2.9
+    bold: true                  # 2.9
+    alignment: left             # 2.6, 2.9 "sayfa soluna hizalı"
+    case: title                 # 2.9 "her sözcüğün ilk harfi büyük"
+  heading_3:
+    size_pt: 12                 # 2.9
+    bold: true                  # 2.9
+    alignment: left             # 2.6, 2.9
+  figure_caption:
+    position: below             # 2.15 "şekil/resimin altına"
+  table_caption:
+    position: above             # 2.15 "çizelgenin üstüne"
+  block_quote:
+    italic: true                # 2.10 "italik olarak"
+    line_spacing: 1.0           # 2.4, 2.10 "1 satır aralık"
+  reference_entry:
+    line_spacing: 1.0           # 2.4 "kaynaklar ... 1 satır aralığı"
+  footnote:
+    size_pt: 10                 # 2.11
+    line_spacing: 1.0           # 2.4
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.8
+  position: bottom_center       # 2.8 "sayfa altında ... sayfa ortasına hizalı"
+
+document:
+  forbid_tracked_changes: true

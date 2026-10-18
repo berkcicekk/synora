@@ -1,0 +1,82 @@
+# Yalova Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (Yalova 2022)
+# Kaynak: https://lee.yalova.edu.tr/Uploads/lee/files/Tez-Yazim-Kilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Kılavuz iki yazı tipine izin veriyor (Times New Roman 12 pt ya da Arial 11 pt, 3.2);
+# punto yazı tipine bağlı olduğundan gövde puntosu burada denetlenmez.
+ruleset: yalova-lee
+version: 1
+name: "Yalova Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Yalova Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2022"
+institution: "Yalova Üniversitesi"
+source_url: https://lee.yalova.edu.tr/Uploads/lee/files/Tez-Yazim-Kilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3 "A4 (210 x 297 mm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 2.5, right: 2.5 }   # 3.1 "tüm kenarlarından 2,5 cm"
+
+fonts:
+  allowed: [Times New Roman, Arial]   # 3.2
+
+roles:
+  body:
+    line_spacing: 1.5           # 3.3
+    alignment: justify          # 3.3 "iki yana yaslanmış"
+    first_line_indent_cm: 0     # 3.3 "girinti olmamalı"
+    space_before_pt: 6          # 3.3 "önceki ve sonraki boşluklar 6 nk"
+    space_after_pt: 6           # 3.3
+  heading_1:
+    bold: true                  # 3.4 "kalın karakterler ile"
+    all_caps: true              # 3.4 "tamamen büyük harflerle"
+    first_line_indent_cm: 0     # 3.4 "girinti yapılmadan"
+    space_before_pt: 0          # 3.4
+    space_after_pt: 12          # 3.4
+    page_break_before: true     # 3.4 "yeni bir sayfanın ilk satırı"
+  heading_2:
+    bold: true                  # 3.4
+    case: title                 # 3.4 "her sözcüğün ilk harfi büyük", bağlaçlar küçük
+    first_line_indent_cm: 0     # 3.4
+    space_before_pt: 12         # 3.4
+    space_after_pt: 6           # 3.4
+  heading_3:
+    bold: true                  # 3.4
+    case: sentence              # 3.4 "yalnız ilk sözcüğün ilk harfi büyük"
+    first_line_indent_cm: 0     # 3.4
+    space_before_pt: 12         # 3.4 "ikinci derece başlıklardan itibaren"
+    space_after_pt: 6           # 3.4
+  figure_caption:
+    line_spacing: 1.0           # 3.3
+    alignment: center           # 3.6 "satırda ortalı"
+    position: below             # 3.6 "şeklin altına"
+    space_before_pt: 6          # 3.6 "şekil açıklaması ile şekil arasında 6 nk"
+    space_after_pt: 12          # 3.6 "sonraki paragrafın ilk satırı ile arasında 12 nk"
+  table_caption:
+    line_spacing: 1.0           # 3.3, 3.6
+    alignment: center           # 3.6
+    position: above             # 3.6 "tablonun üstüne"
+    space_before_pt: 12         # 3.6
+    space_after_pt: 6           # 3.6
+  block_quote:
+    size_pt: 10                 # s. 16 "10 punto"
+    line_spacing: 1.0           # s. 16 "1,0 satır aralığı"
+    indent_left_cm: 1.0         # s. 16 "sağ ve soldan 1'er cm içeriden"
+    italic: false               # s. 16 "italik olmadan"
+  reference_entry:
+    line_spacing: 1.0           # 3.9
+    space_after_pt: 12          # 3.9 "kaynağın son satırı ile sonraki kaynağın ilk satırı arasında 12 nk"
+  footnote:
+    line_spacing: 1.0           # 3.3
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 3.5 başlangıç kısmı küçük Romen, Giriş'ten itibaren 1, 2, 3
+  position: bottom_center       # 3.5 "sayfanın alt orta kısmına"
+  forbid_decoration: true       # 3.5 "ayraç, çizgi gibi simgeler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

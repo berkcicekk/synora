@@ -1,0 +1,66 @@
+# Malatya Turgut Özal Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu, 2022
+# Kaynak: https://lisansustu.ozal.edu.tr/subdomain_files/lisansustu.ozal.edu.tr/files/39/Malatya%20Turgut%20%C3%96zal%20%C3%9Cnivesitesi%20Lisans%C3%BCst%C3%BC%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: kenar boşlukları yalnızca Şekil 1.1 görselinde verildiği için kodlanmadı; metin punto
+# "yazı tipine göre 11 veya 12" (2.2) olduğundan tek değer olarak kodlanmadı.
+ruleset: ozal-lee
+version: 1
+name: "Malatya Turgut Özal Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Malatya Turgut Özal Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2022"
+institution: "Malatya Turgut Özal Üniversitesi"
+source_url: https://lisansustu.ozal.edu.tr/subdomain_files/lisansustu.ozal.edu.tr/files/39/Malatya%20Turgut%20%C3%96zal%20%C3%9Cnivesitesi%20Lisans%C3%BCst%C3%BC%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1, 2.3
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    line_spacing: 1.5           # 2.5
+    alignment: justify          # 2.3 "iki yana yasla formatı"
+    first_line_indent_cm: 1.25  # 2.3
+    space_before_pt: 6          # 2.5 "paragraftan önce ve sonra 6 punto (nk)"
+    space_after_pt: 6           # 2.5
+  heading_1:
+    all_caps: true              # 2.7 "BÜYÜK HARF ile"
+    alignment: left             # 2.3 "sol boşluk çerçevesine bitişik"
+    page_break_before: true     # 2.5 "Bölümler daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    case: title                 # 2.7 "Her Kelimenin İlk Harfi Büyük"
+    alignment: left             # 2.3
+  heading_3:
+    case: sentence              # 2.7 "birinci kelimenin ilk harfi büyük"
+    alignment: left             # 2.3
+  figure_caption:
+    line_spacing: 1.0           # 2.5, 3.1 "tek satır aralığı"
+    alignment: left             # 3 "sola dayalı"
+    first_line_indent_cm: 0     # 3 "ilk satır girintisi (tab) yapılmadan"
+    position: below             # 3 "şekil açıklamaları ise şeklin altına"
+  table_caption:
+    line_spacing: 1.0           # 2.5, 3.1
+    alignment: left             # 3.1
+    first_line_indent_cm: 0     # 3.1
+    position: above             # 3 "Çizelge açıklamaları çizelgenin üstüne"
+  block_quote:
+    line_spacing: 1.0           # 2.5 "alıntılar ... 1 satır aralığı"
+  footnote:
+    line_spacing: 1.0           # 2.5, 2.9
+  reference_entry:
+    line_spacing: 1.0           # 2.5 "kaynaklar listesinin yazımında ise 1 satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.6
+  position: bottom_center       # 2.6 "sayfa altında orta kısma"
+  forbid_decoration: true       # 2.6 "ayıraç, çizgi vb gibi bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

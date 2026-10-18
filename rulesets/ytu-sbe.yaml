@@ -1,0 +1,81 @@
+# Yıldız Teknik Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Kılavuzu (İstanbul, 2022)
+# Kaynak: https://sbe.yildiz.edu.tr/sites/sbe.yildiz.edu.tr/files/sbe-tez-yazim-kilavuzu-guncel.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ytu-sbe
+version: 1
+name: "Yıldız Teknik Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "YTÜ Sosyal Bilimler Enstitüsü Tez Yazım Kılavuzu, 2022"
+institution: "Yıldız Teknik Üniversitesi"
+source_url: "https://sbe.yildiz.edu.tr/sites/sbe.yildiz.edu.tr/files/sbe-tez-yazim-kilavuzu-guncel.pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 boyutunda (21 x 29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.2/1
+
+fonts:
+  allowed: [Times New Roman]    # 2.3/1
+
+roles:
+  body:
+    size_pt: 12                 # 2.3/1
+    line_spacing: 1.5           # 2.2/5 "Giriş'den Kaynakça'ya kadar 1,5 satır"
+    alignment: justify          # 2.2/3 "iki yana yaslı"
+    space_before_pt: 6          # 2.2/4 "öncesi ve sonrasındaki boşluk puntosu 6"
+    space_after_pt: 6           # 2.2/4
+    # 2.2/10: paragraf girintisi isteğe bağlı → denetlenmez
+  heading_1:
+    bold: true                  # 2.4/3
+    all_caps: true              # 2.4/3 "tüm harfleri büyük"
+    alignment: left             # 2.4/3 "sola hizalı"
+    space_before_pt: 72         # 2.4/4
+    space_after_pt: 18          # 2.4/4
+    page_break_before: true     # 2.2/2, 2.4/6
+  heading_2:
+    bold: true                  # 2.4/3
+    case: title                 # 2.4/3 "sadece kelimelerin ilk harfleri büyük"
+    alignment: left             # 2.4/3
+    space_before_pt: 18         # 2.4/4
+    space_after_pt: 12          # 2.4/4
+  heading_3:
+    bold: true                  # 2.4/3
+    case: title                 # 2.4/3
+    alignment: left             # 2.4/3
+    space_before_pt: 12         # 2.4/4
+    space_after_pt: 6           # 2.4/4
+  table_caption:
+    bold: true                  # 3.2.1/5 "Başlıklar koyu, ortalı"
+    alignment: center           # 3.2.1/5
+    case: title                 # 3.2.1/5 "her kelimenin ilk harfi büyük"
+    line_spacing: 1.0           # 2.2/6
+    position: above             # 3.2.1/5 "tablo ve şeklin üzerinde"
+  figure_caption:
+    bold: true                  # 3.2.1/5
+    alignment: center           # 3.2.1/5
+    case: title                 # 3.2.1/5
+    line_spacing: 1.0           # 2.2/6
+    position: above             # 3.2.1/5 şekil başlığı da şeklin üzerinde
+  front_matter:
+    line_spacing: 1.0           # 2.2/5 Özet, Ön Söz, İçindekiler, listeler 1 satır
+  block_quote:
+    indent_left_cm: 0.5         # 4.8 "soldan 0.5 cm içeriden başlayan ayrı bir paragraf"
+  footnote:
+    size_pt: 10                 # 2.3/2
+    line_spacing: 1.0           # 2.3/2, 2.2/6
+  reference_entry:
+    line_spacing: 1.0           # 2.2/5 "Kaynakça 1 satır aralığı"
+
+page_numbering:
+  # 2.2/8-9: Giriş'e kadar küçük Romen (iii, iv…), Giriş'ten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.2/9 "sayfanın altına ve ortasına"
+  forbid_decoration: true       # 2.2/9 "nokta, parantez, çizgi vb. hiçbir işaret kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

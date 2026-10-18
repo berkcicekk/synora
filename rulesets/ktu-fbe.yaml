@@ -1,0 +1,59 @@
+# Karadeniz Teknik Üniversitesi Fen Bilimleri Enstitüsü — Yüksek Lisans ve Doktora Tez Yazım Kılavuzu (Haziran 2023)
+# Kaynak: https://www.ktu.edu.tr/dosyalar/fbe_fe8c3.pdf  (enstitü sitesi "Lisansüstü Tez Yazım Kılavuzu" sayfası)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Sayfa numarası konumu bölüme göre değişiyor (ön sayfalar alt orta, metin üst orta; 2.7);
+# tek bir konum alanı olduğundan position verilmedi.
+ruleset: ktu-fbe
+version: 1
+name: "Karadeniz Teknik Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "KTÜ Fen Bilimleri Enstitüsü Yüksek Lisans ve Doktora Tez Yazım Kılavuzu, 2023"
+institution: "Karadeniz Teknik Üniversitesi"
+source_url: https://www.ktu.edu.tr/dosyalar/fbe_fe8c3.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "DIN-A4 formuna uygun (210x297)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 2.5, right: 2.5 }   # 2.3 üst 3 cm, sol 2,5 cm, alt ve sağ 2,5 cm
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2 "yazı boyutu 12 punto"
+    line_spacing: 1.5           # 2.5 "bütün metin 1,5 satır aralıkla"
+    first_line_indent_cm: 1.0   # 2.5 "paragraflara 1 cm boşluk (sekme) bırakılarak"
+  heading_1:
+    bold: true                  # 2.6 "büyük harflerle ve koyu (bold)"
+    all_caps: true              # 2.6
+    page_break_before: true     # 2.3 "ana bölüm başlıkları, yeni bir sayfadan başlamak üzere"
+  heading_2:
+    bold: true                  # 2.6 "alt başlıklar ve başlık numaraları koyu (bold)"
+  heading_3:
+    bold: true                  # 2.6
+  figure_caption:
+    line_spacing: 1.0           # 2.5, 5.1 "şekil yazıları 1 satır aralıklı"
+    alignment: center           # 5.1 "şekil yazısı ortaya hizalanacak"
+    case: sentence              # 5.1 "(ilk kelime hariç) ilk harfleri küçük"
+  table_caption:
+    line_spacing: 1.0           # 2.5, 5.2 "tablo yazıları 1 satır aralıkla"
+    alignment: center           # 5.2 "sayfaya ortalı hizalanacak"
+    position: above             # 5.2 "tablonun üstüne"
+  reference_entry:
+    line_spacing: 1.0           # 2.5 "kaynaklar ... 1 satır aralıklı"
+    space_after_pt: 12          # 2.5 "iki kaynak arasında bir satır (12nk) boşluk"
+  footnote:
+    line_spacing: 1.0           # 2.5 "dipnotlar ... 1 satır aralıklı"
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # 2.7 ön sayfalar "Romen rakamları ile (I,II,III,IV,V...)", metin 1, 2, 3
+  forbid_decoration: true       # 2.7 "parantez veya iki çizgi gibi işaretler arasında yazılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

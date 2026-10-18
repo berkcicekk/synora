@@ -1,0 +1,69 @@
+# Aydın Adnan Menderes Üniversitesi Sosyal Bilimler Enstitüsü — Yüksek Lisans / Doktora Tez Yazım Kılavuzu
+# (Düzenleme No: 1, Düzenleme Tarihi: 22 Haziran 2017; enstitü sitesine 03.09.2025'te yüklenen sürüm)
+# Kaynak: https://enstitu.adu.edu.tr/sosyal/webfolders/private/20250903144046-27VAYSTEZYAZMKLAVUZU-000022812388538499818150.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Bölüm adları (numarasız): "Biçim ve Yazı Planı" altındaki alt başlıklar.
+# Not: Paragraf aralığı "12 nk" (önce/sonra belirtilmemiş) → body space_* yazılmadı.
+ruleset: adu-sbe
+version: 1
+name: "Aydın Adnan Menderes Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "ADÜ Sosyal Bilimler Enstitüsü Yüksek Lisans / Doktora Tez Yazım Kılavuzu (Düzenleme 1), 2017"
+institution: "Aydın Adnan Menderes Üniversitesi"
+source_url: https://enstitu.adu.edu.tr/sosyal/webfolders/private/20250903144046-27VAYSTEZYAZMKLAVUZU-000022812388538499818150.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kullanılacak Kâğıdın Niteliği
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.3, right: 2.0 }   # Kenar Boşlukları
+
+fonts:
+  allowed: [Times New Roman]    # Yazı Karakteri ve Büyüklüğü
+
+roles:
+  body:
+    size_pt: 12                 # Yazı Karakteri ve Büyüklüğü
+    line_spacing: 1.5           # Satır ve Paragraf Aralıkları
+    alignment: justify          # Kenar Boşlukları, Paragraflar "İki yana yasla"
+    first_line_indent_cm: 1.0   # Paragraflar "paragraf girintisi 1 cm"
+  heading_1:
+    size_pt: 14                 # Bölümlerin Numaralandırılması
+    bold: true                  # Bölümlerin Numaralandırılması
+    all_caps: true              # Bölümlerin Numaralandırılması "büyük harflerle"
+    space_before_pt: 12         # Satır ve Paragraf Aralıkları "tüm başlıklar öncesinde 12 nk"
+    space_after_pt: 18          # Satır ve Paragraf Aralıkları "tüm başlıklarından sonra 18 nk"
+  heading_2:
+    size_pt: 13                 # Bölümlerin Numaralandırılması
+    bold: true                  # Bölümlerin Numaralandırılması
+    case: title                 # "sadece kelimelerin baş harfleri büyük"
+    space_before_pt: 12         # Satır ve Paragraf Aralıkları
+    space_after_pt: 18          # Satır ve Paragraf Aralıkları
+  heading_3:
+    # ÇELİŞKİ: metin "üçüncü derece alt başlıklar 12 punto"; hemen altındaki örnek "11 punto" (metin alındı)
+    size_pt: 12                 # Bölümlerin Numaralandırılması
+    bold: true                  # Bölümlerin Numaralandırılması
+    case: title                 # "sadece kelimelerin baş harfleri büyük"
+    space_before_pt: 12         # Satır ve Paragraf Aralıkları
+    space_after_pt: 18          # Satır ve Paragraf Aralıkları
+  figure_caption:
+    line_spacing: 1.0           # Satır ve Paragraf Aralıkları "tek satır aralığı"
+    position: below             # Satır ve Paragraf Aralıkları "alt kısmında"
+  table_caption:
+    line_spacing: 1.0           # Satır ve Paragraf Aralıkları
+    position: above             # Satır ve Paragraf Aralıkları "üst kısmında"
+  footnote:
+    size_pt: 10                 # Yazı Karakteri ve Büyüklüğü
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Sayfa Numaraları
+  # Sayfa Numaraları: tek yüz basımda sağ alt köşe (çift yüzde tek sayfalar sağ alt, çift sayfalar sol alt)
+  position: bottom_right
+  forbid_decoration: true       # Sayfa Numaraları "ayıraç, çizgi vb. gibi karakterler bulunmamalıdır"
+
+document:
+  forbid_tracked_changes: true

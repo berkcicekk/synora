@@ -1,0 +1,52 @@
+# TED University Graduate School — Graduate Thesis Writing Guide (Ocak 2021)
+# Kaynak: https://graduate.tedu.edu.tr/sites/default/files/docs/tedu_thesis_writing_guide_jan_2021_0.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Paragraf biçimi serbest (girinti 1 cm VEYA paragraflar arası boşluk, 2.5) → first_line_indent_cm yazılmadı.
+ruleset: tedu-lee
+version: 1
+name: "TED Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "TED University Graduate School Graduate Thesis Writing Guide, 2021"
+institution: "TED Üniversitesi"
+source_url: https://graduate.tedu.edu.tr/sites/default/files/docs/tedu_thesis_writing_guide_jan_2021_0.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.2
+  # 2.3: sol 4 cm; diğerleri "en az 2,5 cm" (alt sınır; burada tam değer olarak yazıldı)
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }
+
+fonts:
+  # 2.4: "Arial, Bookman, Palatino, Tahoma, Times New Roman, and Verdana" (Bookman/Palatino standart adlarıyla)
+  allowed: [Arial, Bookman Old Style, Palatino Linotype, Tahoma, Times New Roman, Verdana]
+
+roles:
+  body:
+    size_pt: 12                 # 2.4
+    line_spacing: 1.5           # 2.5
+  heading_1:
+    size_pt: 14                 # Ek "Enumeration of the text section"
+    bold: true                  # Ek "in bold character"
+    all_caps: true              # Ek "CAPITAL LETTERS"
+    alignment: center           # 3.2 Text "centered between the ... text margins"
+    page_break_before: true     # 3.2 "new chapters should start on a new page"
+  figure_caption:
+    position: below             # 3.1.14 "placed below the picture"
+  table_caption:
+    position: above             # 3.1.12 "written above the table"
+  block_quote:
+    line_spacing: 1.0           # 3.1.16 "single line space"
+  reference_entry:
+    line_spacing: 1.0           # 3.1.19 "single line spacing"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.7
+  position: bottom_center       # 2.7 "bottom of the page and centered"
+
+document:
+  forbid_tracked_changes: true

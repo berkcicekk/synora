@@ -1,0 +1,83 @@
+# Ardahan Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu (Haziran 2023'ten itibaren yürürlükte)
+# Kaynak: https://lee.ardahan.edu.tr/Files/ckFiles/lee-ardahan-edu-tr/G%C3%BCncel%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu%20G%C3%BCncel.docx
+# ("Tez Yazım Kılavuzu ve Formlar" sayfasındaki "Güncel Tez Yazım Kılavuzu")
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ardahan-lee
+version: 1
+name: "Ardahan Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Ardahan Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2023"
+institution: "Ardahan Üniversitesi"
+source_url: https://lee.ardahan.edu.tr/Files/ckFiles/lee-ardahan-edu-tr/G%C3%BCncel%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu%20G%C3%BCncel.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }   # 1.2
+
+fonts:
+  allowed: [Times New Roman]    # 1.5
+
+roles:
+  body:
+    size_pt: 12                 # 1.5
+    line_spacing: 1.5           # 1.5, 1.6 "1,5 satır (18 pt)"
+    alignment: justify          # 1.7 "iki yana yaslı"
+    first_line_indent_cm: 1.0   # 1.5, 1.7 "1 cm girinti"
+    space_after_pt: 0           # 1.7 "Paragraf geçişlerinde boşluk bırakılmamalıdır"
+  heading_1:
+    size_pt: 14                 # 2
+    bold: true                  # 2
+    all_caps: true              # 2 "bütün sözcükler büyük harfle"
+    # ÇELİŞKİ: 1.7 "Başlıklar dahil bütün metin iki yana yaslı"; 2 bölüm başlıkları için "metin ortalanır" (2 alındı)
+    alignment: center           # 2
+    line_spacing: 1.5           # 2 "Bütün başlıklarda satır aralığı 1,5"
+    space_after_pt: 24          # 2 "sonrasında ... 24 nk"
+    page_break_before: true     # 1.1, 2 "yeni bir sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # 2.1
+    bold: true                  # 2.1
+    all_caps: true              # 2.1 "bütün sözcükler büyük harfle"
+    alignment: justify          # 2.1 "iki yana yaslanır"
+    line_spacing: 1.5           # 2
+    space_before_pt: 12         # 2.1
+    space_after_pt: 12          # 2.1
+  heading_3:
+    size_pt: 12                 # 2.1.1
+    bold: true                  # 2.1.1
+    case: title                 # 2.1.1 "bütün sözcüklerin ilk harfleri büyük"
+    alignment: justify          # 2.1.1
+    line_spacing: 1.5           # 2
+    space_before_pt: 12         # 2.1.1
+    space_after_pt: 12          # 2.1.1
+  figure_caption:
+    line_spacing: 1.0           # 1.6
+    alignment: justify          # 3.2 "iki yana yaslı"
+    first_line_indent_cm: 0     # 3.2 "paragraf girintisi olmadan"
+    case: sentence              # 3.2 "tümce düzeninde"
+    position: below             # 3.2 "şeklin altında"
+  table_caption:
+    line_spacing: 1.0           # 1.6
+    alignment: justify          # 3.2
+    first_line_indent_cm: 0     # 3.2
+    case: sentence              # 3.2
+    position: above             # 3.2 "tablonun üstünde"
+  block_quote:
+    line_spacing: 1.0           # 1.6, 1.7 "Satır aralığı tek"
+    indent_left_cm: 1.0         # 1.7 "soldan ve sağdan 1 cm girinti"
+  reference_entry:
+    line_spacing: 1.0           # 1.6
+  footnote:
+    line_spacing: 1.0           # 1.6 "1 satır (12 pt)"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.3
+  position: top_right           # 1.3 "yazı çerçevesinin sağ üst köşesine"
+  forbid_decoration: true       # 1.3 "parantez, çizgi vb. işaretler kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

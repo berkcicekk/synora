@@ -1,0 +1,79 @@
+# Ankara Hacı Bayram Veli Üniversitesi Lisansüstü Eğitim Enstitüsü — Dönem Projesi ve Tez Yazım Kılavuzu (e-imzalı, 26.06.2025)
+# Kaynak: https://hacibayram.edu.tr/api/files/1/Hac%C4%B1bayram%20AHBV/le(tr-TR)/Tez%20ve%20Mezuniyet/TEZ%20YAZIM%20KILAVUZU%20VE%20%C5%9EABLONLARI%20(GAZ%C4%B0)/AHBV/12.03.2024/TEZ%20YAZIM%20KLAVUZU%2026.06.2025.pdf
+# Sayfa: https://hacibayram.edu.tr/le/tez-yazim-kilavuzu
+# 1.4: ön kısım "Roma rakamlarıyla" (küçük/büyük belirtilmemiş) → formats_in_order verilmedi.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: hbv-lee
+version: 1
+name: "Ankara Hacı Bayram Veli Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "AHBVÜ LEE Dönem Projesi ve Tez Yazım Kılavuzu, 2025"
+institution: "Ankara Hacı Bayram Veli Üniversitesi"
+source_url: https://hacibayram.edu.tr/api/files/1/Hac%C4%B1bayram%20AHBV/le(tr-TR)/Tez%20ve%20Mezuniyet/TEZ%20YAZIM%20KILAVUZU%20VE%20%C5%9EABLONLARI%20(GAZ%C4%B0)/AHBV/12.03.2024/TEZ%20YAZIM%20KLAVUZU%2026.06.2025.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.1 "A4 (21 x 29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 1.3 "Ciltleme tarafı için 4 cm ... Diğer kenar boşlukları ise 2,5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 1.5
+
+roles:
+  body:
+    size_pt: 12                 # 1.5 "12 punto büyüklüğünde"
+    line_spacing: 1.5           # 1.7 "1,5 satır aralığı"
+    alignment: justify          # 1.6 "iki yana yaslı"
+    first_line_indent_cm: 1.0   # 1.7 "ilk satırı 1 cm girintili"
+    space_before_pt: 6          # 1.7 "öncesi ve sonrasında 6 nk"
+    space_after_pt: 6           # 1.7
+  heading_1:
+    size_pt: 12                 # 2.2.1 "tamamı büyük harflerle, 12 punto büyüklüğünde, koyu ve sola yaslı"
+    bold: true                  # 2.2.1
+    all_caps: true              # 2.2.1
+    alignment: left             # 2.2.1
+    first_line_indent_cm: 1.0   # 1.7, 2.2.1 "paragraf girintisine göre hizalanmalıdır"
+    space_before_pt: 12         # 2.2.1 "12 nk önce ve sonra"
+    space_after_pt: 12          # 2.2.1
+  heading_2:
+    size_pt: 12                 # 2.2.1 "Alt başlıklar ... 12 punto büyüklüğünde, koyu ve sola yaslı"
+    bold: true                  # 2.2.1
+    case: title                 # 2.2.1 "yalnızca kelimelerin ilk harfi büyük"
+    alignment: left             # 2.2.1
+  heading_3:
+    size_pt: 12                 # 2.2.1
+    bold: true                  # 2.2.1
+    case: title                 # 2.2.1
+    alignment: left             # 2.2.1
+  table_caption:
+    size_pt: 12                 # 2.2.2 "12 punto büyüklüğünde, koyu ve ortalı, 12 nk önce ve sonra"
+    bold: true                  # 2.2.2
+    alignment: center           # 2.2.2
+    space_before_pt: 12         # 2.2.2
+    space_after_pt: 12          # 2.2.2
+    line_spacing: 1.0           # 1.7 "şekiller, tablolar ve diğer gösterimler ... tek satır aralığı"
+    position: above             # 2.2.2 "Tablonun başlığı, ilgili tablonun hemen üstünde"
+  figure_caption:
+    size_pt: 12                 # 2.2.2
+    bold: true                  # 2.2.2
+    alignment: center           # 2.2.2
+    space_before_pt: 12         # 2.2.2
+    space_after_pt: 12          # 2.2.2
+    line_spacing: 1.0           # 1.7
+    position: below             # 2.2.2 "şekillerin ... başlıkları hemen altında"
+  footnote:
+    size_pt: 10                 # 1.5 "dipnot ya da son not yazımında ... 10 punto"
+    line_spacing: 1.0           # 1.7 "dipnot ve son not tek satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # 1.7 "'Kaynakça' kısımları ... tek satır aralığı"
+
+page_numbering:
+  position: bottom_center       # 1.4 "sayfanın altında, ortalı"
+
+document:
+  forbid_tracked_changes: true

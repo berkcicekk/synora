@@ -1,0 +1,55 @@
+# Çukurova Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Yazım Kılavuzu (PDF tarihi 2013)
+# Kaynak: https://sbe.cu.edu.tr/storage/formlar/Tez%20yaz%C4%B1m%20k%C4%B1lavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# 2.3 yazı tipi için "Times New Roman, Calibri, Arial, vb." diyor (kapalı liste değil) → fonts.allowed verilmedi.
+ruleset: cu-sabe
+version: 1
+name: "Çukurova Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "ÇÜ Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2013"
+institution: "Çukurova Üniversitesi"
+source_url: https://sbe.cu.edu.tr/storage/formlar/Tez%20yaz%C4%B1m%20k%C4%B1lavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 (210-297 mm)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 3.5, right: 2.5 }   # 2.4
+
+roles:
+  body:
+    size_pt: 12                 # 2.3 "(12 punto)"
+    line_spacing: 1.5           # 2.6 "Ana metin yazımında 1,5 satır aralığı"
+    alignment: justify          # 2.4 "sol ve sağ kenarlara yanaşık"
+  heading_1:
+    page_break_before: true     # 2.6 "Ana bölümler ... daima yeni bir sayfadan başlamalıdır"
+  figure_caption:
+    size_pt: 10                 # 2.14 "1 satır aralığında ve 10 puntoda"
+    line_spacing: 1.0           # 2.6, 2.14
+    alignment: justify          # 2.14 "ana metin gibi bloklama tarzında"
+    position: below             # 2.14 "şekil açıklaması ise şeklin altına"
+  table_caption:
+    size_pt: 10                 # 2.14
+    line_spacing: 1.0           # 2.6, 2.14
+    alignment: justify          # 2.14
+    position: above             # 2.14 "Çizelge açıklamaları çizelgenin üstüne"
+  block_quote:
+    line_spacing: 1.0           # 2.6 "alıntılar ... satır aralığı 1"
+  footnote:
+    size_pt: 10                 # 2.9 "Dip notlar 10 punto ve 1 satır aralığı"
+    line_spacing: 1.0           # 2.9
+  reference_entry:
+    size_pt: 10                 # 3.4 "10 punto büyüklüğünde ... 1 aralıkla"
+    line_spacing: 1.0           # 3.4, 2.6
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.7 ön sayfalar "i, ii, iii", Giriş'ten "1,2,3"
+  position: bottom_center       # 2.7 "sayfa altında orta kısma"
+  forbid_decoration: true       # 2.7 "ayıraç, çizgi vb.. gibi işaretler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

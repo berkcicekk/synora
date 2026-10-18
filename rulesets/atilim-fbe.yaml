@@ -1,0 +1,45 @@
+# Atılım Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Ek-2a, Word belgesi 2026)
+# Kaynak: https://www.atilim.edu.tr/uploads/pages/tez-yazim-kilavuzu-1517410925/1786108572-Ek-2a_FBE_Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu.docx
+# Sayfa: https://www.atilim.edu.tr/tr/fbe/page/1000/tez-yazim-kilavuzu
+# Not: Sosyal Bilimler Enstitüsü sayfasında yalnızca süreç belgeleri ve kontrol listesi bulundu, ayrı kılavuz metnine ulaşılamadı.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: atilim-fbe
+version: 1
+name: "Atılım Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Atılım Üniversitesi FBE Tez Yazım Kılavuzu, 2026"
+institution: "Atılım Üniversitesi"
+source_url: https://www.atilim.edu.tr/uploads/pages/tez-yazim-kilavuzu-1517410925/1786108572-Ek-2a_FBE_Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 ölçülerinde"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.2 "sol kenar boşluğu tam olarak 4 cm, diğer kenar boşlukları tam olarak 2.5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 2.3 "Sadece Times New Roman fontu geçerli"
+
+roles:
+  body:
+    size_pt: 12                 # 2.3 "Yazı boyutu 12 punto"
+    line_spacing: 1.5           # 2.4 "genelinde 1.5 satır aralığı"
+  heading_1:
+    all_caps: true              # 3.2 "BÖLÜM başlığı ... ortada ve büyük harflerle"
+    alignment: center           # 3.2 "metin alanı içerisinde ortalanmış"
+    page_break_before: true     # 3.2 "Ana bölümler yeni bir sayfayla başlamalıdır"
+  table_caption:
+    position: above             # 3.2.1 "tablo üst çizgisinin bir satır üzerine"
+  figure_caption:
+    position: below             # 3.2.1 "Şekil numaraları ve açıklamalar ... bir satır altında"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.9 (a) küçük Roma rakamları, (b) Arap rakamları
+  position: bottom_center       # 2.9 "sayfanın en altında ortalanarak"
+
+document:
+  forbid_tracked_changes: true

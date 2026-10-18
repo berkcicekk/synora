@@ -1,0 +1,48 @@
+# Çukurova Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (APA 6, Temmuz 2015; Word belgesi)
+# Kaynak: https://sosyalbilimler.cu.edu.tr/storage/Belgeler/tez_islemleri/lisansustu_tez_yazim_kilavuzu_apa6th.docx
+# Sayfa: https://sosyalbilimler.cu.edu.tr/cu/ogrenci/tez-islemleri (Hukuk ve İlahiyat için ayrı kılavuzlar var; burada genel kılavuz)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# D: "her paragrafın ilk satırı beş-yedi karakter içeriden" (cm değeri yok) → first_line_indent_cm verilmedi.
+# D: ön sayfalar "Roman Rakamlarıyla" (küçük/büyük belirtilmemiş) → formats_in_order verilmedi.
+ruleset: cu-sbe
+version: 1
+name: "Çukurova Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "ÇÜ SBE Lisansüstü Tez Yazım Kılavuzu (APA 6th), 2015"
+institution: "Çukurova Üniversitesi"
+source_url: https://sosyalbilimler.cu.edu.tr/storage/Belgeler/tez_islemleri/lisansustu_tez_yazim_kilavuzu_apa6th.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # C "A4 : (210x297 mm.)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # D "sol kenarından 3,5 cm, diğer üç kenardan 2,5 cm"
+
+fonts:
+  allowed: [Times New Roman, Arial]   # E "Times New Roman veya Arial"
+
+roles:
+  body:
+    size_pt: 12                 # E "12 punto"
+    line_spacing: 1.5           # E "Satırlar arasında 1,5 aralık"
+    alignment: justify          # D "iki yana yaslanmalıdır"
+  heading_1:
+    all_caps: true              # F "Ana bölüm başlıkları büyük harflerle"
+    alignment: center           # F "yazı alanı ortalanarak"
+    page_break_before: true     # F "Sadece ana bölüm başlıkları yeni bir sayfaya"
+  heading_2:
+    case: title                 # F "diğer alt başlıkların her sözcüğünün ilk harfi büyük"
+  heading_3:
+    case: title                 # F
+  footnote:
+    size_pt: 10                 # E "Açıklamalar ve dipnotlar için 10 punto"
+
+page_numbering:
+  position: top_right           # D "sayfanın sağ üst köşesine"
+
+document:
+  forbid_tracked_changes: true

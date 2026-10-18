@@ -96,6 +96,44 @@ def discover_rulesets(directory: Path) -> dict[str, RulesetInfo]:
     return found
 
 
+# Türk alfabesi: Ç, Ğ, I/İ, Ö, Ş, Ü yerinde sıralansın (Python varsayılanı bunları sona atar).
+_TR_ALPHABET = "abcçdefgğhıijklmnoöprsştuüvyz"
+_TR_FOLD = str.maketrans({"I": "ı", "İ": "i", "â": "a", "Â": "a", "î": "i", "Î": "i",
+                          "û": "u", "Û": "u"})
+
+
+def tr_sort_key(text: str) -> tuple[int, ...]:
+    key: list[int] = []
+    for ch in text.translate(_TR_FOLD).lower():
+        pos = _TR_ALPHABET.find(ch)
+        # Boşluk ve rakamlar harflerden önce, alfabe dışı harfler sonra.
+        key.append(pos if pos >= 0 else (100 + ord(ch) if ch.isalpha() else ord(ch) - 1000))
+    return tuple(key)
+
+
+@dataclass(frozen=True)
+class RulesetGroup:
+    institution: str
+    items: list[RulesetInfo]
+
+
+OTHER_GROUP = "Diğer"
+
+
+def order_rulesets(rulesets: dict[str, RulesetInfo], default: str) -> list[RulesetInfo]:
+    """Varsayılan kılavuz başta, örnek kural seti sonda, kalanlar Türkçe alfabetik."""
+    return sorted(rulesets.values(), key=lambda r: (
+        r.id != default, r.id == "example", tr_sort_key(r.name)))
+
+
+def group_rulesets(ordered: list[RulesetInfo]) -> list[RulesetGroup]:
+    groups: dict[str, list[RulesetInfo]] = {}
+    for r in ordered:
+        groups.setdefault(r.rules.institution or OTHER_GROUP, []).append(r)
+    names = sorted(groups, key=lambda n: (n == OTHER_GROUP, tr_sort_key(n)))
+    return [RulesetGroup(n, sorted(groups[n], key=lambda r: tr_sort_key(r.name))) for n in names]
+
+
 def job_error_message(code: str | None) -> str:
     if code in JOB_ERRORS:
         return JOB_ERRORS[code]
@@ -214,14 +252,16 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     mailer = mailer or make_mailer(settings)
     runner = JobRunner(db, settings)
     rulesets = discover_rulesets(settings.rulesets_dir)
-    # Örnek kural seti en sona: pilotta varsayılan seçim gerçek kılavuz olsun.
-    ordered_rulesets = sorted(rulesets.values(), key=lambda r: (r.id == "example", r.name))
+    # Varsayılan (pilot) kılavuz başta: giriş sayfası onu tanıtır, yüklemede seçili gelir.
+    ordered_rulesets = order_rulesets(rulesets, settings.default_ruleset)
+    ruleset_groups = group_rulesets(ordered_rulesets)
     login_page: PageSpec | None = (
         page_spec(ordered_rulesets[0].rules) if ordered_rulesets else None
     )
     login_tiles: list[RuleTile] = rule_tiles(ordered_rulesets[0].rules) if ordered_rulesets else []
-    # LaTeX şablonları başlangıçta bir kez üretilir (kural setinden; kullanıcı girdisi yok).
-    latex_zips = {r.id: build_zip(r.rules) for r in rulesets.values()}
+    # LaTeX şablonu ilk istendiğinde kural setinden üretilip saklanır (kullanıcı girdisi yok;
+    # yalnızca keşfedilmiş kural seti kimlikleri kabul edilir).
+    latex_zips: dict[str, bytes] = {}
     templates = Jinja2Templates(directory=str(HERE / "templates"))
     templates.env.filters["when"] = format_when
     templates.env.filters["date_tr"] = format_date
@@ -324,14 +364,18 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return resp
         jobs = db.recent_jobs(user.email)
         return render(request, "upload.html", user=user, active="docs", rulesets=ordered_rulesets,
+                      ruleset_groups=ruleset_groups,
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
 
     @app.get("/sablon/{ruleset_id}/latex.zip")
     def latex_template(ruleset_id: str) -> Response:
+        info = rulesets.get(ruleset_id)
+        if info is None:
+            raise HTTPException(404)
         data = latex_zips.get(ruleset_id)
         if data is None:
-            raise HTTPException(404)
+            data = latex_zips[ruleset_id] = build_zip(info.rules)
         name = f"synora-{ruleset_id}-latex.zip"
         return Response(data, media_type="application/zip",
                         headers={"Content-Disposition": f'attachment; filename="{name}"'})

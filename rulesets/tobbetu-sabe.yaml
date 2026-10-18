@@ -1,0 +1,72 @@
+# TOBB ETÜ Sağlık Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu (Mayıs 2025)
+# Kaynak: https://www.etu.edu.tr/files/dosyalar/2025/08/22/a5ea8b33a5a16842d4f7eb9b18e4341c.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: tobbetu-sabe
+version: 1
+name: "TOBB Ekonomi ve Teknoloji Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "TOBB ETÜ Sağlık Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2025"
+institution: "TOBB Ekonomi ve Teknoloji Üniversitesi"
+source_url: https://www.etu.edu.tr/files/dosyalar/2025/08/22/a5ea8b33a5a16842d4f7eb9b18e4341c.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.2.1
+
+roles:
+  body:
+    size_pt: 12                 # 2.2.1
+    line_spacing: 1.5           # 2.2.3
+    alignment: justify          # 2.2.2 "iki yana yaslanır"
+    space_before_pt: 6          # 2.2.3
+    space_after_pt: 6           # 2.2.3
+  heading_1:
+    bold: true                  # 2.2.1 "başlıklarda koyu (bold)"
+    all_caps: true              # 2.2.3 "TÜM HARFLER BÜYÜK"
+    space_before_pt: 72         # 2.2.3
+    space_after_pt: 18          # 2.2.3
+  heading_2:
+    bold: true                  # 2.2.1
+    case: title                 # 2.2.3 "Sadece İlk Harfler Büyük"
+    space_before_pt: 18         # 2.2.3
+    space_after_pt: 12          # 2.2.3
+  heading_3:
+    bold: true                  # 2.2.1
+    case: sentence              # 2.2.3 "sadece ilk harf büyük"
+    space_before_pt: 12         # 2.2.3
+    space_after_pt: 6           # 2.2.3
+  figure_caption:
+    size_pt: 12                 # 2.2.4 Çizelge, resim ve şekiller
+    line_spacing: 1.0           # 2.2.3, 2.2.4 "bir aralık"
+    space_before_pt: 6          # 2.2.3, 2.2.4
+    space_after_pt: 12          # 2.2.3, 2.2.4
+    position: below             # 2.2.4 "resmin/şeklin altına"
+  table_caption:
+    size_pt: 12                 # 2.2.4
+    line_spacing: 1.0           # 2.2.3, 2.2.4
+    # ÇELİŞKİ: 2.2.3 "öncesinde 6, sonrasında 12 punto"; 2.2.4 "önce 12 punto, sonra 6 punto" — 2.2.4 (çizelgeye özgü) kullanıldı
+    space_before_pt: 12         # 2.2.4
+    space_after_pt: 6           # 2.2.4
+    position: above             # 2.2.4 "çizelgenin üstüne"
+  reference_entry:
+    line_spacing: 1.0           # 2.2.3 "Kaynaklar ... 1 aralıkla"
+    space_before_pt: 6          # 2.2.3
+    space_after_pt: 6           # 2.2.3
+  footnote:
+    line_spacing: 1.0           # 2.2.3
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.2.4 Sayfa numaralama
+  position: bottom_center       # 2.2.4 "alt-ortasına"
+
+document:
+  forbid_tracked_changes: true

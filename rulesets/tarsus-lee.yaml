@@ -1,0 +1,86 @@
+# Tarsus Üniversitesi Lisansüstü Eğitim Enstitüsü — Yüksek Lisans ve Doktora Tez Yazım Esasları
+# Kaynak: https://enstitu.tarsus.edu.tr/Files/ckFiles/enstitu-tarsus-edu-tr/TARSUS%20%C3%9CN%C4%B0VERS%C4%B0TES%C4%B0%20L%C4%B0SANS%C3%9CST%C3%9C%20E%C4%9E%C4%B0T%C4%B0M%20ENST%C4%B0T%C3%9CS%C3%9C%20Y%C3%9CKSEK%20L%C4%B0SANS%20ve%20DOKTORA%20TEZ%20YAZIM%20ESASLAR1%20(2).pdf
+# Belgede tarih yok; örneklerde 2024 tarihli kaynak geçtiği için 2024 sonrası sürüm.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: tarsus-lee
+version: 1
+name: "Tarsus Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Tarsus Üniversitesi Lisansüstü Eğitim Enstitüsü Yüksek Lisans ve Doktora Tez Yazım Esasları, tarihsiz (2024 sonrası)"
+institution: "Tarsus Üniversitesi"
+source_url: https://enstitu.tarsus.edu.tr/Files/ckFiles/enstitu-tarsus-edu-tr/TARSUS%20%C3%9CN%C4%B0VERS%C4%B0TES%C4%B0%20L%C4%B0SANS%C3%9CST%C3%9C%20E%C4%9E%C4%B0T%C4%B0M%20ENST%C4%B0T%C3%9CS%C3%9C%20Y%C3%9CKSEK%20L%C4%B0SANS%20ve%20DOKTORA%20TEZ%20YAZIM%20ESASLAR1%20(2).pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # Madde 11
+
+fonts:
+  allowed: [Times New Roman]    # Madde 12, 13
+
+roles:
+  body:
+    size_pt: 12                 # Madde 13
+    line_spacing: 1.5           # Madde 13
+    alignment: justify          # Madde 13 "iki yana yaslı"
+    first_line_indent_cm: 1.0   # Madde 13 "soldan 1 cm girinti"
+    space_before_pt: 6          # Madde 13
+    space_after_pt: 6           # Madde 13
+  heading_1:
+    size_pt: 12                 # Madde 14
+    bold: true                  # Madde 14 "koyu"
+    all_caps: true              # Madde 14 "tamamı büyük harflerle"
+    alignment: left             # Madde 14 "sola yaslı"
+    line_spacing: 1.5           # Madde 14
+    space_before_pt: 12         # Madde 14
+    space_after_pt: 12          # Madde 14
+    page_break_before: true     # Madde 14 "yeni bir sayfada başlamalıdır"
+  heading_2:
+    size_pt: 12                 # Madde 14
+    bold: true                  # Madde 14
+    case: title                 # Madde 14 "her kelimenin yalnızca ilk harfi büyük"
+    alignment: left             # Madde 14
+    line_spacing: 1.5           # Madde 14
+    space_before_pt: 12         # Madde 14
+    space_after_pt: 12          # Madde 14
+  figure_caption:
+    size_pt: 12                 # Madde 17
+    bold: true                  # Madde 17
+    alignment: center           # Madde 17 "ortalanmış"
+    case: title                 # Madde 17 "yalnızca ilk harfleri büyük ... bağlaçlar küçük"
+    space_before_pt: 12         # Madde 17
+    space_after_pt: 12          # Madde 17
+    position: below             # Madde 17 "şeklin hemen altında"
+  table_caption:
+    size_pt: 12                 # Madde 18
+    bold: true                  # Madde 18
+    alignment: center           # Madde 18 "ortalanmış"
+    case: title                 # Madde 18
+    space_before_pt: 12         # Madde 18
+    space_after_pt: 12          # Madde 18
+    position: above             # Madde 18 "tablonun hemen üzerinde"
+  block_quote:
+    indent_left_cm: 2.3         # Madde 23 "2,3 cm soldan girintilidir"
+  footnote:
+    size_pt: 10                 # Madde 13, 19
+    alignment: justify          # Madde 19
+    line_spacing: 1.0           # Madde 19 "tek satır aralığı"
+    space_before_pt: 0          # Madde 19
+    space_after_pt: 0           # Madde 19
+  reference_entry:
+    size_pt: 12                 # Madde 24
+    alignment: justify          # Madde 24
+    line_spacing: 1.5           # Madde 24
+    space_before_pt: 6          # Madde 24
+    space_after_pt: 6           # Madde 24
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Madde 12
+  position: bottom_center       # Madde 12 "alt orta kısmında"
+
+document:
+  forbid_tracked_changes: true

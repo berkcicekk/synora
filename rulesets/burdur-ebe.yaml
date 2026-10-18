@@ -1,0 +1,41 @@
+# Burdur Mehmet Akif Ersoy Üniversitesi Eğitim Bilimleri Enstitüsü — Tez Yazım Kılavuzu (2025)
+# Kaynak: https://depo2.mehmetakif.edu.tr/storage/ebe/contents/16465/83_16465_2025-12-13-11-30-48-652766_egitim-bilimleri-enstitusu-tez-yazim-kilavuzu-yeni.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Kılavuz başlık/tablo/şekil biçimini APA'nın güncel sürümüne ve enstitü şablonuna bırakır ("Metin" bölümü);
+# bu nedenle başlık ve tablo/şekil başlığı kuralları burada yoktur. Konumlar kılavuzdaki bölüm başlıklarıdır.
+ruleset: burdur-ebe
+version: 1
+name: "Burdur Mehmet Akif Ersoy Üniversitesi · Eğitim Bilimleri Enstitüsü"
+source: "MAKÜ Eğitim Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2025"
+institution: "Burdur Mehmet Akif Ersoy Üniversitesi"
+source_url: https://depo2.mehmetakif.edu.tr/storage/ebe/contents/16465/83_16465_2025-12-13-11-30-48-652766_egitim-bilimleri-enstitusu-tez-yazim-kilavuzu-yeni.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Basımda Kullanılacak Kâğıdın Niteliği "A4 boyutlarında (21 cm × 29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 2.5 }  # Kenar Boşlukları "alt, üst ve sağ 2,5 cm, sol 3 cm"
+
+fonts:
+  allowed: [Arial]              # Kullanılacak Yazı Tipi Özellikleri "Arial yazı tipi"
+
+roles:
+  body:
+    size_pt: 11                 # Kullanılacak Yazı Tipi Özellikleri "11 punto büyüklüğünde"
+    line_spacing: 2.0           # Satır Aralıkları ve Boşluklar "Satır aralıkları 2 satır olmalıdır"
+    alignment: justify          # Kenar Boşlukları "iki yana yasla"
+  block_quote:
+    size_pt: 11                 # Yazı Tipi "blok alıntı formatında, aynı puntoda"
+    line_spacing: 2.0           # Satır Aralıkları "Blok alıntılar da çift satır aralığıyla"
+    indent_left_cm: 1.25        # Yazı Tipi "her iki yandan bir tab (1.25 cm) girintili"
+
+page_numbering:
+  position: bottom_right        # Kenar Boşlukları "sayfanın sağ alt köşesinde"
+
+document:
+  forbid_tracked_changes: true

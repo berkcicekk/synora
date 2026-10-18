@@ -1,0 +1,89 @@
+# Ondokuz Mayıs Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu, Samsun 2022 (sürüm 19.12.2022)
+# Kaynak: https://lisansustu.omu.edu.tr/tr/ogrenci/yl-dr-sy-tez-savunma-sinavi/L%C3%9CEE%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu%2019.12.2022.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# ÇELİŞKİ: blok alıntı girintisi 2.6'da "soldan 2 cm, sağdan 1 cm", 4.x'te "soldan 1 cm, sağdan 1 cm";
+#          boşluk 2.6'da hem "6 nk" hem "12 nk". Girinti ve boşluk kodlanmadı.
+# Not: ana bölüm başlıkları "iki yana dayalı" ama "istenirse ... ortalanabilir" (2.5); hizalama kodlanmadı.
+ruleset: omu-lee
+version: 1
+name: "Ondokuz Mayıs Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "OMÜ Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2022"
+institution: "Ondokuz Mayıs Üniversitesi"
+source_url: https://lisansustu.omu.edu.tr/tr/ogrenci/yl-dr-sy-tez-savunma-sinavi/L%C3%9CEE%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu%2019.12.2022.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.4
+
+roles:
+  body:
+    size_pt: 12                 # 2.4
+    line_spacing: 1.5           # 2.6 "bir buçuk satır aralıklı"
+    alignment: justify          # 2.6 "iki yana yaslı"
+    first_line_indent_cm: 1.0   # 2.6 "1 cm ilk satır girintisi"
+    space_after_pt: 6           # 2.6 "Her paragraftan sonra 6 nk"
+  heading_1:
+    size_pt: 14                 # 2.4 "bölüm başlıkları 14 punto"
+    bold: true                  # 2.4, 2.5
+    all_caps: true              # 2.5 "BÜTÜN HARFLERİ BÜYÜK"
+    first_line_indent_cm: 1.0   # 2.5
+    space_before_pt: 6          # 2.5
+    space_after_pt: 6           # 2.5
+    page_break_before: true     # 2.5 "her ana bölümü yeni bir sayfada başlar"
+  heading_2:
+    size_pt: 12                 # 2.4 "alt başlıklar metinle aynı büyüklükte"
+    bold: true                  # 2.4, 2.5
+    case: title                 # 2.5 "Sadece Baş Harfleri Büyük"
+    alignment: justify          # 2.5 "iki yana dayalı"
+    first_line_indent_cm: 1.0   # 2.5
+    space_before_pt: 6          # 2.5
+    space_after_pt: 6           # 2.5
+  heading_3:
+    size_pt: 12                 # 2.4
+    bold: true                  # 2.4, 2.5
+    case: title                 # 2.5
+    alignment: justify          # 2.5
+    first_line_indent_cm: 1.0   # 2.5
+    space_before_pt: 6          # 2.5
+    space_after_pt: 6           # 2.5
+  figure_caption:
+    size_pt: 10                 # 2.7
+    line_spacing: 1.0           # 2.4, 2.6, 2.7
+    alignment: center           # 2.7 "satırı ortalayacak biçimde"
+    position: below             # 2.7 "şekil altına"
+  table_caption:
+    size_pt: 10                 # 2.7
+    line_spacing: 1.0           # 2.4, 2.6, 2.7
+    alignment: center           # 2.7
+    position: above             # 2.7 "tablo üstüne"
+  block_quote:
+    size_pt: 10                 # 2.6, 4.x
+    line_spacing: 1.0           # 2.6
+    alignment: justify          # 2.6
+  footnote:
+    size_pt: 10                 # 2.4, 2.8
+    line_spacing: 1.0           # 2.8
+    alignment: justify          # 2.8
+    space_before_pt: 0          # 2.8 "sıfır nk"
+    space_after_pt: 0           # 2.8
+  reference_entry:
+    size_pt: 11                 # Kaynaklar
+    line_spacing: 1.0           # Kaynaklar "satır aralığı 1 (tek)"
+    alignment: justify          # Kaynaklar
+    space_after_pt: 6           # Kaynaklar "paragraf boşluğu 6 nk"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.3
+  position: bottom_center       # 2.3 "sayfanın altında ve ortalanmış"
+
+document:
+  forbid_tracked_changes: true

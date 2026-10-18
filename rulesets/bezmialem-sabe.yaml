@@ -1,0 +1,81 @@
+# Bezmialem Vakıf Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Yazım Kılavuzu (2020; .docx)
+# Bölüm numaraları belgede otomatik numaralı olduğundan yorumlarda başlık adları kullanıldı.
+# Kaynak: https://bezmialem.edu.tr/saglik-bilimleri-enstitusu/tr/PublishingImages/Sayfalar/tez-yazim-klavuzu/BVU-SBE-Tez-Yazim%20Kilavuzu-2020.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: bezmialem-sabe
+version: 1
+name: "Bezmialem Vakıf Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Bezmialem Vakıf Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2020"
+institution: "Bezmialem Vakıf Üniversitesi"
+source_url: "https://bezmialem.edu.tr/saglik-bilimleri-enstitusu/tr/PublishingImages/Sayfalar/tez-yazim-klavuzu/BVU-SBE-Tez-Yazim%20Kilavuzu-2020.docx"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kâğıt "A4 (21x29.7 cm)"
+  # Kenar Boşlukları: sol 4, sağ 2,5, üst/alt 2,5 cm (birincil başlık sayfalarında üst 5 cm)
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }
+
+fonts:
+  allowed: [Times New Roman]    # Yazı Karakteri
+
+roles:
+  body:
+    size_pt: 12                 # Yazı Karakteri "12 puntoluk"
+    line_spacing: 1.5           # Satır Aralıkları ve Paragraflar "standart satır aralığı 1,5"
+    alignment: justify          # "iki yana yaslanmış"
+    space_before_pt: 6          # "Paragraflardan önce ve sonra 6 punto"
+    space_after_pt: 6           # aynı
+  heading_1:
+    size_pt: 14                 # Ana ve Alt Başlıklar "Bölüm başlıkları 14"
+    bold: true                  # "koyu (bold)"
+    all_caps: true              # "Ana başlıkların tamamı ... büyük harflerle"
+    alignment: left             # "satır başına dayanmalıdır"
+    space_before_pt: 72         # Satır Aralıkları "önce 72 punto"
+    space_after_pt: 18          # "sonra 18 punto"
+    page_break_before: true     # "Birincil başlıklar yeni sayfada başlamalı"; "Her bölüm ayrı sayfadan"
+  heading_2:
+    size_pt: 12                 # "diğer bütün başlıklar 12 punto"
+    bold: true                  # aynı
+    case: title                 # "birinci alt başlıklarda bütün kelimelerin ilk harfi"
+    alignment: left             # aynı
+    space_before_pt: 18         # "İkinci derece başlıklardan önce 18 punto"
+    space_after_pt: 12          # "sonra 12 punto"
+  heading_3:
+    size_pt: 12                 # aynı
+    bold: true                  # aynı
+    case: sentence              # "ikinci alt başlıklarda yalnız birinci kelimenin ilk harfi"
+    alignment: left             # aynı
+    space_before_pt: 12         # "Üçüncü ve dördüncü derece ... önce 12 punto"
+    space_after_pt: 6           # "sonra 6 punto"
+  table_caption:
+    alignment: center           # Şekil ve Tablolar "tablonun üstüne satırda ortalı"
+    position: above             # aynı
+    line_spacing: 1.0           # "bir satır aralığı kullanılarak"
+    space_before_pt: 12         # "yazıdan önce 12 punto"
+    space_after_pt: 6           # "sonra 6 punto"
+  figure_caption:
+    alignment: center           # "şeklin altına ... ortalı"
+    position: below             # aynı
+    line_spacing: 1.0           # "bir aralık boşlukla"
+    space_before_pt: 6          # "önce 6 punto"
+    space_after_pt: 12          # "sonra 12 punto"
+  front_matter:
+    line_spacing: 1.0           # Satır Aralıkları: önsöz, içindekiler, listeler, özetler 1 satır
+  footnote:
+    line_spacing: 1.0           # Dipnotlar "9-10 punto ve bir satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # Satır Aralıkları "kaynaklar ... 1 satır aralıklı"
+
+page_numbering:
+  # Sayfa Numaraları: onay sayfasından metne kadar Romen rakamı, metin Arap rakamı
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # "sayfanın alt-ortasına"
+
+document:
+  forbid_tracked_changes: true

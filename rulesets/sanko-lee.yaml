@@ -1,0 +1,72 @@
+# SANKO Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (2021)
+# Kaynak: https://www.sanko.edu.tr/wp-content/uploads/2019/05/SANKO-%C3%9CN%C4%B0VERS%C4%B0TES%C4%B0-L%C4%B0SANS%C3%9CST%C3%9C-E%C4%9E%C4%B0T%C4%B0M-ENST%C4%B0T%C3%9CS%C3%9C-TEZ-YAZIM-KILAVUZU-2.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: sanko-lee
+version: 1
+name: "Sanko Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "SANKO Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2021"
+institution: "Sanko Üniversitesi"
+source_url: https://www.sanko.edu.tr/wp-content/uploads/2019/05/SANKO-%C3%9CN%C4%B0VERS%C4%B0TES%C4%B0-L%C4%B0SANS%C3%9CST%C3%9C-E%C4%9E%C4%B0T%C4%B0M-ENST%C4%B0T%C3%9CS%C3%9C-TEZ-YAZIM-KILAVUZU-2.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 12.1 Kâğıt
+  margins_cm: { top: 2.0, bottom: 2.0, left: 3.5, right: 2.0 }   # 11.3
+
+fonts:
+  allowed: [Times New Roman]    # 11.2
+
+roles:
+  body:
+    size_pt: 12                 # 11.2
+    line_spacing: 1.5           # 11.8 "1,5 (18 nk)"
+    alignment: justify          # 11.3, 11.8 "iki tarafına da hizalanmış"
+    first_line_indent_cm: 0     # 11.8 "girinti verilmeden başlamalıdır"
+  heading_1:
+    size_pt: 12                 # 11.2
+    bold: true                  # 11.2 "koyu"
+    all_caps: true              # 11.2 "tamamı büyük harf"
+    alignment: left             # 11.2 "sayfanın soluna yaslanmış"
+    page_break_before: true     # 11.8 "sayfa başı yapılmalı"
+    space_before_pt: 24         # 11.8 "önce ve sonrasında 2 (24 nk)"
+    space_after_pt: 24          # 11.8
+  heading_2:
+    size_pt: 12                 # 11.2
+    bold: true                  # 11.2
+    case: title                 # 11.2 "her sözcüğünün ilk harfi büyük"
+    alignment: left             # 11.8 "Tüm başlıklar satır başından başlamalıdır"
+  heading_3:
+    size_pt: 12                 # 11.2
+    bold: true                  # 11.2
+    case: sentence              # 11.2 "yalnızca birinci sözcüğün ilk harfi büyük"
+    alignment: left             # 11.8
+  table_caption:
+    position: above             # 12.2 "Tablo başlığı ve açıklamaları tablonun üstüne"
+    space_after_pt: 6           # 11.8 "tablo ve tablo üst yazısı arasında 6 nk"
+  figure_caption:
+    position: below             # 11.8 "şekil alt yazısı"
+    space_before_pt: 6          # 11.8 "Şekil ve şekil alt yazısı arasında 6 nk"
+  table_cell:
+    line_spacing: 1.0           # 11.8 "tablo yazımında tek satır aralığı"
+  block_quote:
+    italic: true                # 12.5 "italik harflerle"
+    line_spacing: 1.0           # 11.8 "alıntı … tek satır aralığı"
+    indent_left_cm: 1.25        # 12.5 "her iki taraftan 1,25 cm içeriden"
+  footnote:
+    line_spacing: 1.0           # 11.8, 12.4 "bir satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # 11.8 "kaynak listesi … tek satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 11.4
+  position: bottom_center       # 11.4 "orta alt kısmına"
+  forbid_decoration: true       # 11.4 "parantez, çizgi gibi işaretler bulunmamalıdır"
+
+document:
+  forbid_tracked_changes: true

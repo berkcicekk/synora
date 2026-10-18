@@ -1,0 +1,60 @@
+# Ankara Sosyal Bilimler Üniversitesi — Lisansüstü Tez Yazım Kılavuzu (üniversite geneli; PDF 2023-01, Senato Ocak 2023)
+# Kaynak: https://asben.asbu.edu.tr/sites/enstituler/asben.asbu.edu.tr/files/inline-files/ASB%C3%9C%20Lisans%C3%BCst%C3%BC%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu_0.pdf
+# Duyuru: https://sbe.asbu.edu.tr/en/announcement/manual-writing-graduate-theses-and-dissertations
+# Not: SBE'nin eski (2018) ayrı kılavuzu da sitede duruyor; burada güncel üniversite geneli kılavuz kullanıldı.
+# 3.4: paragraf girintisi "6 karakter boşluk" (cm değeri yok) → first_line_indent_cm verilmedi.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: asbu-lisansustu
+version: 1
+name: "Ankara Sosyal Bilimler Üniversitesi · Lisansüstü Enstitüleri"
+source: "ASBÜ Lisansüstü Tez Yazım Kılavuzu, 2023"
+institution: "Ankara Sosyal Bilimler Üniversitesi"
+source_url: https://asben.asbu.edu.tr/sites/enstituler/asben.asbu.edu.tr/files/inline-files/ASB%C3%9C%20Lisans%C3%BCst%C3%BC%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu_0.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 2.5, left: 2.5, right: 2.5 }   # 3.2 Sayfa Yapısı
+
+fonts:
+  allowed: [Times New Roman]    # 3.4 Yazı Tipi
+
+roles:
+  body:
+    size_pt: 12                 # 3.4 "Metin: 12 punto, dik, iki yana yaslı ve 1.5 satır aralığında"
+    line_spacing: 1.5           # 3.4
+    alignment: justify          # 3.4
+    italic: false               # 3.4 "dik"
+  heading_1:
+    size_pt: 12                 # 3.4 Bölüm Başlıkları "tümü büyük harf, 12 punto, koyu, ortalı"
+    bold: true                  # 3.4
+    all_caps: true              # 3.4
+    alignment: center           # 3.4
+    page_break_before: true     # 3.4 "Her bölüm yeni sayfada başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 3.4 Alt başlıklar "Baş harfleri büyük, 12 punto, koyu, sola dayalı"
+    bold: true                  # 3.4
+    case: title                 # 3.4 "Baş harfleri büyük"
+    alignment: left             # 3.4
+  heading_3:
+    size_pt: 12                 # 3.4 Alt başlıklar
+    bold: true                  # 3.4
+    case: title                 # 3.4
+    alignment: left             # 3.4
+  table_caption:
+    size_pt: 12                 # 3.4 "Tablo Başlıkları: 12 punto"
+  footnote:
+    size_pt: 10                 # 3.4 "Dipnotlar: 10 punto, iki yana yaslı"
+    alignment: justify          # 3.4
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 3.3 "küçük Romen rakamları (i, ii, iii, …)" / "(1, 2, 3, …)"
+  position: bottom_center       # 3.3 "sayfanın orta alt kısmında"
+
+document:
+  forbid_tracked_changes: true

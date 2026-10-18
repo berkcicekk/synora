@@ -16,6 +16,10 @@ Tıp Fakültesi *Tıpta Uzmanlık Öğrencileri için Tez Yazım Kılavuzu* (201
 kapsanmayan kurallar ve kılavuzdaki çelişkiler `rulesets/zbeu-tip.md`'de. Lisansüstü Eğitim Enstitüsü
 (yüksek lisans/doktora) için ayrı kılavuz gerekir `[KARAR?]`.
 
+**Diğer üniversiteler (2026-10-18):** 178 üniversitenin resmi kılavuzlarından otomatik çıkarılmış 246
+kural seti `rulesets/` altında; kaynakları ve bulunamayanlar `rulesets/KAYNAKLAR.md`'de. Hiçbiri enstitü
+tarafından doğrulanmadı. Varsayılan kılavuz `SYNORA_DEFAULT_RULESET` (öntanımlı `zbeu-tip`).
+
 Kapsam dışı: yazım/dil denetimi, intihal, içerik önerisi, kaynakça içeriğinin doğruluğu.
 
 ## 2. Tasarım ilkeleri (değişmez)

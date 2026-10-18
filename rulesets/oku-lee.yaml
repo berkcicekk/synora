@@ -1,0 +1,71 @@
+# Osmaniye Korkut Ata Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu 2026 (.docx)
+# Kaynak: https://www.osmaniye.edu.tr/uploads/lisansustu-egitim-enstitusu/tez_yaz%C4%B1m/OK%C3%9C_LEE_Tez_yaz%C4%B1m_K%C4%B1lavuzu_2026.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: oku-lee
+version: 1
+name: "Osmaniye Korkut Ata Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "OKÜ Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2026"
+institution: "Osmaniye Korkut Ata Üniversitesi"
+source_url: https://www.osmaniye.edu.tr/uploads/lisansustu-egitim-enstitusu/tez_yaz%C4%B1m/OK%C3%9C_LEE_Tez_yaz%C4%B1m_K%C4%B1lavuzu_2026.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 3.0, left: 4.0, right: 2.5 }   # 2.3 (dikey sayfalar)
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2
+    line_spacing: 1.5           # 2.4
+    alignment: justify          # 2.3 "iki yana yaslanmış"
+    # ÇELİŞKİ: 2.3 "bütün satırlar ... sol kenar boşluğunun bitiminden başlamalı"; 2.4 "Yeni paragraf 1,25cm içeriden". 2.4 kullanıldı.
+    first_line_indent_cm: 1.25  # 2.4
+    space_after_pt: 6           # 2.4 "Paragraflar arasına 6nk aralık"
+  heading_1:
+    bold: true                  # 2.2 "Başlıklarda koyu harfler"
+    all_caps: true              # 2.7 "Ana başlıkların tümü ... büyük"
+    alignment: center           # 2.7 "yazı alanı ortalanarak"
+    page_break_before: true     # 2.7 "Sadece ana başlıklar yeni bir sayfaya"
+    space_before_pt: 0          # 2.4 "ana başlıklardan önce aralık bırakılmaz"
+    space_after_pt: 24          # 2.4
+  heading_2:
+    bold: true                  # 2.2
+    case: title                 # 2.7 "her kelimesinin ilk harfi büyük"
+    alignment: left             # 2.7 "satır kenarından başlayacak"
+    space_before_pt: 18         # 2.4
+    space_after_pt: 18          # 2.4
+  heading_3:
+    bold: true                  # 2.2
+    case: title                 # 2.7
+    alignment: left             # 2.7
+    space_before_pt: 18         # 2.4
+    space_after_pt: 18          # 2.4
+  figure_caption:
+    line_spacing: 1.0           # 2.4
+    space_after_pt: 12          # 2.9 "şekil açıklamasından sonra 12nk"
+    position: below             # 2.9 "şeklin altına"
+  table_caption:
+    line_spacing: 1.0           # 2.4
+    space_before_pt: 12         # 2.9 "Çizelge üst yazısından önce ... 12nk"
+    position: above             # 2.9 "çizelgenin üstüne"
+  footnote:
+    size_pt: 10                 # 2.2, 2.8
+    line_spacing: 1.0           # 2.4, 2.8
+  reference_entry:
+    line_spacing: 1.5           # 2.4 "kaynaklar ... 1,5 satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5
+  position: bottom_right        # 2.5 "alt kenarından 2 cm yukarıda ve sayfanın sağına"
+  forbid_decoration: true       # 2.5 "ayraç, çizgi gibi karakterler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

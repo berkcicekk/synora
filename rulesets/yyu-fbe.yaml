@@ -1,0 +1,72 @@
+# Van Yüzüncü Yıl Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Van 2023)
+# Kaynak: https://www.yyu.edu.tr/images/files/Tez_Yazim_Kurallari(1).pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: yyu-fbe
+version: 1
+name: "Van Yüzüncü Yıl Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Van YYÜ Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2023"
+institution: "Van Yüzüncü Yıl Üniversitesi"
+source_url: https://www.yyu.edu.tr/images/files/Tez_Yazim_Kurallari(1).pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # I.1, I.3 "A4"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 3.0, right: 3.0 }   # I.3 "Üst-Alt-Sağ-Sol: 3 cm"
+
+fonts:
+  allowed: [Times New Roman]    # I.3
+
+roles:
+  body:
+    size_pt: 12                 # I.3 "Tez ana metni 12 punto"
+    line_spacing: 1.5           # "Satır Aralıkları" tablosu (s. 2) "Tez metni 1.5 satır aralığı"
+    first_line_indent_cm: 1.25  # I.3 "paragraflar 1.25 cm içerden başlamalıdır"
+  heading_1:
+    bold: true                  # I.8 "tüm başlıklar koyu"
+    all_caps: true              # I.8 "BÜYÜK HARFLERLE"
+    alignment: left             # I.8 "sola dayalı"
+    page_break_before: true     # I.3 "daima yeni ve tek numaralı sayfadan"
+  heading_2:
+    bold: true                  # I.8
+    case: title                 # I.8 "her sözcüğün İlk Harfleri Büyük", bağlaçlar küçük
+    alignment: left             # I.8
+  heading_3:
+    bold: true                  # I.8
+    case: title                 # I.8
+    alignment: left             # I.8
+  figure_caption:
+    size_pt: 12                 # I.3 "Çizelge ve şekil başlıkları 12 punto"
+    line_spacing: 1.0           # I.9.c "tek satır aralığında"
+    position: below             # I.9.c "şeklin altında"
+    space_before_pt: 6          # I.9.c "önce ve sonra 6 nk"
+    space_after_pt: 6           # I.9.c
+  table_caption:
+    size_pt: 12                 # I.3
+    line_spacing: 1.0           # I.9.c
+    position: above             # I.9.c "çizelgenin üstünde"
+    space_before_pt: 6          # I.9.c
+    space_after_pt: 6           # I.9.c
+  block_quote:
+    size_pt: 10                 # I.3 "Alıntı ve dipnotlar 10 punto"
+    line_spacing: 1.0           # "Satır Aralıkları" tablosu (s. 2) "Alıntı ve dip not satırları tek satır aralığı"
+    italic: true                # I.11 "alıntı metni italik olmalıdır"
+    indent_left_cm: 2.5         # I.11 "sol ve sağ kenar boşluklarından 2.5 cm daha içeride"
+  reference_entry:
+    line_spacing: 1.0           # I.15 "1 satır aralığı"
+    first_line_indent_cm: -1.0  # I.15 "ikinci ve sonraki satırlar sol kenardan 1 cm içerden"
+  footnote:
+    size_pt: 10                 # I.3, I.10
+    line_spacing: 1.0           # I.10 "tek satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # I.4 ön sayfalar küçük Romen, Giriş'ten itibaren 1, 2, 3
+  position: bottom_center       # I.4 "sayfanın alt-orta kısmında"
+
+document:
+  forbid_tracked_changes: true

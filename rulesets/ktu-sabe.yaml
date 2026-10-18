@@ -1,0 +1,74 @@
+# Karadeniz Teknik Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Hazırlama ve Yazım Kılavuzu (Trabzon 2023; güncelleme 22.03.2023)
+# Kaynak: https://www.ktu.edu.tr/dosyalar/sabe_d6f4a.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ktu-sabe
+version: 1
+name: "Karadeniz Teknik Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "KTÜ Sağlık Bilimleri Enstitüsü Tez Hazırlama ve Yazım Kılavuzu, 2023"
+institution: "Karadeniz Teknik Üniversitesi"
+source_url: https://www.ktu.edu.tr/dosyalar/sabe_d6f4a.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.2 "A4 (210 mm x 297 mm)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.0, right: 2.5 }   # 2.3 solda ve üstte 3 cm, sağda ve altta 2,5 cm
+
+fonts:
+  allowed: [Times New Roman]    # 2.5.1
+
+roles:
+  body:
+    size_pt: 12                 # 2.5.2 "metin içindeki karakter boyutu 12 punto"
+    line_spacing: 1.5           # 2.5.4
+    alignment: justify          # 2.3, 2.5.5 "iki kenara yaslı"
+    first_line_indent_cm: 1.25  # 2.5.5 "her yeni paragraf 1.25 cm içerden"
+    space_after_pt: 6           # 2.5.4 "her paragraftan sonra 6 nk"
+  heading_1:
+    bold: true                  # 2.5.3 "tüm başlıklar koyu tonda"
+    all_caps: true              # 2.5.7 (2) "bölüm başlıkları büyük harflerle"
+    alignment: left             # 2.5.7 (5) "sol kenar boşluğu çizgisine dayalı"
+    space_after_pt: 6           # 2.5.4 "bölüm ve alt bölüm başlıklarından sonra 6 nk"
+    page_break_before: true     # 2.5.7 (1) "yeni bir sayfadan başlatılır"
+  heading_2:
+    bold: true                  # 2.5.3
+    case: title                 # 2.5.7 (2) "her sözcüğün yalnızca ilk harfi büyük", bağlaçlar küçük
+    alignment: left             # 2.5.7 (5)
+    space_after_pt: 6           # 2.5.4
+  heading_3:
+    bold: true                  # 2.5.3
+    case: title                 # 2.5.7 (2)
+    alignment: left             # 2.5.7 (5)
+    space_after_pt: 6           # 2.5.4
+  figure_caption:
+    line_spacing: 1.0           # 2.5.4 "şekil ve resim altı yazıları tek satır aralığında"
+    case: sentence              # 2.12.4 "ilk sözcüğün ilk harfi büyük, diğer harf ve sözcükler küçük"
+    alignment: center           # 2.12.4 bir satıra sığıyorsa ortalanır (çok satırlı: iki yana yaslı)
+    position: below             # 2.5.4 "şekil ve resim altı yazıları"
+    space_before_pt: 6          # 2.12.6 "şekil adları yazılarından önce 6 nk"
+  table_caption:
+    line_spacing: 1.0           # 2.5.4 "tablo açıklamaları tek satır aralığında"
+    case: sentence              # 2.12.4
+    alignment: justify          # 2.12.4 "her iki kenar boşluğu çizgisine yaslı"
+    position: above             # 2.12.5 tablo adı metin ile tablo arasında; "açıklamasından sonra 6 nk" ardından tablo
+    space_after_pt: 6           # 2.12.5
+  block_quote:
+    line_spacing: 1.5           # 2.8 "1.5 satır aralığı ile"
+    italic: true                # 2.8 "italik olarak"
+    indent_left_cm: 1.25        # 2.8 "her iki taraf kenar boşluk çizgilerinden 1.25 cm içeride"
+  footnote:
+    size_pt: 10                 # 2.5.2, 2.9
+    line_spacing: 1.0           # 2.5.4, 2.9
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.4 ön sayfalar küçük Romen, tez metni Arap rakamı
+  position: bottom_center       # 2.4 "sayfanın alt kenar orta noktasında"
+  forbid_decoration: true       # 2.4 "önünde ve arkasında herhangi bir işaret ... olmamalıdır"
+
+document:
+  forbid_tracked_changes: true

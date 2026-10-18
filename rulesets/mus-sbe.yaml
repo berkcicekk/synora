@@ -1,0 +1,80 @@
+# Muş Alparslan Üniversitesi Sosyal Bilimler Enstitüsü — Tez/Seminer/Dönem Projesi Yazım Kılavuzu, Muş 2023
+# (sitedeki dosya adı "MAUN SBE TEZ YAZIM KILAVUZU 2024")
+# Kaynak: https://sosyalenstitu.alparslan.edu.tr/files/45/SBE/Yaz%C4%B1m%20K%C4%B1lavuzu/MAUN%20SBE%20TEZ%20YAZIM%20KILAVUZU%202024.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: mus-sbe
+version: 1
+name: "Muş Alparslan Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Muş Alparslan Üniversitesi Sosyal Bilimler Enstitüsü Tez/Seminer/Dönem Projesi Yazım Kılavuzu, 2023"
+institution: "Muş Alparslan Üniversitesi"
+source_url: https://sosyalenstitu.alparslan.edu.tr/files/45/SBE/Yaz%C4%B1m%20K%C4%B1lavuzu/MAUN%20SBE%20TEZ%20YAZIM%20KILAVUZU%202024.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1.4
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }   # 2.1.5
+
+fonts:
+  allowed: [Times New Roman]    # 2.1.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.1.2
+    line_spacing: 1.5           # 2.1.2
+    alignment: justify          # 2.1.2 "iki yana yaslı"
+    first_line_indent_cm: 1.0   # 2.1.2
+    space_before_pt: 6          # 2.1.2 "Paragraf aralığı önce 6 nk"
+    space_after_pt: 6           # 2.1.2 "sonra 6 nk"
+  heading_1:
+    size_pt: 12                 # 2.1.2, Ana metin bölümleri
+    bold: true                  # 2.1.2 "koyu"
+    all_caps: true              # Ana metin bölümleri "büyük harflerle"
+    # ÇELİŞKİ: "Ana bölüm başlığı ortalanır" ama GİRİŞ ve SONUÇ başlıkları için "sola dayalı" deniyor. Genel kural kullanıldı.
+    alignment: center           # Ana metin bölümleri "Ana bölüm başlığı ortalanır"
+    page_break_before: true     # Ana metin bölümleri "Ana bölümler yeni bir sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # Ana metin bölümleri "birinci dereceden başlıklar ... 12 punto"
+    bold: true                  # Ana metin bölümleri
+    all_caps: true              # Ana metin bölümleri "birinci dereceden başlık büyük harflerle"
+  heading_3:
+    size_pt: 12                 # Ana metin bölümleri
+    bold: true                  # Ana metin bölümleri
+    case: title                 # Ana metin bölümleri "diğer başlıklar ilk harfleri büyük"
+  figure_caption:
+    size_pt: 12                 # 2.1.3 (uzun başlıkta 11 punto da olabilir)
+    bold: true                  # 2.1.3
+    line_spacing: 1.0           # 2.1.3
+    alignment: center           # 2.1.3 "sayfa ortalanarak"
+    space_before_pt: 12         # 2.1.3
+    space_after_pt: 6           # 2.1.3
+    position: above             # 2.1.3 "Görsel nesnelerin (tablo, şekil ...) başlıkları görsel nesnenin üstüne"
+  table_caption:
+    size_pt: 12                 # 2.1.3
+    bold: true                  # 2.1.3
+    line_spacing: 1.0           # 2.1.3
+    alignment: center           # 2.1.3
+    space_before_pt: 12         # 2.1.3
+    space_after_pt: 6           # 2.1.3
+    position: above             # 2.1.3
+  block_quote:
+    size_pt: 11                 # Alıntılar "11 punto"
+    line_spacing: 1.0           # Alıntılar "tek satır aralığıyla"
+    indent_left_cm: 1.0         # Alıntılar "sağ ve sol taraftan 1 cm içerden"
+  footnote:
+    size_pt: 10                 # Dipnotlar
+    line_spacing: 1.0           # Dipnotlar "bir satır aralıkla"
+    alignment: justify          # Dipnotlar "iki yana yaslı"
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # 2.1.6 "I, II, III" ve "1, 2, 3"
+  position: bottom_center       # 2.1.6 "sayfa altında ortalanarak"
+  forbid_decoration: true       # 2.1.6 "yarım parantez, çizgi vb. gibi karakter kullanılmamalı"
+
+document:
+  forbid_tracked_changes: true

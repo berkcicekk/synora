@@ -1,0 +1,72 @@
+# Erciyes Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Yazım Kılavuzu (2025)
+# Kaynak: https://sagens.erciyes.edu.tr/Dosya/MainContent/tez-yazim-kilavuzu-2025.pdf
+# (Enstitü Yönetim Kurulu 12.11.2025)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Kılavuzda "bölüm başlıkları" (GİRİŞ VE AMAÇ, GENEL BİLGİLER…) ayrı, bunların içindeki
+# "birinci/ikinci/üçüncü derece" alt başlıklar ayrı tanımlanmış. Burada bölüm başlığı → heading_1,
+# birinci derece alt başlık → heading_2, ikinci derece → heading_3 olarak eşlendi.
+ruleset: erciyes-sabe
+version: 1
+name: "Erciyes Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Erciyes Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2025"
+institution: "Erciyes Üniversitesi"
+source_url: https://sagens.erciyes.edu.tr/Dosya/MainContent/tez-yazim-kilavuzu-2025.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 1.1, 1.6
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }   # 1.6
+
+fonts:
+  allowed: [Times New Roman]                # 1.5 "sadece Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                             # 1.5
+    line_spacing: 1.5                       # 1.8 "Ana metinde satır araları 1,5 satır"
+    first_line_indent_cm: 0                 # 1.8 "Paragraf için girinti yapılmaz"
+    space_after_pt: 6                       # 1.8 "paragraflar arasında 6 nk boşluk"
+  heading_1:
+    size_pt: 14                             # 1.5, 1.9 "14 punto büyüklüğünde"
+    alignment: center                       # 1.9 "sayfayı ortalayacak şekilde"
+    page_break_before: true                 # 1.9 "daima yeni bir sayfa ile başlamalı"
+    space_after_pt: 12                      # 1.8 "Başlıklardan sonra ... 12 nk"
+  heading_2:
+    size_pt: 12                             # 1.9 "metin ile aynı büyüklükte (12 punto)"
+    bold: true                              # 1.9
+    all_caps: true                          # 1.9 "tamamı büyük harfle"
+    space_before_pt: 12                     # 1.8 "son satırı ile sonraki alt bölüm başlığı arasında 12 nk"
+    space_after_pt: 12                      # 1.8
+  heading_3:
+    size_pt: 12                             # 1.9
+    bold: true                              # 1.9
+    case: title                             # 1.9 "her kelimenin ilk harfi büyük ... bağlaçlar küçük"
+    space_before_pt: 12                     # 1.8
+    space_after_pt: 12                      # 1.8
+  figure_caption:
+    line_spacing: 1.0                       # 1.8, 1.13 "1 satır aralıkla"
+    position: below                         # 1.13 "şekle ilişkin yazılar ise şekil altına"
+    # ÇELİŞKİ: 1.13 açıklamalar "iki yana yaslı" diyor, aynı maddede tablo başlığı "ortalanarak" → hizalama denetlenmez
+  table_caption:
+    line_spacing: 1.0                       # 1.8, 1.13
+    position: above                         # 1.13 "tablonun üstüne"
+  reference_entry:
+    line_spacing: 1.0                       # 1.8 "Kaynaklar dizininin yazımında 1 satır aralığı"
+    space_after_pt: 6                       # 1.8 "kaynaklar arasında 6 nk boşluk"
+  footnote:
+    size_pt: 10                             # 1.5
+    line_spacing: 1.0                       # 1.8
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.7
+  position: bottom_right                    # 1.7 "alt kısmına metin bloğunun sağ kenar hizasında"
+  forbid_decoration: true                   # 1.7 "parantez, çizgi vb. işaretler olmamalıdır"
+
+document:
+  forbid_tracked_changes: true

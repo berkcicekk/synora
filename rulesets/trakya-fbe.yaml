@@ -1,0 +1,65 @@
+# Trakya Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (2022 revizyonu)
+# Kaynak: https://bys.trakya.edu.tr/file/open/37804440
+# (bağlantı sayfası: http://fbe.trakya.edu.tr/pages/formlar-ve-dilekceler)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Yıl, belgenin üst verisindeki son değişiklik tarihinden (2022-06-15) alınmıştır; kılavuzda yıl yazmaz.
+ruleset: trakya-fbe
+version: 1
+name: "Trakya Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Trakya Üniversitesi Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2022"
+institution: "Trakya Üniversitesi"
+source_url: https://bys.trakya.edu.tr/file/open/37804440
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # D.1 "A4 ebadında (210x297 mm.)"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }  # D.2 "üst: 3 cm., alt: 3 cm., sol: 4 cm., sağ: 2 cm"
+
+fonts:
+  allowed: [Times New Roman]    # D.3 "Times New Roman yazı tipi"
+
+roles:
+  body:
+    size_pt: 12                 # D.3 "12 punto"
+    line_spacing: 1.5           # D.4 "1,5 satır aralığı"
+    alignment: justify          # D.6 "iki yana yasla"
+    space_after_pt: 6           # D.6 "Paragraflar arasında 6 nk aralık"
+  heading_1:
+    size_pt: 14                 # D.6 "14 punto"
+    bold: true                  # D.6 "koyu renkte (K)"
+    all_caps: true              # D.6 "büyük harflerle"
+    alignment: center           # D.6 "ortalı"
+    page_break_before: true     # D.6 "Bölümler daima yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    size_pt: 12                 # D.6 "12 punto ve koyu renkte (K)"
+    bold: true                  # D.6
+    space_before_pt: 12         # D.4, D.6 "alt bölüm isminden önce ve sonra 12 nk"
+    space_after_pt: 12          # D.4, D.6
+  heading_3:
+    size_pt: 12                 # D.6
+    bold: true                  # D.6
+    space_before_pt: 12         # D.4, D.6
+    space_after_pt: 12          # D.4, D.6
+  figure_caption:
+    line_spacing: 1.0           # D.4, D.8.3 "bir satır aralığı"
+    position: below             # D.8.3 "Şekil açıklamaları ise şeklin altına"
+  table_caption:
+    line_spacing: 1.0           # D.4, D.8.3 "bir aralık"
+    position: above             # D.8.3 "Çizelge açıklamaları çizelgenin üstüne"
+  reference_entry:
+    line_spacing: 1.0           # D.4 "kaynaklar listesinin yazımında ise bir satır aralığı"
+
+page_numbering:
+  # D.5: ön sayfalar küçük Romen (iç kapak = i, gizli), Giriş'ten itibaren Arap rakamı
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # D.5 "sayfa altında ... ortada"
+  forbid_decoration: true       # D.5 "ayıraç, çizgi vb. gibi karakterler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

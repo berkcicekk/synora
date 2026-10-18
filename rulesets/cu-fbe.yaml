@@ -1,0 +1,64 @@
+# Çukurova Üniversitesi Fen Bilimleri Enstitüsü — Tez Yönergesi V1 (Word belgesi, 2024)
+# Kaynak: https://fbe.cu.edu.tr/storage/Tez%20Yaz%C4%B1m%20Kurallar%C4%B1%20(YEN%C4%B0)/TEZ%20YO%CC%88NERGE%20V1.docx
+# Sayfa: https://fbe.cu.edu.tr/cu/tez/tez-yazim-kurallari ; yıl belge özelliklerinden (2024-01-24)
+# Madde numarası yok; yorumlarda "Biçim" bölümündeki paragraflar anılır.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: cu-fbe
+version: 1
+name: "Çukurova Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "ÇÜ FBE Tez Yönergesi V1, 2024"
+institution: "Çukurova Üniversitesi"
+source_url: https://fbe.cu.edu.tr/storage/Tez%20Yaz%C4%B1m%20Kurallar%C4%B1%20(YEN%C4%B0)/TEZ%20YO%CC%88NERGE%20V1.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Biçim ¶1 "A4 boyutunda (210x297mm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.0 }   # Biçim ¶3
+
+fonts:
+  allowed: [Times New Roman]    # Biçim ¶3 "Times New Roman karakterinde 11 punto"
+
+roles:
+  body:
+    size_pt: 11                 # Biçim ¶3
+    line_spacing: 1.5           # Biçim ¶5 "Ana yazımda 1,5 satır aralığı"
+    first_line_indent_cm: 1.25  # Biçim ¶3 "1 (bir) tab (1,25 cm)"
+    space_before_pt: 0          # Biçim ¶6 "paragraflar arasında aralık bırakılmamalıdır"
+    space_after_pt: 0           # Biçim ¶6
+  heading_1:
+    all_caps: true              # Biçim ¶8 "Ana bölüm başlıklarının tümü [büyük harf]"; örnek "1. GİRİŞ"
+    alignment: left             # Biçim ¶8 "satır kenarından başlayacak"
+    page_break_before: true     # Biçim ¶7 "Ana bölümler daima yeni bir sayfadan"
+  heading_2:
+    case: title                 # Biçim ¶8 "alt başlıkların her kelimesinin ilk harfi büyük"
+    alignment: left             # Biçim ¶8
+  heading_3:
+    case: title                 # Biçim ¶8
+    alignment: left             # Biçim ¶8
+  figure_caption:
+    line_spacing: 1.0           # Biçim ¶5 "Şekillerin ve çizelgelerin açıklamaları ... 1 satır aralığı"
+    position: below             # İçerik ¶3 "şekil açıklamaları şeklin alt tarafına"
+  table_caption:
+    size_pt: 11                 # İçerik ¶3 "Times New Roman 11 pt"
+    line_spacing: 1.0           # Biçim ¶5
+    alignment: left             # İçerik ¶3 "üst tarafa sola yaslı"
+    position: above             # İçerik ¶3
+  block_quote:
+    line_spacing: 1.0           # Biçim ¶5 "alıntılar ... 1 (bir) satır aralığı"
+  footnote:
+    line_spacing: 1.0           # Biçim ¶5
+  # Kaynaklar: ilk satır girintisiz, alt satırlar 0,85 cm (asılı) — şemada karşılığı yok
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # Biçim ¶4 "I, II, III" büyük Romen; GİRİŞ'ten "1, 2, 3"
+  position: bottom_center       # Biçim ¶4 "sayfa altında orta kısma"
+  forbid_decoration: true       # Biçim ¶4 "ayıraç, çizgi vb. gibi bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

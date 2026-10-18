@@ -1,0 +1,58 @@
+# Bahçeşehir Üniversitesi Lisansüstü Eğitim Enstitüsü — Tezli Yüksek Lisans Programları Tez Hazırlama Yönergesi (2024-2025; .docx)
+# Not: Doktora için ayrı kılavuz yayımlanıyor; bu dosya yüksek lisans yönergesinden çıkarıldı.
+# Kaynak: https://cdn.bau.edu.tr/content/4xzn5bdt8sdue-LEE%20TEZ%20HAZIRLAMA%20Y%C3%96NERGES%C4%B0%20(Y%C3%9CKSEK%20L%C4%B0SANS)%202024-2025.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: bau-lee
+version: 1
+name: "Bahçeşehir Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "BAU Lisansüstü Eğitim Enstitüsü Tezli Yüksek Lisans Tez Hazırlama Yönergesi, 2024-2025"
+institution: "Bahçeşehir Üniversitesi"
+source_url: "https://cdn.bau.edu.tr/content/4xzn5bdt8sdue-LEE%20TEZ%20HAZIRLAMA%20Y%C3%96NERGES%C4%B0%20(Y%C3%9CKSEK%20L%C4%B0SANS)%202024-2025.docx"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.2 Sayfa "210'a 297 mm (A4)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.3 Kenarlar
+
+fonts:
+  allowed: [Times New Roman]    # 2.4
+
+roles:
+  body:
+    size_pt: 12                 # 2.4 "Font boyutu 12 punto"
+    line_spacing: 1.5           # 2.5 Boşluk "genel metni 1,5 satır aralığı"
+    alignment: justify          # Bölüm 2 Ortalama "metin iki yana yaslı olmalıdır"
+    first_line_indent_cm: 1.0   # 2.3 "ilk satırı soldan 1 cm içeriden"
+  heading_1:
+    bold: true                  # Başlıklar, Stil 1 "Ortalanmış, Kalın"
+    alignment: center           # Stil 1
+    case: title                 # Stil 1 "Her Sözcüğün Büyük Harfle Başladığı"
+  heading_2:
+    bold: true                  # Stil 2 "Sola Hizalanmış, Kalın"
+    alignment: left             # Stil 2
+    case: title                 # Stil 2
+  heading_3:
+    bold: true                  # Stil 3 "İçeri girintili, kalın, küçük harfle"
+    case: sentence              # Stil 3
+  table_caption:
+    italic: true                # Tablolar "Tablonun başlığını italik yapıp"
+    case: title                 # Tablolar "her kelimenin ilk harfini büyük"
+  figure_caption:
+    case: sentence              # Şekiller "sadece ilk kelimenin ilk harfi büyük"
+  footnote:
+    size_pt: 10                 # Dipnotlar "daha küçük punto (boyut 10)"
+  # 2.5: tablolar, uzun alıntılar, dipnotlar, kaynakça "tek boşluklu olabilir" (isteğe bağlı → denetlenmez)
+
+page_numbering:
+  # Sayfa Numaralandırma: ilk sayfalar küçük Roma (i, ii, iii…), Bölüm 1'den itibaren Arap rakamı.
+  # Konum: "ortalanmış"; üstte mi altta mı olduğu belirtilmemiş → konum denetlenmez.
+  formats_in_order: [lowerRoman, decimal]
+
+document:
+  forbid_tracked_changes: true

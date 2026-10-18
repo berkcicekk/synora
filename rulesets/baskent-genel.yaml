@@ -1,0 +1,72 @@
+# Başkent Üniversitesi Enstitüleri Tez Yazım Kuralları (2019; yıl FBE kılavuzundaki atıftan)
+# Kaynak: https://gthe.baskent.edu.tr/kw/upload/593/dosyalar/genel-tez.pdf
+# Tüm enstitüler (AB ve Uluslararası İlişkiler, Eğitim, Fen, Sağlık, Sosyal Bilimler, GTHE) için ortak kurallar.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: baskent-genel
+version: 1
+name: "Başkent Üniversitesi · Enstitüler Ortak Tez Yazım Kuralları"
+source: "Başkent Üniversitesi Enstitüleri Tez Yazım Kuralları, 2019"
+institution: "Başkent Üniversitesi"
+source_url: https://gthe.baskent.edu.tr/kw/upload/593/dosyalar/genel-tez.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.2
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 2.5 }   # 2 (Sayfa Düzeni)
+
+fonts:
+  allowed: [Times New Roman]    # 2
+
+roles:
+  body:
+    size_pt: 12                 # 2
+    line_spacing: 1.5           # 2.2
+    alignment: justify          # 2 "sağ ve sol kenara yaslanmalıdır"
+    first_line_indent_cm: 1.0   # 2, 2.2
+  heading_1:
+    size_pt: 14                 # 2
+    bold: true                  # 2, 2.3
+    all_caps: true              # 2.3 "BÜYÜK HARF"
+    alignment: center           # 2.3 "sayfa ortalanarak"
+    page_break_before: true     # 2.2 "sayfa başı yapılmalıdır"
+  heading_2:
+    size_pt: 12                 # 2.3
+    bold: true                  # 2.3
+    alignment: left             # 2.3 "sola hizalı"
+    case: title                 # 2.3 Her Kelimenin İlk Harfi Büyük
+  heading_3:
+    size_pt: 12                 # 2.3
+    bold: true                  # 2.3
+    alignment: left             # 2.3
+    indent_left_cm: 1.0         # 2.2, 2.3 "1,0 cm içeriden"
+    case: sentence              # 2.3 ilk kelimenin ilk harfi büyük
+  figure_caption:
+    size_pt: 10                 # 2
+    line_spacing: 1.5           # 2.2
+    position: below             # 3.2 "şeklin alt kısmında"
+  table_caption:
+    size_pt: 10                 # 2
+    line_spacing: 1.5           # 2.2
+    position: above             # 3.2 "tablonun üst kısmında"
+  block_quote:
+    size_pt: 10                 # 2 "alıntılar ... 10 punto"
+    line_spacing: 1.5           # 2.2
+  reference_entry:
+    line_spacing: 1.5           # 2.2, 3.3 "Kaynaklar 1.5 satır aralığı ile"
+  footnote:
+    size_pt: 10                 # 2
+    line_spacing: 1.0           # 2.2
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.1
+  position: bottom_center       # 2.1 "altında ve ortasında"
+  forbid_decoration: true       # 2.1 "parantez, çizgi gibi işaretler konulmamalıdır"
+
+document:
+  forbid_tracked_changes: true

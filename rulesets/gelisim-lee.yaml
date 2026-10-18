@@ -1,0 +1,65 @@
+# İstanbul Gelişim Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Tez / Dönem Projesi Yazım Kılavuzu (İstanbul, Mayıs 2024)
+# Kaynak: https://panel.gelisim.edu.tr/assets/2024/dokumanlar/lisansustu/igu-tez-yazim-klavuzu-2024_c3dc8ac83e5744f7acd1d5cde6dbf9ed.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Madde numaraları kılavuzun "İkinci Bölüm: Tezin Şekil Özellikleri" kısmına göredir (İB = İkinci Bölüm).
+ruleset: gelisim-lee
+version: 1
+name: "İstanbul Gelişim Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Lisansüstü Tez / Dönem Projesi Yazım Kılavuzu, 2024"
+institution: "İstanbul Gelişim Üniversitesi"
+source_url: https://panel.gelisim.edu.tr/assets/2024/dokumanlar/lisansustu/igu-tez-yazim-klavuzu-2024_c3dc8ac83e5744f7acd1d5cde6dbf9ed.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # İB 1 "21x29,7 cm (A4)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # İB 3, "Sayfa Düzeni ve Numaralandırma" (s. 9)
+
+fonts:
+  allowed: [Times New Roman]    # İB 2
+
+roles:
+  body:
+    size_pt: 12                 # İB 2
+    line_spacing: 1.5           # İB 2, İB 4
+    alignment: justify          # İB 4 "İki Yana Yasla"
+    first_line_indent_cm: 1.0   # İB 4 "Paragraflar soldan 1 cm içeriden başlar"
+    space_before_pt: 6          # İB 4 "Aralık (önce ve sonra) : 6 nk"
+    space_after_pt: 6           # İB 4
+  heading_1:
+    size_pt: 14                 # İB 3 "Bölüm Başlıkları 14 punto"
+    bold: true                  # İB 3
+    all_caps: true              # İB 3 "tümü büyük"
+    alignment: center           # İB 3 "sayfaya ortalanmış"
+  heading_2:
+    size_pt: 12                 # İB 3
+    bold: true                  # İB 3
+    case: title                 # İB 3 "her kelimenin ilk harfi büyük"
+  heading_3:
+    size_pt: 12                 # İB 3
+    bold: true                  # İB 3
+  table_caption:
+    size_pt: 12                 # İB 5.1 "Times New Roman, 12 Punto, kalın"
+  figure_caption:
+    position: below             # İB 5.2 "şekil numarası isimi şeklin altında"
+  footnote:
+    size_pt: 10                 # İB 2 "dipnotlarda ise Times New Roman, 10"
+  reference_entry:
+    size_pt: 12                 # Kaynak gösterimi, Kaynakça sayfası (s. 17-18)
+    line_spacing: 1.0           # "Satır Aralığı (Tek)"
+    space_before_pt: 12         # "Önce (12 nk)"
+    space_after_pt: 12          # "Sonra (12 nk)"
+
+page_numbering:
+  # İB 3: başlangıç kısmı küçük Romen (i, ii, iii…), metin kısmı 1, 2…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # İB 3 "ortalanarak, sayfa altında"
+  forbid_decoration: true       # İB 3 "öncesinde ve sonrasında ayıraç, çizgi vb. karakterler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

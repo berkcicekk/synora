@@ -1,0 +1,86 @@
+# Batman Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (2024)
+# Kaynak: https://batman.edu.tr/images/files/Tez_Yazim_Kilavuzu_(2024)(1).pdf
+# (bağlantı sayfası: https://batman.edu.tr/Birimler/leem/sayfalar/22363)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: batman-lee
+version: 1
+name: "Batman Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Batman Üniversitesi LEE Tez Yazım Kılavuzu, 2024"
+institution: "Batman Üniversitesi"
+source_url: https://batman.edu.tr/images/files/Tez_Yazim_Kilavuzu_(2024)(1).pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.2 "A4 standardında"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }  # 1.2 "sol 3.5 cm; alt, üst ve sağ 2.5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 1.3 "yazı tipi Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 1.3 "yazı büyüklüğü 12 punto"
+    line_spacing: 1.5           # 1.4 "l.5 satır aralığı"
+    alignment: justify          # 1.3, 1.4 "iki yana yasla"
+    first_line_indent_cm: 1.25  # 1.4 "Paragraflarda 1.25 cm'lik girinti"
+    # 1.4 "Paragraflar arasında boşluk bırakılmamalıdır" (nk değeri verilmemiş)
+  heading_1:
+    size_pt: 12                 # 1.4 "Bölüm (birinci derece) başlıkları ... 12 punto"
+    bold: true                  # 1.4, 1.5 "koyu"
+    all_caps: true              # 1.5 "tümü büyük harf"
+    alignment: center           # 1.5 "ortalı"
+    line_spacing: 1.5           # 1.4 "l.5 satır aralıklı"
+    space_before_pt: 42         # 1.5 "öncesinde 42nk"
+    space_after_pt: 24          # 1.5 "sonrasında 24nk"
+    page_break_before: true     # 1.5 "yeni bir sayfanın başında"
+  heading_2:
+    size_pt: 12                 # 1.4 "diğer alt başlıklar ... 12 punto"
+    bold: true                  # 1.4, 1.5 "koyu"
+    line_spacing: 1.5           # 1.4
+    alignment: justify          # 1.5 "iki yana yaslı"
+    case: title                 # 1.5 "her kelimenin ilk harfi büyük", bağlaçlar küçük
+    # 1.5 "1,25 cm girintili" — girinti türü belirsiz, denetlenmez
+  heading_3:
+    size_pt: 12                 # 1.4
+    bold: true                  # 1.4, 1.5
+    line_spacing: 1.5           # 1.4
+    alignment: justify          # 1.5
+    case: sentence              # 1.5 "ilk kelimesinin ilk harfi büyük, diğer tüm kelimeler küçük"
+    first_line_indent_cm: 0     # 1.5 "soldan girinti yapılmadan"
+  figure_caption:
+    size_pt: 11                 # 1.4 "Şekil ve çizelge başlıkları ... 11 punto"
+    line_spacing: 1.0           # 1.4 "1.0 satır aralığı"
+    alignment: center           # 1.9 "şekil başlıkları ise altta ve ortada"
+    case: sentence              # 1.9 "ilk kelimenin ilk harfi büyük diğer tüm kelimeler küçük"
+    position: below             # 1.9 "şekil başlıkları ise altta"
+  table_caption:
+    size_pt: 11                 # 1.4
+    line_spacing: 1.0           # 1.4
+    alignment: justify          # 1.9 "Çizelge başlıkları üstte ve iki yana yaslı"
+    case: sentence              # 1.9
+    position: above             # 1.9 "Çizelge başlıkları üstte"
+  block_quote:
+    size_pt: 11                 # 4.1.1 (Alıntılar) "yazı boyutu 11 punto"
+    indent_left_cm: 1.25        # 4.1.1 (Alıntılar) "metinin tümü soldan 1,25 cm içeriden"
+  reference_entry:
+    line_spacing: 1.0           # 1.4 "kaynaklar listesinin yazımında 1.0 satır aralığı"
+    alignment: justify          # 4.1.2 "iki yana yaslı"
+    indent_left_cm: 1.0         # 4.1.2 "ilk satırdan sonraki satırlar 1.0 cm sağdan"
+    first_line_indent_cm: -1.0  # 4.1.2 (asılı girinti)
+  footnote:
+    line_spacing: 1.0           # 1.4 "dipnotlar ... 1.0 satır aralığı"
+
+page_numbering:
+  # 1.3, 1.6: özel sayfalar küçük Romen (i, ii…), Giriş'ten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 1.6 "sayfanın altında ve ortada"
+  forbid_decoration: true       # 1.6 "çizgi veya benzeri bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

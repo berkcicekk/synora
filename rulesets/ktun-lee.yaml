@@ -1,0 +1,72 @@
+# Konya Teknik Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez ve Seminer Yazım Kılavuzu (Konya, 2018)
+# Kaynak: https://www.ktun.edu.tr/Dosyalar/1005/files/Sablonlar/5_1_2_Yaz%C4%B1m%20Klavuzu.docx
+# (Enstitü şablonlar klasöründe .docx olarak yayımlanıyor)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ktun-lee
+version: 1
+name: "Konya Teknik Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "KTÜN Lisansüstü Eğitim Enstitüsü Tez ve Seminer Yazım Kılavuzu, 2018"
+institution: "Konya Teknik Üniversitesi"
+source_url: https://www.ktun.edu.tr/Dosyalar/1005/files/Sablonlar/5_1_2_Yaz%C4%B1m%20Klavuzu.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 2.2
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]                # 2.3
+
+roles:
+  body:
+    size_pt: 12                             # 2.3
+    line_spacing: 1.5                       # 2.4 "l.5 satır aralığı"
+    first_line_indent_cm: 1.25              # 2.4 "1.25 cm'lik girinti"
+    space_after_pt: 0                       # 2.4 "Paragraflar arasında boşluk bırakılmamalıdır"
+  heading_1:
+    size_pt: 12                             # 2.4 "Bütün başlıklar sola dayalı, 12 punto ve koyu"
+    bold: true                              # 2.4
+    all_caps: true                          # 2.5 "büyük harf ile"
+    alignment: left                         # 2.4
+    page_break_before: true                 # 2.5 "sayfa başına"
+  heading_2:
+    size_pt: 12                             # 2.4
+    bold: true                              # 2.4
+    alignment: left                         # 2.4
+    case: title                             # 2.5 "her kelimenin ilk harfi büyük"
+  heading_3:
+    size_pt: 12                             # 2.4
+    bold: true                              # 2.4
+    alignment: left                         # 2.4
+    case: sentence                          # 2.5 "ilk kelimenin ilk harfi dışında tüm kelimeler küçük"
+  figure_caption:
+    size_pt: 10                             # 2.4
+    line_spacing: 1.0                       # 2.4
+    case: sentence                          # 3.3
+    position: below                         # 3.3 "şeklin ise altına"
+  table_caption:
+    size_pt: 10                             # 2.4
+    line_spacing: 1.0                       # 2.4
+    alignment: center                       # 2.4 "Çizelge açıklaması (başlık) ve çizelge sayfayı ortalayacak şekilde"
+    case: sentence                          # 3.3
+    position: above                         # 3.3 "çizelgenin üstüne"
+  reference_entry:
+    size_pt: 12                             # 2.4 "Kaynak listesinin yazımında 12 punto"
+    line_spacing: 1.0                       # 2.4 "1.0 satır aralığı"
+  footnote:
+    size_pt: 10                             # 2.8
+    line_spacing: 1.0                       # 2.4, 2.8
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.6
+  # 2.3/2.6: ön sayfalar alt ortada, metin sayfaları "üst sağ boşluğa" → bölüme göre değiştiği için konum denetlenmez
+  forbid_decoration: true                   # 2.6 "çizgi veya benzeri bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

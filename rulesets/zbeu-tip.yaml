@@ -5,6 +5,8 @@ ruleset: zbeu-tip
 version: 1
 name: ZBEÜ Tıp Fakültesi · Tıpta Uzmanlık Tezi
 source: ZBEÜ Tıp Fakültesi Tez Yazım Kılavuzu, Zonguldak 2019
+institution: Zonguldak Bülent Ecevit Üniversitesi
+source_url: https://cdn3.beun.edu.tr/tip//zbeu-tipta-uzmanlik-ogrencileri-icin-tez-yazim-kilavuzu.pdf
 
 tolerance:
   length_cm: 0.05

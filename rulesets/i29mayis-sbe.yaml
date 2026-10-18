@@ -1,0 +1,85 @@
+# İstanbul 29 Mayıs Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (İstanbul 2025; dosya 2026-07)
+# Kaynak: https://filehost.29mayis.edu.tr/upload/2026/07/27/istanbul_29_mayis_universitesi_tez_yazim_kilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Arap harfli metinler için Traditional Arabic ve farklı puntolar (gövde 16, Başlık 1 18, Başlık 2+ 14) öngörülüyor;
+# aşağıdaki punto değerleri Latin harfli metin içindir.
+ruleset: i29mayis-sbe
+version: 1
+name: "İstanbul 29 Mayıs Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "İstanbul 29 Mayıs Üniversitesi Sosyal Bilimler Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2025"
+institution: "İstanbul 29 Mayıs Üniversitesi"
+source_url: "https://filehost.29mayis.edu.tr/upload/2026/07/27/istanbul_29_mayis_universitesi_tez_yazim_kilavuzu.pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  # 2.1: Üst 3,5 / Alt 3 / Sol 2,5 / Sağ 2,5 cm + Cilt Payı 1 cm (sol) → etkin sol boşluk 3,5 cm
+  margins_cm: { top: 3.5, bottom: 3.0, left: 3.5, right: 2.5 }
+
+fonts:
+  allowed: [Times New Roman, Traditional Arabic]   # 2.2.1.1 Latin harfli: TNR; Arap harfli: Traditional Arabic
+
+roles:
+  body:
+    size_pt: 12                 # 2.2.1.1 "Latin harfli metinler için 12 punto"
+    line_spacing: 1.5           # 2.2.1.2.1 "1,5 Satır"
+    alignment: justify          # 2.2.1.2.1 "İki Yana Yaslanmış"
+    space_before_pt: 0          # 2.2.1.2.1 "Önce: 0"
+    space_after_pt: 0           # 2.2.1.2.1 "Sonra: 0"
+    # 2.2.1.2.1: "İlk Satır" girintisi isteniyor ama değeri verilmemiş; başlık sonrası ilk paragraf girintisiz (2.2.1.2.2)
+  heading_1:
+    size_pt: 14                 # 2.2.2 "Latin harfli ... 14 punto"
+    bold: true                  # 2.2.2 "Koyu / Bold"
+    all_caps: true              # 2.2.2 "Koyu ve Tümü Büyük Harf"
+    alignment: center           # 2.2.2 "Ortalanmış"
+    first_line_indent_cm: 0     # 2.2.2 "Özel: Yok"
+    space_before_pt: 12         # 2.2.2 "Önce: 12"
+    space_after_pt: 12          # 2.2.2 "Sonra: 12"
+    line_spacing: 1.5           # 2.2.2 "1,5 Satır"
+  heading_2:
+    size_pt: 12                 # 2.2.2.1 "Latin harfli metinler için 12 punto"
+    bold: true                  # 2.2.2.1
+    case: sentence              # 2.2.2.1 "İlk Harfi Büyük Diğerleri Küçük"
+    alignment: left             # 2.2.2.1 "Sola"
+    first_line_indent_cm: 0     # 2.2.2.1 "Özel: YOK"
+    space_before_pt: 12         # 2.2.2.1 "Önce: 12"
+    space_after_pt: 12          # 2.2.2.1 "Sonra: 12"
+    line_spacing: 1.5           # 2.2.2.1
+  heading_3:
+    size_pt: 12                 # 2.2.2.1
+    bold: true                  # 2.2.2.1
+    case: sentence              # 2.2.2.1
+    alignment: left             # 2.2.2.1
+    first_line_indent_cm: 0     # 2.2.2.1
+    space_before_pt: 12         # 2.2.2.1
+    space_after_pt: 12          # 2.2.2.1
+    line_spacing: 1.5           # 2.2.2.1
+  block_quote:
+    size_pt: 12                 # 2.2.5.1 "12 punto"
+    italic: true                # 2.2.5.1 "Yazı şekli italik"
+    alignment: justify          # 2.2.5.1 "İki Yana Yaslanmış"
+    first_line_indent_cm: 0     # 2.2.5.1 "Özel: Yok"
+    indent_left_cm: 2.5         # 2.2.5.1 "soldan 2,5 cm girintili"
+    space_before_pt: 6          # 2.2.5.1 "Önce: 6"
+    space_after_pt: 6           # 2.2.5.1 "Sonra: 6"
+    line_spacing: 1.0           # 2.2.5.1 "Tek"
+  footnote:
+    size_pt: 10                 # 2.2.3 "10 punto"
+    alignment: justify          # 2.2.3
+    first_line_indent_cm: 0     # 2.2.3 "Özel: Yok"
+    space_before_pt: 0          # 2.2.3
+    space_after_pt: 0           # 2.2.3
+    line_spacing: 1.0           # 2.2.3 "Tek"
+
+page_numbering:
+  # 2.2.4: Giriş'e kadar küçük Roma (ii, iii…), Giriş'ten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.2.4 "sayfa altında ve ortalanmış"
+
+document:
+  forbid_tracked_changes: true

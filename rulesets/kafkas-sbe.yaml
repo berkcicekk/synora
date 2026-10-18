@@ -1,0 +1,65 @@
+# Kafkas Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Kılavuzu (Kars, 2015)
+# Kaynak: https://www.kafkas.edu.tr/dosyalar/sobe/file/Tez%20Yaz%C4%B1m%20Klavuzu(1)%20(1).docx
+# (Enstitü sitesinde "Tez Yazım Kuralları" adıyla .docx olarak yayımlanıyor; madde numarası olmayan
+#  yerlerde kaynak yeri 2.2 alt başlığının adıyla verildi)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: kafkas-sbe
+version: 1
+name: "Kafkas Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Kafkas Üniversitesi Sosyal Bilimler Enstitüsü Tez Yazım Kılavuzu, 2015"
+institution: "Kafkas Üniversitesi"
+source_url: https://www.kafkas.edu.tr/dosyalar/sobe/file/Tez%20Yaz%C4%B1m%20Klavuzu(1)%20(1).docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 2.1
+  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.1
+
+fonts:
+  allowed: [Times New Roman]                # 2.2 Yazım Biçimi
+
+roles:
+  body:
+    size_pt: 12                             # 2.2 Yazım Biçimi
+    line_spacing: 1.5                       # 2.2 Satır Aralığı
+    alignment: justify                      # 2.2 Paragraflar "İki Yana Yaslı"
+    first_line_indent_cm: 0                 # 2.2 Paragraflar "başlarında girinti yapılmamalıdır"
+  heading_1:
+    bold: true                              # 2.2 Bölüm Başlıkları / Başlıklar
+    all_caps: true                          # 2.2 "büyük harflerle"
+    page_break_before: true                 # 2.2 "yeni bir sayfadan başlar"; 3 "daima yeni bir sayfadan"
+    # ÇELİŞKİ: 2.2 "Bölüm Başlıkları" 14 punto ve ortalı diyor; hemen ardından "Başlıklar" maddesi
+    # birinci düzey için 12 punto ve sol kenardan hizalı diyor → punto ve hizalama denetlenmez
+  heading_2:
+    bold: true                              # 2.2 Başlıklar
+    case: title                             # 2.2 "bütün sözcüklerin yalnızca ilk harfleri büyük"
+    alignment: left                         # 2.2 "sol kenardan hizalanır"
+  heading_3:
+    bold: true                              # 2.2 Başlıklar
+    case: title                             # 2.2
+    alignment: left                         # 2.2
+  figure_caption:
+    position: above                         # 3 Tablo ve Şekil Listesi "Şeklin üst kısmında yer almalıdır"
+  table_caption:
+    case: sentence                          # 3 "Tablo başlığının yalnızca baş harfi büyük"
+    position: above                         # 3, 11 "tablonun üstüne yazılmalı"
+  block_quote:
+    line_spacing: 1.0                       # 4.1.1 "tek satır"
+    italic: true                            # 4.1.1 "italik harflerle"
+    indent_left_cm: 1.0                     # 4.1.1 "sağdan ve soldan 1 cm girinti"
+  # reference_entry: 9 taşan satırlar 1,25 cm asılı girinti (şemada karşılığı yok)
+  footnote:
+    size_pt: 10                             # 6 "Dipnotlar 10 puntoyla"
+    line_spacing: 1.0                       # 2.2 Dipnotlar "Tek satır aralığında"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.2 Sayfa Numarası (konum: "sağ alt köşeye veya sayfa ortasına" → denetlenmez)
+
+document:
+  forbid_tracked_changes: true

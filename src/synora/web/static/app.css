@@ -454,6 +454,9 @@ input::placeholder { color: #707482; }
 .prep strong, .prep em { color: var(--ink); }
 .prep p { margin: .2rem 0 .6rem; color: var(--muted); line-height: 1.5; }
 .prep .latex-note { margin: .7rem 0 0; font-size: .8rem; }
+.prep .latex-name { font-size: .82rem; }
+.ruleset-filter { width: 100%; min-height: 44px; margin: .2rem 0 .4rem; padding: .5rem .7rem; border: 1px solid var(--hair); background: var(--paper); font: inherit; }
+.ruleset-count { display: block; font-size: .8rem; color: var(--muted); min-height: 1em; }
 
 /* --- Hata sayfaları: ne yapabilirsiniz --- */
 .help-box { background: var(--paper); border-left: 3px solid var(--blue); padding: .9rem 1rem; display: grid; gap: .5rem; }

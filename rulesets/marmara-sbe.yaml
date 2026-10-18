@@ -1,0 +1,65 @@
+# Marmara Üniversitesi Sosyal Bilimler Enstitüsü — Lisansüstü Tez ve Proje Yazım Kılavuzu (kapakta İstanbul 2020; dosya adı "yeni_tez_yazım_kılavuzu.2023")
+# Kaynak: https://sbe.marmara.edu.tr/dosya/sbe/mevzuat/SBE-yeni_tez_yaz%C4%B1m_k%C4%B1lavuzu.2023.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: marmara-sbe
+version: 1
+name: "Marmara Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Marmara Üniversitesi Sosyal Bilimler Enstitüsü Lisansüstü Tez ve Proje Yazım Kılavuzu, 2020 (2023 yayını)"
+institution: "Marmara Üniversitesi"
+source_url: "https://sbe.marmara.edu.tr/dosya/sbe/mevzuat/SBE-yeni_tez_yaz%C4%B1m_k%C4%B1lavuzu.2023.pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 2.5, left: 2.5, right: 2.5 }   # 8.2 Sayfa Yapısı tablosu
+
+fonts:
+  allowed: [Times New Roman]    # 8.1 (özel karakterler için uyumlu başka font serbest)
+
+roles:
+  body:
+    size_pt: 11                 # 8.1 "Metin: 11 p."
+    alignment: justify          # 8.1 "iki yana yaslanmış"
+    space_before_pt: 6          # 8.1 "paragraf öncesi 6 nk"
+    space_after_pt: 6           # 8.1 "sonrası 6 nk"
+    # 8.1 "satır aralığı 1,6 nk" — birim belirsiz (1,6 katsayı mı, 16 nk mı?) → denetlenmez
+  heading_1:
+    size_pt: 12                 # 8.1 "Bölüm başlığı ... 12 punto"
+    bold: true                  # 8.1 "koyu"
+    all_caps: true              # 8.1 "tümü büyük harf"
+    alignment: center           # 8.1 "ortalı"
+    space_before_pt: 30         # 8.1 "üsten 30"
+    space_after_pt: 30          # 8.1 "alttan 30 nk"
+    page_break_before: true     # 8.1 "Bölüm yeni sayfada başlamalı"
+  heading_2:
+    size_pt: 12                 # 8.1 "Alt başlıklar: ... 12 punto"
+    bold: true                  # 8.1
+    case: title                 # 8.1 "Baş harfleri büyük"
+    alignment: left             # 8.1 "sola dayalı"
+    space_before_pt: 15         # 8.1 "üstten 15"
+    space_after_pt: 1.5         # 8.1 "alttan 1,5 nk"
+  heading_3:
+    size_pt: 12                 # 8.1 (tüm alt başlıklar)
+    bold: true                  # 8.1
+    case: title                 # 8.1
+    alignment: left             # 8.1
+    space_before_pt: 15         # 8.1
+    space_after_pt: 1.5         # 8.1
+  footnote:
+    size_pt: 9                  # 8.1 "Dipnot: 9 punto"
+    alignment: justify          # 8.1 "iki yana yaslanmış"
+    # 8.1 "satır aralığı 12 nk" — tam/en az belirtilmemiş → denetlenmez
+
+page_numbering:
+  # 8.3: Giriş'e kadar küçük Roma (i, ii, iii…), Giriş'ten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 8.3 "kâğıdın altına ortalanarak"
+  forbid_decoration: true       # 8.3 "parantez, çizgi vb. işaretler kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

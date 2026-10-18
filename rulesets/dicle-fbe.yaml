@@ -1,0 +1,94 @@
+# Dicle Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Temmuz 2021)
+# Kaynak: https://www.dicle.edu.tr/Contents/Pages/Files/1b5249fc-decd-4b96-b08b-9793627182de/365cadf5a5fc45fd9414610a01cc2c25_D%c3%9c%20FBE%20Tez%20Yaz%c4%b1m%20K%c4%b1lavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Değerlerin çoğu kılavuzun "Tablo 2.1 Tezin farklı bölümlerinde kullanılacak yazım biçimleri" tablosundandır.
+ruleset: dicle-fbe
+version: 1
+name: "Dicle Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Dicle Üniversitesi Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2021"
+institution: "Dicle Üniversitesi"
+source_url: https://www.dicle.edu.tr/Contents/Pages/Files/1b5249fc-decd-4b96-b08b-9793627182de/365cadf5a5fc45fd9414610a01cc2c25_D%c3%9c%20FBE%20Tez%20Yaz%c4%b1m%20K%c4%b1lavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 (210 x 297 mm)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 2.5 }  # 2.2 "üst 3 cm, sağ ve alt 2,5 cm, sol 4 cm (1 cm cilt payı dahil)"
+
+fonts:
+  allowed: [Times New Roman]    # 2.3 "Times New Roman (TNR)"
+
+roles:
+  body:
+    size_pt: 12                 # 2.3, Tablo 2.1 "METİN (TEZ ANA METİN) 12"
+    line_spacing: 1.5           # Tablo 2.1 "1,5"
+    alignment: justify          # 2.3 "iki yana yaslı"
+    # ÇELİŞKİ: Tablo 2.1 ön/arka boşluk 0/0 nk; 2.5 "Paragraflar arasında 1 satır boşluk bırakılmalıdır" → denetlenmez
+  heading_1:
+    size_pt: 12                 # Tablo 2.1 "BÖLÜM BAŞLIKLARI 12"
+    line_spacing: 1.0           # Tablo 2.1 "1"
+    bold: true                  # 2.4 tablo "kalın (bold)", Tablo 2.1 "Koyu"
+    all_caps: true              # 2.4 tablo "tamamı büyük harf"
+    alignment: left             # 2.4 "başlıkların tamamı sola dayalı"
+    space_before_pt: 6          # Tablo 2.1 ön boşluk 6 nk
+    space_after_pt: 12          # Tablo 2.1 arka boşluk 12 nk
+  heading_2:
+    size_pt: 12                 # Tablo 2.1 "ALT BÖLÜM BAŞLIKLARI 12"
+    line_spacing: 1.0           # Tablo 2.1
+    bold: true                  # 2.4 tablo, Tablo 2.1
+    case: title                 # 2.4 tablo "her sözcüğün baş harfi büyük"
+    alignment: left             # 2.4
+    space_before_pt: 3          # Tablo 2.1 ön 3 nk
+    space_after_pt: 6           # Tablo 2.1 arka 6 nk
+  heading_3:
+    size_pt: 12                 # Tablo 2.1
+    line_spacing: 1.0           # Tablo 2.1
+    bold: true                  # 2.4 tablo
+    case: sentence              # 2.4 tablo "sadece ilk sözcüğün baş harfi büyük"
+    alignment: left             # 2.4
+    space_before_pt: 3          # Tablo 2.1
+    space_after_pt: 6           # Tablo 2.1
+  figure_caption:
+    size_pt: 10                 # 2.10, Tablo 2.1 "ŞEKİL/TABLO AÇIKLAMASI 10"
+    line_spacing: 1.0           # 2.10, Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+    case: sentence              # 2.10 "yalnızca baştaki sözcüğün ilk harfi büyük"
+    position: below             # 2.10 "Şekil açıklamaları, ilgili şeklin alt kısmına"
+  table_caption:
+    size_pt: 10                 # 2.10, Tablo 2.1
+    line_spacing: 1.0           # 2.10, Tablo 2.1
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+    case: sentence              # 2.10
+    position: above             # 2.10 "Tablo açıklamaları ise ilgili tablonun üst kısmına"
+  block_quote:
+    size_pt: 10                 # 2.11 "iki (2) punto küçük", Tablo 2.1 "PARAGRAF ALINTILARI 10"
+    line_spacing: 1.0           # Tablo 2.1
+    indent_left_cm: 1.27        # 2.11 "soldan 1 sekme (1,27 cm) içerden"
+    space_before_pt: 0          # Tablo 2.1
+    space_after_pt: 0           # Tablo 2.1
+  reference_entry:
+    size_pt: 12                 # Tablo 2.1 "KAYNAKLAR (METİN) 12"
+    line_spacing: 1.0           # Tablo 2.1
+    space_before_pt: 6          # Tablo 2.1 ön 6 nk
+    space_after_pt: 0           # Tablo 2.1 arka 0 nk
+  footnote:
+    size_pt: 10                 # 2.3, 2.9, Tablo 2.1 "METİN (DİPNOT) 10"
+    line_spacing: 1.0           # 2.9, Tablo 2.1
+    space_before_pt: 6          # Tablo 2.1
+    space_after_pt: 12          # Tablo 2.1
+
+page_numbering:
+  # 2.6: metin bölümünden önce küçük Romen (i, ii…), Giriş'ten sona kadar Arap rakamı
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.6 "yazı alanına ortalanmış olarak sayfanın altında"
+  forbid_decoration: true       # 2.6 "parantez, nokta, ayraç, çizgi gibi bir işaret kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

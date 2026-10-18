@@ -1,0 +1,65 @@
+# İstanbul Bilgi Üniversitesi Lisansüstü Programlar Enstitüsü — Tez Yazım Kılavuzu, Türkçe Programlar (2026)
+# Kaynak: https://www.bilgi.edu.tr/media/uploads/2026/01/05/lpe-2026_tezyazimkilavuzu_turkceprogramlar.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Hukuk programlarının alt başlık numaralandırması farklıdır (4.3); burada genel kurallar kodlandı.
+ruleset: bilgi-lpe
+version: 1
+name: "İstanbul Bilgi Üniversitesi · Lisansüstü Programlar Enstitüsü"
+source: "Tez Yazım Kılavuzu (Türkçe Programlar), 2026"
+institution: "İstanbul Bilgi Üniversitesi"
+source_url: https://www.bilgi.edu.tr/media/uploads/2026/01/05/lpe-2026_tezyazimkilavuzu_turkceprogramlar.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 4.0, bottom: 3.0, left: 3.0, right: 3.0 }   # 2.2 "üst kenar boşluğu 4 cm ve diğer ... 3 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 2.2 "kabul edilen tek yazı karakteri Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 2.2
+    line_spacing: 1.5           # 2.2
+    space_before_pt: 6          # 2.2 "her paragraftan önce 6 nk"
+    space_after_pt: 6           # 2.2 "sonra 6 nk"
+  heading_1:
+    size_pt: 12                 # 4.1, 4.2
+    bold: true                  # 4.2 "KALIN"
+    all_caps: true              # 4.2 "tamamı BÜYÜK HARFLERLE"
+    alignment: center           # 4.2 "ilk satıra ortalanmış"
+    line_spacing: 1.0           # 2.2 "başlıklar tek aralıklı"
+    page_break_before: true     # 4.2 "Sadece yeni bölümler yeni bir sayfa ile başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 4.2
+    bold: true                  # 4.2
+    line_spacing: 1.0           # 2.2
+    case: title                 # 4.2 "Alt başlıktaki kelimelerin ilk harfleri büyük"
+  heading_3:
+    alignment: left             # 4.2 "İkinci derece alt başlıklar ... sola yaslı"
+    line_spacing: 1.0           # 2.2
+  table_caption:
+    size_pt: 12                 # 3.9 "Listenin başlığı Times New Roman, 12 punto"
+    position: above             # 3.9 "tablonun üstünde bir satıra"
+  figure_caption:
+    size_pt: 12                 # 3.9
+    position: above             # 3.9 "her şeklin numarası ve başlığı şeklin üstünde"
+  footnote:
+    size_pt: 10                 # 2.2
+    line_spacing: 1.0           # 2.2 "tek boşluk"
+    alignment: justify          # 2.2 "iki yana yaslı"
+  block_quote:
+    line_spacing: 1.0           # 2.2 "uzun alıntılar ... tek aralıklı"
+
+page_numbering:
+  # 2.3: ön sayfalar küçük Romen (i, ii, iii…), ana metnin ilk sayfasından itibaren Arap
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.3 "altbilginin ortasına"
+
+document:
+  forbid_tracked_changes: true

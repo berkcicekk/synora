@@ -1,0 +1,86 @@
+# Millî Savunma Üniversitesi Enstitüleri — Lisansüstü (Yüksek Lisans ve Doktora) Tezleri Yazım Kılavuzu (düzeltilmiş, 03/2025)
+# Tüm MSÜ enstitüleri için ortak kılavuz (ATASAREN sitesinde yayımlanıyor).
+# Kaynak: https://atasaren.msu.edu.tr/contents/kilavuz/MSU_LISANSUSTU_TEZLERI_YAZIM_KILAVUZU_Duzeltilmis_SON_032025.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: msu-lee
+version: 1
+name: "Millî Savunma Üniversitesi · Enstitüler (ortak kılavuz)"
+source: "MSÜ Enstitüleri Lisansüstü Tezleri Yazım Kılavuzu, 2025"
+institution: "Milli Savunma Üniversitesi"
+source_url: "https://atasaren.msu.edu.tr/contents/kilavuz/MSU_LISANSUSTU_TEZLERI_YAZIM_KILAVUZU_Duzeltilmis_SON_032025.pdf"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.3 "A4 standardında (21 x 29,7 cm)"
+  # 2.1: tüm kenarlar 2,5 cm + 1 cm cilt payı, karşılıklı (aynalı) kenar boşlukları → iç kenar 3,5 cm
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }
+
+fonts:
+  allowed: [Times New Roman]    # 2.1
+
+roles:
+  body:
+    size_pt: 12                 # 2.1 "12 punto Times New Roman"
+    line_spacing: 1.5           # 2.3 "1,5 satır aralığı"
+    alignment: justify          # 2.3 "iki yana yaslı"
+    first_line_indent_cm: 0     # 2.3 "paragraf girintisi kullanılmaz"
+    space_before_pt: 6          # 2.3 "paragraf öncesi 6nk"
+    space_after_pt: 6           # 2.3 "sonrası 6nk"
+  heading_1:
+    size_pt: 18                 # 2.4 "Ana bölüm başlığı 18 punto" (başlık numarası 30 punto)
+    bold: true                  # 2.4 "hepsi koyu"
+    all_caps: true              # 2.4 "tamamı büyük harfle"
+    alignment: right            # 2.4 "sayfa üstünde sağ kenara yaslanmış"
+    page_break_before: true     # 2.4 "yeni sayfa başında ve basılı tezde sağ sayfada"
+  heading_2:
+    size_pt: 14                 # 2.4 "Birinci seviye alt başlık (1.1) 14 punto"
+    bold: true                  # 2.4
+    case: title                 # 2.4 "her sözcüğün ilk harfi büyük", bağlaçlar küçük
+    alignment: justify          # 2.4 "Alt bölüm başlıkları ... iki yana yaslı"
+    first_line_indent_cm: 0     # 2.4 "Paragraf girintisi verilmez"
+  heading_3:
+    size_pt: 12                 # 2.4 "İkinci seviye alt başlık (1.1.1) 12 punto"
+    bold: true                  # 2.4
+    case: title                 # 2.4
+    alignment: justify          # 2.4
+    first_line_indent_cm: 0     # 2.4
+  figure_caption:
+    case: sentence              # 2.7 "yalnızca baştaki sözcüğün ilk harfi büyük"
+    line_spacing: 1.0           # 2.3 "öğe açıklamaları/başlıkları tek (1) satır aralığıyla"
+    space_before_pt: 6          # 2.7 "önce 6nk"
+    space_after_pt: 12          # 2.7 "sonra 12nk"
+    position: below             # 2.7 "şeklin altına"
+  table_caption:
+    case: sentence              # 2.8
+    line_spacing: 1.0           # 2.3
+    space_before_pt: 12         # 2.8 "önce 12nk"
+    space_after_pt: 6           # 2.8 "sonra 6nk"
+    position: above             # 2.8 "tablonun üstüne"
+  front_matter:
+    line_spacing: 1.0           # 2.3 "Tezin Ön Kısmındaki listeler ... tek (1) satır aralığıyla"
+  block_quote:
+    size_pt: 10                 # 2.10 "10 punto ve 1 satır aralığıyla"
+    line_spacing: 1.0           # 2.10
+    indent_left_cm: 1.0         # 2.10 "sol kenarına göre bir santimetre içeriden"
+    first_line_indent_cm: 0     # 2.10 "paragraf girintisi verilmez"
+  footnote:
+    size_pt: 10                 # 2.5 "10 punto Times New Roman"
+    line_spacing: 1.0           # 2.5 "tek (1) satır aralığında"
+    alignment: justify          # 2.5 "iki yana yaslı"
+    space_before_pt: 6          # 2.5 "öncesinde 6nk"
+    space_after_pt: 6           # 2.5 "sonrasında 6nk"
+
+page_numbering:
+  # 2.2: ön kısım küçük Romen (Teşekkür'den görünür), Giriş'ten itibaren 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.2 "kâğıdın alt orta kısmına"
+  forbid_decoration: true       # 2.2 "nokta, parantez, çizgi vb. hiçbir işaret kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

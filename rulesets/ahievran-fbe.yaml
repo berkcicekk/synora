@@ -1,0 +1,72 @@
+# Kırşehir Ahi Evran Üniversitesi Fen Bilimleri Enstitüsü — Lisansüstü Tez Yazım Usul ve Esasları (Kırşehir, 2025)
+# Kaynak: https://fbe.ahievran.edu.tr/uploads/6573/KAEU_FBE_LISANSUSTU_TEZ_YAZIM_USUL_VE_EESASLARI.docx
+# (Enstitü Kurulu 27.04.2023, Senato 12.05.2023; kapak "Kırşehir, 2025"; .docx olarak yayımlanıyor,
+#  madde numarası olmadığı için kaynak yerleri bölüm adıyla verildi)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: ahievran-fbe
+version: 1
+name: "Kırşehir Ahi Evran Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Kırşehir Ahi Evran Üniversitesi FBE Lisansüstü Tez Yazım Usul ve Esasları, 2025"
+institution: "Kırşehir Ahi Evran Üniversitesi"
+source_url: https://fbe.ahievran.edu.tr/uploads/6573/KAEU_FBE_LISANSUSTU_TEZ_YAZIM_USUL_VE_EESASLARI.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # Kâğıt özellikleri
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # Sayfa düzeni
+
+fonts:
+  allowed: [Times New Roman]                # Yazı karakteri "Tüm tez boyunca ... Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                             # Yazı karakteri
+    line_spacing: 1.5                       # Yazı karakteri "1.5 satır aralığında"
+    alignment: justify                      # Yazı karakteri "iki yana yaslanacak (justified)"
+    first_line_indent_cm: 1.25              # Yazı karakteri "1.25 cm (bir TAB tuşu) içeriden"
+    space_after_pt: 0                       # Yazı karakteri "Paragraflar arasında herhangi bir boşluk bırakılmamalıdır"
+  heading_1:
+    size_pt: 12                             # Bölüm başlıkları, Tablo 1
+    bold: true                              # Tablo 1
+    all_caps: true                          # "bağlaçlar dâhil büyük harflerle"
+    alignment: justify                      # "Tüm başlıklar ... iki yana yaslı"
+    page_break_before: true                 # "her zaman sayfa başlarında yer almalıdır"
+  heading_2:
+    size_pt: 12                             # Tablo 1
+    bold: true                              # Tablo 1
+    case: title                             # "her kelimesinin ilk harfi büyük"
+    alignment: justify                      # Bölüm başlıkları
+  heading_3:
+    size_pt: 12                             # Tablo 1
+    bold: true                              # Tablo 1
+    case: sentence                          # Tablo 1 "İlk kelimenin baş harfi büyük"
+    alignment: justify                      # Bölüm başlıkları
+  figure_caption:
+    size_pt: 12                             # Tablo ve şekiller
+    position: below                         # "şekillerde ise açıklamalar alt tarafa"
+  table_caption:
+    size_pt: 12                             # Tablo ve şekiller
+    position: above                         # "Tablo açıklamaları ... üst tarafına"
+  reference_entry:
+    # Kaynaklar: ilk satır sol kenardan, sonraki satırlar 1 cm içeriden (asılı girinti; şemada karşılığı yok)
+    size_pt: 12                             # Yazı karakteri "Tüm tez boyunca ... 12 punto"
+  footnote:
+    size_pt: 8                              # Dipnotlar "8 punto"
+    line_spacing: 1.0                       # Dipnotlar "1 satır aralıklı"
+    alignment: justify                      # Dipnotlar "iki yana dayalı"
+
+page_numbering:
+  # Sayfa numaralandırma: ön sayfalar "büyük harf Romen Rakamları" (I, II, III), Giriş'ten itibaren 1, 2, 3
+  # ÇELİŞKİ: İçindekiler maddesinde "Küçük Romen rakamları ile numaralama (I, II, III, IV)" yazıyor; açık "büyük harf" ifadesi esas alındı
+  formats_in_order: [upperRoman, decimal]
+  position: bottom_center                   # "sayfanın alt ortasına"
+  forbid_decoration: true                   # "ayraç, çizgi vb. karakterler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

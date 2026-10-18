@@ -1,0 +1,64 @@
+# Yeditepe Üniversitesi Sağlık Bilimleri Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (İstanbul, 2014)
+# Kaynak: https://sabe.yeditepe.edu.tr/sites/sabe.yeditepe.edu.tr/files/inline-files/a15-_yeditepe_universitesi_tez_yazim_kilavuzu_0.doc
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: yeditepe-sabe
+version: 1
+name: "Yeditepe Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Yeditepe Üniversitesi Sağlık Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2014"
+institution: "Yeditepe Üniversitesi"
+source_url: https://sabe.yeditepe.edu.tr/sites/sabe.yeditepe.edu.tr/files/inline-files/a15-_yeditepe_universitesi_tez_yazim_kilavuzu_0.doc
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 standardında" (metinde "21 cm x 29,5 cm" yazıyor)
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.3
+
+fonts:
+  allowed: [Times New Roman]    # 2.2
+
+roles:
+  body:
+    size_pt: 12                 # 2.2
+    line_spacing: 1.5           # 2.5 "Ana metinde satır aralığı 1,5"
+    first_line_indent_cm: 1.25  # 2.3, 2.5 "1,25 cm içeriden"
+  heading_1:
+    size_pt: 12                 # 2.6 "büyük, 12 puntoluk harfler"
+    bold: true                  # 2.6
+    all_caps: true              # 2.6 "büyük ... harfler"
+    alignment: center           # 2.6 "ortalı"
+    page_break_before: true     # 2.6 "her bölüm ayrı sayfadan başlamalıdır"
+  heading_2:
+    size_pt: 12                 # 2.6
+    bold: true                  # 2.6
+    alignment: left             # 2.6 "satır başından başlayarak"
+    case: title                 # 2.6 "her kelimenin ilk harfi büyük"
+  heading_3:
+    size_pt: 12                 # 2.6
+    bold: true                  # 2.6
+    alignment: left             # 2.6
+    case: title                 # 2.6 (EK örneğinde "1.1.1. İkinci alt başlık" küçük harfle — ÇELİŞKİ: metin değeri kullanıldı)
+  figure_caption:
+    line_spacing: 1.5           # 2.5 "Şekil altı yazıları ... aynı aralık"
+    alignment: left             # 2.8 "sol alt köşesi hizasından başlayarak"
+    position: below             # 2.8 "Şekil ile ilgili açıklamalar şekil altında"
+  table_caption:
+    line_spacing: 1.5           # 2.5 "tablo açıklamaları ... aynı aralık"
+    position: above             # 2.8 "tablonun üstünde"
+  reference_entry:
+    line_spacing: 1.5           # 2.5 "kaynaklar dizininin yazımında da aynı aralık"
+  footnote:
+    line_spacing: 1.0           # 2.5, 2.9 "satır aralığı 1" (punto "8-10 gibi": tek değer yok)
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.4
+  position: bottom_right        # 2.4 "sayfanın sağ alt köşesine"
+  forbid_decoration: true       # 2.4 "önüne ve arkasına bir işaret ... konulmaksızın"
+
+document:
+  forbid_tracked_changes: true

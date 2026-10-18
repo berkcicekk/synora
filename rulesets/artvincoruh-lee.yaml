@@ -1,0 +1,75 @@
+# Artvin Çoruh Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu (Artvin, 2025)
+# Kaynak: https://www.artvin.edu.tr/uploads/enstitu.artvin.edu.tr/userfiles/files/tez%20yaz%C4%B1m%20k%C4%B1lavuzu-yay%C4%B1nlanacak-v2.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Eşleme: "Ana bölüm başlıkları" (GİRİŞ, bölüm başlıkları…) → heading_1; "1. düzey alt başlık" → heading_2;
+# "diğer düzey başlıklar" → heading_3.
+ruleset: artvincoruh-lee
+version: 1
+name: "Artvin Çoruh Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Artvin Çoruh Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2025"
+institution: "Artvin Çoruh Üniversitesi"
+source_url: https://www.artvin.edu.tr/uploads/enstitu.artvin.edu.tr/userfiles/files/tez%20yaz%C4%B1m%20k%C4%B1lavuzu-yay%C4%B1nlanacak-v2.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 3.0 }   # 1.1 "soldan ve sağdan 30 mm, üstten ve alttan 25 mm"
+
+fonts:
+  allowed: [Times New Roman]    # 1.1, 1.1.1.1
+
+roles:
+  body:
+    size_pt: 12                 # 1.1.1.1
+    line_spacing: 1.5           # 1.2.1
+    alignment: justify          # 1.1 "iki yana yasla"
+    space_before_pt: 6          # 1.2.1 "paragraf öncesi ve sonrasında 6 nk"
+    space_after_pt: 6           # 1.2.1
+  heading_1:
+    size_pt: 16                 # 2.1.1 "16 karakter büyüklüğü"
+    bold: true                  # 2.1 "bütün başlıklar ... koyu (bold)"
+    all_caps: true              # 2.1.1 örnekler (GİRİŞ, SONUÇ VE ÖNERİLER), 2.2.1 "tamamı büyük harflerle"
+    alignment: right            # 2.1 "Tüm ana bölüm başlıkları sağa dayalı olarak yazılmalıdır" (metindeki ifade)
+    line_spacing: 1.0           # 2.1.1 "tek satır"
+    space_before_pt: 60         # 2.1.1
+    space_after_pt: 0           # 2.1.1
+    page_break_before: true     # 2.1 "her zaman sayfa başlarında yer almalıdır"
+  heading_2:
+    bold: true                  # 2.1
+    case: title                 # 2.1.1.1 "kelimelerin ilk harfleri büyük"
+    line_spacing: 1.5           # 2.1.1.1
+    space_before_pt: 18         # 2.1.1.1 "1. düzey başlık önce 18 nk"
+    space_after_pt: 6           # 2.1.1.1
+  heading_3:
+    bold: true                  # 2.1
+    case: title                 # 2.1.1.1
+    line_spacing: 1.5           # 2.1.1.1
+    space_before_pt: 0          # 2.1.1.1 "Diğer düzey başlıkların tamamı önce 0 nk sonra 0 nk"
+    space_after_pt: 0           # 2.1.1.1
+  figure_caption:
+    line_spacing: 1.0           # 1.2.1
+    alignment: center           # 1.3 "şeklin altına yazılmalı ve ortalanmalıdır"
+    case: sentence              # 1.3 "yalnızca baştaki sözcüğün ilk harfi büyük"
+    space_before_pt: 6          # 1.2.1, 1.3
+    space_after_pt: 12          # 1.2.1, 1.3
+    position: below             # 1.3
+  table_caption:
+    line_spacing: 1.0           # 1.2.1
+    alignment: center           # 1.4 "tablonun üstüne yazılmalı ve ortalanmalıdır"
+    case: sentence              # 1.4
+    space_before_pt: 12         # 1.2.1, 1.4
+    space_after_pt: 6           # 1.2.1, 1.4
+    position: above             # 1.4
+
+page_numbering:
+  formats_in_order: [upperRoman, decimal]   # 1.2.2 "büyük Romen rakamlarıyla ... Latin rakamları"
+  position: bottom_center       # 1.2.2 "alt orta kısmına"
+  forbid_decoration: true       # 1.2.2 "nokta, parantez, çizgi vb. hiçbir işaret kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

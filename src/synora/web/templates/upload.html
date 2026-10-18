@@ -29,9 +29,14 @@
       {% if rulesets|length > 1 %}
       <div class="field grow">
         <label for="ruleset">Kılavuz</label>
+        <input id="ruleset-filter" class="ruleset-filter" type="search" autocomplete="off"
+               placeholder="Üniversite ya da enstitü ara" aria-label="Kılavuz listesinde ara"
+               aria-controls="ruleset" aria-describedby="ruleset-count" hidden>
         <select id="ruleset" name="ruleset">
-          {% for r in rulesets %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}
+          {% for g in ruleset_groups %}<optgroup label="{{ g.institution }}">{% for r in g.items %}<option value="{{ r.id }}"{% if r.id == rulesets[0].id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</optgroup>
+          {% endfor %}
         </select>
+        <span id="ruleset-count" class="ruleset-count" role="status" aria-live="polite"></span>
       </div>
       {% elif rulesets %}
       <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
@@ -60,11 +65,8 @@
     <details class="prep latex">
       <summary>LaTeX ile mi yazıyorsunuz?</summary>
       <p>Synora Word belgelerini denetler. LaTeX kullanıyorsanız kılavuzun biçim kuralları (kâğıt, kenar boşlukları, yazı tipi, satır aralığı, başlıklar, sayfa numaraları) hazır ayarlanmış şablonu indirin. Overleaf'te <em>New Project › Upload Project</em> ile açabilirsiniz.</p>
-      <ul>
-        {% for r in rulesets %}
-        <li><a class="textlink" href="/sablon/{{ r.id }}/latex.zip" download>{{ r.name }} · LaTeX şablonu (.zip)</a></li>
-        {% endfor %}
-      </ul>
+      <p><a id="latex-link" class="textlink" href="/sablon/{{ rulesets[0].id }}/latex.zip" download>Seçili kılavuzun LaTeX şablonunu indirin (.zip)</a><br>
+        <span id="latex-name" class="latex-name">{{ rulesets[0].name }}</span></p>
       <p class="latex-note">Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.</p>
     </details>
     {% endif %}

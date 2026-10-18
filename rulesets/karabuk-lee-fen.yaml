@@ -1,0 +1,63 @@
+# Karabük Üniversitesi Lisansüstü Eğitim Enstitüsü — Fen/Sağlık Alanları Tez Yazım Kılavuzu (2023; 2026 yüklemesi)
+# Kaynak: https://lisansustu.karabuk.edu.tr/yuklenen/dosyalar/12614092026110242.docx
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Kılavuz .docx olarak yayımlanmış; kaynak olarak bölüm başlıkları verildi.
+ruleset: karabuk-lee-fen
+version: 1
+name: "Karabük Üniversitesi · Lisansüstü Eğitim Enstitüsü (Fen ve Sağlık Bilimleri Alanları)"
+source: "Karabük Üniversitesi Lisansüstü Eğitim Enstitüsü Fen/Sağlık Alanları Tez Yazım Kılavuzu, 2023"
+institution: "Karabük Üniversitesi"
+source_url: https://lisansustu.karabuk.edu.tr/yuklenen/dosyalar/12614092026110242.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kullanım Alanı
+  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 2.5 }   # Kullanım Alanı "sol 40 mm, üst 30 mm, sağ ve alt 25 mm"
+
+fonts:
+  allowed: [Times New Roman]    # Yazı Karakteri ve Kalitesi
+
+roles:
+  body:
+    size_pt: 12                 # Yazı Karakteri ve Kalitesi
+    line_spacing: 1.5           # Yazı Düzeni "1,5 satır aralığında"
+    alignment: justify          # Yazı Düzeni "right justification"
+    first_line_indent_cm: 0     # Yazı Düzeni "paragraf başı için girinti yok"
+  heading_1:
+    bold: true                  # Bölümlendirme ve Başlıklar "koyu (bold)"
+    alignment: center           # Bölümlendirme ve Başlıklar "ortalanarak"
+    page_break_before: true     # Yazı Düzeni "Bölümlerin yazımına daima yeni bir sayfadan başlanmalıdır"
+  heading_2:
+    bold: true                  # Bölümlendirme ve Başlıklar
+    alignment: left             # "satır başından itibaren"
+  heading_3:
+    bold: true                  # Bölümlendirme ve Başlıklar
+    alignment: left             # "satır başından itibaren"
+  figure_caption:
+    line_spacing: 1.0           # Yazı Düzeni, Şekil ve Çizelgeler "Tek aralıklı"
+    case: sentence              # Şekil ve Çizelgeler "yalnızca ilk harfi büyük"
+    position: below             # Şekil ve Çizelgeler "şekillerin altında"
+  table_caption:
+    line_spacing: 1.0           # Yazı Düzeni, Şekil ve Çizelgeler
+    case: sentence              # Şekil ve Çizelgeler
+    position: above             # Şekil ve Çizelgeler "çizelgelerin ise üstünde"
+  block_quote:
+    italic: true                # Doğrudan Alıntılar "italik yazılır"
+    line_spacing: 1.0           # Yazı Düzeni, Doğrudan Alıntılar "tek satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # Yazı Düzeni, Kaynaklar "tek satır aralığı"
+  footnote:
+    line_spacing: 1.0           # Yazı Düzeni, Dipnotlar "1 tam aralık"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Sayfaların Numaralandırılması ve Sırası
+  position: bottom_center       # Kullanım Alanı "alt kenarından 15 mm yukarıda ... tam ortada"
+
+document:
+  forbid_tracked_changes: true

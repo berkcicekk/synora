@@ -1,0 +1,73 @@
+# Pamukkale Üniversitesi Eğitim Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Mart 2025)
+# Kaynak: https://d.pau.edu.tr/24fa86c9
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Sayfa numarası konumu bölüme göre değişir (1.3: Romen rakamlı sayfalarda alt orta, metinde sağ üst köşe);
+# şema tek konum desteklediğinden konum denetlenmez.
+ruleset: pamukkale-ebe
+version: 1
+name: "Pamukkale Üniversitesi · Eğitim Bilimleri Enstitüsü"
+source: "PAÜ Eğitim Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2025"
+institution: "Pamukkale Üniversitesi"
+source_url: https://d.pau.edu.tr/24fa86c9
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.1 "A4 standartlarında (21 cm × 29.7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.0 }  # 1.2 "sol 3.5 cm, sağ 2 cm, üst ve alt 2.5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 1.4 "Tüm metin Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 1.4 "12 punto"
+    line_spacing: 1.5           # 1.5 "Metin içinde 1.5 satır aralığı"
+    alignment: justify          # 1.4 "iki yana yaslı"
+    first_line_indent_cm: 1.25  # 1.6 "ilk satırı 1,25 cm girintili"
+    # 1.6 "paragraflar arasında boşluk verilmemelidir" (nk değeri verilmemiş)
+  heading_1:
+    bold: true                  # 1.7 Tablo 1.1 Ana Bölüm "KALIN"
+    all_caps: true              # 1.7 Tablo 1.1 "TÜM HARFLER BÜYÜK"
+    alignment: center           # 1.7 Tablo 1.1 "ORTALANMIŞ"
+    page_break_before: true     # 1.3, 1.7 "Ana bölümler ... yeni bir sayfadan başlamalıdır"
+    space_before_pt: 12         # 1.7 "önce 12 nk"
+    space_after_pt: 6           # 1.7 "sonra 6 nk"
+  heading_2:
+    bold: true                  # 1.7 Tablo 1.1 Düzey 1 "Kalın"
+    case: title                 # 1.7 Tablo 1.1 "Sözcüklerin İlk Harfleri Büyük", bağlaçlar küçük
+    alignment: center           # 1.7 Tablo 1.1 Düzey 1 "Ortalanmış"
+    space_before_pt: 12         # 1.7
+    space_after_pt: 6           # 1.7
+  heading_3:
+    bold: true                  # 1.7 Tablo 1.1 Düzey 2 "Kalın"
+    case: title                 # 1.7 Tablo 1.1 Düzey 2 "Sözcüklerin İlk Harfleri Büyük"
+    alignment: left             # 1.7 Tablo 1.1 Düzey 2 "Sola Yaslı"
+    space_before_pt: 12         # 1.7
+    space_after_pt: 6           # 1.7
+  figure_caption:
+    size_pt: 12                 # 1.8 "Times New Roman, 12 punto"
+    line_spacing: 1.5           # 1.8 "1.5 satır aralıklı" (ÇELİŞKİ: 1.5 "Tablo, şekil ... tek satır aralığı"; başlığa özgü 1.8 esas alındı)
+    alignment: left             # 1.8 "sola yaslı"
+  table_caption:
+    size_pt: 12                 # 1.8
+    line_spacing: 1.5           # 1.8 (ÇELİŞKİ: bkz. figure_caption)
+    alignment: left             # 1.8 "sola yaslı"
+    case: title                 # 1.8 "başlığı italik ve sözcüklerin ilk harfleri büyük"
+    position: above             # 1.8 "Tablo başlığı, tablonun üst kısmında"
+  reference_entry:
+    line_spacing: 1.0           # 1.5 "kaynakçada ise tek satır aralığı"
+  footnote:
+    size_pt: 10                 # 1.9 "Dipnotlar için yazı boyutu 10 punto"
+    first_line_indent_cm: 1.25  # 1.6 "Paragrafların ve dipnotların ilk satırı 1,25 cm girintili"
+
+# page_numbering: 1.3 yalnızca ön kısım için küçük Romen (i, ii…) belirtir; metin kısmının rakam türü
+# yazılı olarak verilmediğinden numara biçimi denetlenmez.
+
+document:
+  forbid_tracked_changes: true

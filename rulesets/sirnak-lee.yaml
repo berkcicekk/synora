@@ -1,0 +1,75 @@
+# Şırnak Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (Şırnak 2026)
+# Kaynak: https://enstitu.sirnak.edu.tr/file/birimCommon/leetamkilavuz2026v2_d93965b4-db18-42ef-b7fd-0f7dac7d75b7.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: sirnak-lee
+version: 1
+name: "Şırnak Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Şırnak Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2026"
+institution: "Şırnak Üniversitesi"
+source_url: https://enstitu.sirnak.edu.tr/file/birimCommon/leetamkilavuz2026v2_d93965b4-db18-42ef-b7fd-0f7dac7d75b7.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.3 "A4 (21×29,7 cm)"
+  # 2.4.1: üst 2,5, alt 2,5, dış 2,5, iç 4 cm, karşılıklı kenar boşlukları (iç = sol, dış = sağ)
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }
+
+fonts:
+  allowed: [Times New Roman]    # 2.5
+
+roles:
+  body:
+    size_pt: 12                 # 2.5
+    line_spacing: 1.5           # 2.6
+    alignment: justify          # 2.6 "iki yana yaslı hizalama"
+    first_line_indent_cm: 1.0   # 2.6 "GİRİŞ bölümünden itibaren her paragraf başı 1 cm içeriden"
+    space_before_pt: 6          # 2.6 "paragraf öncesinde ve sonrasında 6 nk"
+    space_after_pt: 6           # 2.6
+  heading_1:
+    size_pt: 12                 # 2.5 "başlıklar için de Times New Roman 12 punto"
+    bold: true                  # 3.2
+    all_caps: true              # 3.2 "tüm harfler büyük"
+    space_before_pt: 72         # 2.6 "önce 72 nk"
+    space_after_pt: 18          # 2.6 "sonra 18 nk"
+    page_break_before: true     # 3.2 "sağ (tek numaralı) sayfadan başlar"
+  heading_2:
+    size_pt: 12                 # 2.5
+    bold: true                  # 3.2
+    case: title                 # 3.2 "her sözcüğün ilk harfi büyük"
+    space_before_pt: 6          # 2.6
+    space_after_pt: 6           # 2.6
+  heading_3:
+    size_pt: 12                 # 2.5
+    bold: true                  # 3.2
+    case: sentence              # 3.2 "yalnızca ilk sözcüğün ilk harfi büyük"
+    space_before_pt: 6          # 2.6
+    space_after_pt: 6           # 2.6
+  figure_caption:
+    alignment: center           # 3.8.3 "ortalanmış"
+    position: below             # 3.8.3 "şeklin altına"
+  table_caption:
+    alignment: center           # 3.8.3 "ortalanmış"
+    position: above             # 3.8.3 "tablonun üstüne"
+  block_quote:
+    size_pt: 11                 # 3.1.1 "yazı boyutu 1 punto küçültülerek" (12 − 1)
+    line_spacing: 1.0           # 3.1.1 "1 satır aralıklı"
+    indent_left_cm: 1.27        # 3.1.1 "soldan 1 sekme (1,27 cm) içeriden"
+  reference_entry:
+    line_spacing: 1.0           # 3.9.2 "1 satır aralıklı"
+    space_after_pt: 6           # 3.9.2 "her kaynak girişi arasında 6 punto boşluk"
+  footnote:
+    size_pt: 10                 # 3.10 "metinden 2 punto küçük" (12 − 2)
+    line_spacing: 1.0           # 3.10 "1 satır aralıklı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.7 ön sayfalar Romen (i, ii, iii), metin Arap rakamı
+  position: bottom_right        # 2.7 "sayfanın alt sağına"
+
+document:
+  forbid_tracked_changes: true

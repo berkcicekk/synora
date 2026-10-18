@@ -1,0 +1,80 @@
+# Atatürk Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Kılavuzu (Son güncelleme: Temmuz 2025)
+# Kaynak: https://birimler.atauni.edu.tr/sosyal-bilimler-enstitusu/wp-content/uploads/sites/798/2026/01/SBE-Tez-Yazim-Kilavuzu-Temmuz-2025.pdf
+# (bağlantı sayfası: https://atauni.edu.tr/sosyal-bilimler-enstitusu/oneri-ve-tez-yazim-kilavuzlari/)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Tablo/şekil başlığının yeri ve biçimi tez şablonuna bırakılmıştır; burada denetlenmez.
+ruleset: ataturk-sbe
+version: 1
+name: "Atatürk Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Atatürk Üniversitesi Sosyal Bilimler Enstitüsü Tez Yazım Kılavuzu, 2025"
+institution: "Atatürk Üniversitesi"
+source_url: https://birimler.atauni.edu.tr/sosyal-bilimler-enstitusu/wp-content/uploads/sites/798/2026/01/SBE-Tez-Yazim-Kilavuzu-Temmuz-2025.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kâğıt özellikleri "A4 boyutunda"
+  # Kenar boşlukları "üst, alt ve sağdan 2 cm, soldan 3 cm" (çift yüze baskıda sağ ve sol 3 cm)
+  margins_cm: { top: 2.0, bottom: 2.0, left: 3.0, right: 2.0 }
+
+fonts:
+  allowed: [Times New Roman]    # Yazı tipi ve boyutu "Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # Yazı tipi ve boyutu "yazılar 12 punto"
+    line_spacing: 1.5           # Satır aralıkları "Ana metin 1,5 satır aralığı"
+    alignment: justify          # Satır aralıkları "her iki yana yaslı"
+    first_line_indent_cm: 1.25  # Satır aralıkları "ilk satır soldan 1,25 cm girintili"
+    space_before_pt: 0          # Satır aralıkları "paragraf öncesi 0 nk"
+    space_after_pt: 6           # Satır aralıkları "sonrasında 6 nk"
+  heading_1:
+    size_pt: 12                 # Başlık Düzeyleri "12 punto"
+    bold: true                  # Başlık Düzeyleri "kalın"
+    all_caps: true              # Başlık Düzeyleri "tamamı büyük harflerle"
+    alignment: center           # Başlık Düzeyleri "ortalı"
+    line_spacing: 1.0           # Başlık Düzeyleri "tek satır"
+    page_break_before: true     # "Bölümler (... Bölüm başlıkları ...) daima yeni bir sayfa ile başlamalıdır"
+    # ÇELİŞKİ: bölüm başlıkları 48/24 nk, düzey başlıkları 0/24 nk, "tüm başlık düzeylerinde" 12/12 nk → boşluk denetlenmez
+  heading_2:
+    bold: true                  # Başlık Düzeyleri "2. Düzey ... kalın"
+    case: title                 # "her sözcüğün ilk harfi büyük (bağlaçlar hariç)"
+    alignment: left             # "sola yaslı"
+    first_line_indent_cm: 0     # "Paragraf girintisi olmadan"
+    line_spacing: 1.0           # "tek satır aralıklı"
+    space_before_pt: 12         # "Tüm başlık düzeylerinde ... öncesinde 12 nk"
+    space_after_pt: 12          # "sonrasında 12 nk"
+  heading_3:
+    bold: true                  # "3. Düzey ... kalın ve italik"
+    italic: true                # "3. Düzey ... italik"
+    case: title                 # "her sözcüğün ilk harfi büyük (bağlaçlar hariç)"
+    alignment: left             # "sola yaslı"
+    first_line_indent_cm: 0     # "Paragraf girintisi olmadan"
+    line_spacing: 1.0           # "tek satır aralıklı"
+    space_before_pt: 12         # "Tüm başlık düzeylerinde ... 12 nk"
+    space_after_pt: 12          # "sonrasında 12 nk"
+  figure_caption:
+    line_spacing: 1.0           # Satır aralıkları "Şekil ve çizelgelerin açıklamaları ... tek satır"
+  table_caption:
+    line_spacing: 1.0           # Satır aralıkları
+  block_quote:
+    line_spacing: 1.0           # Satır aralıkları "tek satır aralıklı"
+    indent_left_cm: 1.25        # "soldan 1,25 cm ve sağdan 1 cm girintili"
+    first_line_indent_cm: 0     # "ilk satır girintisi verilmeden"
+  footnote:
+    size_pt: 10                 # Yazı tipi ve boyutu "Dipnotlar 10 punto"
+    line_spacing: 1.0           # Satır aralıkları "dipnotların yazımında ise tek satır"
+
+page_numbering:
+  # Sayfaların Numaralandırılması: ön sayfalar "I, II, III…" Romen, Giriş'ten itibaren "1, 2, 3…"
+  formats_in_order: [upperRoman, decimal]
+  position: bottom_center       # "sayfa altında ve ortaya"
+  forbid_decoration: true       # "yarım parantez, çizgi vb. karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

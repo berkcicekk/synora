@@ -1,0 +1,75 @@
+# Işık Üniversitesi Lisansüstü Eğitim Enstitüsü — Yüksek Lisans Tez Yazım Kuralları (2024; .docx)
+# Doktora Tez Yazım Kuralları (2024) biçim kuralları bakımından aynı metni içeriyor.
+# Kaynak: https://www.isikun.edu.tr/sites/default/files/2024-10/1182_1_yuksek_lisans_tez_yazim_kilavuzu-1.docx
+# Erişim: 2026-10-18
+# Belgede bölüm numaraları otomatik olduğundan yorumlarda başlık adları kullanıldı.
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: isik-lee
+version: 1
+name: "Işık Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Işık Üniversitesi Lisansüstü Eğitim Enstitüsü Yüksek Lisans Tez Yazım Kılavuzu, 2024"
+institution: "Işık Üniversitesi"
+source_url: "https://www.isikun.edu.tr/sites/default/files/2024-10/1182_1_yuksek_lisans_tez_yazim_kilavuzu-1.docx"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Kağıt Standartları "A4 (210x297 mm)"
+  margins_cm: { top: 3.5, bottom: 3.5, left: 4.0, right: 3.5 }   # Kağıt Kullanım Alanı
+
+fonts:
+  allowed: [Times New Roman]    # Yazı Karakterleri "12 punto Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # Yazı Karakterleri
+    line_spacing: 1.5           # Satır Aralıkları ve Düzeni "Düz Metinler, 1,5 aralıkla yazılır"
+    alignment: justify          # Kağıt Kullanım Alanı "sol ve sağ sınırlara göre hizalanmalıdır (justified)"
+    first_line_indent_cm: 1.0   # Satır Aralıkları ve Düzeni "paragraf başları, 1 cm içeriden"
+    space_before_pt: 0          # Satır Aralıkları ve Düzeni "Paragraflardan önce ve sonra aralık bırakılmaz"
+    space_after_pt: 0           # Satır Aralıkları ve Düzeni
+  heading_1:
+    size_pt: 12                 # Başlıklar "birinci dereceden başlıklar büyük harf ve 12 punto koyu" (bölüm no 14 punto)
+    bold: true                  # Başlıklar
+    all_caps: true              # Başlıklar
+    alignment: center           # Başlıklar "TÜM BAŞLIKLAR, ortalanmış olarak yazılır"
+    space_after_pt: 36          # Başlıklar "sonra 36 punto"
+    page_break_before: true     # Numaralandırma "her birinci dereceden bölüm başlığı, ayrı bir sayfaya"
+  heading_2:
+    size_pt: 12                 # Başlıklar
+    bold: true                  # Başlıklar
+    all_caps: true              # Başlıklar "Birinci ve ikinci dereceden ... tümü büyük harf"
+    alignment: center           # Başlıklar
+    space_before_pt: 36         # Başlıklar "önce 36 punto"
+    space_after_pt: 18          # Başlıklar "sonra 18 punto"
+  heading_3:
+    size_pt: 12                 # Başlıklar
+    bold: true                  # Başlıklar
+    case: title                 # Başlıklar "kelimelerin ilk harfleri büyük", bağlaçlar küçük
+    alignment: center           # Başlıklar
+    space_before_pt: 12         # Başlıklar "önce ise 12 punto"
+  figure_caption:
+    size_pt: 12                 # İsimlendirme ve Açıklama "12 punto"
+    alignment: left             # "sola dayalı (align left)"
+    case: title                 # "baş harfleri büyük ve düz yazı"
+    position: below             # "şeklin altına"
+  table_caption:
+    size_pt: 12                 # aynı
+    alignment: left             # aynı
+    case: title                 # aynı
+    position: above             # "tablonun üstüne"
+  footnote:
+    size_pt: 10                 # Dipnotlar "10 punto"
+    line_spacing: 1.0           # Dipnotlar "1 satır aralığı"
+
+page_numbering:
+  # Sayfa Numaralandırılması: Bölüm 1'e kadar küçük Romen (i, ii…), sonrası 1, 2, 3
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # "sayfanın alt-ortasına"
+
+document:
+  forbid_tracked_changes: true

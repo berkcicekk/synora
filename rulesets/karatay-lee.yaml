@@ -1,0 +1,87 @@
+# KTO Karatay Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Yönergesi (27.02.2023)
+# Kaynak: https://mevzuat.karatay.edu.tr/yonerge/kto-karatay-universitesi-lisansustu-egitim-enstitu-359918.html
+# (Üniversitenin resmi mevzuat sitesinde HTML olarak yayımlanıyor; LEE "Tez Yazım Kılavuzu" sayfası buraya bağlanıyor)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: karatay-lee
+version: 1
+name: "KTO Karatay Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "KTO Karatay Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Yönergesi, 2023"
+institution: "KTO Karatay Üniversitesi"
+source_url: https://mevzuat.karatay.edu.tr/yonerge/kto-karatay-universitesi-lisansustu-egitim-enstitu-359918.html
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 2.1
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }   # 2.2 (kapaklar hariç "diğer tüm sayfalar")
+
+fonts:
+  allowed: [Times New Roman]                # 2.3
+
+roles:
+  body:
+    size_pt: 12                             # 2.3
+    line_spacing: 1.5                       # 2.4 "Tüm metinler 1,5 satır aralıklı"
+    alignment: justify                      # 2.5 "iki yana yaslanmış"
+    first_line_indent_cm: 0                 # 2.5 "ilk satırında soldan girinti verilmemelidir"
+    space_before_pt: 6                      # 2.5 "önce ve sonra 6 punto"
+    space_after_pt: 6                       # 2.5
+  heading_1:
+    size_pt: 12                             # 2.3 "başlıklarda ... 12 punto"
+    bold: true                              # 2.7.1 "kalın karakterle"
+    all_caps: true                          # 2.7.1 "tamamı büyük harfe"
+    alignment: left                         # 2.7 "sola hizalanmış"
+    line_spacing: 1.0                       # 2.4, 2.7 "Başlıklar 1 satır aralığı ile"
+    page_break_before: true                 # 2.7.1 "yeni sayfadan başlamalıdır"
+    space_before_pt: 18                     # 2.7 "Başlıklardan önce 18 punto"
+    space_after_pt: 12                      # 2.7 "sonra 12 punto"
+  heading_2:
+    size_pt: 12                             # 2.3
+    bold: true                              # 2.7.2 "kalın karakterle"
+    case: title                             # 2.7.2 "tüm kelimelerin ilk harfi büyük"
+    alignment: left                         # 2.7
+    line_spacing: 1.0                       # 2.7
+    space_before_pt: 18                     # 2.7
+    space_after_pt: 12                      # 2.7
+  heading_3:
+    size_pt: 12                             # 2.3
+    case: title                             # 2.7.3 "tüm kelimelerin ilk harfi büyük"
+    alignment: left                         # 2.7
+    line_spacing: 1.0                       # 2.7
+    space_before_pt: 18                     # 2.7
+    space_after_pt: 12                      # 2.7
+  figure_caption:
+    bold: true                              # 2.10 "kalın karakterle"
+    alignment: center                       # 2.10 "metin bloğuna ortalanmış"
+    line_spacing: 1.0                       # 2.10
+    space_before_pt: 6                      # 2.10 "önce ve sonra 6 punto"
+    space_after_pt: 6                       # 2.10
+    position: below                         # 2.10 "şekil başlıkları şeklin altında"
+  table_caption:
+    bold: true                              # 2.10
+    alignment: center                       # 2.10
+    line_spacing: 1.0                       # 2.10
+    space_before_pt: 6                      # 2.10
+    space_after_pt: 6                       # 2.10
+    position: above                         # 2.10 "Tablo başlıkları tablonun üstünde"
+  block_quote:
+    line_spacing: 1.0                       # 2.4 "bloklanmış alıntılar ... 1 satır aralıklı"
+    indent_left_cm: 1.0                     # 2.5 "soldan ve sağdan 1 cm girinti"
+  reference_entry:
+    line_spacing: 1.0                       # 2.4 "kaynaklar ... 1 satır aralıklı"
+    # 2.5: 1 cm asılı girinti (şemada karşılığı yok)
+  footnote:
+    size_pt: 10                             # 2.3
+    line_spacing: 1.0                       # 2.4
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.6
+  position: bottom_right                    # 2.6 "alt kenardan 1,5 cm yukarıya ve sağa hizalanmış"
+
+document:
+  forbid_tracked_changes: true

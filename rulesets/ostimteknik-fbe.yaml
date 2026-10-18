@@ -1,0 +1,65 @@
+# OSTİM Technical University Institute of Natural and Applied Sciences — Thesis Writing Guide (Ankara 2021, © Şubat 2022)
+# Kaynak: https://fbe.ostimteknik.edu.tr/web/content/246935?unique=667ab36d5575341176bf083839a2bb3649d6c78f&download=true
+# ("Forms and Manuals" sayfasındaki "GSES Thesis Writing Guide.pdf")
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Yazı tipi "Times New Roman 12 veya Arial 11"; punto yazı tipine bağlı olduğu için gövde/başlık/dipnot size_pt yazılmadı.
+ruleset: ostimteknik-fbe
+version: 1
+name: "OSTİM Teknik Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "OSTİM Technical University Institute of Natural and Applied Sciences Thesis Writing Guide, 2022"
+institution: "Ostim Teknik Üniversitesi"
+source_url: https://fbe.ostimteknik.edu.tr/web/content/246935?unique=667ab36d5575341176bf083839a2bb3649d6c78f&download=true
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.2
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 2.5 }   # 1.4
+
+fonts:
+  allowed: [Times New Roman, Arial]   # 1.4
+
+roles:
+  body:
+    line_spacing: 1.5           # 1.6.2
+    alignment: justify          # 1.4 "snaps right and left"
+    first_line_indent_cm: 1.0   # 1.4, 1.6.2
+  heading_1:
+    bold: true                  # 1.4, 1.6.3
+    all_caps: true              # 1.4, 1.6.3 "capital letters"
+    alignment: center           # 1.6.3 "middle of the page"
+    page_break_before: true     # 1.6.2 "a page turn is made"
+  heading_2:
+    bold: true                  # 1.6.3
+    alignment: left             # 1.6.3 "left aligned"
+    case: title                 # 1.6.3 "first letter of each word is capitalized"
+  heading_3:
+    bold: true                  # 1.6.3
+    alignment: left             # 1.6.3
+    indent_left_cm: 1.0         # 1.6.3 "started 1.0 cm in"
+    case: sentence              # 1.6.3 "first letter of the first word"
+  figure_caption:
+    line_spacing: 1.5           # 1.6.2
+    position: below             # 2.2 "at the bottom of the figure"
+  table_caption:
+    line_spacing: 1.5           # 1.6.2
+    position: above             # 2.1.9, 2.2 "at the top of the table"
+  block_quote:
+    indent_left_cm: 2.0         # 4.2 "starting 2 cm from the left"
+  reference_entry:
+    line_spacing: 1.0           # 3.2.2 — ÇELİŞKİ: 1.6.2 kaynakça için 1,5 satır diyor
+  footnote:
+    line_spacing: 1.0           # 1.6.2
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1.6.1
+  position: bottom_center       # 1.6.1 "bottom and middle"
+  forbid_decoration: true       # 1.6.1 "no signs such as parentheses or lines"
+
+document:
+  forbid_tracked_changes: true

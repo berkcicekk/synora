@@ -1,0 +1,52 @@
+# Giresun Üniversitesi Sağlık Bilimleri Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Kasım 2017; dosya 12.03.2018)
+# Kaynak: https://saglikbe.giresun.edu.tr/files/ckFiles/saglikbe-giresun-edu-tr/SBE_TEZ%20Yaz%C4%B1m%20K%C4%B1lavuzu%20yeni%20son%2012.03.2018pdf.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: giresun-sabe
+version: 1
+name: "Giresun Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Giresun Üniversitesi Sağlık Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2017"
+institution: "Giresun Üniversitesi"
+source_url: https://saglikbe.giresun.edu.tr/files/ckFiles/saglikbe-giresun-edu-tr/SBE_TEZ%20Yaz%C4%B1m%20K%C4%B1lavuzu%20yeni%20son%2012.03.2018pdf.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman, Arial]   # 2.4 "Times New Roman ya da Arial"
+
+roles:
+  body:
+    size_pt: 12                 # 2.4
+    line_spacing: 1.5           # 2.3
+    alignment: justify          # 2.2 "her iki yana yaslı"
+    first_line_indent_cm: 1.0   # 2.5 "7 karakter ya da (1cm) içerden"
+  heading_1:
+    size_pt: 12                 # 5 "büyük harflerle, 12 punto, koyu"
+    bold: true                  # 5
+    all_caps: true              # 5
+    alignment: left             # 5 "sayfanın soluna bitişik"
+    page_break_before: true     # 2.3, 5 "yeni bir sayfadan başlamalıdır"
+  table_caption:
+    position: above             # 4.8 "tablonun üzerine"
+  figure_caption:
+    position: below             # 4.8 "şeklin altına"
+  footnote:
+    size_pt: 10                 # 2.4
+  reference_entry:
+    line_spacing: 1.0           # 2.3 "1 satır aralıklı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.9
+  position: bottom_right        # 2.9 "alt sağ kısmına"
+  forbid_decoration: true       # 2.9 "önünde ve arkasında herhangi bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

@@ -1,0 +1,56 @@
+# Süleyman Demirel Üniversitesi Eğitim Bilimleri Enstitüsü — Lisansüstü Tez Yazım Kılavuzu (Kasım 2015; dosya 18.12.2020)
+# Kaynak: https://egitimbilimleri.sdu.edu.tr/assets/uploads/sites/284/files/tez-yazim-kilavuzu-18122020.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: sdu-ebe
+version: 1
+name: "Süleyman Demirel Üniversitesi · Eğitim Bilimleri Enstitüsü"
+source: "SDÜ Eğitim Bilimleri Enstitüsü Lisansüstü Tez Yazım Kılavuzu, 2015"
+institution: "Süleyman Demirel Üniversitesi"
+source_url: https://egitimbilimleri.sdu.edu.tr/assets/uploads/sites/284/files/tez-yazim-kilavuzu-18122020.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]    # 2.3
+
+roles:
+  body:
+    size_pt: 12                 # 2.3
+    line_spacing: 1.5           # 2.4 "Tüm tez boyunca 1,5 satır aralığı"
+    alignment: justify          # 2.4 "iki yana yasla ile hizalanmalıdır"
+    first_line_indent_cm: 0     # 2.4 "satır başından başlamalı (girintisiz)"
+    space_before_pt: 0          # 2.4 "önce ve sonra gelen aralık değeri 0 nk"
+    space_after_pt: 0           # 2.4
+  heading_1:
+    bold: true                  # 2.6
+    all_caps: true              # 2.6 "tamamı büyük harf"
+    page_break_before: true     # 2.6 "daima yeni bir sayfa ile"
+  heading_2:
+    bold: true                  # 2.6
+    case: title                 # 2.6 "kelimelerin ilk harfi büyük"
+  heading_3:
+    bold: true                  # 2.6
+    case: sentence              # 2.6 "ilk kelimenin ilk harfi büyük"
+  table_caption:
+    position: above             # 2.8 "Tablo isimleri tablonun üstüne"
+  figure_caption:
+    position: below             # 2.8 "şekil isimleri şeklin altına"
+  footnote:
+    size_pt: 10                 # 2.3, 2.12
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5
+  position: bottom_center       # 2.5 "sayfa sonunda ortalı"
+  forbid_decoration: true       # 2.5 "parantez veya çizgi gibi işaretler konulmamalıdır"
+
+document:
+  forbid_tracked_changes: true

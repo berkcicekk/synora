@@ -1,0 +1,38 @@
+# Hacettepe Üniversitesi Eğitim Bilimleri Enstitüsü — Tez Yazım Yönergesi (Senato 20.12.2017)
+# Kaynak: https://fs.hacettepe.edu.tr/ebe/dosyalar/Tez_Yazma_Sureci/HU_EBE_Yeni_Tez_Yazim_Yonergesi.pdf
+# Sayfa: https://egitimbilimlerienstitusu.hacettepe.edu.tr/tr/menu/tez_yazma_sureci-47
+# Başlık, tablo ve şekil biçimleri için yönerge APA'nın güncel sürümüne ve enstitü şablonuna atıf yapıyor; burada yalnız yönergedeki açık değerler var.
+# Yönergede madde numarası yok; yorumlar "Genel Bilgiler" alt başlıklarını anar.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: hacettepe-ebe
+version: 1
+name: "Hacettepe Üniversitesi · Eğitim Bilimleri Enstitüsü"
+source: "Hacettepe Üniversitesi EBE Tez Yazım Yönergesi, 2017"
+institution: "Hacettepe Üniversitesi"
+source_url: https://fs.hacettepe.edu.tr/ebe/dosyalar/Tez_Yazma_Sureci/HU_EBE_Yeni_Tez_Yazim_Yonergesi.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Basımda Kullanılacak Kâğıdın Niteliği "A4 (21 cm × 29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 2.5 }   # Kenar Boşlukları ve Sayfa Düzeni
+
+fonts:
+  allowed: [Arial]              # Kullanılacak Yazı Tipi Özellikleri "Arial yazı tipi"
+
+roles:
+  body:
+    size_pt: 12                 # Kullanılacak Yazı Tipi Özellikleri "12 punto"
+    line_spacing: 1.5           # Satır Aralıkları ve Boşluklar "1,5 satır"
+    alignment: justify          # Kenar Boşlukları ve Sayfa Düzeni "iki yana yasla"
+
+page_numbering:
+  position: bottom_right        # Kenar Boşlukları ve Sayfa Düzeni "sayfanın sağ alt köşesinde"
+
+document:
+  forbid_tracked_changes: true

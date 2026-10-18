@@ -115,6 +115,8 @@ class Ruleset(_Strict):
     version: int = Field(ge=1)
     name: str
     source: str | None = None  # kılavuzun adı/tarihi
+    institution: str | None = None  # üniversite adı; arayüzde seçenekler buna göre gruplanır
+    source_url: str | None = Field(None, pattern=r"^https?://[^\s]+$")  # kılavuzun resmi adresi
     tolerance: Tolerance = Tolerance()
     page: PageRules = PageRules()
     fonts: FontRules = FontRules()
@@ -124,6 +126,8 @@ class Ruleset(_Strict):
 
 
 def load_ruleset(path: str | Path) -> Ruleset:
+    # SafeLoader'ın C sürümü (varsa): aynı güvenli alt küme, 200+ kural setinde belirgin hızlı.
+    loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
     with open(path, encoding="utf-8") as fh:
-        data = yaml.safe_load(fh)
+        data = yaml.load(fh, Loader=loader)  # noqa: S506 — yalnızca SafeLoader/CSafeLoader
     return Ruleset.model_validate(data)

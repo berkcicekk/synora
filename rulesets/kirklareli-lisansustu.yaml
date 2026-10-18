@@ -1,0 +1,73 @@
+# Kırklareli Üniversitesi — Lisansüstü Tez ve Dönem Projesi Yazım Kılavuzu (2024; Senato 15.05.2025, EK-4)
+# Kaynak: https://sabe.klu.edu.tr/dosyalar/birimler/sabe/dosyalar/dosya_ve_belgeler/ders_planlari/klu_lisansustu_tez_ve_donem_projesi_yazim_kilavuzu_03.07.2026.docx
+# (Üniversitenin tüm enstitüleri için ortak kılavuz; SBE ve SABE sitelerinde aynı metin .docx olarak yayımlanıyor)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: kirklareli-lisansustu
+version: 1
+name: "Kırklareli Üniversitesi · Lisansüstü Enstitüler (ortak kılavuz)"
+source: "Kırklareli Üniversitesi Lisansüstü Tez ve Dönem Projesi Yazım Kılavuzu, 2024"
+institution: "Kırklareli Üniversitesi"
+source_url: https://sabe.klu.edu.tr/dosyalar/birimler/sabe/dosyalar/dosya_ve_belgeler/ders_planlari/klu_lisansustu_tez_ve_donem_projesi_yazim_kilavuzu_03.07.2026.docx
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 2.1, 2.3
+  orientation: portrait                     # 2.3 "Yönlendirme dikey olmalıdır"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 3.0 }   # 2.3
+
+fonts:
+  allowed: [Times New Roman]                # 2.2 "sadece Times New Roman"
+
+roles:
+  body:
+    # metin puntosu açıkça belirtilmemiş
+    line_spacing: 1.5                       # 2.2, 2.4 "1,5 satır aralığı"
+    alignment: justify                      # 2.11 "açıklamalar da ana metin gibi iki yana yaslı"
+    first_line_indent_cm: 0                 # 2.4 "Girinti ... değerler 0 cm"
+    space_before_pt: 0                      # 2.4 "Önce: 0 nk"
+    space_after_pt: 12                      # 2.4 "Sonra: 12 nk"
+  heading_1:
+    size_pt: 14                             # 2.8.1.1, 2.8.1.2
+    all_caps: true                          # 2.8.1.1 "büyük harf ile", 2.8.1.2 "tamamı büyük harfle"
+    page_break_before: true                 # 2.4, 2.8 "her zaman sayfa başlarında"
+    space_after_pt: 36                      # 2.4 "Birinci dereceden bölüm başlıklarından sonra 36 nk"
+    # 2.8.1: iki numaralandırma yöntemi var (sayı ile: sola dayalı + koyu; yazı ile: ortalı) → hizalama ve kalınlık denetlenmez
+  heading_2:
+    size_pt: 12                             # 2.8.1.1, 2.8.1.2
+    bold: true                              # 2.8.1.1, 2.8.1.2 (iki yöntemde de koyu)
+    space_before_pt: 18                     # 2.4 "önce 18 nk"
+    space_after_pt: 12                      # 2.4 "sonra ise 12 nk"
+  heading_3:
+    size_pt: 12                             # 2.8.1.1, 2.8.1.2
+    space_before_pt: 18                     # 2.4
+    space_after_pt: 12                      # 2.4
+  figure_caption:
+    size_pt: 10                             # 2.2 "Şekil alt yazıları ... 10 punto"
+    line_spacing: 1.0                       # 2.4, 2.11 "1 tam satır"
+    case: sentence                          # 2.11 "ilk harf büyük sonrakiler küçük"
+    position: below                         # 2.4, 2.11 "şeklin altına"
+    # 2.11: tek satırsa ortalı, uzunsa iki yana yaslı → hizalama denetlenmez
+  table_caption:
+    size_pt: 10                             # 2.2 "tablo üst yazılarının büyüklüğü 10 punto"
+    line_spacing: 1.0                       # 2.4, 2.11
+    alignment: justify                      # 2.11 "Tablo üst yazıları ise her zaman iki yana yaslı"
+    case: sentence                          # 2.11
+    space_after_pt: 0                       # 2.4 "tablo başlığından sonra boşluk bırakılmamalıdır"
+    position: above                         # 2.11 "tablonun üstüne"
+  reference_entry:
+    size_pt: 10                             # 3.12 "10 punto büyüklüğünde"
+    alignment: justify                      # 3.12 "iki yana yaslı"
+    # 3.12: 1,25 cm asılı girinti (şemada karşılığı yok)
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.7
+  position: bottom_center                   # 2.7 "sayfanın alt kısmında ortada"
+
+document:
+  forbid_tracked_changes: true

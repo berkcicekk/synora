@@ -1,0 +1,69 @@
+# Boğaziçi Üniversitesi Fen Bilimleri Enstitüsü — Thesis Format Guide (FBE Tez Formatı Kılavuzu, 2022)
+# Kaynak: https://mediastore.cc.bogazici.edu.tr/web/userfiles/files/fbe_format_2022%20(2).pdf
+# (Enstitü sayfası: https://fbe.bogazici.edu.tr/tr/pages/tez-yazim-sablonukilavuzu/2904)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: boun-fbe
+version: 1
+name: "Boğaziçi Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Boğaziçi Üniversitesi FBE Thesis Format Guide, 2022"
+institution: "Boğaziçi Üniversitesi"
+source_url: https://mediastore.cc.bogazici.edu.tr/web/userfiles/files/fbe_format_2022%20(2).pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  # 2.4: "Bottom margin: (at least) 2 cm" — alt kenar en az değer olduğundan denetlenmez
+  margins_cm: { top: 3.5, left: 3.5, right: 2.0 }   # 2.4
+
+fonts:
+  allowed: [Times New Roman, Times]   # 2.1 "Times, Times New Roman or Computer Modern (LaTeX)"
+
+roles:
+  body:
+    size_pt: 12                 # 2.1
+    line_spacing: 1.5           # 2.2
+    first_line_indent_cm: 1.0   # 2.7 "indented by one centimeter"
+  heading_1:
+    size_pt: 14                 # 2.6.1, Table 2.2
+    bold: true                  # 2.6.1
+    all_caps: true              # 2.6.1 "capital letters"
+    alignment: center           # 2.6.1 "centered"
+    page_break_before: true     # 2.6.1 "should begin a new page"
+  heading_2:
+    size_pt: 12                 # 2.6.2
+    bold: true                  # 2.6.2
+    alignment: center           # 2.6.2 "centered"
+    case: title                 # 2.6.2 "title case letters"
+  heading_3:
+    size_pt: 12                 # 2.6.3
+    bold: true                  # 2.6.3
+    alignment: left             # 2.6.3 "beginning at the left margin"
+    case: title                 # 2.6.3
+  table_caption:
+    position: above             # 2.12 "Table captions … above the Tables"
+    size_pt: 12                 # 2.1 "Table and Figure captions" 12 pt
+    alignment: center           # 2.12 "captions should be centered"
+  figure_caption:
+    position: below             # 2.12 "Figure captions … below the Figures"
+    size_pt: 12                 # 2.1
+    alignment: center           # 2.12
+  block_quote:
+    size_pt: 10                 # 2.1 "extensive quotations should be 10 points"
+    line_spacing: 1.0           # 2.2 "single spacing"
+    indent_left_cm: 1.0         # 2.2 "indented 1 cm relative to the text material"
+  footnote:
+    size_pt: 10                 # 2.1
+    line_spacing: 1.0           # 2.2
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5 ön kısım "lower case Roman numerals", sonrası Arabic
+  position: top_right           # 2.5 "two centimeters from the top and the right edges"
+  forbid_decoration: true       # 2.5 "punctuation (such as a dash or a period) is not permitted"
+
+document:
+  forbid_tracked_changes: true

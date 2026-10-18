@@ -1,0 +1,61 @@
+# Bingöl Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Kılavuzu (2023)
+# Kaynak: https://sbe.bingol.edu.tr/media/52779/tez-yazim-kilavuzu-2023-1.doc
+# (bağlantı sayfası: https://sbe.bingol.edu.tr/ogrenci/ogrenci-dokumanlari/)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Arapça yazılan tezler için ayrı yazı tipi/satır aralığı kuralı vardır (2.1); bu kural seti Türkçe tezler içindir.
+ruleset: bingol-sbe
+version: 1
+name: "Bingöl Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Bingöl Üniversitesi Sosyal Bilimler Enstitüsü Tez Yazım Kılavuzu, 2023"
+institution: "Bingöl Üniversitesi"
+source_url: https://sbe.bingol.edu.tr/media/52779/tez-yazim-kilavuzu-2023-1.doc
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 boyutunda"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 2.5 }  # 2.1 "Üst 3 cm, Alt 2.5 cm, Sol 4 cm, Sağ 2.5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 2.1 Yazım Biçimi "Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 2.1 Yazım Biçimi "12 punto"
+    line_spacing: 1.5           # 2.1 Satır Aralığı "1.5 satır aralığı"
+    alignment: justify          # 2.1 Paragraflar "iki yana yaslı"
+    first_line_indent_cm: 1.0   # 2.1 Paragraflar "paragraf başları, bu çerçevenin 1 cm sağından"
+    space_after_pt: 6           # 2.1 Paragraflar "paragraflar arasındaki boşluk 6 nk"
+  heading_1:
+    size_pt: 12                 # 2.1 Bölüm Başlıkları "12 punto"
+    bold: true                  # 2.1 Bölüm Başlıkları "kalın (bold)"
+    all_caps: true              # 2.1 Bölüm Başlıkları "büyük harflerle"
+    page_break_before: true     # 2.1 "Bölüm başlıkları (birinci düzey başlıklar) yeni bir sayfadan başlar"
+    space_after_pt: 12          # 2.1 Paragraflar "Birinci dereceden başlıklarda ... 12"
+    # ÇELİŞKİ: "ortalanarak yazılmalıdır" ile "sol kenardan 1 cm içeriden başlamalıdır" birlikte geçiyor → hizalama denetlenmez
+  heading_2:
+    bold: true                  # 2.1 "koyu yazılır"
+    case: title                 # 2.1 "bütün sözcüklerin yalnızca ilk harfleri büyük"
+    space_after_pt: 6           # 2.1 Paragraflar "ikinci dereceden başlıklarda ... 6 nk"
+  heading_3:
+    bold: true                  # 2.1 "İkinci daha alt düzeydeki başlıklarda ... koyu"
+    case: title                 # 2.1
+  figure_caption:
+    position: below             # 6. "şekil başlığı ve açıklamaları ise ... altına"
+  table_caption:
+    position: above             # 6. "Tablo başlığı ve açıklamaları tablonun üstüne"
+  footnote:
+    line_spacing: 1.0           # 2.1 Dipnotlar "Tek satır aralığında"
+
+page_numbering:
+  # 2.1 Sayfa Numarası: ön sayfalar büyük Romen (I, II, III…), Giriş = 1 (yazılmaz), sonra 2, 3…
+  formats_in_order: [upperRoman, decimal]
+  position: bottom_right        # 2.1 "Sağ alt köşeye"
+
+document:
+  forbid_tracked_changes: true

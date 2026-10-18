@@ -1,0 +1,66 @@
+# Adana Alparslan Türkeş Bilim ve Teknoloji Üniversitesi Fen Bilimleri Enstitüsü — Yüksek Lisans ve Doktora Tez Yazım Kuralları (2020, Word .doc)
+# Kaynak: https://www.atu.edu.tr/Upload/Dosyalar/Icerik/Dosya/13/21012020110156_Icerik_D_13.doc
+# Not: Yükleme tarihi 21.01.2020. Enstitüler sonradan Lisansüstü Eğitim Enstitüsü altında birleşmiş olabilir; daha yeni resmi kılavuz bulunamadı.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: atu-fbe
+version: 1
+name: "Adana Alparslan Türkeş Bilim ve Teknoloji Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "ATÜ FBE Yüksek Lisans ve Doktora Tez Yazım Kuralları, 2020"
+institution: "Adana Alparslan Türkeş Bilim ve Teknoloji Üniversitesi"
+source_url: https://www.atu.edu.tr/Upload/Dosyalar/Icerik/Dosya/13/21012020110156_Icerik_D_13.doc
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Madde 6 "A4 boyutunda (210 mm x 297 mm)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 2.5, right: 2.5 }   # Madde 6 "üstten 3 cm, diğer kenarlardan ise 2,5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # Madde 8
+
+roles:
+  body:
+    size_pt: 12                 # Madde 8 "tezin metin kısmı için 12 punto"
+    line_spacing: 1.5           # Madde 8 "satır aralığı 1,5 satır"
+    alignment: justify          # Madde 8 "her iki yana yaslı"
+    space_before_pt: 0          # Madde 8 "paragraf öncesi ve sonrası aralık 0 nk"
+    space_after_pt: 0           # Madde 8
+    first_line_indent_cm: 0     # Madde 8 "ilk satır girintisi uygulanmamalı"
+  heading_1:
+    size_pt: 16                 # Madde 8 "ana bölüm başlıkları için 16 punto"
+    bold: true                  # Madde 9
+    all_caps: true              # Madde 9 "büyük harflerle"
+    alignment: left             # Madde 9 "sola dayalı"
+  heading_2:
+    size_pt: 12                 # Madde 8 "alt başlıklar ... 12 punto"
+    bold: true                  # Madde 9
+    case: title                 # Madde 9 "her sözcük büyük harfle başlayacak"
+    alignment: left             # Madde 9
+  heading_3:
+    size_pt: 12                 # Madde 8
+    bold: true                  # Madde 9
+    case: title                 # Madde 9
+    alignment: left             # Madde 9, 12
+  table_caption:
+    line_spacing: 1.0           # Madde 8 "Tablo ve şekil başlıklarında ise tek satır aralığı"
+    alignment: justify          # Madde 10 "her iki yana yaslı"
+    position: above             # Madde 10 "tabloların üstüne"
+  figure_caption:
+    line_spacing: 1.0           # Madde 8
+    alignment: justify          # Madde 10
+    position: below             # Madde 10 "şekillerin altına"
+  footnote:
+    size_pt: 10                 # Madde 8 "dipnotların yazı tipi boyutu ise 10 punto"
+    line_spacing: 1.0           # Madde 10 "Dipnotlar için tek satır aralığı"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Madde 11
+  position: bottom_center       # Madde 11 "sayfa altına ortalanmış"
+
+document:
+  forbid_tracked_changes: true

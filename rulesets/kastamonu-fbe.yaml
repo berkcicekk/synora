@@ -1,0 +1,75 @@
+# Kastamonu Üniversitesi Fen Bilimleri Enstitüsü — Tez ve Seminer Yazım Kılavuzu (2020)
+# Kaynak: https://lisansustu.kastamonu.edu.tr/images/2025/FBESAGBETEZ/FBE_TEZ_YAZIM_KILAVUZU.pdf
+# (Senato 14/05/2020; Lisansüstü Eğitim Enstitüsü sitesinde fen bilimleri kılavuzu olarak yayımlanıyor)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: kastamonu-fbe
+version: 1
+name: "Kastamonu Üniversitesi · Fen Bilimleri (Lisansüstü Eğitim Enstitüsü)"
+source: "Kastamonu Üniversitesi Fen Bilimleri Enstitüsü Tez ve Seminer Yazım Kılavuzu, 2020"
+institution: "Kastamonu Üniversitesi"
+source_url: https://lisansustu.kastamonu.edu.tr/images/2025/FBESAGBETEZ/FBE_TEZ_YAZIM_KILAVUZU.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                                  # 2.1
+  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman]                # 2.3 "Bunun dışında başka yazı tipi kullanılmamalıdır"
+
+roles:
+  body:
+    size_pt: 12                             # 2.3
+    line_spacing: 1.5                       # 2.5 "1,5 satır aralığında"
+    alignment: justify                      # 2.4 "iki yana yaslı"
+    first_line_indent_cm: 0                 # 2.4 "paragraf başında girinti yok"
+  heading_1:
+    size_pt: 12                             # 2.9 Tablo 2.4
+    bold: true                              # 2.9 b
+    all_caps: true                          # 2.9 b "büyük ve koyu harflerle"
+    alignment: left                         # 2.9 f "sol sayfa boşluğuna dayalı"
+    page_break_before: true                 # 2.4 "Bölümler daima yeni bir sayfada başlamalıdır"
+    space_after_pt: 36                      # 2.9 h "2 satır (veya 36 nk)"
+  heading_2:
+    size_pt: 12                             # 2.9 Tablo 2.4
+    bold: true                              # 2.9 c
+    case: title                             # 2.9 c "kelimelerin ilk harfleri büyük"
+    alignment: left                         # 2.9 f
+    space_after_pt: 18                      # 2.9 h "1,5 satır (veya 18 nk)"
+  heading_3:
+    size_pt: 12                             # 2.9 Tablo 2.4
+    bold: true                              # 2.9 c
+    case: title                             # 2.9 c
+    alignment: left                         # 2.9 f
+    space_after_pt: 18                      # 2.9 h
+  figure_caption:
+    size_pt: 11                             # 3.3 (2.3: 10-12 punto, ideal 11)
+    line_spacing: 1.0                       # 2.5 "tanıtım yazıları ... tek satır aralığında"
+    position: below                         # 3.3 "şeklin alt orta kısmına"
+  table_caption:
+    size_pt: 11                             # 3.3
+    line_spacing: 1.0                       # 2.5
+    position: above                         # 3.3 "tablonun üst orta kısmına"
+  block_quote:
+    line_spacing: 1.0                       # 2.5 "doğrudan alıntılar ... tek satır aralığında"
+    alignment: justify                      # 2.11 "blok hizalama ile"
+  reference_entry:
+    line_spacing: 1.0                       # 6.8 "tek satır aralığında"
+    space_after_pt: 12                      # 6.8 "kaynaklar arasında 12nk boşluk"
+    # 6.8: ikinci satıra taşan metin 1 cm asılı girinti (şemada karşılığı yok)
+  footnote:
+    line_spacing: 1.0                       # 2.5 (punto: 2.3 "10 ya da 11" → denetlenmez)
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.8 ön kısım Romen, Giriş'ten itibaren Arabi
+  position: bottom_center                   # 2.8 "sayfa altında orta kısma"
+  forbid_decoration: true                   # 2.8 "ayıraç, çizgi vb. gibi bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

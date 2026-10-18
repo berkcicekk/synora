@@ -1,0 +1,68 @@
+# Dicle Üniversitesi Sağlık Bilimleri Enstitüsü — Tez Yazım Kılavuzu (2023)
+# Kaynak: https://www.dicle.edu.tr/Contents/pages/Files/36ff0403-4d76-4a6e-84a0-666aac0492af/362350521d5e4a38a0633521fe5de30f_Sa%c4%9fl%c4%b1k%20Bilimleri%20Enstit%c3%bcs%c3%bc%20Tez%20Yaz%c4%b1m%20K%c4%b1lavuzu-2023.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: dicle-sabe
+version: 1
+name: "Dicle Üniversitesi · Sağlık Bilimleri Enstitüsü"
+source: "Dicle Üniversitesi Sağlık Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2023"
+institution: "Dicle Üniversitesi"
+source_url: https://www.dicle.edu.tr/Contents/pages/Files/36ff0403-4d76-4a6e-84a0-666aac0492af/362350521d5e4a38a0633521fe5de30f_Sa%c4%9fl%c4%b1k%20Bilimleri%20Enstit%c3%bcs%c3%bc%20Tez%20Yaz%c4%b1m%20K%c4%b1lavuzu-2023.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "A4 (21x29.7 cm)"
+  # 2.4, Şekil 1.1: tek numaralı (ve tek taraflı basımda tüm) sayfalar sol 4, sağ 2,5, üst/alt 3 cm.
+  # 100 sayfayı aşan tezler arkalı-önlü basılır; çift sayfalarda sol 2,5 / sağ 4 cm (aynalı) — burada denetlenmez.
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.5 }
+
+fonts:
+  allowed: [Times New Roman]    # 2.3 "Times New Roman"
+
+roles:
+  body:
+    size_pt: 12                 # 2.3 "12 puntoluk"
+    line_spacing: 1.5           # 2.5 "standart satır aralığı 1,5"
+    alignment: justify          # 2.4 "Metin sol ve sağ kenarda bloklanmalıdır"
+    first_line_indent_cm: 0.75  # 2.5 "Paragraflar 0,75 cm mesafede içerden başlamalıdır"
+    # 2.5 "Paragraf aralarında yarım satırlık (0,5 cm) boşluk" — nk değeri yok, denetlenmez
+  heading_1:
+    size_pt: 14                 # 2.6 "Bölüm başlıkları 14"
+    bold: true                  # 2.6 "koyu (bold)"
+    all_caps: true              # 2.6 "Ana başlıkların tamamı ... büyük harflerle"
+    first_line_indent_cm: 0     # 2.6 "satır başına dayanmalıdır"
+    page_break_before: true     # 2.6 "Her bölüm ayrı sayfadan başlamalı"
+  heading_2:
+    size_pt: 12                 # 2.6 "diğer bütün başlıklar 12 punto"
+    bold: true                  # 2.6
+    case: title                 # 2.6 "birinci alt başlıklarda bütün kelimelerin ilk harfi", bağlaçlar küçük
+    first_line_indent_cm: 0     # 2.6
+  heading_3:
+    size_pt: 12                 # 2.6
+    bold: true                  # 2.6
+    case: sentence              # 2.6 "ikinci alt başlıklarda yalnız birinci kelimenin ilk harfi"
+    first_line_indent_cm: 0     # 2.6
+  figure_caption:
+    line_spacing: 1.0           # 2.5 "Şekil, resim ve tablo yazıları ... 1 tam aralık"
+    position: below             # 2.9 "şekil veya resmin alt kenarının bir satır altına"
+  table_caption:
+    line_spacing: 1.0           # 2.5
+    position: above             # 2.9 "tablonun üst kenarının bir satır üstüne"
+  block_quote:
+    line_spacing: 1.0           # 2.5 "alıntılar ... 1 tam aralık"
+  footnote:
+    line_spacing: 1.0           # 2.5, 2.11 "bir satır aralığı"
+
+page_numbering:
+  # 2.13: ön sayfalar Romen, Türkçe Özet'ten itibaren Arap rakamı.
+  # ÇELİŞKİ: metin "küçük Romen rakamları" diyor, örnek "(I, II, III, IV şeklinde)" büyük harf; metin esas alındı.
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.13 "sayfanın alt kısmına, metin bloğunun ortasında"
+
+document:
+  forbid_tracked_changes: true

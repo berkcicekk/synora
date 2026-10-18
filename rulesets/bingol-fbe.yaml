@@ -1,0 +1,84 @@
+# Bingöl Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Mart 2026; 2026-2027 Güz yarıyılından itibaren)
+# Kaynak: https://fbe.bingol.edu.tr/media/53794/bingol_fbe_tez-yazim-k.pdf
+# (bağlantı sayfası: https://fbe.bingol.edu.tr/ogrenci/ogrenci-dokumanlari/)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Ana bölüm başlıkları "küçük büyük" (small caps) yazı tipiyle yazılır (2.3.1); şemada small caps olmadığından
+# büyük harf kuralı denetlenmez. Ön bölüm metinleri 10 punto/1,25 aralık, tez metni 11 punto/1,5 aralıktır (2.4).
+ruleset: bingol-fbe
+version: 1
+name: "Bingöl Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Bingöl Üniversitesi Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2026"
+institution: "Bingöl Üniversitesi"
+source_url: https://fbe.bingol.edu.tr/media/53794/bingol_fbe_tez-yazim-k.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 2.1 "210 mm x 297 mm boyutunda (A4)"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 3.25, right: 2.5 }  # 2.2 "üst 3 cm, sol 3,25 cm, diğer kenarlar 2,5 cm"
+
+fonts:
+  allowed: [Times New Roman]    # 2.4 "Tezin temel yazı tipi Times New Roman"
+
+roles:
+  body:
+    size_pt: 11                 # 2.4 "Giriş ile Kaynaklar Bölümleri arasında ... 11 punto"
+    line_spacing: 1.5           # 2.4 "1,5 satır aralığı"
+    alignment: justify          # 2.4 "iki yana yaslı"
+    first_line_indent_cm: 1.0   # 2.4 "soldan 1 cm paragraf girintisi"
+  heading_1:
+    size_pt: 16                 # 2.3.1 "16 punto"
+    bold: true                  # 2.3.1 "kalın"
+    line_spacing: 1.0           # 2.3.1 "tek aralıklı satırda"
+    space_before_pt: 0          # 2.3.1 "Öncesinde boşluk bulunmaz"
+    space_after_pt: 24          # 2.3.1 "toplamda 24 nk"
+    page_break_before: true     # 2.3.1 "daima yeni bir sayfada başlamalı"
+  heading_2:
+    size_pt: 12                 # 2.3.2 "12 punto"
+    bold: true                  # 2.3.2 "koyu"
+    case: title                 # 2.3.2 "her kelimenin ilk harfi büyük", bağlaçlar küçük
+    line_spacing: 1.0           # 2.3.2 "Tek satır aralığı"
+    indent_left_cm: 0           # 2.3.2 "Sol girinti bulunmaz"
+    space_before_pt: 24         # 2.3.2 "önceki metinle ... (24 nk)"
+    space_after_pt: 12          # 2.3.2 "sonra gelen metinle ... (veya 12 nk)"
+  heading_3:
+    size_pt: 11                 # 2.3.2 "Üçüncü derece ... 11 punto"
+    bold: true                  # 2.3.2 "diğer özellikler ikinci derece ile aynı"
+    case: title                 # 2.3.2
+    line_spacing: 1.0           # 2.3.2
+    indent_left_cm: 0           # 2.3.2
+    space_before_pt: 24         # 2.3.2
+    space_after_pt: 12          # 2.3.2
+  figure_caption:
+    size_pt: 10                 # 2.4, 2.5 "10 punto Times New Roman"
+    line_spacing: 1.0           # 2.4 "tek satır aralığı"
+    space_before_pt: 10         # 2.5 "Şeklin alt kenarı ile başlık yazısı arasında ... (10 nk)"
+    position: below             # 2.5 "Şekillerin etiketleri ve başlık yazıları şeklin altında"
+  table_caption:
+    size_pt: 10                 # 2.4, 2.5
+    line_spacing: 1.0           # 2.4
+    space_after_pt: 10          # 2.5 "tablo üst çizgisi ile tablo başlık yazısı arasında ... (10 nk)"
+    position: above             # 2.5 "tabloların etiketleri ve başlık yazıları ise tablonun üstünde"
+  reference_entry:
+    size_pt: 10                 # Kaynaklar "10 punto"
+    line_spacing: 1.25          # Kaynaklar "1,25 aralık ayarı"
+    alignment: justify          # Kaynaklar "iki yana yaslı"
+    # Kaynaklar: "sol kenarından 1 cm içeriden başlar" ve "Asılı-1,25 cm" birlikte veriliyor; girinti belirsiz, denetlenmez
+    space_after_pt: 6           # Kaynaklar "sonra = 6 nk"
+  footnote:
+    size_pt: 9                  # 2.7 "9 punto"
+    line_spacing: 1.0           # 2.7 "tek aralık"
+    italic: true                # 2.7 "İtalik stil"
+
+page_numbering:
+  # 2.4.2: ön bölümler küçük Romen (iv, v…), Giriş'ten sona kadar 1, 2, 3…
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 2.4.2 "sayfanın altında, ortada"
+
+document:
+  forbid_tracked_changes: true

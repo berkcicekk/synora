@@ -1,0 +1,74 @@
+# Kahramanmaraş Sütçü İmam Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Yönergesi (06.06.2020)
+# Kaynak: https://bahcebitkileri.ksu.edu.tr/depo/belgeler/FEN%20B%C4%B0L%C4%B0MLER%C4%B0%20ENST%C4%B0T%C3%9CS%C3%9C%20TEZ%20YAZIM%20Y%C3%96NERGES%C4%B0%2006.06.2020_2007061057028635%20(2)_2106062203587346.doc
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Yönerge bir bölüm alt alan adında (bahcebitkileri.ksu.edu.tr) yayımlanmış; enstitü sitesinde ayrı kopya bulunamadı.
+ruleset: ksu-fbe
+version: 1
+name: "Kahramanmaraş Sütçü İmam Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "KSÜ Fen Bilimleri Enstitüsü Tez Yazım Yönergesi, 2020"
+institution: "Kahramanmaraş Sütçü İmam Üniversitesi"
+source_url: https://bahcebitkileri.ksu.edu.tr/depo/belgeler/FEN%20B%C4%B0L%C4%B0MLER%C4%B0%20ENST%C4%B0T%C3%9CS%C3%9C%20TEZ%20YAZIM%20Y%C3%96NERGES%C4%B0%2006.06.2020_2007061057028635%20(2)_2106062203587346.doc
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Madde 10 "A4 standardında (210 mm x 297 mm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.0, right: 2.5 }   # Madde 13 "sol 30 mm, diğer kenarlar 25 mm"
+
+fonts:
+  allowed: [Times New Roman]    # Madde 12
+
+roles:
+  body:
+    size_pt: 12                 # Madde 12
+    line_spacing: 1.5           # Madde 14 (2) "Metinler 1,5 aralıkla yazılır"
+    alignment: justify          # Madde 13, 14 (3) "iki yana yaslı"
+    space_before_pt: 6          # Madde 14 (4) "Paragraftan önce ve sonra 6 punto"
+    space_after_pt: 6           # Madde 14 (4)
+  heading_1:
+    bold: true                  # Madde 15 (4) "koyu olarak yazılmalıdır"
+    all_caps: true              # Madde 15 (3) "Bölüm başlıkları büyük harf"
+    alignment: left             # Madde 15 (4) "sayfa yazım alanının sol kenarından"
+    space_after_pt: 18          # Madde 15 (2) "sonrasında 18 punto"
+    page_break_before: true     # Madde 15 (2) "sayfa başından başlatılmalı"
+  heading_2:
+    bold: true                  # Madde 15 (4)
+    alignment: left             # Madde 15 (4)
+    case: title                 # Madde 15 (3) "her sözcüğün ilk harfi büyük"
+    space_before_pt: 18         # Madde 15 (2)
+    space_after_pt: 12          # Madde 15 (2)
+  heading_3:
+    bold: true                  # Madde 15 (4)
+    alignment: left             # Madde 15 (4)
+    case: sentence              # Madde 15 (3) "yalnız ilk harfi büyük"
+    space_before_pt: 12         # Madde 15 (2)
+    space_after_pt: 6           # Madde 15 (2)
+  figure_caption:
+    bold: false                 # Madde 17 (2) "başlıkları koyu yazılmamalıdır"
+    case: sentence              # Madde 17 (3) "birinci kelimenin baş harfi büyük"
+    line_spacing: 1.0           # Madde 17 (3) "tek satır aralığı"
+    space_before_pt: 6          # Madde 17 (5) "Şekil alt yazısı ile şekil arasında 6 punto"
+    space_after_pt: 12          # Madde 17 (5)
+    position: below             # Madde 17 (3) "şeklin altına"
+  table_caption:
+    bold: false                 # Madde 17 (2)
+    case: sentence              # Madde 17 (3)
+    line_spacing: 1.0           # Madde 17 (3)
+    space_before_pt: 12         # Madde 17 (4)
+    space_after_pt: 6           # Madde 17 (4)
+    position: above             # Madde 17 (3) "çizelgenin üstüne"
+  reference_entry:
+    space_after_pt: 12          # Madde 7 (2) "Ardışık iki kaynak arasında 12 punto"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Madde 16
+  position: bottom_center       # Madde 16 "alt orta kısmına"
+  forbid_decoration: true       # Madde 16 "ayıraç, çizgi vb. gibi karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

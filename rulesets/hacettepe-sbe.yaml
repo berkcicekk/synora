@@ -1,0 +1,67 @@
+# Hacettepe Üniversitesi Sosyal Bilimler Enstitüsü — Tez Yazım Yönergesi (Senato 23.01.2019; Word .doc)
+# Kaynak: https://fs.hacettepe.edu.tr/sosbil/dosyalar/tez_teslim/YENI_2019_Tez%20Yaz%C4%B1m%20Y%C3%B6nergesi.doc
+# Sayfa: https://sosyalbilimler.hacettepe.edu.tr/tr/menu/tez_yazim-28
+# Yorumlar yönergedeki büyük harfli madde etiketlerini (1. bölüm) ve 2. bölüm alt başlıklarını anar.
+# Yazı boyutu aralık olarak verilmiş (metin 11-12 pt, bölüm başlığı 13-14 pt, dipnot/alıntı 9-11 pt) → size_pt verilmedi.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: hacettepe-sbe
+version: 1
+name: "Hacettepe Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Hacettepe Üniversitesi SBE Tez Yazım Yönergesi, 2019"
+institution: "Hacettepe Üniversitesi"
+source_url: https://fs.hacettepe.edu.tr/sosbil/dosyalar/tez_teslim/YENI_2019_Tez%20Yaz%C4%B1m%20Y%C3%B6nergesi.doc
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1 BASIMDA KULLANILACAK KÂĞIT "A4"
+  margins_cm: { top: 3.0, bottom: 3.0, left: 4.0, right: 2.0 }   # 1 KENAR BOŞLUKLARI
+
+fonts:
+  allowed: [Times New Roman, Arial]   # 1 YAZI TİPİ VE BOYUTU "Times New Roman ya da Arial"
+
+roles:
+  body:
+    line_spacing: 1.5           # 1 SATIR ARALARI "1,5 satır (18 pt)"
+    alignment: justify          # 1 PARAGRAFLAR "soldan ve sağdan bloklanmış hizalı"
+    first_line_indent_cm: 0     # 1 PARAGRAFLAR "girinti yapılmamalıdır"
+  heading_1:
+    # Bölüm ana başlıkları
+    bold: true                  # 2.1 "büyük harfle, koyu"
+    all_caps: true              # 2.1
+    alignment: center           # 2.1 "metin ortalanır"
+    page_break_before: true     # 2.1 "Yeni bölüm başlıkları yeni bir sayfadan başlar"
+    space_before_pt: 24         # 2.4 "başlıklardan önce 2 satır (24 pt), sonra 1,5 satır (18 pt)"
+    space_after_pt: 18          # 2.4
+  heading_2:
+    # Birinci düzey başlıklar
+    bold: true                  # 2.2 "büyük harfle ve koyu"
+    all_caps: true              # 2.2
+    indent_left_cm: 1.0         # 2.2 "sol kenardan 1 cm hizalanır"
+    space_before_pt: 24         # 2.4
+    space_after_pt: 18          # 2.4
+  heading_3:
+    # İkinci düzey başlıklar
+    bold: true                  # 2.3 "koyu"
+    case: title                 # 2.3 "Bütün sözcüklerin ilk harfleri büyük"
+    indent_left_cm: 1.0         # 2.3 "sol kenardan 1 cm hizalanır"
+    space_before_pt: 24         # 2.4
+    space_after_pt: 18          # 2.4
+  block_quote:
+    line_spacing: 1.0           # 1 SATIR ARALARI "bloklanmış alıntılarda 1 satır (12 pt)"
+    indent_left_cm: 1.0         # 1 PARAGRAFLAR "soldan ve sağdan 1 cm girinti"
+  footnote:
+    line_spacing: 1.0           # 1 SATIR ARALARI "dipnotlarda ... 1 satır"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 1 NUMARALANDIRMA "küçük harf Romen" / girişten "1, 2, 3"
+  position: top_right           # 1 SAYFA NUMARALARI "yazı çerçevesinin sağ üst köşesine"
+  forbid_decoration: true       # 1 SAYFA NUMARALARI "parantez, çizgi vb. işaretler kullanılmadan"
+
+document:
+  forbid_tracked_changes: true

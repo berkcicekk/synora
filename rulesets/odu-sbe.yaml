@@ -1,0 +1,85 @@
+# Ordu Üniversitesi Sosyal Bilimler Enstitüsü — Tez/Proje/Seminer Yazım Kılavuzu, 2022
+# Kaynak: https://sbe.odu.edu.tr/files/other/Mevzuat/Tez_Yazim/1-SBE-Tez_Yazim_Kilavuzu.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# ÇELİŞKİ: 2.4 "kaynaklar ... tek satır aralığında", 6 nk önce/sonra; 2.14 "1.5 satır aralığıyla", önce 6 / sonra 12 nk.
+#          Kaynakça satır aralığı ve boşlukları kodlanmadı.
+ruleset: odu-sbe
+version: 1
+name: "Ordu Üniversitesi · Sosyal Bilimler Enstitüsü"
+source: "Ordu Üniversitesi Sosyal Bilimler Enstitüsü Tez/Proje/Seminer Yazım Kılavuzu, 2022"
+institution: "Ordu Üniversitesi"
+source_url: https://sbe.odu.edu.tr/files/other/Mevzuat/Tez_Yazim/1-SBE-Tez_Yazim_Kilavuzu.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 2.2
+
+fonts:
+  allowed: [Times New Roman, Traditional Arabic]   # 2.3 (Traditional Arabic yalnızca Arapça karakterler için)
+
+roles:
+  body:
+    size_pt: 12                 # 2.3
+    line_spacing: 1.5           # 2.4
+    alignment: justify          # 2.4 "iki yana yaslı"
+    first_line_indent_cm: 0     # 2.4 "paragraf başı için girinti olmayacak şekilde"
+    space_before_pt: 6          # 2.4 "paragraflar ... arasında önce ve sonra 6 nk"
+    space_after_pt: 6           # 2.4
+  heading_1:
+    size_pt: 12                 # 2.8
+    bold: true                  # 2.8
+    all_caps: true              # 2.8 "BÜYÜK HARF ile"
+    alignment: justify          # 2.8 "iki yana yaslı"
+    page_break_before: true     # 2.4 (2), 2.8 "yeni bir sayfadan başlamalı"
+    space_after_pt: 24          # 2.4 "ana bölüm başlığından sonra 24 nk"
+  heading_2:
+    size_pt: 12                 # 2.8
+    bold: true                  # 2.8
+    case: title                 # 2.8 "her kelimenin ilk harfi Büyük Harf"
+    alignment: justify          # 2.8
+    space_before_pt: 12         # 2.4 "alt başlıklardan önce ve sonra 12 nk"
+    space_after_pt: 12          # 2.4
+  heading_3:
+    size_pt: 12                 # 2.8
+    bold: true                  # 2.8
+    case: sentence              # 2.8 "ilk kelimenin ilk harfi büyük"
+    alignment: justify          # 2.8
+    space_before_pt: 12         # 2.4
+    space_after_pt: 12          # 2.4
+  figure_caption:
+    alignment: left             # 2.12 "sola dayalı"
+    first_line_indent_cm: 0     # 2.12 "paragraf girintisi yapılmadan"
+    space_before_pt: 6          # 2.4 "şekil tanıtım yazılarından önce 6"
+    space_after_pt: 12          # 2.4 "sonra 12 nk"
+    position: below             # 2.12
+  table_caption:
+    alignment: left             # 2.12
+    first_line_indent_cm: 0     # 2.12
+    space_before_pt: 12         # 2.4 "tablo tanıtım yazılarından önce 12"
+    space_after_pt: 6           # 2.4 "sonra 6 nk"
+    position: above             # 2.12
+  block_quote:
+    italic: true                # 2.10
+    line_spacing: 1.0           # 2.4, 2.10
+    indent_left_cm: 1.0         # 2.10 "sağ-sol taraftan birer cm girinti"
+    space_before_pt: 12         # 2.10
+    space_after_pt: 12          # 2.10
+  footnote:
+    size_pt: 10                 # 2.9 "ideal olarak 10 punto"
+    line_spacing: 1.0           # 2.4, 2.9
+  reference_entry:
+    size_pt: 11                 # 2.3 "Kaynaklar listesi 11 punto"
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 2.5
+  position: bottom_center       # 2.5 "sayfa altında ve ortada"
+  forbid_decoration: true       # 2.5 "önünde ve arkasında herhangi bir karakter kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

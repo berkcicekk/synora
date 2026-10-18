@@ -1,0 +1,65 @@
+# Sivas Bilim ve Teknoloji Üniversitesi Lisansüstü Eğitim Enstitüsü — Tez Yazım Kılavuzu (Eylül 2024)
+# Kaynak: https://lee.sivas.edu.tr/media/uploads/images/users/mustafa.cigdem/TYK-150126.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: Kılavuz, kenar boşluklarını tek ve çift taraflı basım için ayrı veriyor; burada tek taraflı (4.2) kullanıldı.
+ruleset: sbtu-lee
+version: 1
+name: "Sivas Bilim ve Teknoloji Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "SBTÜ Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2024"
+institution: "Sivas Bilim ve Teknoloji Üniversitesi"
+source_url: https://lee.sivas.edu.tr/media/uploads/images/users/mustafa.cigdem/TYK-150126.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 4.1 "A4 (21 x 29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 3.5, right: 2.5 }   # 4.2 tek taraflı basım
+
+fonts:
+  allowed: [Times New Roman]    # 4.4.2
+
+roles:
+  body:
+    size_pt: 12                 # 4.4.2 "Times New Roman (12)"
+    line_spacing: 1.5           # 4.6
+  heading_1:
+    size_pt: 14                 # 4.11 Tablo 1
+    bold: true                  # 4.11 Tablo 1
+    all_caps: true              # 4.11 Tablo 1 "Büyük Harf"
+    page_break_before: true     # 4.6, 4.12 "her ana bölüm yeni bir sayfadan"
+  heading_2:
+    size_pt: 12                 # 4.11 Tablo 1
+    bold: true                  # 4.11 Tablo 1
+    case: title                 # 4.11 Tablo 1 "Her sözcüğün ilk harfi büyük"
+  heading_3:
+    size_pt: 12                 # 4.11 Tablo 1
+    bold: true                  # 4.11 Tablo 1
+    case: sentence              # 4.11 Tablo 1 "Yalnızca birinci sözcüğün ilk harfi büyük"
+  figure_caption:
+    line_spacing: 1.0           # 4.6 "Şekil ... alt yazıları tek satır aralığı"
+    alignment: center           # s. 15 "şeklin altında ortalanmış"
+    position: below             # s. 15
+  table_caption:
+    line_spacing: 1.0           # 4.6 "Çizelge üst yazıları tek satır aralığı"
+    alignment: left             # s. 15 "çizelgenin üstünde ve sola yaslı"
+    position: above             # s. 15
+  block_quote:
+    line_spacing: 1.0           # 4.6 "doğrudan alıntılar ... tek satır aralığı"
+  reference_entry:
+    line_spacing: 1.0           # 4.6, 6
+  footnote:
+    size_pt: 10                 # 4.4.2, 4.14
+    line_spacing: 1.0           # 4.6
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # 4.7 ön kısım küçük Romen, Giriş'ten itibaren 1, 2, 3
+  position: top_right           # 4.7 "sayfanın sağ üst kısmına"
+  forbid_decoration: true       # 4.7 "ayıraç, çizgi gibi karakterler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true

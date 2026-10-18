@@ -1,0 +1,69 @@
+# İstanbul Gedik Üniversitesi Lisansüstü Eğitim Enstitüsü — Lisansüstü Tez/Proje Yazım Yönergesi (Senato 08/01/2019, 2019/02)
+# Kaynak: https://www.gedik.edu.tr/wp-content/uploads/Lisansustu-Tez-Yazim-Yonergesi.pdf
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+# Not: 1.2.1 iki yazı tipine izin veriyor (Times New Roman 12 / Arial 11); punto yazı tipine bağlı
+# olduğu için gövde puntosu tek değer olarak denetlenmez.
+ruleset: gedik-lee
+version: 1
+name: "İstanbul Gedik Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Lisansüstü Tez/Proje Yazım Yönergesi, 2019"
+institution: "İstanbul Gedik Üniversitesi"
+source_url: https://www.gedik.edu.tr/wp-content/uploads/Lisansustu-Tez-Yazim-Yonergesi.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 1.2 "A4 standardında (21 x 29.7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }   # 1.2.2
+
+fonts:
+  allowed: [Times New Roman, Arial]   # 1.2.1
+
+roles:
+  body:
+    line_spacing: 1.5           # 1.2.3 "Tez metni 1.5 aralıkla yazılır"
+    alignment: justify          # 1.2.2 "metin sol ve sağ sınırlara göre hizalanır"
+    space_before_pt: 6          # 1.2.3 "Paragraflardan önce ve sonra 6 punto"
+    space_after_pt: 6           # 1.2.3
+  heading_1:
+    bold: true                  # 1.2.3 "Tüm başlıklar koyu (bold)"
+    all_caps: true              # 1.2.3 "tüm harfler büyük"
+    space_before_pt: 72         # 1.2.3 "önce 72 punto"
+    space_after_pt: 18          # 1.2.3 "sonra 18 punto"
+  heading_2:
+    bold: true                  # 1.2.3
+    case: title                 # 1.2.3 "her kelimenin ilk harfi büyük"
+    space_before_pt: 18         # 1.2.3
+    space_after_pt: 12          # 1.2.3
+  heading_3:
+    bold: true                  # 1.2.3
+    case: sentence              # 1.2.3 "sadece başlığın ilk harfi büyük"
+    space_before_pt: 12         # 1.2.3
+    space_after_pt: 6           # 1.2.3
+  table_caption:
+    line_spacing: 1.0           # 1.2.3, 1.2.5 "bir satır aralığı"
+    space_before_pt: 12         # 1.2.5 "yazıdan önce 12 punto"
+    space_after_pt: 6           # 1.2.5 "sonra 6 punto"
+    position: above             # 1.2.5 "çizelgenin üstüne"
+  figure_caption:
+    line_spacing: 1.0           # 1.2.3, 1.2.5
+    space_before_pt: 6          # 1.2.5 "yazıdan önce 6 punto"
+    space_after_pt: 12          # 1.2.5 "sonra 12 punto"
+    position: below             # 1.2.5 "şeklin altına"
+  footnote:
+    line_spacing: 1.0           # 1.2.3 "dipnotlar 1 aralıkla"
+  reference_entry:
+    line_spacing: 1.0           # 1.2.3 "Kaynaklar ... 1 aralıkla"
+
+page_numbering:
+  # 1.2.4: başlangıç bölümü küçük Romen (i, ii…), metin bölümü Arap (1, 2…)
+  formats_in_order: [lowerRoman, decimal]
+  position: bottom_center       # 1.2.4 "sayfanın kısa kenarının alt-ortasına"
+
+document:
+  forbid_tracked_changes: true

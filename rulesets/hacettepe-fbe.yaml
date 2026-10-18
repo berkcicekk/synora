@@ -1,0 +1,75 @@
+# Hacettepe Üniversitesi Fen Bilimleri Enstitüsü — Tez Yazım Kılavuzu (Yönerge 03.10.2018)
+# Kaynak: https://fs.hacettepe.edu.tr/fenbilimleri/dosyalar/tez_yazim/TezYazimKilavuzu2018_.pdf
+# Sayfa: https://fenbilimleri.hacettepe.edu.tr/tr/menu/tez_yazim_islemleri-49
+# 3.2: iç kenar 3 cm + 0,5 cm cilt payı (Word'de sol kenar mı cilt payı mı olduğu belirsiz) → sol kenar verilmedi.
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: hacettepe-fbe
+version: 1
+name: "Hacettepe Üniversitesi · Fen Bilimleri Enstitüsü"
+source: "Hacettepe Üniversitesi FBE Tez Yazım Kılavuzu, 2018"
+institution: "Hacettepe Üniversitesi"
+source_url: https://fs.hacettepe.edu.tr/fenbilimleri/dosyalar/tez_yazim/TezYazimKilavuzu2018_.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # 3.1 "A4 boyutlarında (21 cm x 29,7 cm)"
+  margins_cm: { top: 2.5, bottom: 2.5, right: 2.5 }   # 3.2 "alt, üst ve dış kenarlarından 2,5 cm"
+
+fonts:
+  allowed: [Times New Roman, Arial]   # 3.3
+
+roles:
+  body:
+    size_pt: 12                 # 3.3, Çizelge 3.1 "METİN (TEZ ANAMETİN) 12 / 1,5 / 0 / 0"
+    line_spacing: 1.5           # 3.4, Çizelge 3.1
+    alignment: justify          # 3.2 "iki yana yaslı"
+    space_before_pt: 0          # Çizelge 3.1
+    space_after_pt: 0           # Çizelge 3.1
+  heading_1:
+    size_pt: 14                 # Çizelge 3.1 "BÖLÜM BAŞLIKLARI 14 / 1 / 6 / 12 / Koyu"
+    line_spacing: 1.0           # Çizelge 3.1
+    space_before_pt: 6          # Çizelge 3.1
+    space_after_pt: 12          # Çizelge 3.1
+    bold: true                  # Çizelge 3.1, 5.4.2
+    all_caps: true              # 5.4.2 "Birinci derece bölüm başlıkları; BÜYÜK HARF"
+    page_break_before: true     # 3.4 "birinci derece bölüm başlıkları sayfa başından"
+  heading_2:
+    size_pt: 12                 # Çizelge 3.1 "ALT BÖLÜM BAŞLIKLARI 12 / 1 / 3 / 6 / Koyu"
+    line_spacing: 1.0           # Çizelge 3.1
+    space_before_pt: 3          # Çizelge 3.1
+    space_after_pt: 6           # Çizelge 3.1
+    bold: true                  # Çizelge 3.1
+    case: title                 # 5.4.2 "her sözcüğün ilk harfi büyük"
+    alignment: left             # 5.4.2 "sola dayalı"
+  heading_3:
+    size_pt: 12                 # Çizelge 3.1
+    line_spacing: 1.0           # Çizelge 3.1
+    space_before_pt: 3          # Çizelge 3.1
+    space_after_pt: 6           # Çizelge 3.1
+    bold: true                  # 5.4.2 "birinci, ikinci ve üçüncü derece ... koyu"
+    case: title                 # 5.4.2 "ikinci derece alt bölüm başlıkları gibi"
+    alignment: left             # 5.4.2
+  table_caption:
+    position: above             # 5.4.2 "Çizelgelerin üstünde o çizelgeye ait bir çizelge başlığı"
+  figure_caption:
+    position: below             # 5.4.2 "Şekillerin ise altında o şekle ait bir şekil başlığı"
+  footnote:
+    size_pt: 10                 # Çizelge 3.1 "METİN (DİP NOT) 10 / 1"
+    line_spacing: 1.0           # Çizelge 3.1
+  reference_entry:
+    size_pt: 12                 # Çizelge 3.1 "KAYNAKLAR 12 / 1,15 / 6 / 0"
+    line_spacing: 1.15          # Çizelge 3.1
+    space_before_pt: 6          # Çizelge 3.1
+    space_after_pt: 0           # Çizelge 3.1
+
+page_numbering:
+  position: bottom_center       # 3.2 "sayfanın alt ortasında"
+
+document:
+  forbid_tracked_changes: true

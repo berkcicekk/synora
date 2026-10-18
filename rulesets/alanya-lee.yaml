@@ -1,0 +1,59 @@
+# Alanya Üniversitesi Lisansüstü Akademik Yazım Kılavuzu Yönergesi (YNG-KGS-034; ilk yayın 09.03.2020, revizyon 01: 07.08.2023)
+# Kaynak: https://3fcampus.alanyahep.edu.tr/uploads/cms/les.ahep/5789_4.pdf
+# (enstitu.alanyauniversity.edu.tr "Tez Yazım Kılavuzu" sayfasından bağlantılı, üniversitenin resmî dosya sunucusu)
+# Erişim: 2026-10-18
+# Otomatik çıkarıldı; enstitü tarafından doğrulanmadı.
+ruleset: alanya-lee
+version: 1
+name: "Alanya Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+source: "Alanya Üniversitesi Lisansüstü Akademik Yazım Kılavuzu Yönergesi, 2023"
+institution: "Alanya Üniversitesi"
+source_url: https://3fcampus.alanyahep.edu.tr/uploads/cms/les.ahep/5789_4.pdf
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+page:
+  size: A4                      # Madde 6
+  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 2.5 }   # Madde 7
+
+fonts:
+  allowed: [Times New Roman]    # Madde 8
+
+roles:
+  body:
+    size_pt: 12                 # Madde 8
+    line_spacing: 1.5           # Madde 9
+    alignment: justify          # Madde 7 "iki yana hizalanmış"
+    first_line_indent_cm: 1.0   # Madde 9 "1cm içerden"
+  heading_1:
+    bold: true                  # Madde 8, 10
+    all_caps: true              # Madde 10 "tümü büyük ve koyu harflerle"
+    alignment: left             # Madde 7 "sol boşluk çerçevesi kenarından başlamalıdır"
+    page_break_before: true     # Madde 7 "ana bölümler yeni bir sayfadan başlatılmalıdır"
+  heading_2:
+    bold: true                  # Madde 10
+    all_caps: true              # Madde 10 "birinci derece alt başlığı ... tümü büyük"
+    alignment: left             # Madde 7
+  heading_3:
+    bold: true                  # Madde 10
+    alignment: left             # Madde 7
+    case: title                 # Madde 10 "sözcüklerin ilk harfleri büyük"
+  block_quote:
+    size_pt: 10                 # Madde 8 "doğrudan uzun aktarmalarda ... 2 punto küçültülerek"
+  reference_entry:
+    line_spacing: 1.0           # Madde 9
+  footnote:
+    size_pt: 10                 # Madde 8
+    line_spacing: 1.0           # Madde 9
+
+page_numbering:
+  formats_in_order: [lowerRoman, decimal]   # Madde 11(2)
+  position: bottom_center       # Madde 11(1) "sayfa altında, ortada"
+  forbid_decoration: true       # Madde 11(1) "parantez, çizgi vb. gibi karakterler kullanılmamalıdır"
+
+document:
+  forbid_tracked_changes: true
