@@ -257,9 +257,6 @@ def test_missing_job_shows_friendly_page(client: TestClient, mailer: ConsoleMail
     assert 'href="/"' in res.text
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "A9 backend: exception_handler fastapi.HTTPException için kayıtlı; yönlendirici bilinmeyen "
-    "adres ve yanlış yöntemde starlette HTTPException fırlatıyor → ham JSON. Öneri: ONERILER Ö3."))
 def test_unknown_url_shows_friendly_page(client: TestClient) -> None:
     res = client.get("/boyle-bir-sayfa-yok")
     assert res.status_code == 404

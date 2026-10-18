@@ -17,6 +17,7 @@ from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from http import HTTPStatus
 from pathlib import Path
 from typing import Any, Literal
 
@@ -26,6 +27,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Resp
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import ValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from synora.check import USER_ROLES
 from synora.errors import ErrorCode
@@ -45,6 +47,11 @@ PRE_CSRF_COOKIE = "synora_pre"
 # Kayıtta onaylanan aydınlatma metninin sürümü; metin değişince artırılır.
 TERMS_VERSION = "aydinlatma-taslak-2026-10"
 SERVER_BUSY = "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin."
+JSON_ERRORS = {
+    401: "Oturumunuz sona erdi. Sayfayı yenileyip yeniden giriş yapın.",
+    403: "Oturum doğrulaması başarısız. Sayfayı yenileyip yeniden deneyin.",
+    404: "Denetim bulunamadı ya da süresi doldu.",
+}
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+\-]{1,64}@[A-Za-z0-9.\-]{1,190}\.[A-Za-z]{2,24}")
 JOB_ID_RE = re.compile(r"[A-Za-z0-9_\-]{16,64}")
 
@@ -417,8 +424,12 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     async def send_link(request: Request, mode: Literal["login", "register"]) -> HTMLResponse:
         """Giriş ve kayıt ortak akışı: denetimler, tek kullanımlık bağlantı, e-posta."""
         form = await request.form()
-        check_csrf(request.cookies.get(PRE_CSRF_COOKIE, ""), str(form.get("csrf", "")))
         email = str(form.get("email", "")).strip().lower()
+        expected, provided = request.cookies.get(PRE_CSRF_COOKIE, ""), str(form.get("csrf", ""))
+        if not provided or not hmac.compare_digest(expected, provided):
+            # Form uzun süre açık kalmış: yazılan adres kaybolmasın, yeni formla gönderilsin.
+            return auth_form(request, mode, status=403, email=email, error=(
+                "Sayfanın süresi doldu. Adresinizi kontrol edip yeniden gönderin."))
 
         def fail(msg: str) -> HTMLResponse:
             return auth_form(request, mode, status=400, error=msg, email=email)
@@ -427,7 +438,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return fail("Geçerli bir e-posta adresi yazın.")
         if not domain_allowed(email):
             return fail(
-                "Pilot süresince yalnızca üniversite e-posta adresleriyle giriş yapılabilir."
+                "Pilot süresince yalnızca üniversite e-posta adresleri kullanılabilir."
             )
         consent = None
         if mode == "register":
@@ -695,18 +706,36 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
-    @app.exception_handler(HTTPException)
-    async def http_error(request: Request, exc: HTTPException) -> Response:
-        if request.method == "POST" and (
-            request.url.path == "/jobs" or "/output/" in request.url.path
-            or request.url.path.endswith(("/roles", "/recheck"))
-        ):
-            return JSONResponse({"error": exc.detail}, status_code=exc.status_code)
-        if exc.status_code == 401:
+    def api_request(request: Request) -> bool:
+        """Arayüzün fetch ile çağırdığı uçlar JSON hata alır; diğerleri hata sayfası."""
+        path = request.url.path
+        return request.method == "POST" and (
+            path == "/jobs" or "/output/" in path or path.endswith(("/roles", "/recheck")))
+
+    # Yönlendiricinin fırlattığı starlette HTTPException (bilinmeyen adres, yanlış yöntem) dahil.
+    @app.exception_handler(StarletteHTTPException)
+    async def http_error(request: Request, exc: StarletteHTTPException) -> Response:
+        code = exc.status_code
+        generic = exc.detail == HTTPStatus(code).phrase  # "Not Found" gibi İngilizce öntanımlı
+        if api_request(request):
+            message = (JSON_ERRORS.get(code, "İstek tamamlanamadı. Yeniden deneyin.")
+                       if generic or code in (401, 403) else exc.detail)
+            return JSONResponse({"error": message}, status_code=code)
+        if code == 401:
             return RedirectResponse("/", status_code=303)
         messages = {403: "Oturum doğrulaması başarısız. Sayfayı yenileyip yeniden deneyin.",
-                    404: "Aradığınız sayfa bulunamadı ya da süresi doldu."}
-        return render(request, "error.html", status=exc.status_code,
-                      message=messages.get(exc.status_code, str(exc.detail)))
+                    404: "Aradığınız sayfa bulunamadı ya da süresi doldu.",
+                    405: "Bu adres bu şekilde açılamaz."}
+        return render(request, "error.html", status=code, user=current_user(request),
+                      message=messages.get(code, str(exc.detail)))
+
+    @app.exception_handler(Exception)
+    async def server_error(request: Request, exc: Exception) -> Response:
+        # Ayrıntı (ve olası tez içeriği) kullanıcıya ya da kayda gitmez; yalnızca hata türü.
+        log_event("http.error", code=type(exc).__name__)
+        message = "Beklenmeyen bir hata oluştu. Birkaç saniye sonra yeniden deneyin."
+        if api_request(request):
+            return JSONResponse({"error": message}, status_code=500)
+        return render(request, "error.html", status=500, message=message)
 
     return app
