@@ -130,9 +130,9 @@ class JobRunner:
                                   user_roles)
         else:
             result = run_pipeline(data, ruleset_path, job_id, user_roles)
-        if self.db.get_job(job_id) is not None:  # kullanıcı bu arada silmiş olabilir
-            self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"],
-                               source_sha256=result["source_sha256"])
+        # Kullanıcı bu arada silmişse UPDATE hiçbir satıra dokunmaz.
+        self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"],
+                           source_sha256=result["source_sha256"])
 
     def make_output(
         self, kind: OutputKind, job_id: str, data: bytes, ruleset_path: str,

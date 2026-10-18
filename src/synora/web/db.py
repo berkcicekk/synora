@@ -12,6 +12,7 @@ import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS login_tokens (
@@ -45,6 +46,24 @@ CREATE TABLE IF NOT EXISTS users (
     consent_at REAL
 );
 """
+
+
+class Rows(list[tuple[Any, ...]]):
+    """Kilit içinde okunmuş sorgu sonucu (cursor'un kullanılan arayüzü: fetchone/fetchall).
+
+    Paylaşılan bağlantıda fetchone kilit dışında çalışırsa eşzamanlı iki okuma birbirinin
+    sonucunu bozar (ONERILER Ö9).
+    """
+
+    def __init__(self, cur: sqlite3.Cursor) -> None:
+        super().__init__(cur.fetchall())
+        self.rowcount = cur.rowcount
+
+    def fetchone(self) -> Any:  # sqlite3.Cursor.fetchone ile aynı tip: satır ya da None
+        return self[0] if self else None
+
+    def fetchall(self) -> list[tuple[Any, ...]]:
+        return list(self)
 
 
 @dataclass(frozen=True)
@@ -86,9 +105,9 @@ class Database:
                 "WHERE status IN ('queued', 'running')", (time.time(),),
             )
 
-    def execute(self, sql: str, params: tuple[object, ...] = ()) -> sqlite3.Cursor:
+    def execute(self, sql: str, params: tuple[object, ...] = ()) -> Rows:
         with self._lock:
-            return self._conn.execute(sql, params)
+            return Rows(self._conn.execute(sql, params))
 
     # --- Giriş bağlantıları -----------------------------------------------------------
 
