@@ -315,10 +315,6 @@ def test_daily_job_limit_survives_deleting_reports(client: TestClient, mailer: C
     assert res.status_code == 429
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "Kopya üretimi (output) eşzamanlı iş sınırına ve günlük sınıra tabi değil; her istek ayrı "
-    "süreçte (2 GB'a kadar) çalışır. Paralel isteklerle sunucu belleği tüketilebilir. "
-    "Öneri: ONERILER Ö6."))
 def test_output_respects_concurrency_limit(client: TestClient, mailer: ConsoleMailer,
                                            settings: Settings) -> None:
     csrf = login(client, mailer)

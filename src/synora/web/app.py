@@ -44,6 +44,7 @@ SESSION_COOKIE = "synora_session"
 PRE_CSRF_COOKIE = "synora_pre"
 # Kayıtta onaylanan aydınlatma metninin sürümü; metin değişince artırılır.
 TERMS_VERSION = "aydinlatma-taslak-2026-10"
+SERVER_BUSY = "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin."
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+\-]{1,64}@[A-Za-z0-9.\-]{1,190}\.[A-Za-z]{2,24}")
 JOB_ID_RE = re.compile(r"[A-Za-z0-9_\-]{16,64}")
 
@@ -352,6 +353,20 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             raise HTTPException(404)
         return job
 
+    # Kopya üretimi istek içinde çalışır (ayrı süreç, 2 GB'a kadar); sayaç yalnızca olay döngüsünde
+    # değişir, kontrol ile artırma arasında await olmadığından yarış yoktur (ONERILER Ö6).
+    outputs_running: dict[str, int] = {}
+
+    def check_job_limits(email: str) -> None:
+        if db.active_jobs(email) + outputs_running.get(email, 0) >= settings.max_active_jobs:
+            raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+        if db.jobs_since(email, time.time() - 86400) >= settings.max_daily_jobs:
+            raise HTTPException(429, "Günlük denetim sınırına ulaştınız. Yarın yeniden deneyin.")
+
+    def check_queue() -> None:
+        if runner.queued() >= settings.max_queued_jobs:
+            raise HTTPException(503, SERVER_BUSY)
+
     def domain_allowed(email: str) -> bool:
         if not settings.allowed_domains:
             return settings.dev
@@ -507,10 +522,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         declared = request.headers.get("content-length")
         if declared and declared.isdigit() and int(declared) > settings.max_upload_bytes:
             raise HTTPException(413, "Dosya çok büyük.")
-        if db.active_jobs(user.email) >= settings.max_active_jobs:
-            raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
-        if db.jobs_since(user.email, time.time() - 86400) >= settings.max_daily_jobs:
-            raise HTTPException(429, "Günlük denetim sınırına ulaştınız. Yarın yeniden deneyin.")
+        check_job_limits(user.email)
 
         chunks: list[bytes] = []
         size = 0
@@ -521,6 +533,10 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             chunks.append(chunk)
         if size == 0:
             raise HTTPException(400, "Dosya boş.")
+        # Gövde okunurken paralel istekler aynı kontrolü geçmiş olabilir; buradan sonra await
+        # yok, yeniden kontrol ile kayıt arasına başka istek giremez.
+        check_job_limits(user.email)
+        check_queue()
         job_id = secrets.token_urlsafe(18)
         db.add_job(job_id, user.email, ruleset.id)
         runner.submit(job_id, b"".join(chunks), str(ruleset.path))
@@ -619,9 +635,13 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         ruleset = rulesets.get(job.ruleset)
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim yeniden çalıştırılamıyor.")
-        if db.active_jobs(user.email) >= settings.max_active_jobs:
-            raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+        check_job_limits(user.email)
         data = await same_file(request, job.source_sha256)
+        job = own_job(user, job_id)  # beklerken başka bir istek yeniden kuyruğa almış olabilir
+        if job.status != "done" or not job.report:
+            raise HTTPException(409, "Bu denetim zaten yeniden denetleniyor.")
+        check_job_limits(user.email)
+        check_queue()
         roles = pending_roles(job, json.loads(job.report))
         db.requeue(job_id)
         runner.submit(job_id, data, str(ruleset.path), roles)
@@ -640,13 +660,24 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         ruleset = rulesets.get(job.ruleset)
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim için kopya üretilemiyor.")
-        data = await same_file(request, job.source_sha256)
-        # Kopya, ekrandaki raporla aynı rollerle üretilir (kaydedilmiş ama henüz yeniden
-        # denetlenmemiş seçimlerle değil).
-        roles = applied_roles(json.loads(job.report))
-        result = await run_in_threadpool(runner.make_output, kind,  # type: ignore[arg-type]
-                                         job_id, data, str(ruleset.path), roles)
-        del data
+        check_job_limits(user.email)
+        if sum(outputs_running.values()) >= settings.workers:
+            raise HTTPException(503, SERVER_BUSY)
+        outputs_running[user.email] = outputs_running.get(user.email, 0) + 1
+        try:
+            data = await same_file(request, job.source_sha256)
+            # Kopya, ekrandaki raporla aynı rollerle üretilir (kaydedilmiş ama henüz yeniden
+            # denetlenmemiş seçimlerle değil).
+            roles = applied_roles(json.loads(job.report))
+            result = await run_in_threadpool(runner.make_output, kind,  # type: ignore[arg-type]
+                                             job_id, data, str(ruleset.path), roles)
+            del data
+        finally:
+            left = outputs_running[user.email] - 1
+            if left:
+                outputs_running[user.email] = left
+            else:
+                del outputs_running[user.email]
         if result["docx"] is None:
             code = result["error_code"] or "INTERNAL"
             message = OUTPUT_ERRORS.get(code, "Belge otomatik olarak işlenemedi; metninizin "

@@ -118,6 +118,9 @@ class JobRunner:
         for _ in range(self.settings.workers):
             self._queue.put(None)
 
+    def queued(self) -> int:
+        return self._queue.qsize()
+
     def submit(self, job_id: str, data: bytes, ruleset_path: str,
                user_roles: UserRoles = None) -> None:
         self._queue.put((job_id, data, ruleset_path, user_roles))

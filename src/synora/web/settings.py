@@ -29,6 +29,7 @@ class Settings:
     login_requests_per_hour: int = 5
     max_active_jobs: int = 2
     max_daily_jobs: int = 20
+    max_queued_jobs: int = 20  # kuyrukta bekleyen her iş belleği 50 MB'a kadar tutar
     max_upload_bytes: int = 50 * 1024 * 1024
     job_timeout_seconds: float = 120.0
     workers: int = 2
