@@ -1,8 +1,11 @@
 # Gece durumu
 
+> **10:32 — 06:00 sonrası, kullanıcı kontrolü bekleniyor.** Faz 5 (son kontrol) zamanında çalışmadı;
+> zamanlanmış görevler ancak 10:32'de tetiklendi. SABAH_RAPORU.md 02:25 taslağı olarak duruyor.
+
 **Güncellendi:** 2026-10-18 02:26
 **Dal:** gece/arayuz-guvenlik
-**Faz:** 1–4 ✅. Faz 5 (son kontrol) 05:30'da. Arada: düşük riskli küçük iyileştirmeler.
+**Faz:** 1–5 ✅ — **Faz 5 bitti** (kullanıcı onayıyla, 06:00 sonrası).
 
 ## Başlangıç (01:40)
 - `python -m uv run pytest -q` → **306 passed**, 1 uyarı (starlette/httpx kullanımdan kalkma)
@@ -43,3 +46,4 @@
 - 02:07 — 393 passed, 6 xfailed (Ö3–Ö8)
 - 02:24 — 401 passed, 7 xfailed (+Ö9); 6/6 tekrar yeşil
 - 02:22 saatlik oturum (02 tetiklemesi) — 401 passed, 7 xfailed; değişiklik yok
+- Faz 5 (kullanıcı döndükten sonra) — 401 passed, 7 xfailed; ruff/mypy temiz; korumalı .py diff boş

@@ -67,6 +67,6 @@ Korumalı modüllerde kod değişmez; açık → xfail test + ONERILER.md + GUVE
 - [x] Yüklemede yüzde ilerleme
 
 ## Faz 5 — Son kontrol
-- [ ] 5.1 `uv run pytest -q`, `uv run ruff check .`, `uv run mypy src` temiz
-- [ ] 5.2 `git log main..` özeti
-- [ ] 5.3 `.gece/SABAH_RAPORU.md`: yapılanlar, yapılamayanlar, sorular, öneriler, nasıl incelenir
+- [x] 5.1 `uv run pytest -q`, `uv run ruff check .`, `uv run mypy src` temiz
+- [x] 5.2 `git log main..` özeti
+- [x] 5.3 `.gece/SABAH_RAPORU.md`: yapılanlar, yapılamayanlar, sorular, öneriler, nasıl incelenir

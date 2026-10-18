@@ -1,11 +1,12 @@
 # Sabah raporu — gece/arayuz-guvenlik (2026-10-18)
 
-> Durum: **taslak (02:25)**. Son kontrol 05:30'da yapılıp bu dosya güncellenecek. Oturum o saate kadar
-> kapanırsa bu taslak geçerlidir.
+> Durum: **son**. Gece çalışması 02:26'da bitti. 05:33'teki son kontrol bilgisayar uykudayken kaçtı;
+> kullanıcı dönünce onayıyla yapıldı: 401 passed, 7 xfailed · ruff temiz · mypy temiz · `src/**/*.py`
+> ve `rulesets/` için `git diff` boş.
 
 ## 1. Tek bakışta
 
-- **Dal:** `gece/arayuz-guvenlik` (main'den). 16 commit, push/merge yok, main'e dokunulmadı.
+- **Dal:** `gece/arayuz-guvenlik` (main'den). 19 commit, push/merge yok, main'e dokunulmadı.
 - **Testler:** başlangıçta 306 geçiyordu → şimdi **401 geçiyor + 7 xfail** (xfail'ler bilinen açıklar,
   gerekçeli). `ruff` ve `mypy src` temiz.
 - **Korumalı modüllerde kod değişikliği yok.** `src/**/*.py` ve `rulesets/` için `git diff` boş.
