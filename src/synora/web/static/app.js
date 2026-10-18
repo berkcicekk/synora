@@ -114,8 +114,11 @@
         || card.dataset.severity === f;
       card.hidden = !show;
     });
+    const shown = document.querySelectorAll(".card:not([hidden])").length;
     const empty = document.getElementById("filter-empty");
-    if (empty) empty.hidden = document.querySelectorAll(".card:not([hidden])").length > 0;
+    if (empty) empty.hidden = shown > 0;
+    const pos = document.getElementById("step-pos");
+    if (pos) pos.textContent = shown + " yorum";
     // Editör: görünür yorumu olmayan paragrafları soluklaştır.
     const visible = new Set([...document.querySelectorAll(".comment:not([hidden])")].map((c) => c.dataset.card));
     document.querySelectorAll(".blk[data-cards]").forEach((blk) => {
@@ -156,14 +159,38 @@
     const activateCard = (comment, scrollCanvas) => {
       clearActive();
       comment.classList.add("active");
+      showPos(comment);
       const blocks = comment.dataset.blocks.split(" ").filter(Boolean)
         .map((i) => document.getElementById("b" + i)).filter(Boolean);
       blocks.forEach((b) => b.classList.add("active"));
       if (scrollCanvas && blocks[0]) scrollInto(canvas, blocks[0]);
     };
+    // Önceki/sonraki: yalnızca süzgeçte görünen yorumlar arasında gezilir.
+    const stepPos = document.getElementById("step-pos");
+    const visibleCards = () => [...document.querySelectorAll(".comment:not([hidden])")];
+    const showPos = (comment) => {
+      const list = visibleCards();
+      if (stepPos) stepPos.textContent = (list.indexOf(comment) + 1) + " / " + list.length;
+    };
+    const step = (dir) => {
+      const list = visibleCards();
+      if (!list.length) return;
+      const current = list.indexOf(document.querySelector(".comment.active"));
+      const next = list[current === -1 ? (dir > 0 ? 0 : list.length - 1)
+                                       : (current + dir + list.length) % list.length];
+      activateCard(next, true);
+      next.focus({ preventScroll: true });
+      scrollInto(commentsPane, next);
+    };
+    document.querySelectorAll("[data-step-card]").forEach((b) =>
+      b.addEventListener("click", () => step(Number(b.dataset.stepCard))));
     document.querySelectorAll(".comment").forEach((c) => {
       c.addEventListener("click", (e) => { if (!e.target.closest("summary")) activateCard(c, true); });
-      c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activateCard(c, true); } });
+      c.addEventListener("keydown", (e) => {
+        if (e.target !== c) return; // kart içindeki "Word'de nasıl düzeltilir" vb. kendi tuşlarını kullanır
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activateCard(c, true); }
+        else if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); step(e.key === "ArrowDown" ? 1 : -1); }
+      });
     });
     document.querySelectorAll(".blk[data-cards]").forEach((blk) => {
       const open = () => {

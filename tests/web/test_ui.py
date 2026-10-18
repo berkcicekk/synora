@@ -176,8 +176,11 @@ def test_report_digest_buckets_and_next_steps(client: TestClient, mailer: Consol
     assert "Kontrol edin" not in digest  # belirsiz paragraf yok
     assert "Sıradaki adımlar" in digest
     assert "Tümünü Kabul Et" in digest
-    assert 'data-filter="manual"' in html
-    assert "Düzeltilmiş kopyada otomatik düzeltilir." in html
+    # Süzgeçler sayılı; boş süzgeç gösterilmez (bu raporda elle düzeltilecek bulgu yok).
+    assert ('data-filter="fixable" aria-pressed="false">Düzeltilebilir <span class="fc">1</span>'
+            in html)
+    assert 'data-filter="manual"' not in html
+    assert '<span class="tag fix">Otomatik düzeltilir</span>' in html
     assert "Word'de nasıl düzeltilir" in html
     assert "Satır Aralığı Seçenekleri" in html  # body.line_spacing bulgusu
     assert "son onayı" in html  # resmi kontrolün yerini almaz
@@ -390,3 +393,16 @@ def test_upload_reports_progress_without_flooding_screen_readers() -> None:
     assert "pct >= shown + 10" in upload_js  # aria-live bölgesi 10'luk adımlarla güncellenir
     for header in ("Content-Type", "X-CSRF-Token", "X-Ruleset"):
         assert f'xhr.setRequestHeader("{header}"' in upload_js
+
+
+def test_report_stepper_and_legend(client: TestClient, mailer: ConsoleMailer) -> None:
+    job_id = _done_job(client, mailer, bad_thesis())
+    html = client.get(f"/jobs/{job_id}").text
+    assert 'data-step-card="-1" aria-label="Önceki yorum"' in html
+    assert 'data-step-card="1" aria-label="Sonraki yorum"' in html
+    assert 'id="step-pos" aria-live="polite"' in html
+    assert 'class="lg lg-error"' in html
+    # Özet önce, yorum başlığı ve süzgeçler sonra (bulgular ilk ekranda görünsün diye özet kompakt).
+    order = [html.index(f'class="{c}"') for c in ("digest", "pane-head", "comments")]
+    assert order == sorted(order)
+    assert 'ArrowDown' in JS and "step(" in JS

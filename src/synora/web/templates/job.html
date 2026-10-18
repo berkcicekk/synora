@@ -131,7 +131,12 @@
 
   {# --- Orta: sayfa tuvali --- #}
   <section class="pane pane-canvas" aria-label="Belge">
-    <p class="canvas-note">Metniniz saklanmadığı için paragraflar çizgilerle gösterilir; başlıklar ve bulgular gerçektir.</p>
+    <div class="canvas-legend">
+      <span class="lg lg-error">Hata</span>
+      <span class="lg lg-warning">Uyarı</span>
+      {% if view.editable %}<span class="lg lg-unsure">Türü belirsiz</span>{% endif %}
+      <span class="lg-note">Metniniz saklanmadığı için paragraflar çizgiyle gösterilir; başlıklar ve bulgular gerçektir.</span>
+    </div>
     <div class="paper">
       {% for b in view.blocks %}
       {% set i = loop.index0 %}
@@ -181,26 +186,15 @@
 
   {# --- Sağ: yorumlar --- #}
   <aside class="pane pane-comments" aria-label="Bulgular">
-    <div class="pane-head">
-      <p class="pane-title">Yorumlar <span class="muted">({{ view.cards|length }})</span></p>
-      {% if view.finding_count > view.cards|length %}
-      <p class="muted small">{{ view.finding_count }} bulgu; aynı türdekiler tek yorumda toplandı.</p>
-      {% endif %}
-      <div class="filters" role="group" aria-label="Bulguları süz">
-        <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü</button>
-        <button type="button" class="filter" data-filter="error" aria-pressed="false">Hatalar</button>
-        <button type="button" class="filter" data-filter="warning" aria-pressed="false">Uyarılar</button>
-        <button type="button" class="filter" data-filter="fixable" aria-pressed="false">Düzeltilebilir</button>
-        <button type="button" class="filter" data-filter="manual" aria-pressed="false">Elle</button>
-      </div>
-    </div>
     {% set manual = [s.errors + s.warnings - s.fixable, 0] | max %}
     {% set unsure = s.unknown_paragraphs or 0 %}
     {% if view.cards or unsure %}
     <section class="digest" aria-labelledby="digest-title">
-      <h2 id="digest-title" class="digest-title">Özet</h2>
-      <p class="digest-tally"><strong>{{ s.errors }} hata, {{ s.warnings }} uyarı.</strong>
-        {% if s.fixable %}{{ s.fixable }} tanesi otomatik düzeltilebilir.{% endif %}</p>
+      <div class="digest-top">
+        <h2 id="digest-title" class="digest-title">Özet</h2>
+        <p class="digest-tally"><strong>{{ s.errors }} hata, {{ s.warnings }} uyarı.</strong>
+          {% if s.fixable %}{{ s.fixable }} tanesi otomatik düzeltilebilir.{% endif %}</p>
+      </div>
       <ul class="buckets">
         {% if view.cards %}
         <li class="bucket b-fix">
@@ -228,19 +222,19 @@
         </li>
         {% endif %}
       </ul>
-      <h3 class="next-title">Sıradaki adımlar</h3>
-      <ol class="next-steps">
-        {% if s.fixable %}<li>Düzeltilmiş kopyayı indirin; Word'de <em>Gözden Geçir › Tümünü Kabul Et</em> deyin.</li>{% endif %}
-        {% if manual %}<li>Kalan {{ manual }} bulguyu Word'de düzeltin; yorumlu kopya yerlerini gösterir.</li>{% endif %}
-        {% if unsure %}<li>Kesikli çizgili paragrafların türünü seçip yeniden denetleyin.</li>{% endif %}
-        <li>Düzelttiğiniz dosyayı yeni bir denetimle kontrol edin.</li>
-      </ol>
+      <details class="next">
+        <summary>Sıradaki adımlar</summary>
+        <ol class="next-steps">
+          {% if s.fixable %}<li>Düzeltilmiş kopyayı indirin; Word'de <em>Gözden Geçir › Tümünü Kabul Et</em> deyin.</li>{% endif %}
+          {% if manual %}<li>Kalan {{ manual }} bulguyu Word'de düzeltin; yorumlu kopya yerlerini gösterir.</li>{% endif %}
+          {% if unsure %}<li>Kesikli çizgili paragrafların türünü seçip yeniden denetleyin.</li>{% endif %}
+          <li>Düzelttiğiniz dosyayı yeni bir denetimle kontrol edin.</li>
+        </ol>
+      </details>
     </section>
     {% endif %}
-    {% if s.unknown_paragraphs or s.cover_paragraphs %}
-    <p class="info">{% if s.cover_paragraphs %}Kapak sayfası ({{ s.cover_paragraphs }} satır) denetlenmedi. {% endif %}
-      {% if s.unknown_paragraphs %}Türü belirlenemeyen {{ s.unknown_paragraphs }} paragraf denetlenmedi. Belgede
-      kesikli çizgiyle gösterilen paragrafların türünü seçip yeniden denetleyebilirsiniz.{% endif %}</p>
+    {% if s.cover_paragraphs %}
+    <p class="info">Kapak sayfası ({{ s.cover_paragraphs }} satır) denetlenmedi; kılavuzla elle karşılaştırın.</p>
     {% endif %}
     {% if view.editable %}
     <div class="roles-bar" id="roles-bar" data-job="{{ job.id }}"{% if not view.roles_changed %} hidden{% endif %}>
@@ -255,22 +249,48 @@
     <p class="info">Denetlenen paragraflarda kılavuza aykırı biçim bulunamadı. Türü belirsiz
        paragraflar denetlenmedi; türlerini seçip yeniden denetleyin.</p>
     {% else %}
-    <p class="info ok">Kılavuza aykırı biçim bulunamadı. Tebrikler.{% if s.cover_paragraphs %}
-       Kapak sayfasını kılavuzla elle karşılaştırmayı unutmayın.{% endif %}</p>
+    <p class="info ok">Kılavuza aykırı biçim bulunamadı. Tebrikler.</p>
     {% endif %}
+    {% endif %}
+    {% if view.cards %}
+    {% set n_err = view.cards | selectattr("severity", "equalto", "error") | list | length %}
+    {% set n_warn = view.cards | selectattr("severity", "equalto", "warning") | list | length %}
+    {% set n_fix = view.cards | selectattr("fixable") | list | length %}
+    <div class="pane-head">
+      <div class="pane-head-row">
+        <h2 class="pane-title">Yorumlar <span class="muted">({{ view.cards|length }})</span></h2>
+        <div class="stepper" role="group" aria-label="Yorumlar arasında gezin">
+          <button type="button" class="step-btn" data-step-card="-1" aria-label="Önceki yorum">↑</button>
+          <span class="step-pos" id="step-pos" aria-live="polite">{{ view.cards|length }} yorum</span>
+          <button type="button" class="step-btn" data-step-card="1" aria-label="Sonraki yorum">↓</button>
+        </div>
+      </div>
+      {% if view.finding_count > view.cards|length %}
+      <p class="muted small">{{ view.finding_count }} bulgu; aynı türdekiler tek yorumda toplandı.</p>
+      {% endif %}
+      <div class="filters" role="group" aria-label="Bulguları süz">
+        <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü <span class="fc">{{ view.cards|length }}</span></button>
+        {% if n_err %}<button type="button" class="filter" data-filter="error" aria-pressed="false">Hatalar <span class="fc">{{ n_err }}</span></button>{% endif %}
+        {% if n_warn %}<button type="button" class="filter" data-filter="warning" aria-pressed="false">Uyarılar <span class="fc">{{ n_warn }}</span></button>{% endif %}
+        {% if n_fix %}<button type="button" class="filter" data-filter="fixable" aria-pressed="false">Düzeltilebilir <span class="fc">{{ n_fix }}</span></button>{% endif %}
+        {% if view.cards|length - n_fix %}<button type="button" class="filter" data-filter="manual" aria-pressed="false">Elle <span class="fc">{{ view.cards|length - n_fix }}</span></button>{% endif %}
+      </div>
+    </div>
     {% endif %}
     <ol class="comments">
       {% for c in view.cards %}
       <li class="comment card sev-{{ c.severity }}" id="c{{ c.n }}" data-card="{{ c.n }}" data-blocks="{{ c.blocks|join(' ') }}"
           data-severity="{{ c.severity }}" data-fixable="{{ 'yes' if c.fixable else 'no' }}" tabindex="0">
-        <div class="comment-meta">
+        <div class="comment-head">
           <span class="pin">{{ c.n }}</span>
-          <span class="sev {{ c.severity }}">{{ c.severity_name }}</span>
-          {% if c.role_name %}<span>{{ c.role_name }}</span>{% endif %}
-          {% if c.fixable %}<span class="fix">Düzeltilebilir</span>{% endif %}
-          {% if c.count > 1 %}<span>× {{ c.count }}</span>{% endif %}
+          <p class="message">{{ c.message }}</p>
         </div>
-        <p class="message">{{ c.message }}</p>
+        <div class="comment-meta">
+          <span class="tag sev-tag {{ c.severity }}">{{ c.severity_name }}</span>
+          {% if c.role_name %}<span class="tag">{{ c.role_name }}</span>{% endif %}
+          {% if c.count > 1 %}<span class="tag">× {{ c.count }}</span>{% endif %}
+          {% if c.fixable %}<span class="tag fix">Otomatik düzeltilir</span>{% endif %}
+        </div>
         <div class="where">
           {% if c.locations %}
             {% if c.locations|length == 1 %}Yer: {{ c.locations[0] }}{% else %}
@@ -279,7 +299,6 @@
             </details>{% endif %}
           {% elif c.sections %}Yer: bölüm {{ c.sections|join(", ") }} (sayfa ayarları){% endif %}
         </div>
-        {% if c.fixable %}<p class="fix-note">Düzeltilmiş kopyada otomatik düzeltilir.</p>{% endif %}
         {{ howto(c.rule_id) }}
       </li>
       {% endfor %}
