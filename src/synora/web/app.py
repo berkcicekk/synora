@@ -21,6 +21,7 @@ from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from pathlib import Path
 from typing import Any, Literal
+from urllib.parse import parse_qsl
 
 import yaml
 from fastapi import FastAPI, HTTPException, Request
@@ -29,6 +30,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Resp
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import ValidationError
+from starlette.datastructures import FormData, UploadFile
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from synora.check import USER_ROLES
@@ -49,6 +51,8 @@ PRE_CSRF_COOKIE = "synora_pre"
 # Kayıtta onaylanan aydınlatma metninin sürümü; metin değişince artırılır.
 TERMS_VERSION = "aydinlatma-taslak-2026-10"
 SERVER_BUSY = "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin."
+MAX_FORM_BYTES = 8 * 1024
+MAX_JSON_BYTES = 64 * 1024
 JSON_ERRORS = {
     401: "Oturumunuz sona erdi. Sayfayı yenileyip yeniden giriş yapın.",
     403: "Oturum doğrulaması başarısız. Sayfayı yenileyip yeniden deneyin.",
@@ -379,6 +383,30 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if db.jobs_since(email, time.time() - 86400) >= settings.max_daily_jobs:
             raise HTTPException(429, "Günlük denetim sınırına ulaştınız. Yarın yeniden deneyin.")
 
+    async def small_body(request: Request, content_type: str, limit: int) -> bytes:
+        """Küçük, beklenen türde gövde; büyüğü okumadan reddedilir."""
+        if request.headers.get("content-type", "").split(";")[0].strip() != content_type:
+            raise HTTPException(415, "Desteklenmeyen istek biçimi.")
+        length = request.headers.get("content-length", "")
+        if not length.isdigit() or int(length) > limit:
+            raise HTTPException(413, "İstek çok büyük.")
+        body = await request.body()
+        if len(body) > limit:
+            raise HTTPException(413, "İstek çok büyük.")
+        return body
+
+    async def small_form(request: Request) -> FormData:
+        # Yalnızca URL kodlu küçük formlar: Starlette çok parçalı gövdeyi 1 MB'tan sonra diske
+        # yazar; oturumsuz /login ile disk doldurulabilirdi. Gövdesiz istek boş formdur (CSRF
+        # denetimi reddeder).
+        if request.headers.get("content-length", "0") == "0" and \
+                "transfer-encoding" not in request.headers:
+            return FormData()
+        body = await small_body(request, "application/x-www-form-urlencoded", MAX_FORM_BYTES)
+        pairs: list[tuple[str, str | UploadFile]] = [
+            (k, v) for k, v in parse_qsl(body.decode("latin-1"), keep_blank_values=True)]
+        return FormData(pairs)
+
     def check_queue() -> None:
         if runner.queued() >= settings.max_queued_jobs:
             raise HTTPException(503, SERVER_BUSY)
@@ -428,7 +456,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     async def send_link(request: Request, mode: Literal["login", "register"]) -> HTMLResponse:
         """Giriş ve kayıt ortak akışı: denetimler, tek kullanımlık bağlantı, e-posta."""
-        form = await request.form()
+        form = await small_form(request)
         email = str(form.get("email", "")).strip().lower()
         expected, provided = request.cookies.get(PRE_CSRF_COOKIE, ""), str(form.get("csrf", ""))
         if not provided or not hmac.compare_digest(expected, provided):
@@ -506,7 +534,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     @app.post("/auth")
     async def auth(request: Request) -> Response:
-        form = await request.form()
+        form = await small_form(request)
         check_csrf(request.cookies.get(PRE_CSRF_COOKIE, ""), str(form.get("csrf", "")))
         email = db.consume_login_token(_hash(str(form.get("token", ""))))
         if email is None:
@@ -523,7 +551,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     @app.post("/logout")
     async def logout(request: Request) -> Response:
         user = require_user(request)
-        form = await request.form()
+        form = await small_form(request)
         check_csrf(user.csrf, str(form.get("csrf", "")))
         db.delete_session(user.session_hash)
         resp = RedirectResponse("/", status_code=303)
@@ -593,7 +621,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     @app.post("/jobs/{job_id}/delete")
     async def job_delete(request: Request, job_id: str) -> Response:
         user = require_user(request)
-        form = await request.form()
+        form = await small_form(request)
         check_csrf(user.csrf, str(form.get("csrf", "")))
         own_job(user, job_id)
         db.delete_job(job_id)
@@ -625,7 +653,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if job.status != "done" or not job.report:
             raise HTTPException(409, "Bu denetim için rol seçilemiyor.")
         try:
-            body = await request.json()
+            body = json.loads(await small_body(request, "application/json", MAX_JSON_BYTES))
         except ValueError:
             raise HTTPException(400, "Geçersiz istek.") from None
         changes = body.get("roles") if isinstance(body, dict) else None
