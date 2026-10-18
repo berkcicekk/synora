@@ -246,6 +246,9 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
 - Sunucu Türkiye'de barındırılır (KVKK yurt dışı aktarım). Model katmanı metin görmediği için tez metni hiçbir
   koşulda üçüncü tarafa gitmez.
 - KVKK aydınlatma metni ve açık rıza (rol düzeltmelerinin eğitim verisi olarak kullanımı için ayrı onay).
+- Giriş (`/giris`) ve kayıt (`/kayit`) ayrı sayfalar; ikisi de parolasız bağlantı gönderir. Kayıt,
+  aydınlatma metni (`/aydinlatma`, **taslak**) onayı ister; onay (metin sürümü + zaman) yalnızca bağlantı
+  açılıp e-posta doğrulanınca `users` tablosuna yazılır. Düz girişte kullanıcı satırı açılmaz.
 - Kimlik doğrulama pilotta: üniversite e-postasına tek kullanımlık giriş bağlantısı `[KARAR?]`
   (ileride enstitünün SSO sistemi).
 - Web'e özel ek sınırlar: kullanıcı başına eşzamanlı iş ≤ 2, günlük iş ≤ 20, CSRF koruması, yükleme yalnızca

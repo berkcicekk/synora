@@ -36,7 +36,8 @@
           <button class="btn small" type="submit"><span class="lbl">Çıkış</span>{{ arrow() }}</button>
         </form>
         {% else %}
-        <a class="btn small" href="/#giris"><span class="lbl">Giriş yap</span>{{ arrow() }}</a>
+        <a class="nav-link" href="/giris">Giriş yap</a>
+        <a class="btn small" href="/kayit"><span class="lbl">Kayıt ol</span>{{ arrow() }}</a>
         {% endif %}
       </div>
     </div>
@@ -55,7 +56,8 @@
       <div class="footer-col">
         <span class="meta">Gizlilik</span>
         <p>Metniniz değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca bellekte işlenir;
-           rapor 24 saat sonra silinir.</p>
+           rapor 24 saat sonra silinir.
+           <a href="/aydinlatma">Aydınlatma metni</a></p>
       </div>
       <div class="footer-col">
         <span class="meta">Kılavuz</span>

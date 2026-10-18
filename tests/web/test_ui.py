@@ -77,9 +77,8 @@ def test_cyan_focus_only_on_dark_surfaces() -> None:
     rule = re.search(r"([^{}]+)\{ outline-color: var\(--cyan\); \}", CSS)
     assert rule, "koyu yüzeyler için camgöbeği odak kuralı yok"
     selectors = rule.group(1)
-    for dark in (".hero", ".products", ".join", ".footer"):
+    for dark in (".hero", ".products", ".join", ".footer", ".auth-art"):
         assert dark in selectors
-    assert ".join-card :focus-visible { outline-color: var(--blue); }" in CSS
 
 
 # --- Klavye ve yardımcı teknoloji -------------------------------------------------------------
@@ -275,8 +274,10 @@ TEMPLATES = STATIC.parent / "templates"
 
 
 def _all_pages(client: TestClient, mailer: ConsoleMailer) -> dict[str, str]:
-    pages = {"landing": client.get("/").text, "pricing": client.get("/fiyatlandirma").text}
-    page = client.get("/")
+    pages = {"landing": client.get("/").text, "pricing": client.get("/fiyatlandirma").text,
+             "login": client.get("/giris").text, "register": client.get("/kayit").text,
+             "privacy": client.get("/aydinlatma").text}
+    page = client.get("/giris")
     sent = client.post("/login", data={"email": "ogrenci@beun.edu.tr",
                                        "csrf": _csrf(page.text)})
     pages["login_sent"] = sent.text
@@ -376,7 +377,8 @@ def test_full_student_journey(client: TestClient, mailer: ConsoleMailer) -> None
                        follow_redirects=False).status_code == 303
     assert f'href="/jobs/{job_id}"' not in client.get("/").text
     client.post("/logout", data={"csrf": csrf})
-    assert "Giriş bağlantısı gönder" in client.get("/").text
+    home = client.get("/").text  # oturum kapandı: tanıtım sayfası, giriş sayfasına bağlantı
+    assert "Tezinizi yükleyin" not in home and 'href="/giris"' in home
 
 
 def test_report_prints_as_checklist() -> None:

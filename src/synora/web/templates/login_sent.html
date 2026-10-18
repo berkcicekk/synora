@@ -1,14 +1,11 @@
-{% extends "base.html" %}
+{% extends "auth_base.html" %}
 {% block title %}E-postanızı kontrol edin · Synora{% endblock %}
-{% block content %}
-<section class="section simple">
-  <div class="sheet-card">
-    <span class="eyebrow">Bağlantı gönderildi</span>
-    <h1 class="page-title">E-postanızı kontrol edin.</h1>
-    <p><span class="mono">{{ email }}</span> adresine bir giriş bağlantısı gönderdik. Bağlantı {{ minutes }}
-       dakika geçerlidir ve yalnızca bir kez kullanılabilir.</p>
-    <p class="muted">E-posta gelmediyse istenmeyen posta klasörüne bakın.</p>
-    <p><a class="textlink" href="/#giris">Başka bir adres kullan</a></p>
-  </div>
-</section>
+{% block auth_body %}
+<span class="eyebrow">Bağlantı gönderildi</span>
+<h1 class="auth-title">E-postanızı kontrol edin.</h1>
+<p class="auth-lead"><span class="mono">{{ email }}</span> adresine bir {% if mode == "register" %}hesap
+   onay{% else %}giriş{% endif %} bağlantısı gönderdik. Bağlantı {{ minutes }} dakika geçerlidir ve
+   yalnızca bir kez kullanılabilir.</p>
+<p class="auth-hint">E-posta gelmediyse istenmeyen posta klasörüne bakın.</p>
+<p class="auth-alt"><a class="textlink" href="{{ '/kayit' if mode == 'register' else '/giris' }}">Başka bir adres kullan</a></p>
 {% endblock %}

@@ -25,7 +25,7 @@ EMAIL = "ogrenci@beun.edu.tr"
 
 
 def request_link(client: TestClient, mailer: ConsoleMailer, email: str = EMAIL) -> str:
-    page = client.get("/")
+    page = client.get("/giris")
     res = client.post("/login", data={"email": email, "csrf": csrf_from(page.text)})
     assert res.status_code == 200, res.text
     return mailer.sent[-1][1].split("token=")[1]
@@ -59,7 +59,7 @@ def test_login_link_cannot_be_posted_twice(settings: Settings, mailer: ConsoleMa
         victim.post("/auth", data={"token": token, "csrf": csrf}, follow_redirects=False)
         assert logged_in(victim)
         # Bağlantıyı sonradan ele geçiren biri (ör. iletilen e-posta) oturum açamaz.
-        a_csrf = csrf_from(attacker.get("/").text)
+        a_csrf = csrf_from(attacker.get("/giris").text)
         res = attacker.post("/auth", data={"token": token, "csrf": a_csrf},
                             follow_redirects=False)
         assert SESSION_COOKIE not in res.cookies
@@ -75,7 +75,7 @@ def test_invalid_link_page_does_not_echo_token(client: TestClient) -> None:
 
 def test_login_link_uses_configured_base_url_not_host_header(client: TestClient,
                                                             mailer: ConsoleMailer) -> None:
-    page = client.get("/")
+    page = client.get("/giris")
     client.post("/login", data={"email": EMAIL, "csrf": csrf_from(page.text)},
                 headers={"Host": "saldirgan.example"})
     assert mailer.sent[-1][1].startswith("http://testserver/auth?token=")
@@ -244,7 +244,7 @@ def prod_client(tmp_path: Path, mailer: ConsoleMailer) -> Iterator[TestClient]:
 
 
 def test_production_cookies_and_hsts(prod_client: TestClient, mailer: ConsoleMailer) -> None:
-    first = prod_client.get("/")
+    first = prod_client.get("/giris")  # giriş öncesi CSRF çerezi giriş sayfasında verilir
     assert "max-age=31536000" in first.headers["strict-transport-security"]
     pre = first.headers["set-cookie"].lower()
     assert "httponly" in pre and "secure" in pre and "samesite=strict" in pre
@@ -258,7 +258,7 @@ def test_production_cookies_and_hsts(prod_client: TestClient, mailer: ConsoleMai
 
 def test_production_rejects_unlisted_domains(prod_client: TestClient,
                                              mailer: ConsoleMailer) -> None:
-    page = prod_client.get("/")
+    page = prod_client.get("/giris")
     res = prod_client.post("/login", data={"email": "biri@ornek.com",
                                            "csrf": csrf_from(page.text)})
     assert res.status_code == 400
@@ -275,7 +275,7 @@ def test_api_docs_are_disabled(client: TestClient) -> None:
 
 def test_reflected_email_is_escaped(client: TestClient, mailer: ConsoleMailer) -> None:
     payload = '"><script>alert(1)</script>@beun.edu.tr'
-    page = client.get("/")
+    page = client.get("/giris")
     res = client.post("/login", data={"email": payload, "csrf": csrf_from(page.text)})
     assert res.status_code == 400
     assert "<script>alert(1)</script>" not in res.text
@@ -338,7 +338,7 @@ def test_login_requests_limited_per_client(client: TestClient, mailer: ConsoleMa
                                            settings: Settings) -> None:
     statuses = []
     for i in range(settings.login_requests_per_hour * 6):
-        page = client.get("/")
+        page = client.get("/giris")
         res = client.post("/login", data={"email": f"kisi{i}@beun.edu.tr",
                                           "csrf": csrf_from(page.text)})
         statuses.append(res.status_code)

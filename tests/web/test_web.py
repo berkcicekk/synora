@@ -46,7 +46,7 @@ def csrf_from(html: str) -> str:
 
 
 def login(client: TestClient, mailer: ConsoleMailer, email: str = "ogrenci@beun.edu.tr") -> str:
-    page = client.get("/")
+    page = client.get("/giris")
     res = client.post("/login", data={"email": email, "csrf": csrf_from(page.text)})
     assert res.status_code == 200, res.text
     link = mailer.sent[-1][1]
@@ -101,7 +101,7 @@ def test_login_flow_and_upload_report(client: TestClient, mailer: ConsoleMailer)
 
 
 def test_domain_not_allowed(client: TestClient, mailer: ConsoleMailer) -> None:
-    page = client.get("/")
+    page = client.get("/giris")
     res = client.post("/login", data={"email": "biri@gmail.com", "csrf": csrf_from(page.text)})
     assert res.status_code == 400
     assert "üniversite e-posta" in res.text
@@ -109,14 +109,14 @@ def test_domain_not_allowed(client: TestClient, mailer: ConsoleMailer) -> None:
 
 
 def test_login_requires_csrf(client: TestClient, mailer: ConsoleMailer) -> None:
-    client.get("/")
+    client.get("/giris")
     res = client.post("/login", data={"email": "ogrenci@beun.edu.tr", "csrf": "yanlis"})
     assert res.status_code == 403
     assert mailer.sent == []
 
 
 def test_link_preview_does_not_consume_token(client: TestClient, mailer: ConsoleMailer) -> None:
-    page = client.get("/")
+    page = client.get("/giris")
     client.post("/login", data={"email": "a@beun.edu.tr", "csrf": csrf_from(page.text)})
     token = mailer.sent[-1][1].split("token=")[1]
     for _ in range(3):  # e-posta tarayıcıları bağlantıyı önceden açabilir
@@ -124,7 +124,7 @@ def test_link_preview_does_not_consume_token(client: TestClient, mailer: Console
 
 
 def test_token_single_use(client: TestClient, mailer: ConsoleMailer) -> None:
-    page = client.get("/")
+    page = client.get("/giris")
     client.post("/login", data={"email": "a@beun.edu.tr", "csrf": csrf_from(page.text)})
     token = mailer.sent[-1][1].split("token=")[1]
     csrf = csrf_from(client.get(f"/auth?token={token}").text)
@@ -136,7 +136,7 @@ def test_token_single_use(client: TestClient, mailer: ConsoleMailer) -> None:
 
 def test_login_rate_limit(client: TestClient, mailer: ConsoleMailer, settings: Settings) -> None:
     for _ in range(settings.login_requests_per_hour + 1):
-        page = client.get("/")
+        page = client.get("/giris")
         res = client.post("/login", data={"email": "a@beun.edu.tr", "csrf": csrf_from(page.text)})
     assert res.status_code == 400
     assert "Çok fazla" in res.text
@@ -217,7 +217,8 @@ def test_user_can_delete_report(client: TestClient, mailer: ConsoleMailer) -> No
 def test_logout(client: TestClient, mailer: ConsoleMailer) -> None:
     csrf = login(client, mailer)
     client.post("/logout", data={"csrf": csrf})
-    assert "Giriş bağlantısı gönder" in client.get("/").text
+    home = client.get("/").text  # oturum kapandı: tanıtım sayfası, giriş sayfasına bağlantı
+    assert "Tezinizi yükleyin" not in home and 'href="/giris"' in home
 
 
 # --- Güvenlik ve saklama ------------------------------------------------------------------

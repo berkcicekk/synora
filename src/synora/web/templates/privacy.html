@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Aydınlatma metni · Synora{% endblock %}
+{% block content %}
+<section class="section simple">
+  <article class="sheet-card privacy">
+    <span class="eyebrow">KVKK aydınlatma metni</span>
+    <h1 class="page-title">Verileriniz ve tezinizle ne yapıyoruz?</h1>
+    <p class="alert" role="note">Taslak: bu metin hukuk görüşü alınmadan hazırlandı; köşeli ayraç içindeki
+       bilgiler pilot öncesinde netleşecek. Sürüm: <span class="mono">{{ version }}</span></p>
+
+    <h2>Veri sorumlusu</h2>
+    <p>[Veri sorumlusu ve iletişim bilgisi belirlenecek.]</p>
+
+    <h2>Hangi verileri, ne kadar süre işliyoruz?</h2>
+    <ul>
+      <li><strong>E-posta adresiniz:</strong> giriş bağlantısı göndermek ve oturumunuzu tanımak için.
+        Giriş bağlantısı {{ link_minutes }} dakika geçerlidir, oturum {{ session_hours }} saat sürer;
+        süresi dolan kayıtlar silinir.</li>
+      <li><strong>Kayıt onayınız:</strong> kayıt olduysanız e-posta adresiniz, onayladığınız metnin sürümü
+        ve onay zamanı. Hesabınızın silinmesini isteyene kadar saklanır.</li>
+      <li><strong>Tez dosyanız:</strong> yalnızca bellekte işlenir; diske ya da veritabanına yazılmaz.
+        Aynı dosyayı yeniden yüklediğinizi anlamak için yalnızca dosyanın SHA-256 özeti tutulur.</li>
+      <li><strong>Denetim raporu:</strong> tezinizin metnini içermez; yalnızca bölüm ve başlık adları,
+        biçim bulguları ve sizin seçtiğiniz paragraf türleri yer alır. Rapor ve özet {{ retention }} saat
+        sonra silinir; dilediğiniz an kendiniz de silebilirsiniz.</li>
+    </ul>
+
+    <h2>Yapay zekâ ve aktarım</h2>
+    <p>Tezinizin metni hiçbir yapay zekâ modeline ya da üçüncü tarafa gönderilmez. Paragraf türü yalnızca
+       punto, hizalama gibi sayısal biçim ölçülerinden belirlenir. [Sunucunun Türkiye'de barındırılması
+       planlanıyor; barındırma kararı bekleniyor.]</p>
+
+    <h2>Çerezler</h2>
+    <p>Yalnızca oturum ve form güvenliği (CSRF) için zorunlu çerezler kullanılır. Reklam ya da izleme
+       çerezi yoktur.</p>
+
+    <h2>Haklarınız</h2>
+    <p>KVKK'nın 11. maddesi uyarınca verilerinizin işlenip işlenmediğini öğrenme, düzeltilmesini ya da
+       silinmesini isteme ve işlemeye itiraz etme haklarınız vardır. [Başvuru yolu belirlenecek.]</p>
+
+    <p><a class="textlink" href="/kayit">Kayıt sayfasına dön</a></p>
+  </article>
+</section>
+{% endblock %}

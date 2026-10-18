@@ -46,8 +46,7 @@ body {
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 /* Koyu yüzeylerde camgöbeği odak; fildişi/beyaz zeminde camgöbeği 1,6:1 kalır, mavi kullanılır. */
-.landing .site-nav :focus-visible, .hero :focus-visible, .products :focus-visible, .join :focus-visible, .footer :focus-visible, .price-hero :focus-visible, .plan.featured :focus-visible { outline-color: var(--cyan); }
-.join-card :focus-visible { outline-color: var(--blue); }
+.landing .site-nav :focus-visible, .hero :focus-visible, .products :focus-visible, .join :focus-visible, .footer :focus-visible, .price-hero :focus-visible, .plan.featured :focus-visible, .auth-art :focus-visible { outline-color: var(--cyan); }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 1rem; top: 1rem; background: var(--card); padding: .4rem .7rem; z-index: 60; }
 .wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: 1.25rem; }
@@ -78,6 +77,10 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 .btn.light .arr { border-left-color: var(--hair); }
 .btn.light:hover { background: var(--wash); }
 .btn.small { min-height: 36px; font-size: .82rem; }
+/* Kobalt üstünde ikincil düğme: saydam, ince beyaz kenar. */
+.btn.outline-light { background: transparent; border-color: rgba(255, 255, 255, .55); color: var(--on-blue); }
+.btn.outline-light .arr { border-left-color: rgba(255, 255, 255, .35); }
+.btn.outline-light:hover { background: rgba(255, 255, 255, .1); }
 .btn.small .lbl { padding: 0 .8rem; }
 .btn.small .arr { width: 36px; }
 .btn.danger { background: var(--error); border-color: var(--error); color: #fff; }
@@ -97,6 +100,8 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 .pill a[aria-current="page"] { background: #fff; color: var(--ink); }
 .nav-end { justify-self: end; display: flex; align-items: center; gap: .8rem; min-width: 0; }
 .nav-end form { display: inline; }
+.nav-link { font-size: .85rem; text-decoration: none; white-space: nowrap; }
+.nav-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .who { font-size: .82rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 24vw; }
 .landing .site-nav { background: var(--blue); border-bottom-color: transparent; color: var(--on-blue); }
 .landing .pill { background: var(--night); }
@@ -318,8 +323,10 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 @media (min-width: 900px) { .join-grid { grid-template-columns: 1fr 1fr; } }
 .join h2 { font-size: clamp(3rem, 6.6vw, 5.4rem); }
 .join-grid > div > p { color: var(--on-blue-soft); margin-top: 1rem; max-width: 26rem; line-height: 1.6; }
-.join-card { background: var(--card); color: var(--ink); padding: 1.6rem; border-radius: 3px; display: grid; gap: .7rem; }
-.join-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: .4rem; }
+.join-ctas { display: flex; align-items: center; gap: .9rem 1rem; flex-wrap: wrap; }
+@media (min-width: 900px) { .join-ctas { justify-content: flex-end; } }
+.join-ctas .meta { flex-basis: 100%; }
+@media (min-width: 900px) { .join-ctas .meta { text-align: right; } }
 
 /* ================================ FİYATLANDIRMA ================================ */
 .price-hero { background: var(--blue); color: #fff; padding-block: clamp(4rem, 9vw, 7rem) clamp(7rem, 12vw, 9rem); }
@@ -684,3 +691,72 @@ body.editor main { display: flex; min-height: 0; }
   .comment[hidden] { display: grid !important; } /* süzgeç açık kalsa da hepsi yazdırılır */
   a[href]::after { content: none; }
 }
+
+/* ================================== GİRİŞ / KAYIT ==================================
+   Solda kobalt panel: dökülen bloklar, büyük amblem, slogan. Sağda fildişi zeminde form.
+   Telefonda panel üstte kısa bir bant olur; form hemen altında. */
+.auth main { display: flex; }
+.auth-shell { flex: 1; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; min-height: 100vh; min-height: 100svh; }
+@media (min-width: 900px) { .auth-shell { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
+
+.auth-art { position: relative; overflow: hidden; background: var(--blue); color: var(--on-blue);
+            display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "logo text";
+            align-items: end; gap: 1.4rem; padding: 4.2rem 1.25rem 1.6rem; }
+.auth-blocks { position: absolute; top: 0; left: 0; right: 0; pointer-events: none; }
+.auth-blocks .blocks { width: 100%; height: auto; display: block; }
+.auth-logo { grid-area: logo; position: relative; z-index: 1; width: 60px; display: grid; justify-items: center; gap: 1.4rem; color: var(--on-blue); text-decoration: none; }
+.auth-logo .hero-logo-inner { display: block; width: 100%; }
+.auth-word { display: none; font-weight: 500; font-size: clamp(1.1rem, 1.6vw, 1.5rem); letter-spacing: .32em; text-transform: uppercase; padding-left: .32em; }
+.auth-art-text { grid-area: text; position: relative; z-index: 1; display: grid; gap: 1rem; min-width: 0; }
+.auth-tagline { font-size: clamp(1.5rem, 6vw, 2.1rem); font-weight: 300; line-height: 1.02; letter-spacing: -.03em; }
+.auth-promises { display: none; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; gap: .55rem 1.5rem;
+                 font-family: var(--mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--on-blue-soft); }
+.auth-promises li::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--cyan); margin-right: .6rem; vertical-align: 1px; }
+@media (min-width: 900px) {
+  .auth-art { position: sticky; top: 0; height: 100vh; height: 100svh; padding: 2.5rem;
+              grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto; grid-template-areas: "logo" "text";
+              align-items: stretch; gap: 2rem; padding-top: calc(6vw + 2rem); }
+  .auth-logo { align-self: center; justify-self: center; width: clamp(170px, 19vw, 280px); }
+  .auth-word { display: block; }
+  .auth-tagline { font-size: clamp(2.4rem, 3.8vw, 3.8rem); }
+  .auth-promises { display: flex; }
+}
+.auth-art .hero-mark { color: #fff; }
+.auth-logo, .auth-art-text, .auth-body { animation: rise .9s cubic-bezier(.2, .7, .2, 1) both; }
+.auth-art-text { animation-delay: .12s; } .auth-body { animation-delay: .06s; }
+@media (prefers-reduced-motion: reduce) { .auth-logo, .auth-art-text, .auth-body { animation: none; } }
+
+.auth-panel { display: flex; flex-direction: column; gap: 2.2rem; padding: 1.1rem 1.25rem 1.4rem; min-width: 0; }
+@media (min-width: 900px) { .auth-panel { padding: 2.5rem clamp(2.5rem, 5vw, 5rem); } }
+.auth-top { display: flex; justify-content: space-between; align-items: center; gap: .8rem 1rem; flex-wrap: wrap; }
+.auth-back { font-size: .88rem; color: var(--muted); text-decoration: none; min-height: 36px; display: inline-flex; align-items: center; gap: .4rem; }
+.auth-back:hover { color: var(--ink); }
+.auth-tabs { display: inline-flex; gap: 2px; padding: 3px; border-radius: 4px; background: var(--ink); }
+.auth-tabs a { color: #fff; text-decoration: none; font-size: .85rem; padding: .45rem 1rem; border-radius: 3px; white-space: nowrap; }
+.auth-tabs a:hover { background: rgba(255, 255, 255, .12); }
+.auth-tabs a[aria-current="page"] { background: #fff; color: var(--ink); }
+.auth-tabs :focus-visible { outline-color: var(--cyan); }
+
+.auth-body { flex: 1; display: grid; align-content: center; gap: 1rem; width: 100%; max-width: 28rem; margin-inline: auto; }
+.auth-title { font-size: clamp(2.3rem, 4.2vw, 3.4rem); }
+.auth-lead { color: var(--muted); line-height: 1.6; }
+.auth-form { display: grid; gap: .7rem; margin-top: .8rem; }
+.auth-hint { font-size: .85rem; color: var(--muted); }
+.auth-submit { width: 100%; margin-top: .9rem; }
+.auth-submit .lbl { flex: 1; }
+.check { display: grid; grid-template-columns: auto 1fr; gap: .75rem; align-items: start; margin-top: .6rem; cursor: pointer;
+         font: 400 .9rem/1.5 var(--sans); letter-spacing: 0; text-transform: none; color: var(--ink); }
+.check input { width: 20px; height: 20px; margin: .1rem 0 0; accent-color: var(--blue); cursor: pointer; }
+.auth-steps { list-style: none; margin: 1rem 0 0; padding: 1.1rem 0 0; border-top: 1px solid var(--hair);
+              display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; font-size: .85rem; line-height: 1.35; }
+.auth-steps span { display: block; font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; color: var(--blue); margin-bottom: .3rem; }
+.auth-alt { font-size: .92rem; color: var(--muted); margin-top: .4rem; }
+.auth-foot { font-size: .8rem; color: var(--muted); text-align: center; }
+.auth-foot a { color: inherit; }
+
+/* Aydınlatma metni */
+.privacy { width: min(720px, calc(100% - 2.5rem)); }
+.privacy h2 { font-size: 1.35rem; font-weight: 400; margin-top: .8rem; }
+.privacy ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .6rem; line-height: 1.6; }
+.privacy p { line-height: 1.6; }
+.privacy .alert { color: var(--warning); border-left-color: var(--warning); }

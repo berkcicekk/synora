@@ -1,23 +1,20 @@
-{% extends "base.html" %}
+{% extends "auth_base.html" %}
 {% from "_marks.html" import arrow %}
 {% block title %}Giriş · Synora{% endblock %}
-{% block content %}
-<section class="section simple">
-  <div class="sheet-card">
-    {% if valid %}
-    <span class="eyebrow">Bağlantı doğrulandı</span>
-    <h1 class="page-title">Synora'ya hoş geldiniz.</h1>
-    <form method="post" action="/auth">
-      <input type="hidden" name="csrf" value="{{ csrf }}">
-      <input type="hidden" name="token" value="{{ token }}">
-      <button class="btn primary" type="submit"><span class="lbl">Giriş yap</span>{{ arrow() }}</button>
-    </form>
-    {% else %}
-    <span class="eyebrow">Geçersiz bağlantı</span>
-    <h1 class="page-title">Bağlantının süresi dolmuş.</h1>
-    <p>Bu giriş bağlantısı kullanılmış ya da süresi dolmuş.</p>
-    <div><a class="btn" href="/#giris"><span class="lbl">Yeni bağlantı iste</span>{{ arrow() }}</a></div>
-    {% endif %}
-  </div>
-</section>
+{% block auth_body %}
+{% if valid %}
+<span class="eyebrow">Bağlantı doğrulandı</span>
+<h1 class="auth-title">Synora'ya hoş geldiniz.</h1>
+<p class="auth-lead">Oturumu açmak için düğmeye basın.</p>
+<form method="post" action="/auth" class="auth-form">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <input type="hidden" name="token" value="{{ token }}">
+  <button class="btn primary auth-submit" type="submit"><span class="lbl">Giriş yap</span>{{ arrow() }}</button>
+</form>
+{% else %}
+<span class="eyebrow">Geçersiz bağlantı</span>
+<h1 class="auth-title">Bağlantının süresi dolmuş.</h1>
+<p class="auth-lead">Bu giriş bağlantısı kullanılmış ya da süresi dolmuş.</p>
+<div><a class="btn auth-submit" href="/giris"><span class="lbl">Yeni bağlantı iste</span>{{ arrow() }}</a></div>
+{% endif %}
 {% endblock %}

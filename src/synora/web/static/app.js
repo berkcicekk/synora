@@ -312,9 +312,9 @@
     fade();
   }
 
-  // Amblem, kahraman alanında imlecin yönüne hafifçe döner ve kayar.
-  const logo = document.querySelector("#hero-logo .hero-logo-inner");
-  const hero = document.querySelector(".hero");
+  // Amblem, kahraman alanında (ve giriş/kayıt panelinde) imlecin yönüne hafifçe döner ve kayar.
+  const logo = document.querySelector("#hero-logo .hero-logo-inner, #auth-logo .hero-logo-inner");
+  const hero = document.querySelector(".hero, .auth-art");
   if (logo && hero && !reduced && matchMedia("(hover: hover)").matches) {
     hero.addEventListener("mousemove", (e) => {
       const r = logo.getBoundingClientRect();

@@ -1,4 +1,4 @@
-"""SQLite deposu: giriş bağlantıları, oturumlar, işler.
+"""SQLite deposu: giriş bağlantıları, oturumlar, kullanıcı onayları, işler.
 
 Tez dosyası ASLA buraya yazılmaz (bellekte işlenir). Burada yalnızca e-posta, zaman
 damgaları ve metin içermeyen rapor (başlık yolu dahil) bulunur; saklama süresi dolunca silinir.
@@ -38,6 +38,12 @@ CREATE TABLE IF NOT EXISTS jobs (
     report TEXT
 );
 CREATE INDEX IF NOT EXISTS jobs_email ON jobs(email, created_at);
+CREATE TABLE IF NOT EXISTS users (
+    email TEXT PRIMARY KEY,
+    created_at REAL NOT NULL,
+    consent_version TEXT,
+    consent_at REAL
+);
 """
 
 
@@ -65,6 +71,10 @@ class Database:
         self._lock = threading.Lock()
         with self._lock:
             self._conn.executescript(SCHEMA)
+            token_columns = {row[1] for row in
+                             self._conn.execute("PRAGMA table_info(login_tokens)")}
+            if "consent" not in token_columns:
+                self._conn.execute("ALTER TABLE login_tokens ADD COLUMN consent TEXT")
             columns = {row[1] for row in self._conn.execute("PRAGMA table_info(jobs)")}
             if "source_sha256" not in columns:
                 self._conn.execute("ALTER TABLE jobs ADD COLUMN source_sha256 TEXT")
@@ -82,10 +92,13 @@ class Database:
 
     # --- Giriş bağlantıları -----------------------------------------------------------
 
-    def add_login_token(self, token_hash: str, email: str, ttl: float) -> None:
+    def add_login_token(self, token_hash: str, email: str, ttl: float,
+                        consent: str | None = None) -> None:
+        """consent: kayıtta onaylanan aydınlatma metni sürümü; bağlantı açılınca kaydedilir."""
         now = time.time()
-        self.execute("INSERT INTO login_tokens VALUES (?, ?, ?, ?, 0)",
-                     (token_hash, email, now, now + ttl))
+        self.execute("INSERT INTO login_tokens (token_hash, email, created_at, expires_at, used, "
+                     "consent) VALUES (?, ?, ?, ?, 0, ?)",
+                     (token_hash, email, now, now + ttl, consent))
 
     def login_requests_since(self, email: str, since: float) -> int:
         row = self.execute("SELECT COUNT(*) FROM login_tokens WHERE email=? AND created_at>=?",
@@ -96,18 +109,35 @@ class Database:
         """Bağlantıyı tek seferlik kullanır; geçerliyse e-postayı döndürür."""
         with self._lock:
             row = self._conn.execute(
-                "SELECT email, expires_at, used FROM login_tokens WHERE token_hash=?",
+                "SELECT email, expires_at, used, consent FROM login_tokens WHERE token_hash=?",
                 (token_hash,),
             ).fetchone()
-            if row is None or row[2] or row[1] < time.time():
+            now = time.time()
+            if row is None or row[2] or row[1] < now:
                 return None
             self._conn.execute("UPDATE login_tokens SET used=1 WHERE token_hash=?", (token_hash,))
+            # Onay yalnızca e-posta doğrulanınca yazılır: başkası adına kayıt onayı oluşmaz.
+            # Düz girişte kullanıcı satırı açılmaz (e-posta kalıcı olarak tutulmaz).
+            if row[3]:
+                self._conn.execute(
+                    "INSERT INTO users (email, created_at, consent_version, consent_at) "
+                    "VALUES (?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET "
+                    "consent_version=excluded.consent_version, consent_at=excluded.consent_at",
+                    (row[0], now, row[3], now))
             return str(row[0])
 
     def login_token_valid(self, token_hash: str) -> bool:
         row = self.execute("SELECT expires_at, used FROM login_tokens WHERE token_hash=?",
                            (token_hash,)).fetchone()
         return row is not None and not row[1] and row[0] >= time.time()
+
+    def user_consent(self, email: str) -> tuple[str, float] | None:
+        """Kullanıcının onayladığı aydınlatma metni sürümü ve zamanı; onay yoksa None."""
+        row = self.execute("SELECT consent_version, consent_at FROM users WHERE email=?",
+                           (email,)).fetchone()
+        if row is None or row[0] is None:
+            return None
+        return str(row[0]), float(row[1])
 
     # --- Oturumlar ------------------------------------------------------------------------
 

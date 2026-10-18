@@ -1,0 +1,50 @@
+{% extends "auth_base.html" %}
+{% from "_marks.html" import arrow %}
+{% set register = mode == "register" %}
+{% block title %}{% if register %}Kayıt ol{% else %}Giriş yap{% endif %} · Synora{% endblock %}
+{% block auth_switch %}
+<nav class="auth-tabs" aria-label="Hesap">
+  <a href="/giris" {% if not register %}aria-current="page"{% endif %}>Giriş yap</a>
+  <a href="/kayit" {% if register %}aria-current="page"{% endif %}>Kayıt ol</a>
+</nav>
+{% endblock %}
+{% block auth_body %}
+{% if register %}
+<span class="eyebrow">Yeni hesap</span>
+<h1 class="auth-title">Hesabınızı oluşturun.</h1>
+<p class="auth-lead">Üniversite e&#8209;postanız yeterli. Parola yok: adresinize tek kullanımlık bir
+   bağlantı gönderiyoruz, açtığınızda hesabınız hazır.</p>
+{% else %}
+<span class="eyebrow">Giriş</span>
+<h1 class="auth-title">Tekrar hoş geldiniz.</h1>
+<p class="auth-lead">Üniversite e&#8209;postanızı yazın; tek kullanımlık bir giriş bağlantısı
+   gönderelim. Parola gerekmez.</p>
+{% endif %}
+<form method="post" action="{{ '/kayit' if register else '/login' }}" class="auth-form">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
+  <label for="email">Üniversite e-postası</label>
+  <input id="email" name="email" type="email" required autocomplete="email"
+         {% if domains %}aria-describedby="email-hint"{% endif %}
+         placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
+  {% if domains %}<p class="auth-hint" id="email-hint">Kabul edilen adresler: {% for d in domains %}@{{ d }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+  {% if register %}
+  <label class="check" for="kvkk">
+    <input id="kvkk" name="kvkk" type="checkbox" value="1" required>
+    <span><a class="textlink" href="/aydinlatma">Aydınlatma metnini</a> okudum. Tezimin yalnızca biçim
+      denetimi için, metni okunmadan işlenmesini kabul ediyorum.</span>
+  </label>
+  {% endif %}
+  <button class="btn primary auth-submit" type="submit"><span class="lbl">{% if register %}Hesabı oluştur{% else %}Giriş bağlantısı gönder{% endif %}</span>{{ arrow() }}</button>
+</form>
+{% if register %}
+<ol class="auth-steps">
+  <li><span>01</span>E-postanızı yazın</li>
+  <li><span>02</span>Gelen bağlantıyı açın</li>
+  <li><span>03</span>Tezinizi yükleyin</li>
+</ol>
+<p class="auth-alt">Zaten hesabınız var mı? <a class="textlink" href="/giris">Giriş yapın</a></p>
+{% else %}
+<p class="auth-alt">Hesabınız yok mu? <a class="textlink" href="/kayit">Kayıt olun</a></p>
+{% endif %}
+{% endblock %}

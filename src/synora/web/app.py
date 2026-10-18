@@ -17,7 +17,7 @@ from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
@@ -40,6 +40,8 @@ from synora.web.worker import JobRunner
 HERE = Path(__file__).resolve().parent
 SESSION_COOKIE = "synora_session"
 PRE_CSRF_COOKIE = "synora_pre"
+# Kayıtta onaylanan aydınlatma metninin sürümü; metin değişince artırılır.
+TERMS_VERSION = "aydinlatma-taslak-2026-10"
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+\-]{1,64}@[A-Za-z0-9.\-]{1,190}\.[A-Za-z]{2,24}")
 JOB_ID_RE = re.compile(r"[A-Za-z0-9_\-]{16,64}")
 
@@ -357,11 +359,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     def home(request: Request) -> HTMLResponse:
         user = current_user(request)
         if user is None:
-            token = pre_csrf(request)
-            resp = render(request, "login.html", csrf=token, page=login_page, tiles=login_tiles,
-                          domains=settings.allowed_domains, error=None)
-            set_pre_csrf(resp, token)
-            return resp
+            return render(request, "login.html", page=login_page, tiles=login_tiles)
         jobs = db.recent_jobs(user.email)
         return render(request, "upload.html", user=user, active="docs", rulesets=ordered_rulesets,
                       ruleset_groups=ruleset_groups,
@@ -384,19 +382,22 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     def pricing(request: Request) -> HTMLResponse:
         return render(request, "pricing.html", user=current_user(request), active="pricing")
 
-    @app.post("/login", response_class=HTMLResponse)
-    async def login(request: Request) -> HTMLResponse:
+    def auth_form(request: Request, mode: Literal["login", "register"], status: int = 200,
+                  error: str | None = None, email: str = "") -> HTMLResponse:
+        token = pre_csrf(request)
+        resp = render(request, "auth.html", status=status, csrf=token, mode=mode,
+                      domains=settings.allowed_domains, error=error, email=email)
+        set_pre_csrf(resp, token)
+        return resp
+
+    async def send_link(request: Request, mode: Literal["login", "register"]) -> HTMLResponse:
+        """Giriş ve kayıt ortak akışı: denetimler, tek kullanımlık bağlantı, e-posta."""
         form = await request.form()
         check_csrf(request.cookies.get(PRE_CSRF_COOKIE, ""), str(form.get("csrf", "")))
         email = str(form.get("email", "")).strip().lower()
-        token = pre_csrf(request)
 
         def fail(msg: str) -> HTMLResponse:
-            resp = render(request, "login.html", status=400, csrf=token, page=login_page,
-                          tiles=login_tiles, domains=settings.allowed_domains, error=msg,
-                          email=email)
-            set_pre_csrf(resp, token)
-            return resp
+            return auth_form(request, mode, status=400, error=msg, email=email)
 
         if not EMAIL_RE.fullmatch(email):
             return fail("Geçerli bir e-posta adresi yazın.")
@@ -404,13 +405,46 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return fail(
                 "Pilot süresince yalnızca üniversite e-posta adresleriyle giriş yapılabilir."
             )
+        consent = None
+        if mode == "register":
+            if form.get("kvkk") != "1":
+                return fail("Devam etmek için aydınlatma metnini onaylayın.")
+            consent = TERMS_VERSION
         if db.login_requests_since(email, time.time() - 3600) >= settings.login_requests_per_hour:
             return fail("Çok fazla giriş isteği gönderildi. Bir saat sonra yeniden deneyin.")
         login_token = secrets.token_urlsafe(32)
-        db.add_login_token(_hash(login_token), email, settings.login_token_minutes * 60)
+        db.add_login_token(_hash(login_token), email, settings.login_token_minutes * 60,
+                           consent=consent)
         mailer.send_login_link(email, f"{settings.base_url}/auth?token={login_token}")
-        return render(request, "login_sent.html", email=email,
+        return render(request, "login_sent.html", email=email, mode=mode,
                       minutes=int(settings.login_token_minutes))
+
+    @app.get("/giris", response_class=HTMLResponse)
+    def login_page_view(request: Request) -> Response:
+        if current_user(request) is not None:
+            return RedirectResponse("/", status_code=303)
+        return auth_form(request, "login")
+
+    @app.get("/kayit", response_class=HTMLResponse)
+    def register_page(request: Request) -> Response:
+        if current_user(request) is not None:
+            return RedirectResponse("/", status_code=303)
+        return auth_form(request, "register")
+
+    @app.get("/aydinlatma", response_class=HTMLResponse)
+    def privacy_notice(request: Request) -> HTMLResponse:
+        return render(request, "privacy.html", user=current_user(request),
+                      retention=int(settings.retention_hours),
+                      session_hours=int(settings.session_hours),
+                      link_minutes=int(settings.login_token_minutes), version=TERMS_VERSION)
+
+    @app.post("/login", response_class=HTMLResponse)
+    async def login(request: Request) -> HTMLResponse:
+        return await send_link(request, "login")
+
+    @app.post("/kayit", response_class=HTMLResponse)
+    async def register(request: Request) -> HTMLResponse:
+        return await send_link(request, "register")
 
     @app.get("/auth", response_class=HTMLResponse)
     def auth_confirm(request: Request, token: str = "") -> HTMLResponse:
