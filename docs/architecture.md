@@ -52,6 +52,7 @@ Kapsam dışı: yazım/dil denetimi, intihal, içerik önerisi, kaynakça içeri
 | A9 | Web API | `synora.web` | Dosya yükleme, iş oluşturma, rapor/çıktı indirme, oturum (FastAPI) | ✅ |
 | A10 | İş yürütücü | `synora.worker` | Kuyruktaki işi izole süreçte çalıştırır (zaman/bellek sınırı), saklama süresi dolanları siler | ✅ |
 | A11 | Arayüz | `web/` | Yükle → ilerleme → rapor → indir akışı; marka kitine uygun, mobil uyumlu, erişilebilir | |
+| A12 | LaTeX şablonu | `synora.latex` | Kural setinden Overleaf'e yüklenebilir tez şablonu (.cls + örnek tez); derleme yok | |
 
 \* Hassas modüllerde (A1, A2, A5, A9, A10) kod yazmadan önce plan sunulur ve onay beklenir (bkz. `CLAUDE.md`).
 
@@ -245,6 +246,23 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
   (ileride enstitünün SSO sistemi).
 - Web'e özel ek sınırlar: kullanıcı başına eşzamanlı iş ≤ 2, günlük iş ≤ 20, CSRF koruması, yükleme yalnızca
   `.docx` uzantısı + içerik doğrulaması (A1).
+
+## 10a. LaTeX şablonu (A12)
+
+LaTeX ile yazan öğrenciler için Synora **denetim yapmaz**, kural setinden biçimi hazır ayarlanmış bir
+şablon üretir: `synora-<kural seti>.cls`, örnek `tez.tex`, `kaynaklar.bib`, `BENIOKU.md` (kural → LaTeX
+eşlemesi ve LaTeX'in kendiliğinden uygulayamadığı kurallar).
+
+- Girdi yalnızca doğrulanmış `Ruleset`; kullanıcı dosyası alınmaz, sunucuda TeX derlenmez. Bu yüzden
+  yeni bir saldırı yüzeyi ve tez metni söz konusu değildir.
+- Kılavuz tek kaynakta: YAML değişince hem .docx denetimi hem şablon değişir.
+- Çıktı deterministik (sabit zaman damgalı .zip). Yalnızca TeX Live'daki standart paketler kullanılır
+  (testle zorlanır); pdfLaTeX (Times benzeri newtx) ve XeLaTeX (gerçek yazı tipi) desteklenir.
+- Yazı tipi adı LaTeX'e yazılmadan önce beyaz listeyle süzülür; üretilen dosyalarda `\input`,
+  `\write18` gibi dosya/kabuk komutları bulunmaz (testle zorlanır).
+- Web: `GET /sablon/<id>/latex.zip` (girişsiz; şablonlar başlangıçta üretilir). CLI:
+  `synora latex -r <kural seti> -o <klasör|.zip>`.
+- Kapsam dışı: `.tex` ya da PDF denetimi, sunucuda derleme.
 
 ## 11. Test stratejisi
 

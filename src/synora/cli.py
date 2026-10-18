@@ -77,6 +77,43 @@ def check_command(
     raise typer.Exit(1 if has_errors else 0)
 
 
+@app.command("latex")
+def latex_command(
+    ruleset: Annotated[Path, typer.Option("--ruleset", "-r", exists=True, dir_okay=False)],
+    output: Annotated[
+        Path, typer.Option("--output", "-o", help="Klasör ya da .zip dosyası")
+    ],
+    force: Annotated[bool, typer.Option("--force", help="Var olan dosyaların üzerine yaz")] = False,
+) -> None:
+    """Kural setinden LaTeX tez şablonu üretir (Overleaf'e yüklenebilir)."""
+    from synora.latex import build_template, build_zip
+
+    try:
+        rules = load_ruleset(ruleset)
+    except (ValidationError, yaml.YAMLError, OSError, ValueError) as exc:
+        typer.echo(f"Kural seti okunamadı: {type(exc).__name__}", err=True)
+        raise typer.Exit(2) from None
+
+    if output.suffix.lower() == ".zip":
+        targets = [output]
+    else:
+        files = build_template(rules).files
+        targets = [output / name for name in files]
+    existing = [t for t in targets if t.exists()]
+    if existing and not force:
+        typer.echo(f"Dosya zaten var: {existing[0]} (üzerine yazmak için --force)", err=True)
+        raise typer.Exit(2)
+
+    if output.suffix.lower() == ".zip":
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(build_zip(rules))
+    else:
+        output.mkdir(parents=True, exist_ok=True)
+        for name, content in files.items():
+            (output / name).write_text(content, encoding="utf-8", newline="\n")
+    typer.echo(f"LaTeX şablonu yazıldı: {output}")
+
+
 @app.command("serve")
 def serve_command(
     host: Annotated[str, typer.Option(help="Dinlenecek adres")] = "127.0.0.1",

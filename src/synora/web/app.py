@@ -28,6 +28,7 @@ from pydantic import ValidationError
 
 from synora.check import USER_ROLES
 from synora.errors import ErrorCode
+from synora.latex import build_zip
 from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message
 from synora.ruleset import Ruleset, load_ruleset
 from synora.web.db import Database, Job
@@ -219,6 +220,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         page_spec(ordered_rulesets[0].rules) if ordered_rulesets else None
     )
     login_tiles: list[RuleTile] = rule_tiles(ordered_rulesets[0].rules) if ordered_rulesets else []
+    # LaTeX şablonları başlangıçta bir kez üretilir (kural setinden; kullanıcı girdisi yok).
+    latex_zips = {r.id: build_zip(r.rules) for r in rulesets.values()}
     templates = Jinja2Templates(directory=str(HERE / "templates"))
     templates.env.filters["when"] = format_when
     templates.env.filters["date_tr"] = format_date
@@ -323,6 +326,15 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         return render(request, "upload.html", user=user, active="docs", rulesets=ordered_rulesets,
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
+
+    @app.get("/sablon/{ruleset_id}/latex.zip")
+    def latex_template(ruleset_id: str) -> Response:
+        data = latex_zips.get(ruleset_id)
+        if data is None:
+            raise HTTPException(404)
+        name = f"synora-{ruleset_id}-latex.zip"
+        return Response(data, media_type="application/zip",
+                        headers={"Content-Disposition": f'attachment; filename="{name}"'})
 
     @app.get("/fiyatlandirma", response_class=HTMLResponse)
     def pricing(request: Request) -> HTMLResponse:

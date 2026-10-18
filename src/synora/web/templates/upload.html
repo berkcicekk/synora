@@ -56,6 +56,18 @@
         <li>İzlenen değişiklikler varsa önce kabul edin ya da reddedin; rapor bunları ayrıca uyarır.</li>
       </ul>
     </details>
+    {% if rulesets %}
+    <details class="prep latex">
+      <summary>LaTeX ile mi yazıyorsunuz?</summary>
+      <p>Synora Word belgelerini denetler. LaTeX kullanıyorsanız kılavuzun biçim kuralları (kâğıt, kenar boşlukları, yazı tipi, satır aralığı, başlıklar, sayfa numaraları) hazır ayarlanmış şablonu indirin. Overleaf'te <em>New Project › Upload Project</em> ile açabilirsiniz.</p>
+      <ul>
+        {% for r in rulesets %}
+        <li><a class="textlink" href="/sablon/{{ r.id }}/latex.zip" download>{{ r.name }} · LaTeX şablonu (.zip)</a></li>
+        {% endfor %}
+      </ul>
+      <p class="latex-note">Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.</p>
+    </details>
+    {% endif %}
   </form>
 
   <aside class="history" aria-labelledby="gecmis">

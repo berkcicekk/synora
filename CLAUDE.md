@@ -21,6 +21,7 @@ Arayüz: Synora marka kiti (https://claude.ai/artifact/Bg7bwS9wQZqqiyaEWTHzMK) d
 - CLI: `uv run synora check <docx> --ruleset rulesets/example.yaml [--format json]`
 - Web (geliştirme): `uv run synora serve --dev` → giriş bağlantısı konsola yazılır
 - Demo: `uv run python scripts/demo.py`
+- LaTeX şablonu: `uv run synora latex -r rulesets/zbeu-tip.yaml -o sablon.zip`
 - `uv` PATH'te değilse: `python -m uv run ...`
 
 ## Çalışma biçimi

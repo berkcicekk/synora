@@ -452,6 +452,8 @@ input::placeholder { color: #707482; }
 .prep[open] summary::before { transform: rotate(45deg); }
 .prep ul { margin: .2rem 0 0; padding-left: 1.1rem; display: grid; gap: .4rem; color: var(--muted); line-height: 1.5; }
 .prep strong, .prep em { color: var(--ink); }
+.prep p { margin: .2rem 0 .6rem; color: var(--muted); line-height: 1.5; }
+.prep .latex-note { margin: .7rem 0 0; font-size: .8rem; }
 
 /* --- Hata sayfaları: ne yapabilirsiniz --- */
 .help-box { background: var(--paper); border-left: 3px solid var(--blue); padding: .9rem 1rem; display: grid; gap: .5rem; }
