@@ -1,0 +1,36 @@
+# /etc/systemd/system/synora.service
+# Tek süreç çalışmalı: iki örnek aynı veritabanında birbirinin işlerini "yarıda kaldı" sayar.
+[Unit]
+Description=Synora tez biçim denetimi
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=synora
+Group=synora
+WorkingDirectory=/opt/synora
+EnvironmentFile=/etc/synora/synora.env
+ExecStart=/opt/synora/.venv/bin/synora serve --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+
+# İkinci kat sınır: her iş zaten ayrı süreçte 2 GB / 120 sn ile sınırlı (A10).
+MemoryMax=6G
+TasksMax=128
+
+# Sertleştirme: yalnızca veritabanı dizinine yazabilir; tez dosyası diske hiç yazılmaz.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/synora
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

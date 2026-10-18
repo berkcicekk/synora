@@ -1,0 +1,40 @@
+# Synora'yı sunucuya kurmak
+
+Hedef: Türkiye'de barındırılan bir **Linux** sunucu (Ubuntu 24.04 / Debian 12). Windows üretim için
+uygun değildir: iş yürütücüsünün bellek ve CPU sınırları (A10) yalnızca Linux'ta çalışır.
+
+## Dosyalar
+
+| Dosya | Nereye |
+|---|---|
+| `synora.env.example` | `/etc/synora/synora.env` (izin 600) — tüm ayarlar |
+| `synora.service` | `/etc/systemd/system/synora.service` |
+| `nginx-synora.conf` | `/etc/nginx/sites-available/synora` (+ içindeki `synora_proxy.conf`) |
+
+## Kurulum
+
+```sh
+sudo useradd --system --home /opt/synora --shell /usr/sbin/nologin synora
+sudo mkdir -p /opt/synora /var/lib/synora /etc/synora
+sudo chown synora:synora /var/lib/synora && sudo chmod 700 /var/lib/synora
+# Kodu /opt/synora'ya alın (git clone ya da arşiv), sonra:
+cd /opt/synora && sudo -u synora uv sync --no-dev --frozen
+sudo cp deploy/synora.env.example /etc/synora/synora.env && sudo chmod 600 /etc/synora/synora.env
+sudo cp deploy/synora.service /etc/systemd/system/ && sudo systemctl daemon-reload
+sudo systemctl enable --now synora
+curl -s http://127.0.0.1:8000/health
+```
+
+## Kurallar
+
+- **Tek süreç.** `synora serve` tek uvicorn süreci çalıştırır; ikinci bir örnek aynı veritabanını
+  kullanırsa birbirinin işlerini "yarıda kaldı" diye kapatır. Ölçeklemek için `SYNORA_WORKERS` artırılır.
+- **Tez diske yazılmaz.** nginx'te `proxy_request_buffering off` zorunludur; açık kalırsa nginx yüklenen
+  dosyayı geçici dosyaya yazar. Uygulama dosyayı bellekte işler.
+- **Kayıtlar.** Uygulama olayları (`job.done`, `retention.purged`…) standart çıktıya JSON olarak yazılır,
+  `journalctl -u synora` ile okunur; tez metni içermez. Üretimde uvicorn erişim kaydı kapalıdır, nginx
+  erişim kaydı sorgu dizesini yazmaz (giriş bağlantısı sızmasın).
+- **Yedek.** Veritabanında kalıcı olan yalnızca kayıt onaylarıdır (`users` tablosu). İşler ve raporlar
+  24 saatte silinir; yedekler bu silmeyi geri getirmemeli. Yedekleme politikası `[KARAR?]`.
+- **SMTP.** Giriş bağlantıları için gerçek bir SMTP hesabı gerekir (sağlayıcı `[KARAR?]`); kurulumdan
+  sonra kendi adresinize giriş bağlantısı isteyerek deneyin.
