@@ -298,10 +298,6 @@ def test_daily_job_limit(client: TestClient, mailer: ConsoleMailer, settings: Se
     assert "Günlük" in res.json()["error"]
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "Günlük sınır silinmemiş işleri sayıyor; öğrenci raporu silip yeniden yükleyerek "
-    "sınırı aşabilir. "
-    "Öneri: ONERILER Ö5 (sayacı iş kaydından bağımsız tut)."))
 def test_daily_job_limit_survives_deleting_reports(client: TestClient, mailer: ConsoleMailer,
                                                    settings: Settings) -> None:
     csrf = login(client, mailer)
@@ -313,6 +309,20 @@ def test_daily_job_limit_survives_deleting_reports(client: TestClient, mailer: C
     res = client.post("/jobs", content=thesis(), headers={"X-CSRF-Token": csrf,
                                                           "X-Ruleset": "example"})
     assert res.status_code == 429
+
+
+def test_daily_counter_is_purged_after_a_day(tmp_path: Path) -> None:
+    from synora.web.db import Database
+
+    db = Database(tmp_path / "g.db")
+    db.add_job("gunluk-is-0000000001", EMAIL, "example")
+    db.delete_job("gunluk-is-0000000001")
+    assert db.jobs_since(EMAIL, time.time() - 86400) == 1  # silmek sayacı düşürmez (Ö5)
+    db.execute("UPDATE job_starts SET created_at = created_at - 90000")
+    db.purge(retention_seconds=86400)
+    assert db.execute("SELECT COUNT(*) FROM job_starts").fetchone()[0] == 0
+    # Sayaçta e-posta değil yalnızca özeti tutulur.
+    assert EMAIL.encode() not in (tmp_path / "g.db").read_bytes()
 
 
 def test_output_respects_concurrency_limit(client: TestClient, mailer: ConsoleMailer,

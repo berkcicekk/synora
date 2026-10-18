@@ -7,6 +7,7 @@ Gizli değerler (giriş bağlantısı, oturum kimliği) yalnızca SHA-256 özeti
 
 from __future__ import annotations
 
+import hashlib
 import sqlite3
 import threading
 import time
@@ -39,6 +40,12 @@ CREATE TABLE IF NOT EXISTS jobs (
     report TEXT
 );
 CREATE INDEX IF NOT EXISTS jobs_email ON jobs(email, created_at);
+-- Günlük iş sınırı sayacı: iş/rapor silinse de düşmez (ONERILER Ö5). E-posta yerine özeti.
+CREATE TABLE IF NOT EXISTS job_starts (
+    email_hash TEXT NOT NULL,
+    created_at REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS job_starts_email ON job_starts(email_hash, created_at);
 CREATE TABLE IF NOT EXISTS users (
     email TEXT PRIMARY KEY,
     created_at REAL NOT NULL,
@@ -46,6 +53,10 @@ CREATE TABLE IF NOT EXISTS users (
     consent_at REAL
 );
 """
+
+
+def _email_hash(email: str) -> str:
+    return hashlib.sha256(email.encode("utf-8")).hexdigest()
 
 
 class Rows(list[tuple[Any, ...]]):
@@ -180,8 +191,11 @@ class Database:
     # --- İşler ----------------------------------------------------------------------------
 
     def add_job(self, job_id: str, email: str, ruleset: str) -> None:
-        self.execute("INSERT INTO jobs (id, email, ruleset, status, created_at) "
-                     "VALUES (?, ?, ?, 'queued', ?)", (job_id, email, ruleset, time.time()))
+        now = time.time()
+        with self._lock:
+            self._conn.execute("INSERT INTO jobs (id, email, ruleset, status, created_at) "
+                               "VALUES (?, ?, ?, 'queued', ?)", (job_id, email, ruleset, now))
+            self._conn.execute("INSERT INTO job_starts VALUES (?, ?)", (_email_hash(email), now))
 
     def set_running(self, job_id: str) -> None:
         self.execute("UPDATE jobs SET status='running' WHERE id=?", (job_id,))
@@ -215,8 +229,8 @@ class Database:
         return int(row[0])
 
     def jobs_since(self, email: str, since: float) -> int:
-        row = self.execute("SELECT COUNT(*) FROM jobs WHERE email=? AND created_at>=?",
-                           (email, since)).fetchone()
+        row = self.execute("SELECT COUNT(*) FROM job_starts WHERE email_hash=? AND created_at>=?",
+                           (_email_hash(email), since)).fetchone()
         return int(row[0])
 
     def delete_job(self, job_id: str) -> None:
@@ -231,6 +245,7 @@ class Database:
                                      (now - retention_seconds,))
             self._conn.execute("DELETE FROM sessions WHERE expires_at < ?", (now,))
             self._conn.execute("DELETE FROM login_tokens WHERE expires_at < ?", (now - 3600,))
+            self._conn.execute("DELETE FROM job_starts WHERE created_at < ?", (now - 86400,))
             # Silinen raporlar WAL dosyasında kalmasın: ana dosyaya işle (secure_delete sıfırlar)
             # ve WAL'ı boşalt.
             self._conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
