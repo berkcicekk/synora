@@ -30,9 +30,11 @@ def register(client: TestClient, email: str = EMAIL, kvkk: bool = True) -> int:
 
 
 def confirm(client: TestClient, mailer: ConsoleMailer) -> None:
+    # Kayıt bağlantısında onay kutusunu adres sahibi onay sayfasında işaretler.
     token = mailer.sent[-1][1].split("token=")[1]
     csrf = csrf_from(client.get(f"/auth?token={token}").text)
-    res = client.post("/auth", data={"token": token, "csrf": csrf}, follow_redirects=False)
+    res = client.post("/auth", data={"token": token, "csrf": csrf, "kvkk": "1"},
+                      follow_redirects=False)
     assert res.status_code == 303
 
 
@@ -176,6 +178,6 @@ def test_existing_database_gains_consent_columns(tmp_path: Path) -> None:
     assert db.consume_login_token("h") == "a@beun.edu.tr"
     assert db.user_consent("a@beun.edu.tr") is None
     db.add_login_token("h2", "a@beun.edu.tr", 60, consent="v1")
-    assert db.consume_login_token("h2") == "a@beun.edu.tr"
+    assert db.consume_login_token("h2", consent_confirmed=True) == "a@beun.edu.tr"
     found = db.user_consent("a@beun.edu.tr")
     assert found is not None and found[0] == "v1"

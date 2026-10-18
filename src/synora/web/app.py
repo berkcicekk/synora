@@ -312,7 +312,12 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     async def security_headers(
         request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
+        except Exception as exc:
+            # Burada yakalanır ki ServerErrorMiddleware yeniden fırlatıp ayrıntılı iz kaydı
+            # (olası tez içeriğiyle) yazmasın; sayfa da güvenlik başlıklarını alsın.
+            response = server_error_page(request, exc)
         h = response.headers
         h["Content-Security-Policy"] = CSP
         h["X-Content-Type-Options"] = "nosniff"
@@ -377,9 +382,13 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     # değişir, kontrol ile artırma arasında await olmadığından yarış yoktur (ONERILER Ö6).
     outputs_running: dict[str, int] = {}
 
-    def check_job_limits(email: str) -> None:
+    def check_active(email: str) -> None:
         if db.active_jobs(email) + outputs_running.get(email, 0) >= settings.max_active_jobs:
             raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+
+    def check_job_limits(email: str) -> None:
+        """Yeni yükleme: eşzamanlı ve günlük sınır (kopya ve yeniden denetim günlük sayılmaz)."""
+        check_active(email)
         if db.jobs_since(email, time.time() - 86400) >= settings.max_daily_jobs:
             raise HTTPException(429, "Günlük denetim sınırına ulaştınız. Yarın yeniden deneyin.")
 
@@ -526,9 +535,16 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     def auth_confirm(request: Request, token: str = "") -> HTMLResponse:
         # E-posta tarayıcıları bağlantıyı önceden açabilir: GET bağlantıyı tüketmez.
         valid = bool(token) and db.login_token_valid(_hash(token))
+        return confirm_page(request, token if valid else "", valid=valid)
+
+    def confirm_page(request: Request, token: str, valid: bool, error: str | None = None,
+                     status: int | None = None) -> HTMLResponse:
         csrf = pre_csrf(request)
-        resp = render(request, "auth_confirm.html", status=200 if valid else 400,
-                      token=token if valid else "", csrf=csrf, valid=valid)
+        # Kayıt bağlantısı: formu başkası doldurmuş olabilir; onay kutusunu adres sahibi işaretler.
+        needs_consent = valid and db.login_token_consent(_hash(token)) is not None
+        resp = render(request, "auth_confirm.html", status=status or (200 if valid else 400),
+                      token=token, csrf=csrf, valid=valid, needs_consent=needs_consent,
+                      error=error)
         set_pre_csrf(resp, csrf)
         return resp
 
@@ -536,7 +552,12 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     async def auth(request: Request) -> Response:
         form = await small_form(request)
         check_csrf(request.cookies.get(PRE_CSRF_COOKIE, ""), str(form.get("csrf", "")))
-        email = db.consume_login_token(_hash(str(form.get("token", ""))))
+        token = str(form.get("token", ""))
+        if db.login_token_valid(_hash(token)) and db.login_token_consent(_hash(token)) and \
+                form.get("kvkk") != "1":
+            return confirm_page(request, token, valid=True, status=400,
+                                error="Devam etmek için aydınlatma metnini onaylayın.")
+        email = db.consume_login_token(_hash(token), consent_confirmed=form.get("kvkk") == "1")
         if email is None:
             return RedirectResponse("/auth", status_code=303)
         sid = secrets.token_urlsafe(32)
@@ -683,12 +704,12 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         ruleset = rulesets.get(job.ruleset)
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim yeniden çalıştırılamıyor.")
-        check_job_limits(user.email)
+        check_active(user.email)
         data = await same_file(request, job.source_sha256)
         job = own_job(user, job_id)  # beklerken başka bir istek yeniden kuyruğa almış olabilir
         if job.status != "done" or not job.report:
             raise HTTPException(409, "Bu denetim zaten yeniden denetleniyor.")
-        check_job_limits(user.email)
+        check_active(user.email)
         check_queue()
         roles = pending_roles(job, json.loads(job.report))
         db.requeue(job_id)
@@ -708,7 +729,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         ruleset = rulesets.get(job.ruleset)
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim için kopya üretilemiyor.")
-        check_job_limits(user.email)
+        check_active(user.email)
         if sum(outputs_running.values()) >= settings.workers:
             raise HTTPException(503, SERVER_BUSY)
         outputs_running[user.email] = outputs_running.get(user.email, 0) + 1
@@ -760,17 +781,18 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if api_request(request):
             message = (JSON_ERRORS.get(code, "İstek tamamlanamadı. Yeniden deneyin.")
                        if generic or code in (401, 403) else exc.detail)
-            return JSONResponse({"error": message}, status_code=code)
+            return JSONResponse({"error": message}, status_code=code, headers=exc.headers)
         if code == 401:
             return RedirectResponse("/", status_code=303)
         messages = {403: "Oturum doğrulaması başarısız. Sayfayı yenileyip yeniden deneyin.",
                     404: "Aradığınız sayfa bulunamadı ya da süresi doldu.",
                     405: "Bu adres bu şekilde açılamaz."}
-        return render(request, "error.html", status=code, user=current_user(request),
+        resp = render(request, "error.html", status=code, user=current_user(request),
                       message=messages.get(code, str(exc.detail)))
+        resp.headers.update(exc.headers or {})  # ör. 405 için Allow
+        return resp
 
-    @app.exception_handler(Exception)
-    async def server_error(request: Request, exc: Exception) -> Response:
+    def server_error_page(request: Request, exc: Exception) -> Response:
         # Ayrıntı (ve olası tez içeriği) kullanıcıya ya da kayda gitmez; yalnızca hata türü.
         log_event("http.error", code=type(exc).__name__)
         message = "Beklenmeyen bir hata oluştu. Birkaç saniye sonra yeniden deneyin."

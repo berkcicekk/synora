@@ -135,8 +135,18 @@ class Database:
                            (email, since)).fetchone()
         return int(row[0])
 
-    def consume_login_token(self, token_hash: str) -> str | None:
-        """Bağlantıyı tek seferlik kullanır; geçerliyse e-postayı döndürür."""
+    def login_token_consent(self, token_hash: str) -> str | None:
+        """Kayıt bağlantısıysa onaylanacak aydınlatma metni sürümü."""
+        row = self.execute("SELECT consent FROM login_tokens WHERE token_hash=?",
+                           (token_hash,)).fetchone()
+        return None if row is None or row[0] is None else str(row[0])
+
+    def consume_login_token(self, token_hash: str, consent_confirmed: bool = False) -> str | None:
+        """Bağlantıyı tek seferlik kullanır; geçerliyse e-postayı döndürür.
+
+        Onay yalnızca kayıt bağlantısında ve adres sahibi onay sayfasında kutuyu işaretlediyse
+        yazılır (kayıt formunu başkası doldurmuş olabilir).
+        """
         with self._lock:
             row = self._conn.execute(
                 "SELECT email, expires_at, used, consent FROM login_tokens WHERE token_hash=?",
@@ -146,9 +156,8 @@ class Database:
             if row is None or row[2] or row[1] < now:
                 return None
             self._conn.execute("UPDATE login_tokens SET used=1 WHERE token_hash=?", (token_hash,))
-            # Onay yalnızca e-posta doğrulanınca yazılır: başkası adına kayıt onayı oluşmaz.
             # Düz girişte kullanıcı satırı açılmaz (e-posta kalıcı olarak tutulmaz).
-            if row[3]:
+            if row[3] and consent_confirmed:
                 self._conn.execute(
                     "INSERT INTO users (email, created_at, consent_version, consent_at) "
                     "VALUES (?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET "

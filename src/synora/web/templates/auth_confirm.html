@@ -9,6 +9,14 @@
 <form method="post" action="/auth" class="auth-form">
   <input type="hidden" name="csrf" value="{{ csrf }}">
   <input type="hidden" name="token" value="{{ token }}">
+  {% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
+  {% if needs_consent %}
+  <label class="check" for="kvkk">
+    <input id="kvkk" name="kvkk" type="checkbox" value="1" required>
+    <span><a class="textlink" href="/aydinlatma" target="_blank" rel="noopener">Aydınlatma metnini</a> okudum.
+      Tezimin yalnızca biçim denetimi için, metni okunmadan işlenmesini kabul ediyorum.</span>
+  </label>
+  {% endif %}
   <button class="btn primary auth-submit" type="submit"><span class="lbl">Giriş yap</span>{{ arrow() }}</button>
 </form>
 {% else %}
