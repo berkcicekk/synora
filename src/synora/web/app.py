@@ -250,6 +250,9 @@ def _role_name(role: str | None) -> str:
 
 def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -> FastAPI:
     settings = settings or Settings.from_env()
+    problems = settings.problems()
+    if problems:
+        raise RuntimeError("Üretim ayarları eksik ya da güvensiz: " + "; ".join(problems))
     db = Database(settings.db_path)
     mailer = mailer or make_mailer(settings)
     runner = JobRunner(db, settings)

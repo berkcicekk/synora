@@ -50,6 +50,9 @@ class SmtpMailer:
 
 
 def make_mailer(settings: Settings) -> Mailer:
-    if settings.dev or not settings.smtp_host:
+    if settings.dev:
         return ConsoleMailer()
+    if not settings.smtp_host:
+        # Konsola düşmek canlı giriş bağlantısını sunucu kaydına yazardı.
+        raise RuntimeError("SYNORA_SMTP_HOST tanımlı değil: üretimde e-posta gönderilemez")
     return SmtpMailer(settings)

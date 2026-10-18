@@ -43,6 +43,25 @@ class Settings:
     def secure_cookies(self) -> bool:
         return not self.dev
 
+    def problems(self) -> list[str]:
+        """Üretimde (dev=False) başlamayı engelleyen eksik ya da güvensiz ayarlar."""
+        if self.dev:
+            return []
+        found = []
+        if not self.base_url.startswith("https://"):
+            found.append("SYNORA_BASE_URL https:// ile başlamalı (Secure çerezler ve "
+                         "giriş bağlantıları için)")
+        if not self.smtp_host:
+            found.append("SYNORA_SMTP_HOST boş: giriş bağlantıları gönderilemez")
+        if self.smtp_from.endswith(".local>") or self.smtp_from.endswith(".local"):
+            found.append("SYNORA_SMTP_FROM gerçek bir gönderici adresi olmalı")
+        if not self.allowed_domains:
+            found.append("SYNORA_ALLOWED_DOMAINS boş: herkes giriş yapabilirdi")
+        if not (self.rulesets_dir / f"{self.default_ruleset}.yaml").is_file():
+            found.append(f"SYNORA_DEFAULT_RULESET bulunamadı: {self.default_ruleset} "
+                         f"({self.rulesets_dir})")
+        return found
+
     @classmethod
     def from_env(cls) -> Settings:
         raw_domains = _env("ALLOWED_DOMAINS", "").split(",")

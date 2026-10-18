@@ -127,6 +127,9 @@ def serve_command(
 
     import uvicorn
 
+    if not dev and os.environ.get("SYNORA_DEV") == "1":
+        typer.echo("SYNORA_DEV=1 üretimde kullanılamaz; geliştirme için --dev verin.", err=True)
+        raise typer.Exit(2)
     if dev:
         os.environ.setdefault("SYNORA_DEV", "1")
         os.environ.setdefault("SYNORA_BASE_URL", f"http://{host}:{port}")

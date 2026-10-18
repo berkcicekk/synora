@@ -238,7 +238,8 @@ def prod_client(tmp_path: Path, mailer: ConsoleMailer) -> Iterator[TestClient]:
     root = Path(__file__).resolve().parents[2]
     s = Settings(db_path=tmp_path / "p.db", rulesets_dir=root / "rulesets",
                  base_url="https://testserver", allowed_domains=("beun.edu.tr",), dev=False,
-                 isolate_jobs=False, workers=1)
+                 isolate_jobs=False, workers=1, smtp_host="smtp.example.edu.tr",
+                 smtp_from="Synora <synora@example.edu.tr>")
     with TestClient(create_app(s, mailer), base_url="https://testserver") as c:
         yield c
 
