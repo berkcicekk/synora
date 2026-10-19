@@ -112,3 +112,28 @@ Bağımlılık önerileri de burada.
 - **Risk:** Çok düşük; sonuçlar zaten küçük (tek iş / sayaç / son 10 iş).
 - **Ek (Ö3):** `http_error` hata sayfasını `user` olmadan çiziyor; giriş yapmış kullanıcı üst menüde
   "Giriş yap" görüyor. `render(..., user=current_user(request))` eklenmeli.
+
+## Ö10 — İki üniversitenin resmi şablonu customXml yüzünden tümden reddediliyor (A1)
+> **Durum (2026-10-20): açık — kullanıcı kod değişikliğini şimdilik erteledi.**
+- **Gözlem:** 40 resmi enstitü şablonuyla çapraz doğrulamada Bingöl FBE ve Fırat FBE şablonları
+  `XML_MALFORMED` ile reddedildi. Neden: `customXml/item*.xml` içindeki `xmlns="Fırat
+  Üniversitesi-FBE"` geçerli bir URI değil; Word hoş görüyor, lxml katı modda reddediyor.
+  Synora bu part'ı hiç okumuyor. Bu şablonla yazılmış her öğrenci tezi de reddedilir.
+- **Öneri:** Synora'nın okuduğu part'lar (hikâye part'ları, styles, numbering, theme, content
+  types, rels) için katı `xmlsafe.parse` aynen kalsın; hiç okunmayan part'lar yalnızca bayt
+  düzeyi süzgeçlerden geçsin (DOCTYPE yasağı, boyut/oran sınırları, makro yasağı değişmez) ve
+  parse edilmeden olduğu gibi korunsun. Parse edilmeyen veri saldırı yüzeyi oluşturmaz.
+- **Test:** `tests/security/` içine geçersiz xmlns'li customXml fixture'ı; kabul + fingerprint.
+
+## Ö11 — Düzeltme rolleri değiştirince kapı kopyayı reddediyor (A5)
+> **Durum (2026-10-20): açık — kullanıcı kod değişikliğini şimdilik erteledi.**
+- **Gözlem:** 37 şablonun 14'ünde `WRITE_NEW_FINDINGS`: düzeltme (ör. başlığa `pageBreakBefore`)
+  sayfa geometrisini değiştiriyor, sınıflandırıcı bazı paragrafları yeniden sınıflandırıyor
+  (front_matter→body, cover→heading_1; `scratchpad` kanıtı: karabuk-lee-fen, ahievran-sabe,
+  ebyu-sbe) ve bu paragrafların **zaten var olan** hataları ilk kez görünür oluyor. Kapı bunu
+  "düzeltme hata yarattı" sayıp kopya vermiyor. Kapının kendisi doğru çalışıyor.
+- **Öneri:** `fix_document` en fazla 3 tur: her turda yeniden denetle, yeni görünen
+  düzeltilebilir bulguları da düzelt; kapı koşulları (metin aynılığı, yapı, açıklanamayan yeni
+  bulgu yok) değişmeden son çıktıya uygulanır. 3 turda geçmezse bugünkü gibi kopya verilmez.
+- **Yaygın yeni bulgular:** body.line_spacing ×37, body.space_after_pt ×32,
+  body.first_line_indent_cm ×26 (14 şablon toplamı).
