@@ -79,6 +79,7 @@ class ParaFeatures(BaseModel):
     in_references_section: bool
     in_front_matter: bool  # ön sayfa başlığından (ÖNSÖZ, ÖZET...) sonra, ilk bölüme kadar
     on_first_page: bool  # ilk sayfa sonundan/bölüm sonundan önce (kapak olabilir)
+    on_cover_pages: bool  # ilk ön sayfa başlığından önceki birkaç sayfa (iç kapak, onay, beyan)
 
     # Biçim
     style_kind: StyleKind
@@ -284,6 +285,22 @@ def page_starts(body: tuple[Paragraph, ...]) -> dict[str, bool]:
     return out
 
 
+def page_tops(body: tuple[Paragraph, ...]) -> dict[str, bool]:
+    """Paragraf sayfanın ilk dolu satırı mı: sayfa başıyla arasında yalnızca boş satırlar var
+    (sayfa ya da bölüm sonundan sonra boş satır bırakıp başlık yazmak yaygın)."""
+    starts = page_starts(body)
+    out: dict[str, bool] = {}
+    top = False
+    for p in body:
+        if p.in_table or p.in_textbox:
+            continue
+        top = top or starts[p.para_id]
+        out[p.para_id] = top
+        if p.text.strip() or p.has_drawing:
+            top = False
+    return out
+
+
 def _body_size(doc: DocModel) -> float | None:
     weights: Counter[float] = Counter()
     for p in doc.body():
@@ -347,6 +364,36 @@ def _references_section(body: tuple[Paragraph, ...]) -> set[str]:
     return out
 
 
+MAX_COVER_PAGES = 5  # dış kapak, iç kapak, onay, beyan ve bir yedek
+
+
+def _opens_front_matter(p: Paragraph) -> bool:
+    """Kapak sayfalarının bittiğini gösteren ilk paragraf: ön sayfa/bölüm başlığı, içindekiler
+    alanı ya da 1. düzey başlık stili."""
+    if keyword(p.text) in (Keyword.FRONT_TITLE, Keyword.SECTION_TITLE, Keyword.CHAPTER,
+                           Keyword.REFERENCES_TITLE) or "TOC" in p.field_kinds:
+        return True
+    name = (p.style_name or "").casefold()
+    return bool(re.match(r"(?:heading|başlık|baslik)\s*1(?!\d)", name)) or (
+        p.props.outline_level == 0)
+
+
+def _cover_pages(body: tuple[Paragraph, ...], starts: dict[str, bool]) -> set[str]:
+    """İlk ön sayfa başlığından önceki paragraflar. Böyle bir başlık ilk birkaç sayfada yoksa
+    boş küme: kapak yalnızca ilk sayfa sayılır (bkz. _first_page)."""
+    out: set[str] = set()
+    pages = 1
+    for i, p in enumerate(p for p in body if not p.in_table and not p.in_textbox):
+        if _opens_front_matter(p):
+            return out
+        if i > 0 and starts.get(p.para_id, False):
+            pages += 1
+            if pages > MAX_COVER_PAGES:
+                return set()
+        out.add(p.para_id)
+    return set()
+
+
 def _first_page(body: tuple[Paragraph, ...], starts: dict[str, bool]) -> set[str]:
     out: set[str] = set()
     for i, p in enumerate(p for p in body if not p.in_table and not p.in_textbox):
@@ -366,10 +413,12 @@ def extract_features(doc: DocModel) -> dict[str, ParaFeatures]:
     body_pos = {p.para_id: i for i, p in enumerate(body)}
     n_body = max(len(body), 1)
     starts = page_starts(body)
+    tops = page_tops(body)
     body_size = _body_size(doc)
     refs = _references_section(body)
-    front = _front_matter(body, starts)
+    front = _front_matter(body, tops)
     first_page = _first_page(body, starts)
+    cover_pages = _cover_pages(body, starts)
     flow = [p for p in body if not p.in_table and not p.in_textbox]
     flow_pos = {p.para_id: i for i, p in enumerate(flow)}
 
@@ -404,13 +453,14 @@ def extract_features(doc: DocModel) -> dict[str, ParaFeatures]:
             in_textbox=p.in_textbox,
             section_index=p.section_index,
             relative_position=round(body_pos.get(p.para_id, 0) / n_body, 4),
-            starts_page=starts.get(p.para_id, False),
+            starts_page=tops.get(p.para_id, False),
             prev_empty=prev_flow is not None and not prev_flow.text.strip(),
             next_empty=next_flow is not None and not next_flow.text.strip(),
             next_is_table=next_p is not None and next_p.in_table and not p.in_table,
             in_references_section=p.para_id in refs,
             in_front_matter=p.para_id in front,
             on_first_page=p.para_id in first_page,
+            on_cover_pages=p.para_id in cover_pages,
             style_kind=_style_kind(p.style_name, is_default=p.style_id is None),
             outline_level=p.props.outline_level,
             size_pt=d.size_pt,

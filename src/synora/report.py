@@ -142,6 +142,10 @@ def message(f: Finding) -> str:
                 f"Kılavuz {ALIGN_NAMES.get(exp, exp)} istiyor.")
     if prop == "line_spacing":
         return f"Satır aralığı {_spacing(act)}. Kılavuz {_spacing(exp)} istiyor."
+    if prop == "first_line_indent_cm" and act == "sekme":
+        return (f"Girinti sekme (Tab) ile yapılmış; ölçüsü denetlenemedi. Kılavuz "
+                f"{_tr_num(exp)} cm istiyor: sekmeyi silip Paragraf > Girinti > İlk satır "
+                "ayarını kullanın.")
     if prop == "first_line_indent_cm":
         return f"İlk satır girintisi {_tr_num(act)} cm. Kılavuz {_tr_num(exp)} cm istiyor."
     if prop == "indent_left_cm":

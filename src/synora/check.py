@@ -10,7 +10,7 @@ from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from synora.features import page_starts
+from synora.features import page_tops
 from synora.model import Alignment, DocModel, LineRule, Paragraph, Role, Section, Story
 from synora.roles import RoleDecision, assign_roles
 from synora.ruleset import PAGE_SIZES_CM, LineSpacingRule, RoleRules, Ruleset
@@ -81,7 +81,7 @@ def check(
     checked = unknown = cover = 0
     body = doc.body()
     body_index = {p.para_id: i for i, p in enumerate(body)}
-    starts_page = page_starts(body)
+    starts_page = page_tops(body)
     caption_places = _caption_places(body, roles)
     for para in doc.paragraphs:
         decision = roles[para.para_id]
@@ -241,6 +241,11 @@ def _paragraph_rules(
             continue
         value = measured or 0.0
         if abs(value - target) > t:
+            if name == "first_line_indent_cm" and abs(value) <= t and p.text.startswith("	"):
+                # Girinti sekmeyle yapılmış: sekme durağının yeri denetlenmez ve ilk satır
+                # girintisi eklemek ikinci bir girinti olur; yalnızca uyarı.
+                yield Finding(f"{prefix}.{name}", Severity.WARNING, _num(target), "sekme", False)
+                continue
             yield err(name, _num(target), _num(value))
 
     if rr.page_break_before and not starts_page:

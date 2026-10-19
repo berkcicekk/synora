@@ -60,6 +60,11 @@ def classify(f: ParaFeatures) -> RoleDecision:
         return _d(Role.TOC_ENTRY, 0.9)
     if f.style_kind in _STYLE_ROLES:
         return _d(_STYLE_ROLES[f.style_kind], 0.9)
+    # 4. ve daha alt düzey başlıklar için kural yok: 1. düzey sanılmasın, denetlenmesin.
+    if f.style_kind is StyleKind.HEADING_OTHER or (
+        f.outline_level is not None and f.outline_level not in _LEVEL_HEADINGS
+    ):
+        return UNKNOWN
     if f.outline_level is not None and f.outline_level in _LEVEL_HEADINGS:
         return _d(_LEVEL_HEADINGS[f.outline_level], 0.85)
     if f.style_kind is StyleKind.CAPTION or f.has_seq_field:
@@ -77,6 +82,9 @@ def classify(f: ParaFeatures) -> RoleDecision:
         )
     ):
         return _d(Role.COVER, 0.8)
+    # İç kapak, onay ve beyan sayfaları: ilk ön sayfa başlığından (ÖZET, İÇİNDEKİLER…) önce.
+    if f.on_cover_pages:
+        return _d(Role.COVER, 0.7)
 
     # Desen sinyalleri
     if f.toc_like and f.word_count <= 25:
@@ -154,7 +162,10 @@ def _unstyled_heading(f: ParaFeatures) -> RoleDecision | None:
         return _d(_PREFIX_HEADINGS[f.number_prefix], 0.8)
     if f.numbering_format is NumFormat.DECIMAL and f.numbering_level in _LEVEL_HEADINGS:
         return _d(_LEVEL_HEADINGS[f.numbering_level], 0.75)
-    if caps and (f.starts_page or f.alignment is Alignment.CENTER):
+    # Sayfa ortasında yalnızca büyük harfli ortalı satır (ör. ÖZET sayfasındaki tez adı) başlık
+    # sayılmaz; kalın ya da büyük puntolu olması gerekir.
+    stands_out = f.bold or (f.size_ratio is not None and f.size_ratio >= 1.1)
+    if caps and (f.starts_page or (f.alignment is Alignment.CENTER and stands_out)):
         return _d(Role.HEADING_1, 0.75)
     # Kalın ama numarasız, karışık harfli kısa satır: 2. mi 3. düzey mi, ara başlık mı?
     # Tahmin etmek yerine belirsiz bırak.
