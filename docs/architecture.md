@@ -236,7 +236,8 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
 
 Uygulandı: FastAPI + Jinja2 + az JavaScript (htmx yok), SQLite (WAL), iş yürütücü aynı süreçte iş
 parçacıkları + her iş için ayrı alt süreç (Linux'ta bellek/CPU sınırı). Üretim kurulumu: `deploy/`
-(systemd, nginx, ortam değişkenleri; tek süreç). Üretimde eksik ya da güvensiz ayarla uygulama başlamaz
+(systemd, nginx, ortam değişkenleri; tek süreç) ya da kökteki `Dockerfile` + `compose.yaml` (aynı
+sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya da güvensiz ayarla uygulama başlamaz
 (`Settings.problems`). Aşağıdaki ilk taslak tarihçe için duruyor:
 
 - Backend: FastAPI (A9), iş kuyruğu (ör. RQ + Redis ya da Postgres tabanlı), ayrı worker süreci (A10).

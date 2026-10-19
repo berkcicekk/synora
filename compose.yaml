@@ -1,0 +1,40 @@
+# docker compose up -d --build   (ayrıntı: deploy/README.md, "Docker ile")
+# Tek örnek çalışmalı: iki örnek aynı veritabanında birbirinin işlerini "yarıda kaldı" sayar.
+services:
+  synora:
+    build: .
+    image: synora:latest
+    restart: unless-stopped
+    # Tüm ayarlar (SMTP parolası dahil) sunucuda; izin 600, repoya girmez.
+    env_file:
+      - /etc/synora/synora.env
+    # env_file'daki systemd yollarını kapsayıcı içindekilerle değiştirir.
+    environment:
+      SYNORA_DB_PATH: /data/synora.db
+      SYNORA_RULESETS_DIR: /app/rulesets
+      SYNORA_DEV: "0"
+    # Yalnızca aynı makinedeki nginx erişir (deploy/nginx-synora.conf, 127.0.0.1:8000).
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - synora-data:/data  # yalnızca veritabanı; tez dosyası diske yazılmaz
+    # Sertleştirme: salt okunur kök, yetkisiz kullanıcı, bellek/süreç sınırı (synora.service ile aynı).
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777,noexec,nosuid,nodev
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    init: true  # her iş için açılan alt süreçler toplanır
+    mem_limit: 6g
+    pids_limit: 128
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "5"
+
+volumes:
+  synora-data:

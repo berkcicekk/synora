@@ -1,0 +1,7 @@
+# Derleme bağlamı yalnızca bunlar: gerçek tezler (tests/fixtures/real), yerel veritabanı (var/),
+# .env/synora.env gibi ayar dosyaları ve .git imaja hiç girmez.
+*
+!pyproject.toml
+!uv.lock
+!src
+!rulesets
