@@ -145,12 +145,16 @@ class StyleDef:
     rpr: RunProps
 
 
+WORD_DEFAULT_SIZE_PT = 10.0
+
+
 class StyleSheet:
     def __init__(self, root: Any | None, theme: ThemeFonts) -> None:
         self.theme = theme
         self.styles: dict[str, StyleDef] = {}
         self.doc_ppr = ParaProps()
-        self.doc_rpr = RunProps()
+        # Hiçbir katman punto vermezse Word 10 pt kullanır (w:sz yokluğu "tanımsız" değildir).
+        self.doc_rpr = RunProps(size_pt=WORD_DEFAULT_SIZE_PT)
         self.default_paragraph: str | None = None
         self.default_character: str | None = None
         self._para_cache: dict[str, tuple[ParaProps, RunProps]] = {}
@@ -160,7 +164,8 @@ class StyleSheet:
         defaults = child(root, "docDefaults")
         if defaults is not None:
             self.doc_ppr = read_ppr(child(child(defaults, "pPrDefault"), "pPr"))
-            self.doc_rpr = read_rpr(child(child(defaults, "rPrDefault"), "rPr"), theme)
+            self.doc_rpr = self.doc_rpr.merge(
+                read_rpr(child(child(defaults, "rPrDefault"), "rPr"), theme))
         for el in root.iter(w("style")):
             sid = wattr(el, "styleId")
             if not sid or sid in self.styles:

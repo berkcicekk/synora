@@ -149,3 +149,15 @@ def test_tab_indent_message_explains_what_to_do() -> None:
     from synora.report import to_json
     report = to_json(run(thesis(front_matter() + main_matter(extra=TAB_PARAGRAPH))), RULES)
     assert "sekme" in report.casefold() and "İlk satır" in report
+
+
+# --- Hiçbir yerde punto yoksa Word 10 pt kullanır --------------------------------------------
+
+
+def test_size_defaults_to_ten_points_when_nothing_sets_it() -> None:
+    from builders import make_docx, styles_xml
+    no_size = styles_xml(defaults_rpr='<w:rFonts w:ascii="Times New Roman"/>',
+                         styles=style("Normal", default=True, name="Normal"))
+    for styles in (no_size, None):
+        doc = parse_package(open_docx(make_docx(p(BODY_TEXT), styles=styles)))
+        assert doc.body()[0].dominant.size_pt == 10.0

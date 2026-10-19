@@ -119,7 +119,7 @@ def test_malformed_values_are_ignored() -> None:
     assert para.props.indent_left_cm is None
     assert para.props.line_spacing is None
     assert para.props.alignment is None
-    assert para.dominant.size_pt is None
+    assert para.dominant.size_pt == 10.0  # bozuk w:sz yok sayılır; Word varsayılanı kalır
 
 
 # --- Bölümler ----------------------------------------------------------------------
