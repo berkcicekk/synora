@@ -1,0 +1,26 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - name: Bağımlılıklar
+        run: uv sync --frozen
+      - name: Lint
+        run: uv run ruff check .
+      - name: Tip denetimi
+        run: uv run mypy src
+      - name: Kural setleri
+        run: uv run python tools/validate_rulesets.py
+      - name: Testler
+        run: uv run pytest -q

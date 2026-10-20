@@ -77,6 +77,48 @@ def check_command(
     raise typer.Exit(1 if has_errors else 0)
 
 
+@app.command("fix")
+def fix_command(
+    docx: Annotated[
+        Path, typer.Argument(exists=True, dir_okay=False, help="Düzeltilecek .docx")
+    ],
+    ruleset: Annotated[Path, typer.Option("--ruleset", "-r", exists=True, dir_okay=False)],
+    output: Annotated[Path, typer.Option("--output", "-o", help="Düzeltilmiş kopya (.docx)")],
+    force: Annotated[bool, typer.Option("--force", help="Var olan dosyanın üzerine yaz")] = False,
+) -> None:
+    """Düzeltilebilir bulguları izlenen değişiklik olarak uygular; metne dokunmaz.
+
+    Çıktı, write.verify_output kapılarından (metin aynılığı, yapı) geçmeden üretilmez.
+    """
+    from synora.errors import ErrorCode
+    from synora.fix import fix_document
+
+    try:
+        rules = load_ruleset(ruleset)
+    except (ValidationError, yaml.YAMLError, OSError, ValueError) as exc:
+        typer.echo(f"Kural seti okunamadı: {type(exc).__name__}", err=True)
+        raise typer.Exit(2) from None
+    if output.exists() and not force:
+        typer.echo(f"{output} zaten var (--force ile üzerine yazılır).", err=True)
+        raise typer.Exit(2)
+    limits = Limits()
+    if docx.stat().st_size > limits.max_file_bytes:
+        typer.echo("Dosya çok büyük. En fazla 50 MB yükleyebilirsiniz.", err=True)
+        raise typer.Exit(2)
+    try:
+        result = fix_document(docx.read_bytes(), rules)
+    except SynoraError as exc:
+        if exc.code is ErrorCode.NOTHING_TO_FIX:
+            typer.echo("Düzeltilebilir bulgu yok; dosya üretilmedi.")
+            raise typer.Exit(0) from None
+        typer.echo(f"Kopya üretilemedi (kod: {exc.code.value}).", err=True)
+        raise typer.Exit(2) from None
+    output.write_bytes(result.docx)
+    typer.echo(f"{result.fixed} bulgu düzeltildi"
+               + (f", {result.skipped} atlandı" if result.skipped else "")
+               + f"; yazıldı: {output}")
+
+
 @app.command("word")
 def word_command(
     ruleset: Annotated[Path, typer.Option("--ruleset", "-r", exists=True, dir_okay=False)],

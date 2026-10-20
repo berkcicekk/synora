@@ -20,6 +20,8 @@ Arayüz: Synora marka kiti (https://claude.ai/artifact/Bg7bwS9wQZqqiyaEWTHzMK) d
 - Test: `uv run pytest -q`
 - Lint/tip: `uv run ruff check . && uv run mypy src`
 - CLI: `uv run synora check <docx> --ruleset rulesets/example.yaml [--format json]`
+- Düzelt: `uv run synora fix <docx> -r rulesets/example.yaml -o duzeltilmis.docx`
+- Word şablonu: `uv run synora word -r rulesets/zbeu-tip.yaml -o sablon.docx`
 - Web (geliştirme): `uv run synora serve --dev` → giriş bağlantısı konsola yazılır
 - Demo: `uv run python scripts/demo.py`
 - LaTeX şablonu: `uv run synora latex -r rulesets/zbeu-tip.yaml -o sablon.zip`

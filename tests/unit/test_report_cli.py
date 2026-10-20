@@ -198,3 +198,33 @@ def test_ruleset_warning_reaches_report() -> None:
     doc = json.loads(to_json(result, warned))
     assert doc["ruleset"]["uyari"] == warned.uyari
     assert f"UYARI: {warned.uyari}" in to_text(result, warned)
+
+
+# --- synora fix (A8): mimarinin vadettiği CLI düzeltme komutu ------------------------------------
+
+
+def test_cli_fix_writes_corrected_copy(tmp_path: Path) -> None:
+    from synora.fingerprint import content_fingerprint
+    from synora.ingest import open_docx
+
+    bad = p("Satır aralığı bozuk paragraf.", ppr='<w:spacing w:line="240" w:lineRule="auto"/>')
+    src = tmp_path / "tez.docx"
+    src.write_bytes(thesis(front_matter() + main_matter(extra=bad)))
+    out = tmp_path / "tez-duzeltilmis.docx"
+    result = runner.invoke(app, ["fix", str(src), "-r", str(EXAMPLE), "-o", str(out)])
+    assert result.exit_code == 0, result.output
+    assert "düzeltildi" in result.output
+    fixed = out.read_bytes()
+    assert content_fingerprint(open_docx(fixed)) == content_fingerprint(open_docx(src.read_bytes()))
+    check_again = runner.invoke(app, ["check", str(out), "-r", str(EXAMPLE), "-f", "json"])
+    report = json.loads(check_again.output)
+    assert "body.line_spacing" not in {f["rule_id"] for f in report["findings"]}
+
+
+def test_cli_fix_nothing_to_fix(tmp_path: Path) -> None:
+    src = tmp_path / "tez.docx"
+    src.write_bytes(thesis())
+    out = tmp_path / "out.docx"
+    result = runner.invoke(app, ["fix", str(src), "-r", str(EXAMPLE), "-o", str(out)])
+    assert result.exit_code == 0
+    assert not out.exists()  # düzeltilecek bir şey yoksa dosya üretilmez
