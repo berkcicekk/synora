@@ -500,6 +500,35 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         set_pre_csrf(resp, token)
         return resp
 
+    # Ö7: istemci başına giriş isteği sınırı. Bellek içi ve hash'li: ham IP hiçbir yerde
+    # tutulmaz, pencere dolunca kayıt düşer. Uygulamaya yalnızca 127.0.0.1 (tünel/vekil)
+    # üzerinden ulaşılabildiği için CF-Connecting-IP başlığı güvenilirdir; yoksa soket adresi.
+    login_hits: dict[str, list[float]] = {}
+    login_recent: list[float] = []
+
+    def _client_key(request: Request) -> str:
+        ip = (request.headers.get("cf-connecting-ip")
+              or (request.client.host if request.client else "?"))
+        return hashlib.sha256(ip.encode()).hexdigest()[:16]
+
+    def login_rate_ok(request: Request) -> bool:
+        now = time.time()
+        key = _client_key(request)
+        hits = [t for t in login_hits.get(key, []) if t > now - 3600]
+        recent = [t for t in login_recent if t > now - 60]
+        login_recent[:] = recent
+        if (len(hits) >= settings.login_requests_per_ip_hour
+                or len(recent) >= settings.login_requests_per_minute):
+            login_hits[key] = hits
+            return False
+        hits.append(now)
+        login_hits[key] = hits
+        login_recent.append(now)
+        if len(login_hits) > 1000:  # sözlük sınırsız büyümesin
+            for stale in [k for k, v in login_hits.items() if not v or v[-1] <= now - 3600]:
+                del login_hits[stale]
+        return True
+
     def open_session(email: str) -> RedirectResponse:
         sid = secrets.token_urlsafe(32)
         db.add_session(_hash(sid), email, secrets.token_urlsafe(24),
@@ -525,6 +554,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         def fail(msg: str) -> HTMLResponse:
             return auth_form(request, mode, status=400, error=msg, email=email)
 
+        if not login_rate_ok(request):
+            return auth_form(request, mode, status=429, email=email, error=(
+                "Çok fazla deneme yapıldı. Bir süre sonra yeniden deneyin."))
         if not EMAIL_RE.fullmatch(email):
             return fail("Geçerli bir e-posta adresi yazın.")
         if not domain_allowed(email):

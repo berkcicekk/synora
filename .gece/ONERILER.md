@@ -67,7 +67,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Düşük; kullanıcı arayüzü 429 mesajını zaten gösteriyor.
 
 ## Ö7 — Giriş isteği sınırı yalnızca e-posta başına
-> **Durum (2026-10-19): ilk katman nginx'te** (`deploy/nginx-synora.conf`, IP başına `limit_req`). Uygulama içi IP sınırı açık; xfail testi duruyor.
+> **Durum (2026-10-20): çözüldü** — uygulama içi, bellek içi ve hash'li IP sınırı (saatte 10/IP + dakikada 60 genel); tünel kurulumunda nginx olmadığı için uygulama katmanında. xfail kaldırıldı.
 - **Sorun:** Saatte 5 sınırı e-posta başına. Tek istemci `@beun.edu.tr` altında istediği kadar farklı
   adrese bağlantı gönderebilir: e-posta bombardımanı, SMTP gönderici itibarının düşmesi, maliyet.
 - **Kanıt:** `tests/web/test_web_security.py::test_login_requests_limited_per_client` (xfail).

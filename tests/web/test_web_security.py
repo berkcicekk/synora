@@ -337,10 +337,6 @@ def test_output_respects_concurrency_limit(client: TestClient, mailer: ConsoleMa
     assert output(client, csrf, job_id, "fixed", data).status_code == 429
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "Giriş isteği sınırı yalnızca e-posta başına (saatte 5). Tek istemci izinli alandaki farklı "
-    "adreslere sınırsız bağlantı gönderebilir (e-posta bombardımanı, SMTP itibarı). "
-    "Öneri: ONERILER Ö7 (IP başına ve genel sınır)."))
 def test_login_requests_limited_per_client(client: TestClient, mailer: ConsoleMailer,
                                            settings: Settings) -> None:
     statuses = []
