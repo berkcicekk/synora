@@ -18,7 +18,7 @@ tolerance:
 
 page:
   size: A4                      # Kullanım Alanı
-  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 2.5 }   # Kullanım Alanı "sol 40 mm, üst 30 mm, sağ ve alt 25 mm"
+  margins_cm: { top: 3.0, bottom: 2.5, left: 4.0, right: 2.5, chapter_top: 5.0 }  # resmi şablon bölüm başı sayfalarında üst kenarı 5 cm yapıyor   # Kullanım Alanı "sol 40 mm, üst 30 mm, sağ ve alt 25 mm"
 
 fonts:
   allowed: [Times New Roman]    # Yazı Karakteri ve Kalitesi

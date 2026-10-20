@@ -65,6 +65,31 @@ def test_left_margin_wrong_even_with_gutter() -> None:
     assert (left.expected, left.actual) == ("3.5cm", "2cm (cilt payı 0.5cm)")
 
 
+def test_chapter_top_margin_rule() -> None:
+    # Çankaya/Karabük deseni: kılavuz bölüm başlığını üst kenardan daha aşağıda başlatır;
+    # şablonlar bunu bölüm başı bölümlerinde büyük üst kenarla uygular. chapter_top verilince
+    # bölüm başlığıyla açılan bölümün üst kenarı ona göre denetlenir, diğerleri top'a göre.
+    margins = RULES.page.margins_cm.model_copy(update={"chapter_top": 5.0})
+    chapter = RULES.model_copy(
+        update={"page": RULES.page.model_copy(update={"margins_cm": margins})})
+    big_top = MARGINS.replace('w:top="1701"', 'w:top="2835"')  # 5 cm
+    # main_matter bölümü GİRİŞ başlığıyla açılır → üst kenar top (3) YA DA chapter_top (5)
+    # olabilir; ön bölüm standart kenarla kalabilir.
+    body = front_matter() + main_matter().replace(sect("decimal"),
+                                                  sect("decimal", margins=big_top))
+    result = check(parse_package(open_docx(thesis(body))), chapter)
+    assert "page.margin.top" not in {f.rule_id for f in result.findings}
+    # chapter_top tanımlı değilken aynı belge üst kenar bulgusu verir.
+    plain = check(parse_package(open_docx(thesis(body))), RULES)
+    assert "page.margin.top" in {f.rule_id for f in plain.findings}
+    # İkisine de uymayan değer (4 cm) chapter_top ile de bulgudur.
+    wrong = MARGINS.replace('w:top="1701"', 'w:top="2268"')
+    body = front_matter() + main_matter().replace(sect("decimal"),
+                                                  sect("decimal", margins=wrong))
+    result = check(parse_package(open_docx(thesis(body))), chapter)
+    assert "page.margin.top" in {f.rule_id for f in result.findings}
+
+
 def test_caption_case_skips_keyword_and_number_prefix() -> None:
     # "Şekil 1.1. Örnek şekil açıklaması" doğru Türkçe: cümle düzeni başlık metnine
     # (keyword + numara sonrasına) uygulanır; "Örnek" yanlış alarm olmamalı.

@@ -83,7 +83,7 @@ def check(
             roles[pid] = RoleDecision(role=role, confidence=1.0)
     findings: list[Finding] = []
     findings.extend(_document_rules(doc, rules))
-    findings.extend(_page_rules(doc.sections, rules))
+    findings.extend(_page_rules(doc.sections, rules, _chapter_sections(doc, roles)))
     findings.extend(_page_numbering(doc.sections, rules))
     findings.extend(_page_number_position(doc, rules))
     checked = unknown = cover = 0
@@ -142,7 +142,24 @@ def _document_rules(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
         yield Finding("document.tracked_changes", Severity.WARNING, "false", "true", False)
 
 
-def _page_rules(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[Finding]:
+def _chapter_sections(doc: DocModel, roles: dict[str, RoleDecision]) -> set[int]:
+    """İlk dolu paragrafı birinci düzey başlık olan bölümler (chapter_top kuralı için)."""
+    out: set[int] = set()
+    seen: set[int] = set()
+    for p in doc.body():
+        if p.in_table or p.in_textbox or p.section_index is None:
+            continue
+        if p.section_index in seen or not p.text.strip():
+            continue
+        seen.add(p.section_index)
+        decision = roles.get(p.para_id)
+        if decision is not None and decision.role is Role.HEADING_1:
+            out.add(p.section_index)
+    return out
+
+
+def _page_rules(sections: tuple[Section, ...], rules: Ruleset,
+                chapter_sections: set[int] | None = None) -> Iterator[Finding]:
     page = rules.page
     tol = rules.tolerance.length_cm
     for s in sections:
@@ -170,6 +187,14 @@ def _page_rules(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[Findi
                     continue
                 actual_cm = getattr(s.margins, f"{side}_cm")
                 ok = actual_cm is not None and abs(actual_cm - expected) <= tol
+                chapter_top = page.margins_cm.chapter_top
+                if (not ok and side == "top" and chapter_top is not None
+                        and actual_cm is not None
+                        and s.index in (chapter_sections or set())):
+                    # Bölüm başlığıyla açılan bölümde üst kenar chapter_top da olabilir
+                    # ("bölüm başlığı üst kenardan X cm aşağıda" kuralını bölüm kenarıyla
+                    # uygulayan şablonlar; ör. Çankaya, Karabük).
+                    ok = abs(actual_cm - chapter_top) <= tol
                 gutter = s.margins.gutter_cm or 0
                 if not ok and side == "left" and actual_cm is not None and gutter:
                     # Kılavuzların "soldan X cm" kuralı Word'de sol kenar + cilt payı

@@ -45,6 +45,9 @@ class Margins(_Strict):
     bottom: float | None = Field(None, ge=0)
     left: float | None = Field(None, ge=0)
     right: float | None = Field(None, ge=0)
+    # Bölüm başlığıyla açılan bölümlerin üst kenarı ("bölüm başlığı üst kenardan X cm
+    # aşağıda" kuralını bölüm kenarıyla uygulayan şablonlar için; ör. Çankaya, Karabük).
+    chapter_top: float | None = Field(None, ge=0)
 
 
 class PageRules(_Strict):

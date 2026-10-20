@@ -20,7 +20,7 @@ tolerance:
 page:
   size: A4                      # 1.1.1
   # 1.1.3.1: sol 4, sağ 2,5, alt 2,5; üst 2,5 (ana başlıklı sayfalarda 5 cm — bölüm düzeyinde denetlenemez)
-  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5 }
+  margins_cm: { top: 2.5, bottom: 2.5, left: 4.0, right: 2.5, chapter_top: 5.0 }  # resmi şablon bölüm başı sayfalarında üst kenarı 5 cm yapıyor (başlık aşağıda başlasın diye)
 
 roles:
   body:
