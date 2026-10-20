@@ -8,45 +8,85 @@
 
 {% macro frame(n) -%}
 {% if n == 1 %}
-<div class="sf sf-route">
-  <div class="sf-node sf-in d1">{{ doc_icon() }}<span class="sf-name">tez.docx</span><span class="sf-sub">bilgisayarınız</span></div>
-  <div class="sf-link ok sf-in d2" aria-hidden="true"><i></i></div>
-  <div class="sf-node primary sf-in d3">{{ mark() }}<span class="sf-name">Payper</span><span class="sf-sub">yalnızca bellekte</span></div>
-  <div class="sf-link no sf-in d4" aria-hidden="true"><i></i><b>×</b></div>
-  <div class="sf-node ghost sf-in d5">
-    <svg class="sf-cloud" viewBox="0 0 56 36" aria-hidden="true"><path d="M14 32h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2 11 11 0 0 0-3 22z"/></svg>
-    <span class="sf-name">Yapay zekâ servisleri</span><span class="sf-sub">sohbet botu, bulut model</span>
+{# Yükleme: tarayıcı penceresinde bırakma alanı; belge süzülür, ilerleme dolar. Sağda bellek
+   yongası; yapay zekâ bulutu üstü çizili. #}
+<div class="sf sf-upload">
+  <div class="sf-browser sf-in d1">
+    <div class="sfb-bar" aria-hidden="true">
+      <span class="sfb-dots"><i></i><i></i><i></i></span>
+      <span class="sfb-url">demo.payper.live</span>
+    </div>
+    <div class="sfb-drop">
+      <div class="sfb-doc" aria-hidden="true">{{ doc_icon() }}</div>
+      <span class="sf-name">tez.docx</span>
+      <span class="sfb-progress" aria-hidden="true"><i></i></span>
+      <span class="sf-sub">belleğe alındı · diske yazılmadı</span>
+    </div>
+  </div>
+  <div class="sf-upload-side">
+    <div class="sf-node sf-in d3">
+      <svg class="sf-chip" viewBox="0 0 44 44" aria-hidden="true">
+        <rect x="10" y="10" width="24" height="24" rx="2"/><rect x="17" y="17" width="10" height="10"/>
+        <path d="M15 10V4 M22 10V4 M29 10V4 M15 40v-6 M22 40v-6 M29 40v-6 M10 15H4 M10 22H4 M10 29H4 M40 15h-6 M40 22h-6 M40 29h-6"/>
+      </svg>
+      <span class="sf-name">Yalnızca bellek</span><span class="sf-sub">iş bitince atılır</span>
+    </div>
+    <div class="sf-node ghost sf-in d4">
+      <span class="sf-slash" aria-hidden="true">
+        <svg class="sf-cloud" viewBox="0 0 56 36" aria-hidden="true"><path d="M14 32h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2 11 11 0 0 0-3 22z"/></svg>
+      </span>
+      <span class="sf-name">Yapay zekâ servisleri</span><span class="sf-sub sf-deny">gönderim yok</span>
+    </div>
   </div>
 </div>
 {% elif n == 2 %}
+{# Ölçüm: sayfa kartında cetvel ve tarama ışını; metin çubukları ölçülür, kelime çıkmaz. #}
 <div class="sf sf-measure">
   <div class="sf-para sf-in d1" aria-hidden="true">
+    <span class="sf-ruler"></span>
+    <span class="sf-scan"></span>
     <span class="sf-num">1.1</span><span class="bar h"></span>
     <span class="bar"></span><span class="bar"></span><span class="bar short"></span>
     <span class="sf-lock">kelimeler sınıflandırıcıya verilmez</span>
   </div>
   <div class="sf-arrow-down sf-in d2" aria-hidden="true"></div>
+  <span class="meta sf-in d3">çıkarılan ölçüler</span>
   <ul class="sf-chips">
     <li class="sf-in d3">14 pt</li><li class="sf-in d3">kalın</li><li class="sf-in d4">ortalı</li>
     <li class="sf-in d4">numara: 1.1</li><li class="sf-in d5">önce 12 pt</li><li class="sf-in d5">4 kelime</li>
   </ul>
 </div>
 {% elif n == 3 %}
+{# Karar: ölçüler + kural seti birleşir, rol kartı ve kural karşılaştırması çıkar. #}
 <div class="sf sf-decide">
-  <ul class="sf-chips small sf-in d1"><li>14 pt</li><li>kalın</li><li>ortalı</li><li>numara: 1.1</li></ul>
+  <div class="sf-inputs">
+    <ul class="sf-chips small sf-in d1"><li>14 pt</li><li>kalın</li><li>ortalı</li><li>numara: 1.1</li></ul>
+    <div class="sf-guide sf-in d1" aria-hidden="true">{{ doc_icon() }}<span class="sf-sub">kural seti · zbeu-tip</span></div>
+  </div>
   <div class="sf-arrow-down sf-in d2" aria-hidden="true"></div>
   <div class="sf-verdict sf-in d3"><span class="sf-sub">rol</span><span class="sf-name">Alt bölüm başlığı</span></div>
-  <ul class="sf-checks">
+  <ul class="sf-checks sf-card">
     <li class="sf-in d4"><span>Punto 14</span><b class="yes">✓</b></li>
     <li class="sf-in d4"><span>Kalın</span><b class="yes">✓</b></li>
     <li class="sf-in d5"><span>Önce 24 pt boşluk</span><b class="no">düzeltilecek</b></li>
   </ul>
 </div>
 {% else %}
+{# Doğrulama: iki belgenin metin parmak izi örtüşür; dosya bellekten silinir. #}
 <div class="sf sf-verify">
   <div class="sf-pair">
     <div class="sf-node sf-in d1">{{ doc_icon() }}<span class="sf-name">Yüklenen</span><span class="sf-hash">özet 7c2e…91</span></div>
-    <div class="sf-equal sf-in d3" aria-hidden="true">=</div>
+    <div class="sf-fp sf-in d3" aria-hidden="true">
+      <svg viewBox="0 0 48 48">
+        <path class="fp1" d="M24 10a18 18 0 0 1 18 18"/>
+        <path class="fp2" d="M24 16a12 12 0 0 1 12 12"/>
+        <path class="fp3" d="M24 22a6 6 0 0 1 6 6"/>
+        <path class="fp1" d="M24 38a18 18 0 0 1-18-18"/>
+        <path class="fp2" d="M24 32a12 12 0 0 1-12-12"/>
+        <path class="fp3" d="M24 26a6 6 0 0 1-6-6"/>
+      </svg>
+      <span class="sf-sub">parmak izi aynı</span>
+    </div>
     <div class="sf-node primary sf-in d2">{{ doc_icon() }}<span class="sf-name">Düzeltilmiş</span><span class="sf-hash">özet 7c2e…91</span></div>
   </div>
   <div class="sf-wipe sf-in d4"><span class="sf-bar"><i></i></span><span>Dosya bellekten silindi · rapor 24 saat sonra silinir</span></div>
