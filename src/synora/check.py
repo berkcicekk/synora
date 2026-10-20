@@ -140,6 +140,12 @@ def _missing(value: object) -> str:
 def _document_rules(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
     if rules.document.forbid_tracked_changes and doc.has_tracked_changes:
         yield Finding("document.tracked_changes", Severity.WARNING, "false", "true", False)
+    # Mimari §8: altChunk / gömülü OLE'ye dokunulmaz, uyarı bulgusu üretilir (Ö4).
+    if doc.alt_chunks:
+        yield Finding("document.alt_chunk", Severity.WARNING, "0", str(doc.alt_chunks), False)
+    if doc.embedded_objects:
+        yield Finding("document.embedded_object", Severity.WARNING, "0",
+                      str(doc.embedded_objects), False)
 
 
 def _chapter_sections(doc: DocModel, roles: dict[str, RoleDecision]) -> set[int]:

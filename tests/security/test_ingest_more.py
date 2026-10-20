@@ -196,10 +196,6 @@ def test_error_never_contains_document_text() -> None:
 # --- Mimari §8: altChunk ve gömülü OLE "dokunulmaz, uyarı bulgusu üretilir" ----------------------
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "Mimari §8 altChunk/gömülü OLE için uyarı bulgusu istiyor; denetim (A6) bunu üretmiyor. "
-    "altChunk içeriği (başka bir belge) denetlenmediği gibi kullanıcıya da söylenmiyor. "
-    "Öneri: ONERILER Ö4."))
 def test_alt_chunk_produces_warning() -> None:
     import json
 
@@ -251,3 +247,18 @@ def test_rels_with_invalid_xml_is_still_rejected() -> None:
     parts = minimal_parts()
     parts["word/_rels/document.xml.rels"] = b"<Relationships><"
     assert code_of(zip_parts(parts)) is ErrorCode.XML_MALFORMED
+
+
+def test_embedded_object_produces_warning() -> None:
+    import json
+
+    from thesis import front_matter, main_matter, thesis
+
+    from synora.web.pipeline import run_pipeline
+
+    data = thesis(front_matter() + main_matter(extra="<w:p><w:r><w:object/></w:r></w:p>"))
+    ruleset = Path(__file__).resolve().parents[2] / "rulesets" / "example.yaml"
+    result = run_pipeline(data, str(ruleset), "job")
+    report = json.loads(result["report"] or "{}")
+    assert any(f["rule_id"] == "document.embedded_object" and f["severity"] == "warning"
+               for f in report["findings"])

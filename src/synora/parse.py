@@ -111,10 +111,17 @@ def parse_document(pkg: DocxPackage) -> ParseResult:
     body_el: Any | None = None
     roots: dict[str, Any] = {}
     tracked = False
+    alt_chunks = embedded = 0
+    alt_tag, object_tag = w("altChunk"), w("object")
     for story, part in story_parts(pkg):
         root = main_root if part == pkg.main_part else parse_part(pkg, part)
         roots[part] = root
-        tracked = tracked or any(el.tag in TRACKED_CHANGE_TAGS for el in root.iter())
+        for el in root.iter():
+            tracked = tracked or el.tag in TRACKED_CHANGE_TAGS
+            if el.tag == alt_tag:
+                alt_chunks += 1  # içine bakılmaz; yalnızca sayılır (mimari §8)
+            elif el.tag == object_tag:
+                embedded += 1
         walker = _StoryWalker(ctx, story, part)
         if story is Story.BODY:
             body = child(root, "body")
@@ -141,6 +148,8 @@ def parse_document(pkg: DocxPackage) -> ParseResult:
         paragraphs=tuple(ctx.paragraphs),
         has_tracked_changes=tracked,
         source_sha256=pkg.sha256,
+        alt_chunks=alt_chunks,
+        embedded_objects=embedded,
     )
     return ParseResult(doc, roots, dict(ctx.elements), body_el, tuple(section_elements))
 

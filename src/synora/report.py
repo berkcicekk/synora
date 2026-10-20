@@ -126,6 +126,12 @@ def message(f: Finding) -> str:
     if rid == "document.tracked_changes":
         return ("Belgede değişiklik izleme kayıtları var. Teslimden önce tüm değişiklikleri "
                 "kabul edin ya da reddedin.")
+    if rid == "document.alt_chunk":
+        return (f"Belgede başka bir dosyadan gömülü içerik var ({act} parça); bu kısım "
+                "denetlenmedi. İçeriği Word'de belgeye metin olarak aktarmanız önerilir.")
+    if rid == "document.embedded_object":
+        return (f"Belgede gömülü nesne var ({act} adet; ör. OLE/Excel nesnesi); içeriği "
+                "denetlenmedi ve dokunulmadı.")
     if rid == "page.size":
         return f"Kağıt boyutu {_length(act)}. Kılavuz {exp} istiyor."
     if rid == "page.orientation":

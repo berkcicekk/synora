@@ -177,6 +177,9 @@ class DocModel:
     paragraphs: tuple[Paragraph, ...]
     has_tracked_changes: bool
     source_sha256: str
+    # Denetlenmeyen gömülü içerik (yalnızca sayı; içerikleri okunmaz, dokunulmaz — mimari §8).
+    alt_chunks: int = 0  # w:altChunk: gövdeye gömülü başka belge (HTML/RTF/docx)
+    embedded_objects: int = 0  # w:object: gömülü OLE nesnesi
 
     def body(self) -> tuple[Paragraph, ...]:
         return tuple(p for p in self.paragraphs if p.story is Story.BODY)

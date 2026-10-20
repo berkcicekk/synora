@@ -35,7 +35,7 @@ Bağımlılık önerileri de burada.
 - **Risk:** Çok düşük; tek satır.
 
 ## Ö4 — altChunk / gömülü OLE için uyarı bulgusu (mimari §8)
-> **Durum (2026-10-19): açık** (A2 parser; xfail testi duruyor).
+> **Durum (2026-10-20): çözüldü** (kullanıcı onayıyla; DocModel sayaçları + document.alt_chunk / document.embedded_object uyarıları).
 - **Sorun:** Mimari §8 "altChunk, gömülü OLE: dokunulmaz, uyarı bulgusu üretilir" diyor; A6 bunu
   üretmiyor. `altChunk` başka bir belgeyi (HTML/RTF/docx) gövdeye gömer; Synora onun içini denetlemez,
   ama kullanıcı bunu bilmez ve "temiz" rapor görebilir.
