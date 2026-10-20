@@ -16,6 +16,8 @@ Ham sayılar: `bozma-sonuclar.json`.
   En sık karışanlar: içindekiler→başlık1 ×30, başlık2→başlık1 ×22, başlık3→başlık2 ×22.
 - Bozma değerlendirmesi (37 şablon, 1840 deneme): yakalama %97,1; kopya verilen 23 şablonda
   düzeltme %100, kapı reddi olan 14 şablonda (Ö11) %0. Metin hiçbir denemede değişmedi.
+- **Ö10+Ö11 düzeltmeleri sonrası (39 şablon, 1988 deneme): yakalama %97,0 · düzeltme %97,8 ·
+  metin 0/1988.** Kapı reddi yalnızca firat-sabe'de kaldı (42).
 
 ## Şablon başına
 
@@ -114,6 +116,12 @@ bilerek büyüten şablonlarda `page.margin.top` bulgusu yanlış alarm olabilir
 
 Her şablonda, kural başına 2 paragraf/bölüm kılavuz dışına bozuldu (`--per-type 2 --seed 0`;
 aynı komutla birebir tekrarlanır). Genel: **yakalama %97,1 · düzeltme %63,5 · metin değişimi 0/1840**.
+
+> **Ö10+Ö11 sonrası (aynı gün, ikinci koşu):** 39 şablon (Bingöl ve Fırat artık kabul ediliyor),
+> 1988 deneme: **yakalama %97,0 · düzeltme %97,8 · metin değişimi 0/1988.** Kapı reddi 653 → 42
+> ve tamamı tek şablonda (firat-sabe: üç tur yetmiyor; düzeltme her turda yeni paragrafları
+> yeniden sınıflandırıyor — elle bakılacak). Ham sayılar: `bozma-sonuclar-o11.json`.
+> Aşağıdaki tablo Ö11 öncesi durumun kaydıdır.
 
 - Düzeltme oranı şablon başına ya %100 ya %0: kopya verilen 23 şablonda bozmaların tamamı
   düzeltildi; %0 olan 14 şablon, denetim tablosundaki kapı reddi (Ö11) şablonlarının aynısı
