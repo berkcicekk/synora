@@ -77,6 +77,27 @@ def check_command(
     raise typer.Exit(1 if has_errors else 0)
 
 
+@app.command("word")
+def word_command(
+    ruleset: Annotated[Path, typer.Option("--ruleset", "-r", exists=True, dir_okay=False)],
+    output: Annotated[Path, typer.Option("--output", "-o", help=".docx dosyası")],
+    force: Annotated[bool, typer.Option("--force", help="Var olan dosyanın üzerine yaz")] = False,
+) -> None:
+    """Kural setinden stilleri hazır Word şablonu (.docx) üretir."""
+    from synora.word import build_docx
+
+    try:
+        rules = load_ruleset(ruleset)
+    except (ValidationError, yaml.YAMLError, OSError, ValueError) as exc:
+        typer.echo(f"Kural seti okunamadı: {type(exc).__name__}", err=True)
+        raise typer.Exit(2) from None
+    if output.exists() and not force:
+        typer.echo(f"{output} zaten var (--force ile üzerine yazılır).", err=True)
+        raise typer.Exit(2)
+    output.write_bytes(build_docx(rules))
+    typer.echo(f"Yazıldı: {output}")
+
+
 @app.command("latex")
 def latex_command(
     ruleset: Annotated[Path, typer.Option("--ruleset", "-r", exists=True, dir_okay=False)],

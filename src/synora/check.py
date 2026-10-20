@@ -346,6 +346,11 @@ def _caption_places(body: tuple[Paragraph, ...], roles: dict[str, RoleDecision])
 CONJUNCTIONS = frozenset({"ve", "veya", "ile", "ya", "da", "de", "ki", "yahut", "ama", "fakat",
                           "ancak", "hem", "ne", "ise", "ya da", "and", "or", "of", "the", "in"})
 _PREFIX_RE = re.compile(r"^\s*(?:\d+(?:\.\d+)*\.?|[IVXLC]+\.)\s*")
+# Şekil/tablo başlığı öneki: "Şekil 1.1." / "Tablo 2.3:" — büyük/küçük düzeni başlık
+# metnine uygulanır, öneke değil ("Örnek" ilk sözcük sayılır).
+_CAPTION_PREFIX_RE = re.compile(
+    r"^\s*(?:Şekil|Tablo|Çizelge|Grafik|Resim|Harita|Fotoğraf|Ek)\s+"
+    r"(?:\d+(?:\.\d+)*|[A-Z])\.?:?\s*", re.IGNORECASE)
 _TR_LOWER = str.maketrans({"I": "ı", "İ": "i"})
 
 
@@ -356,7 +361,8 @@ def _tr_lower(text: str) -> str:
 def case_problems(text: str, mode: str) -> list[str]:
     """Kurala uymayan sözcükler. Kısaltmalar (BT, SPSS) ve rakamla başlayanlar atlanır.
     Yalnızca yerel olarak çalışır; metin hiçbir yere gönderilmez."""
-    core_text = _PREFIX_RE.sub("", text).strip()
+    core_text = _CAPTION_PREFIX_RE.sub("", text)
+    core_text = _PREFIX_RE.sub("", core_text).strip()
     letters = [c for c in core_text if c.isalpha()]
     if len(letters) > 3 and all(c.isupper() for c in letters):
         return ["TAMAMI BÜYÜK HARF"]

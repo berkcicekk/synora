@@ -45,6 +45,7 @@ from synora.web.pipeline import run_pipeline
 from synora.web.presentation import PageSpec, RuleTile, page_spec, pixel_blocks, rule_tiles
 from synora.web.settings import Settings
 from synora.web.worker import JobRunner
+from synora.word import build_docx
 
 HERE = Path(__file__).resolve().parent
 SESSION_COOKIE = "synora_session"
@@ -451,6 +452,24 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                       ruleset_groups=ruleset_groups,
                       jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
+
+    word_templates: dict[str, bytes] = {}
+
+    @app.get("/sablon/{ruleset_id}/sablon.docx")
+    def word_template(ruleset_id: str) -> Response:
+        """Kural setinden stilleri hazır Word şablonu; ilk istekte üretilip saklanır."""
+        info = rulesets.get(ruleset_id)
+        if info is None:
+            raise HTTPException(404)
+        data = word_templates.get(ruleset_id)
+        if data is None:
+            data = word_templates[ruleset_id] = build_docx(info.rules)
+        name = f"payper-{ruleset_id}-sablon.docx"
+        return Response(
+            data,
+            media_type="application/vnd.openxmlformats-officedocument"
+                       ".wordprocessingml.document",
+            headers={"Content-Disposition": f'attachment; filename="{name}"'})
 
     @app.get("/sablon/{ruleset_id}/latex.zip")
     def latex_template(ruleset_id: str) -> Response:

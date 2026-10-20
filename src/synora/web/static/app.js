@@ -19,11 +19,15 @@
     }));
     const total = groups.reduce((n, g) => n + g.options.length, 0);
 
+    const wordLink = document.getElementById("word-link");
     const syncLatex = () => {
       const opt = rulesetSelect.selectedOptions[0];
-      if (!opt || !latexLink) return;
-      latexLink.href = "/sablon/" + encodeURIComponent(opt.value) + "/latex.zip";
-      latexName.textContent = opt.textContent;
+      if (!opt) return;
+      if (latexLink) {
+        latexLink.href = "/sablon/" + encodeURIComponent(opt.value) + "/latex.zip";
+        latexName.textContent = opt.textContent;
+      }
+      if (wordLink) wordLink.href = "/sablon/" + encodeURIComponent(opt.value) + "/sablon.docx";
     };
 
     const show = (words) => {

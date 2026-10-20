@@ -65,6 +65,17 @@ def test_left_margin_wrong_even_with_gutter() -> None:
     assert (left.expected, left.actual) == ("3.5cm", "2cm (cilt payı 0.5cm)")
 
 
+def test_caption_case_skips_keyword_and_number_prefix() -> None:
+    # "Şekil 1.1. Örnek şekil açıklaması" doğru Türkçe: cümle düzeni başlık metnine
+    # (keyword + numara sonrasına) uygulanır; "Örnek" yanlış alarm olmamalı.
+    from synora.check import case_problems
+
+    assert case_problems("Şekil 1.1. Örnek şekil açıklaması", "sentence") == []
+    assert case_problems("Tablo 2.3: Örnek tablo başlığı", "sentence") == []
+    assert case_problems("Şekil 1.1. Örnek Şekil Açıklaması", "sentence") != []
+    assert case_problems("Şekil 1.1. Örnek Şekil Açıklaması", "title") == []
+
+
 def test_landscape_section() -> None:
     landscape = '<w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/>'
     body = front_matter() + main_matter().replace(sect("decimal"),

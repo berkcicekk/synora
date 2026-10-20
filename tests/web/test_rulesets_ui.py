@@ -87,3 +87,12 @@ def test_every_ruleset_has_source_and_institution() -> None:
         if r.id == "example":
             continue
         assert r.rules.institution and r.rules.source and r.rules.source_url, r.id
+
+
+def test_word_template_download(client: TestClient) -> None:
+    res = client.get("/sablon/example/sablon.docx")
+    assert res.status_code == 200
+    assert res.headers["content-type"].startswith(
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    assert res.content[:2] == b"PK"
+    assert client.get("/sablon/yok-boyle-set/sablon.docx").status_code == 404

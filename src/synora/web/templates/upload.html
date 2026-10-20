@@ -62,6 +62,14 @@
       </ul>
     </details>
     {% if rulesets %}
+    <details class="prep">
+      <summary>Boş şablonla mı başlayacaksınız?</summary>
+      <p>Seçili kılavuzun biçim kuralları (kenar boşlukları, yazı tipi, satır aralığı, başlık
+         stilleri, sayfa numaraları) hazır ayarlanmış bir Word şablonu indirin; stilleri
+         kullanarak yazın, bitince burada denetleyin.</p>
+      <p><a id="word-link" class="textlink" href="/sablon/{{ rulesets[0].id }}/sablon.docx" download>Seçili kılavuzun Word şablonunu indirin (.docx)</a></p>
+      <p class="latex-note">Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.</p>
+    </details>
     <details class="prep latex">
       <summary>LaTeX ile mi yazıyorsunuz?</summary>
       <p>Payper Word belgelerini denetler. LaTeX kullanıyorsanız kılavuzun biçim kuralları (kâğıt, kenar boşlukları, yazı tipi, satır aralığı, başlıklar, sayfa numaraları) hazır ayarlanmış şablonu indirin. Overleaf'te <em>New Project › Upload Project</em> ile açabilirsiniz.</p>
