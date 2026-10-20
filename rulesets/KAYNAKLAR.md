@@ -9,7 +9,7 @@ kullanımdan önce ilgili enstitüye onaylatılmalı. Kılavuzda belirsiz, aral�
 verilmiş ya da kendi içinde çelişen kurallar dosyaya konmadı; `# ÇELİŞKİ:`
 yorumlarına bakın.
 
-**178 üniversite · 247 kural seti** · 27 üniversite için kılavuz bulunamadı.
+**178 üniversite · 248 kural seti** · 27 üniversite için kılavuz bulunamadı.
 
 | Üniversite | Kural seti | Kılavuz |
 |---|---|---|
@@ -158,6 +158,7 @@ yorumlarına bakın.
 | İzmir Kâtip Çelebi Üniversitesi | `ikcu-fbe` | [İKÇÜ Fen Bilimleri Enstitüsü Tez Hazırlama ve Yazım Kılavuzu, 2024](https://fenbilimleri.ikcu.edu.tr/Share/42FD3269D68E16DFC5879C02B86732C9) |
 | İzmir Tınaztepe Üniversitesi | `tinaztepe-lee` | [İzmir Tınaztepe Üniversitesi Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2024](https://tinaztepe.edu.tr/uploads/tez_yazim_kilavuzu/iztu-lee-tez-yazim-kilavuzu.docx) |
 | İzmir Yüksek Teknoloji Enstitüsü | `iyte-lee` | [İzmir Institute of Technology Thesis Guide, 2019](https://lee.iyte.edu.tr/wp-content/uploads/sites/110/2019/12/Tez-yaz%C4%B1m-k%C4%B1lavuzu-n.pdf) |
+|  | `iyte-lee-test` | [IZTECH Guide to Writing Theses (site yüklemesi 2019/12)](https://lee.iyte.edu.tr/wp-content/uploads/sites/110/2019/12/Tez-yaz%C4%B1m-k%C4%B1lavuzu-n.pdf) |
 | Jandarma ve Sahil Güvenlik Akademisi | `jsga-enstitu` | [JSGA Lisansüstü Tez / Proje Yazım Kılavuzu, 2024](https://www.jsga.edu.tr/kurumlar/jsga.edu.tr/IcSite/guvben/TezYazimKlavuzu/JSGA-Lisansustu-Tez-_-Proje-Yazim-Kilavuzu.docx) |
 | Kadir Has Üniversitesi | `khas-lee` | [Lisansüstü Programlar için Tez ve Bitirme Projesi Yazım Kılavuzu, 2025](https://sgs.khas.edu.tr/wp-content/uploads/sites/76/2025/04/tez-ve-bitirme-projesi-yazim-kilavuzu-z.docx) |
 | Kafkas Üniversitesi | `kafkas-fbe` | [Kafkas Üniversitesi Fen Bilimleri Enstitüsü Tez Yazım Kılavuzu, 2022](https://www.kafkas.edu.tr/dosyalar/febe/file/Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu%202025.docx) |
