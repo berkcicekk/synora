@@ -50,6 +50,21 @@ def test_wrong_paper_and_margins() -> None:
     assert (top.expected, top.actual, top.section_index) == ("3cm", "2.54cm", 1)
 
 
+def test_left_margin_satisfied_with_gutter() -> None:
+    # YTÜ SBE şablonu: sol 2,5 cm + cilt payı 1,5 cm = kılavuzun istediği 4 cm.
+    # Word çıktısında metin bloğu soldan left+gutter kadar içeride başlar.
+    margins = '<w:pgMar w:top="1701" w:bottom="1417" w:left="1134" w:right="1417" w:gutter="851"/>'
+    body = front_matter() + main_matter().replace(sect("decimal"), sect("decimal", margins=margins))
+    assert "page.margin.left" not in rule_ids(run(thesis(body)))
+
+
+def test_left_margin_wrong_even_with_gutter() -> None:
+    margins = '<w:pgMar w:top="1701" w:bottom="1417" w:left="1134" w:right="1417" w:gutter="284"/>'
+    body = front_matter() + main_matter().replace(sect("decimal"), sect("decimal", margins=margins))
+    left = next(f for f in run(thesis(body)).findings if f.rule_id == "page.margin.left")
+    assert (left.expected, left.actual) == ("3.5cm", "2cm (cilt payı 0.5cm)")
+
+
 def test_landscape_section() -> None:
     landscape = '<w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/>'
     body = front_matter() + main_matter().replace(sect("decimal"),

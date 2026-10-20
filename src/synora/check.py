@@ -161,8 +161,16 @@ def _page_rules(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[Findi
                 if expected is None:
                     continue
                 actual_cm = getattr(s.margins, f"{side}_cm")
-                if actual_cm is None or abs(actual_cm - expected) > tol:
+                ok = actual_cm is not None and abs(actual_cm - expected) <= tol
+                gutter = s.margins.gutter_cm or 0
+                if not ok and side == "left" and actual_cm is not None and gutter:
+                    # Kılavuzların "soldan X cm" kuralı Word'de sol kenar + cilt payı
+                    # toplamıyla da sağlanabilir (ör. YTÜ SBE şablonu: 2,5 + 1,5 = 4).
+                    ok = abs(actual_cm + gutter - expected) <= tol
+                if not ok:
                     shown = "tanımsız" if actual_cm is None else f"{_num(actual_cm)}cm"
+                    if actual_cm is not None and side == "left" and gutter:
+                        shown += f" (cilt payı {_num(gutter)}cm)"
                     yield finding(f"page.margin.{side}", f"{_num(expected)}cm", shown)
 
 
