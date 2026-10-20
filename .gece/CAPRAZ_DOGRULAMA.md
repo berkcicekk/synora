@@ -119,9 +119,12 @@ aynı komutla birebir tekrarlanır). Genel: **yakalama %97,1 · düzeltme %63,5 
 
 > **Ö10+Ö11 sonrası (aynı gün, ikinci koşu):** 39 şablon (Bingöl ve Fırat artık kabul ediliyor),
 > 1988 deneme: **yakalama %97,0 · düzeltme %97,8 · metin değişimi 0/1988.** Kapı reddi 653 → 42
-> ve tamamı tek şablonda (firat-sabe: üç tur yetmiyor; düzeltme her turda yeni paragrafları
-> yeniden sınıflandırıyor — elle bakılacak). Ham sayılar: `bozma-sonuclar-o11.json`.
-> Aşağıdaki tablo Ö11 öncesi durumun kaydıdır.
+> ve tamamı tek şablonda (firat-sabe). Ham sayılar: `bozma-sonuclar-o11.json`.
+>
+> **Kapı iyileştirmesi sonrası (üçüncü koşu, `d81421d`):** yeniden sınıflandırmanın görünür
+> kıldığı bulgular özgün dosyayla kanıtlanınca firat-sabe de geçti: 39 şablon, 1988 deneme —
+> **yakalama %97,0 · düzeltme %100,0 · kapı reddi 0 · metin değişimi 0.** Ham sayılar:
+> `bozma-final.json`. Aşağıdaki tablo Ö11 öncesi durumun kaydıdır.
 
 - Düzeltme oranı şablon başına ya %100 ya %0: kopya verilen 23 şablonda bozmaların tamamı
   düzeltildi; %0 olan 14 şablon, denetim tablosundaki kapı reddi (Ö11) şablonlarının aynısı

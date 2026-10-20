@@ -1,0 +1,8496 @@
+{
+ "afsu-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "ahievran-sabe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "aksaray-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "aku-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "amasya-fbe/belge.docx": {
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "amasya-sabe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "ankara-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "beykent-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.bold": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "bilgi-lpe/belge.docx": {
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "bingol-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "btu-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "cankaya-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "cu-fbe/belge.docx": {
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "deu-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "dicle-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "ebyu-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "ebyu-sbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "erciyes-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "erciyes-sbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "esogu-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "esogu-sabe/belge.docx": {
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "firat-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "firat-sabe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "giresun-sbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_cell.font": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 0,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_cell.size_pt": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 0,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "hacettepe-ebe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "itu-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "karabuk-lee-fen/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "kastamonu-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "kayseri-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "ktu-sbe/belge.docx": {
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.first_line_indent_cm": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "marmara-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 1,
+   "detected": 0,
+   "role_changed": 1,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 1,
+   "detected": 0,
+   "role_changed": 1,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "mu-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "odu-sbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "omu-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.first_line_indent_cm": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "rteu-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "sirnak-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "footnote.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "yalova-lee/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "ytu-fbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.first_line_indent_cm": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.size_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  }
+ },
+ "ytu-sbe/belge.docx": {
+  "body.alignment": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.size_pt": {
+   "applied": 2,
+   "detected": 0,
+   "role_changed": 2,
+   "fixed": 0,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "body.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "figure_caption.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "front_matter.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "front_matter.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.bold": {
+   "applied": 2,
+   "detected": 1,
+   "role_changed": 1,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_1.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_after_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_2.space_before_pt": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.bold": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.font": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_after_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "heading_3.space_before_pt": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.bottom": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.left": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.right": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "page.margin.top": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "reference_entry.line_spacing": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.alignment": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.bold": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.font": {
+   "applied": 2,
+   "detected": 2,
+   "role_changed": 0,
+   "fixed": 2,
+   "text_changed": 0,
+   "refused": {}
+  },
+  "table_caption.line_spacing": {
+   "applied": 1,
+   "detected": 1,
+   "role_changed": 0,
+   "fixed": 1,
+   "text_changed": 0,
+   "refused": {}
+  }
+ }
+}
