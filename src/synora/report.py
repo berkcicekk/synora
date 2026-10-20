@@ -219,7 +219,8 @@ def to_json(result: CheckResult, rules: Ruleset) -> str:
         findings.append(row)
     doc = {
         "synora_version": __version__,
-        "ruleset": {"id": rules.ruleset, "version": rules.version, "name": rules.name},
+        "ruleset": {"id": rules.ruleset, "version": rules.version, "name": rules.name,
+                    "uyari": rules.uyari},
         "summary": summary(result),
         "findings": findings,
         "checked_rules": checked_rules(result, rules),
@@ -230,6 +231,8 @@ def to_json(result: CheckResult, rules: Ruleset) -> str:
 def to_text(result: CheckResult, rules: Ruleset, *, max_locations: int = 8) -> str:
     s = summary(result)
     lines = [f"Payper · {rules.name} (kural seti {rules.ruleset} v{rules.version})", ""]
+    if rules.uyari:
+        lines += [f"UYARI: {rules.uyari}", ""]
     if not result.findings:
         lines.append("Kılavuza aykırı biçim bulunamadı.")
     else:

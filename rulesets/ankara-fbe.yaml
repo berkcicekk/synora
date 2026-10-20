@@ -6,6 +6,7 @@
 ruleset: ankara-fbe
 version: 1
 name: "Ankara Üniversitesi · Fen Bilimleri Enstitüsü"
+uyari: "Enstitünün şablonu (2026) kılavuzdan (2013) yeni ve satır aralığında çelişiyor. Bulguları danışmanınızla teyit edin."
 source: "Ankara Üniversitesi FBE Tez Yazım Kılavuzu, 2013"
 institution: "Ankara Üniversitesi"
 source_url: https://fenbilimleri.ankara.edu.tr/wp-content/uploads/sites/79/2024/01/Tez_Yazim_Kilavuzu.pdf

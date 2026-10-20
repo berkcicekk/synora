@@ -8,6 +8,7 @@
 ruleset: btu-lee
 version: 1
 name: "Bursa Teknik Üniversitesi · Lisansüstü Eğitim Enstitüsü"
+uyari: "Enstitü kılavuzu (2022) ile resmi şablon satır aralığında çelişiyor; kılavuzun önsözü çelişkide şablonu esas alır. Satır aralığı bulgularını danışmanınızla teyit edin."
 source: "BTÜ Lisansüstü Eğitim Enstitüsü Tez Yazım Kılavuzu, 2022"
 institution: "Bursa Teknik Üniversitesi"
 source_url: https://depo.btu.edu.tr/dosyalar/enstitu/Dosyalar/BT%C3%9C%20LEE%20Tez%20Yaz%C4%B1m%20K%C4%B1lavuzu_Son_v2.pdf

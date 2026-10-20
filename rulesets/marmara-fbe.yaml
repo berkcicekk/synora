@@ -6,6 +6,7 @@
 ruleset: marmara-fbe
 version: 1
 name: "Marmara Üniversitesi · Fen Bilimleri Enstitüsü"
+uyari: "Kural seti yayındaki 2012 kılavuzundan; enstitünün 2026 tarihli şablonu birçok yerde farklı. Bulguları danışmanınızla teyit edin."
 source: "Marmara Üniversitesi Fen Bilimleri Enstitüsü Lisansüstü Programlarda Tez Yazım Kılavuzu, 2012"
 institution: "Marmara Üniversitesi"
 source_url: "http://dosya.marmara.edu.tr/fbe/tez_formlari/FBE_Tez_Yaz_m_K_lavuzu.pdf"

@@ -137,6 +137,7 @@
 
   {# --- Orta: sayfa tuvali --- #}
   <section class="pane pane-canvas" aria-label="Belge">
+    {% if view.ruleset.uyari %}<p class="alert ruleset-warn">{{ view.ruleset.uyari }}</p>{% endif %}
     <div class="canvas-legend">
       <span class="lg lg-error">Hata</span>
       <span class="lg lg-warning">Uyarı</span>

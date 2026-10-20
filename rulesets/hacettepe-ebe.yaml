@@ -8,6 +8,7 @@
 ruleset: hacettepe-ebe
 version: 1
 name: "Hacettepe Üniversitesi · Eğitim Bilimleri Enstitüsü"
+uyari: "Enstitünün güncel şablonu APA 7 düzenine geçti (11 punto, 2,0 satır aralığı); bu kural seti yayındaki 2017 yönergesini izler. Bulguları danışmanınızla teyit edin."
 source: "Hacettepe Üniversitesi EBE Tez Yazım Yönergesi, 2017"
 institution: "Hacettepe Üniversitesi"
 source_url: https://fs.hacettepe.edu.tr/ebe/dosyalar/Tez_Yazma_Sureci/HU_EBE_Yeni_Tez_Yazim_Yonergesi.pdf

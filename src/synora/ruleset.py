@@ -117,6 +117,8 @@ class Ruleset(_Strict):
     source: str | None = None  # kılavuzun adı/tarihi
     institution: str | None = None  # üniversite adı; arayüzde seçenekler buna göre gruplanır
     source_url: str | None = Field(None, pattern=r"^https?://[^\s]+$")  # kılavuzun resmi adresi
+    # Kullanıcıya gösterilecek uyarı: ör. enstitünün güncel şablonu bu kılavuzla çelişiyor.
+    uyari: str | None = None
     tolerance: Tolerance = Tolerance()
     page: PageRules = PageRules()
     fonts: FontRules = FontRules()

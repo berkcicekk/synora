@@ -188,3 +188,13 @@ def test_text_report_mentions_compliant_count() -> None:
     data = thesis(front_matter() + main_matter(extra=bad))
     result = check(parse_package(open_docx(data)), RULES)
     assert "madde daha denetlendi ve uygun bulundu" in to_text(result, RULES)
+
+
+def test_ruleset_warning_reaches_report() -> None:
+    # Kılavuz-şablon çelişkisi olan kural setleri uyarı taşır; rapor bunu gösterir.
+    warned = load_ruleset(Path(EXAMPLE).parent / "btu-lee.yaml")
+    assert warned.uyari
+    result = check(parse_package(open_docx(thesis())), warned)
+    doc = json.loads(to_json(result, warned))
+    assert doc["ruleset"]["uyari"] == warned.uyari
+    assert f"UYARI: {warned.uyari}" in to_text(result, warned)
