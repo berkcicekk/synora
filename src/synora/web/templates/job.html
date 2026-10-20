@@ -309,6 +309,9 @@
           {% elif c.sections %}Yer: bölüm {{ c.sections|join(", ") }} (sayfa ayarları){% endif %}
         </div>
         {{ howto(c.rule_id) }}
+        {% if not demo %}
+        <button type="button" class="linkbtn fb" data-feedback="{{ c.rule_id }}">Bu bulgu yanlış mı?</button>
+        {% endif %}
       </li>
       {% endfor %}
     </ol>

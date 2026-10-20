@@ -751,6 +751,26 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         db.set_user_roles(job_id, json.dumps(pending, sort_keys=True))
         return JSONResponse({"roles": pending, "changed": pending != applied_roles(report)})
 
+    @app.post("/jobs/{job_id}/feedback")
+    async def job_feedback(request: Request, job_id: str) -> JSONResponse:
+        """Ö1: "Bu bulgu yanlış mı?" oyu. Metin alınmaz; yalnızca rule_id ve karar."""
+        user = require_user(request)
+        check_csrf(user.csrf, request.headers.get("x-csrf-token"))
+        job = own_job(user, job_id)
+        form = await small_form(request)
+        rule_id = str(form.get("rule_id", ""))
+        verdict = str(form.get("verdict", ""))
+        para_id = str(form.get("para_id", ""))[:64]
+        if verdict not in ("wrong", "ok") or not re.fullmatch(r"[a-z0-9_.]{1,64}", rule_id):
+            raise HTTPException(400, "Geçersiz geri bildirim.")
+        if db.feedback_count(job_id) >= 200:  # sınırsız birikme olmasın
+            raise HTTPException(429, "Bu iş için geri bildirim sınırına ulaşıldı.")
+        info = rulesets.get(job.ruleset)
+        version = info.rules.version if info else 0
+        db.add_feedback(job_id, job.ruleset, version, rule_id, para_id, verdict)
+        log_event("feedback", job_id=job_id, code=f"{rule_id}:{verdict}")
+        return JSONResponse({"ok": True})
+
     @app.post("/jobs/{job_id}/recheck")
     async def job_recheck(request: Request, job_id: str) -> JSONResponse:
         """Seçilen rollerle aynı dosyayı yeniden denetler."""

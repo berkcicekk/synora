@@ -503,6 +503,30 @@
     });
   }
 
+  // --- "Bu bulgu yanlış mı?" geri bildirimi (Ö1) ---------------------------------------------
+  const fbOutputs = document.getElementById("outputs");
+  if (fbOutputs && fbOutputs.dataset.job) {
+    document.querySelectorAll("[data-feedback]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        try {
+          const res = await fetch("/jobs/" + fbOutputs.dataset.job + "/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded",
+                       "X-CSRF-Token": fbOutputs.dataset.csrf },
+            body: new URLSearchParams({ rule_id: btn.dataset.feedback, verdict: "wrong" }),
+          });
+          btn.textContent = res.ok ? "Teşekkürler, not edildi."
+                                   : "Gönderilemedi; sonra yeniden deneyin.";
+          if (!res.ok) btn.disabled = false;
+        } catch {
+          btn.textContent = "Gönderilemedi; sonra yeniden deneyin.";
+          btn.disabled = false;
+        }
+      });
+    });
+  }
+
   // --- Silme onayı (tarayıcı confirm() yerine sayfa içi) ------------------------------------
   document.querySelectorAll("[data-confirm]").forEach((btn) => {
     const real = btn.parentElement.querySelector("button[type=submit]");

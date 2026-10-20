@@ -586,6 +586,8 @@ body.editor main { display: flex; min-height: 0; }
 .workspace { flex: 1; display: grid; grid-template-columns: 260px minmax(0, 1fr) 390px; min-height: 0; height: calc(100vh - 61px); height: calc(100dvh - 61px); }
 .pane { overflow-y: auto; min-height: 0; }
 .ruleset-warn { margin: 0 0 .8rem; }
+.comment .fb { font-size: .74rem; color: var(--muted); margin-top: .5rem; }
+.comment .fb:disabled { cursor: default; text-decoration: none; }
 .checked-rules { margin: 1rem 0 0; border-top: 1px solid var(--hair); padding-top: .8rem; }
 .checked-rules summary { cursor: pointer; font-size: .85rem; color: var(--ok); font-weight: 500; }
 .checked-rules summary::marker { color: var(--muted); }

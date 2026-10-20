@@ -46,6 +46,24 @@ CREATE TABLE IF NOT EXISTS job_starts (
     created_at REAL NOT NULL
 );
 CREATE INDEX IF NOT EXISTS job_starts_email ON job_starts(email_hash, created_at);
+-- Ö1: "Bu bulgu yanlış mı?" geri bildirimi. Metin yok; iş silinince satır da silinir.
+CREATE TABLE IF NOT EXISTS feedback (
+    job_id TEXT NOT NULL,
+    rule_id TEXT NOT NULL,
+    para_id TEXT NOT NULL DEFAULT '',
+    verdict TEXT NOT NULL,
+    created_at REAL NOT NULL,
+    PRIMARY KEY (job_id, rule_id, para_id)
+);
+-- Kural seti sürümüne bağlı toplu sayım: iş silinse de kalır (pilot yanlış alarm ölçüsü).
+CREATE TABLE IF NOT EXISTS feedback_counts (
+    ruleset TEXT NOT NULL,
+    ruleset_version INTEGER NOT NULL,
+    rule_id TEXT NOT NULL,
+    verdict TEXT NOT NULL,
+    n INTEGER NOT NULL,
+    PRIMARY KEY (ruleset, ruleset_version, rule_id, verdict)
+);
 CREATE TABLE IF NOT EXISTS users (
     email TEXT PRIMARY KEY,
     created_at REAL NOT NULL,
@@ -259,7 +277,31 @@ class Database:
         return int(row[0])
 
     def delete_job(self, job_id: str) -> None:
-        self.execute("DELETE FROM jobs WHERE id=?", (job_id,))
+        with self._lock:
+            self._conn.execute("DELETE FROM jobs WHERE id=?", (job_id,))
+            self._conn.execute("DELETE FROM feedback WHERE job_id=?", (job_id,))
+
+    # --- Bulgu geri bildirimi (Ö1) ------------------------------------------------------------
+
+    def add_feedback(self, job_id: str, ruleset: str, ruleset_version: int,
+                     rule_id: str, para_id: str | None, verdict: str) -> bool:
+        """Kaydeder; aynı iş+bulgu için ikinci oy sayılmaz. Metin alınmaz."""
+        now = time.time()
+        with self._lock:
+            cur = self._conn.execute(
+                "INSERT OR IGNORE INTO feedback (job_id, rule_id, para_id, verdict, created_at) "
+                "VALUES (?, ?, ?, ?, ?)", (job_id, rule_id, para_id or "", verdict, now))
+            if cur.rowcount == 0:
+                return False
+            self._conn.execute(
+                "INSERT INTO feedback_counts (ruleset, ruleset_version, rule_id, verdict, n) "
+                "VALUES (?, ?, ?, ?, 1) ON CONFLICT(ruleset, ruleset_version, rule_id, verdict) "
+                "DO UPDATE SET n = n + 1", (ruleset, ruleset_version, rule_id, verdict))
+            return True
+
+    def feedback_count(self, job_id: str) -> int:
+        row = self.execute("SELECT COUNT(*) FROM feedback WHERE job_id=?", (job_id,)).fetchone()
+        return int(row[0])
 
     # --- Saklama süresi ---------------------------------------------------------------------
 
@@ -268,6 +310,7 @@ class Database:
         with self._lock:
             cur = self._conn.execute("DELETE FROM jobs WHERE created_at < ?",
                                      (now - retention_seconds,))
+            self._conn.execute("DELETE FROM feedback WHERE job_id NOT IN (SELECT id FROM jobs)")
             self._conn.execute("DELETE FROM sessions WHERE expires_at < ?", (now,))
             self._conn.execute("DELETE FROM login_tokens WHERE expires_at < ?", (now - 3600,))
             self._conn.execute("DELETE FROM job_starts WHERE created_at < ?", (now - 86400,))
