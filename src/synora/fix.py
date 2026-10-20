@@ -15,7 +15,7 @@ from typing import Any
 from synora.check import Finding, UserRoles, check
 from synora.errors import ErrorCode
 from synora.ingest import DocxPackage, open_docx
-from synora.model import RunInfo
+from synora.model import Role, RunInfo
 from synora.ooxml import TWIPS_PER_CM, w
 from synora.parse import ParseResult, parse_document, parse_package
 from synora.ruleset import Ruleset
@@ -260,6 +260,8 @@ def fix_document(
     """
     original = open_docx(data)
     before_keys: set[FindingKey] | None = None
+    first_roles: dict[str, Role] = {}
+    last_roles: dict[str, Role] = {}
     seen_fixable: set[FindingKey] = set()
     applied_all: list[Finding] = []
     modified_all: set[str] = set()
@@ -269,8 +271,10 @@ def fix_document(
         pkg = open_docx(current)
         parsed = parse_document(pkg)
         result = check(parsed.doc, rules, user_roles)
+        last_roles = {pid: d.role for pid, d in result.roles.items()}
         if before_keys is None:
             before_keys = {key(f) for f in result.findings}
+            first_roles = last_roles
         done = {key(f) for f in applied_all}
         fixable = [f for f in result.findings if f.fixable and key(f) not in done]
         if not fixable:
@@ -320,6 +324,15 @@ def fix_document(
     if not applied_all:
         raise WriteError(ErrorCode.NOTHING_TO_FIX)
     assert before_keys is not None
+    changed_roles = {pid: role for pid, role in last_roles.items()
+                     if pid in first_roles and first_roles[pid] is not role}
+    if changed_roles:
+        # Düzeltme bazı paragrafları yeniden sınıflandırdı: özgün dosya SON rollerle yeniden
+        # denetlenir; orada da çıkan bulgu düzeltmenin yarattığı hata değil, görünür olmuş
+        # mevcut durumdur. Kapı yalnızca gerçekten yeni olanı reddetmeye devam eder.
+        revealed = check(parse_package(original), rules, user_roles,
+                         pin_roles=changed_roles).findings
+        before_keys |= {key(f) for f in revealed}
     verify_output(
         original, current,
         modified_parts=modified_all,

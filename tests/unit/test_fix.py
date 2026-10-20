@@ -247,6 +247,41 @@ def test_fix_loop_fixes_findings_revealed_by_earlier_fix(
     assert len(calls) <= 4  # en fazla 3 tur + son kapı denetimi
 
 
+def test_fix_loop_allows_unfixable_finding_revealed_by_reclassification(
+        monkeypatch: pytest.MonkeyPatch) -> None:
+    """firat-sabe deseni: düzeltme bir paragrafı yeniden sınıflandırıyor ve o paragrafın
+    belgede ZATEN VAR OLAN, düzeltilEMEZ bulgusu (ör. sekmeli girinti uyarısı) görünür
+    oluyor. Özgün dosya son rollerle yeniden denetlenip bulgu orada da çıkıyorsa kapı
+    bunu 'düzeltmenin yarattığı hata' saymaz."""
+    import dataclasses
+
+    from synora import fix as fix_mod
+    from synora.model import Role
+
+    data = thesis(front_matter() + main_matter(extra=BAD_PARAGRAPHS["line_spacing"]))
+    real_check = fix_mod.check
+
+    def fake_check(doc, rules, user_roles=None, pin_roles=None):
+        from synora.check import Finding, Severity
+
+        result = real_check(doc, rules, user_roles, pin_roles=pin_roles)
+        fixing_not_done = any(f.rule_id == "body.line_spacing" for f in result.findings)
+        pid = next(iter(result.roles))
+        hidden = Finding("body.first_line_indent_cm", Severity.WARNING, "1.25", "sekme",
+                         False, para_id=pid)
+        if fixing_not_done and pin_roles is None:
+            # 1. tur: paragraf henüz 'farklı' rolde, gizli bulgu görünmüyor.
+            roles = dict(result.roles)
+            roles[pid] = roles[pid].model_copy(update={"role": Role.UNKNOWN})
+            return dataclasses.replace(result, roles=roles)
+        # Düzeltme sonrası (ya da özgünün sabitlenmiş rollerle denetimi): bulgu görünür.
+        return dataclasses.replace(result, findings=(*result.findings, hidden))
+
+    monkeypatch.setattr(fix_mod, "check", fake_check)
+    out = fix_mod.fix_document(data, RULES)  # kapı reddetmemeli
+    assert out.fixed >= 1
+
+
 def test_fix_loop_still_refuses_unexplained_new_findings(
         monkeypatch: pytest.MonkeyPatch) -> None:
     import dataclasses

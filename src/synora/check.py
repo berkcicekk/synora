@@ -62,10 +62,15 @@ USER_ROLES = frozenset({
 
 
 def check(
-    doc: DocModel, rules: Ruleset, user_roles: UserRoles | None = None
+    doc: DocModel, rules: Ruleset, user_roles: UserRoles | None = None,
+    *, pin_roles: dict[str, Role] | None = None,
 ) -> CheckResult:
     """`user_roles`: öğrencinin seçtiği roller. Yalnızca sınıflandırıcının UNKNOWN bıraktığı
-    paragraflara ve USER_ROLES içindeki rollere uygulanır; diğerleri sessizce yok sayılır."""
+    paragraflara ve USER_ROLES içindeki rollere uygulanır; diğerleri sessizce yok sayılır.
+
+    `pin_roles`: yalnızca A5 düzelticinin iç kullanımı. Düzeltme bazı paragrafları yeniden
+    sınıflandırabilir; kapı, 'yeni görünen' bulgunun özgün dosyada da var olduğunu kanıtlamak
+    için özgünü SON rollerle yeniden denetler. Koşulsuz uygulanır; web'e açılmaz."""
     roles = assign_roles(doc)
     applied: dict[str, Role] = {}
     for pid, role in (user_roles or {}).items():
@@ -73,6 +78,9 @@ def check(
         if current is not None and current.role is Role.UNKNOWN and role in USER_ROLES:
             roles[pid] = RoleDecision(role=role, confidence=1.0)
             applied[pid] = role
+    for pid, role in (pin_roles or {}).items():
+        if pid in roles:
+            roles[pid] = RoleDecision(role=role, confidence=1.0)
     findings: list[Finding] = []
     findings.extend(_document_rules(doc, rules))
     findings.extend(_page_rules(doc.sections, rules))
