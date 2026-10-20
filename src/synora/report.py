@@ -100,6 +100,7 @@ _PAGE_LABELS = {
     "page_numbering.formats": "Sayfa numarası biçim sırası",
     "page_numbering.position": "Sayfa numarası konumu",
     "page_numbering.decoration": "Sayfa numarası (süssüz)",
+    "page_numbering.restart": "Sayfa numarası yeni biçimde 1'den başlar",
 }
 _ROLE_BY_VALUE = {role.value: name for role, name in ROLE_NAMES.items()}
 
@@ -153,6 +154,10 @@ def message(f: Finding) -> str:
     if rid == "page_numbering.decoration":
         return ("Sayfa numarasının yanında parantez ya da tire var. "
                 "Kılavuz yalnızca rakam istiyor.")
+    if rid == "page_numbering.restart":
+        return ("Sayfa numarası yeni biçime geçerken 1'den başlamıyor "
+                f"({act}). Word'de bölümün ilk sayfasında Sayfa Numarası → "
+                "Sayfa Numarası Biçimi → Başlangıç: 1 seçin.")
 
     prop = rid.split(".", 1)[1] if "." in rid else rid
     if prop == "position":

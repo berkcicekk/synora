@@ -65,6 +65,60 @@ def test_left_margin_wrong_even_with_gutter() -> None:
     assert (left.expected, left.actual) == ("3.5cm", "2cm (cilt payı 0.5cm)")
 
 
+def test_table_cell_rules_are_enforced_when_defined() -> None:
+    # 9 kural seti table_cell kuralı tanımlıyor ama denetim rolü atlıyordu (ölü harf).
+    from synora.model import Role
+    from synora.ruleset import RoleRules
+
+    cell_rules = RoleRules(size_pt=10)
+    with_cells = RULES.model_copy(update={"roles": {**RULES.roles, Role.TABLE_CELL: cell_rules}})
+    bad_cell = p(r("Hücre metni", rpr='<w:sz w:val="24"/>'),  # 12 punto; kural 10 istiyor
+                 ppr='<w:jc w:val="left"/><w:spacing w:line="240"/>')
+    body = front_matter() + main_matter().replace(
+        "<w:tbl>", f"<w:tbl><w:tr><w:tc>{bad_cell}</w:tc></w:tr>")
+    result = check(parse_package(open_docx(thesis(body))), with_cells)
+    assert "table_cell.size_pt" in {f.rule_id for f in result.findings}
+    # table_cell kuralı tanımlamayan set (RULES) hücrelere karışmaz.
+    plain = check(parse_package(open_docx(thesis(body))), RULES)
+    assert not any(f.rule_id.startswith("table_cell") for f in plain.findings)
+
+
+def test_rule_catalog_only_lists_enforced_rules() -> None:
+    # 'Denetlendi ve uygun' listesi, denetimin gerçekten işletmediği bir kuralı iddia edemez.
+    from synora.check import SKIPPED_ROLES, rule_catalog
+    from synora.model import Role
+    from synora.ruleset import RoleRules
+
+    with_dead = RULES.model_copy(
+        update={"roles": {**RULES.roles, Role.TEXTBOX: RoleRules(size_pt=10),
+                          Role.TABLE_CELL: RoleRules(size_pt=10)}})
+    catalog = rule_catalog(with_dead)
+    assert Role.TEXTBOX in SKIPPED_ROLES
+    assert not any(rid.startswith("textbox.") for rid in catalog)  # atlanan rol: iddia yok
+    assert "table_cell.size_pt" in catalog  # artık denetleniyor
+
+
+def test_page_number_restart_at_format_change() -> None:
+    # Kılavuz [roman, arabic] diyorsa ana metin 1'den başlamalı; Word bölüm geçişinde
+    # numarayı kendiliğinden sürdürür. start=1 yoksa bulgu.
+    no_restart = front_matter() + main_matter().replace(
+        sect("decimal"), '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/>' + MARGINS
+        + '<w:pgNumType w:fmt="decimal"/></w:sectPr>')
+    result = check(parse_package(open_docx(thesis(no_restart))), RULES)
+    assert "page_numbering.restart" in {f.rule_id for f in result.findings}
+    with_restart = front_matter() + main_matter().replace(
+        sect("decimal"), '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/>' + MARGINS
+        + '<w:pgNumType w:fmt="decimal" w:start="1"/></w:sectPr>')
+    result = check(parse_package(open_docx(thesis(with_restart))), RULES)
+    assert "page_numbering.restart" not in {f.rule_id for f in result.findings}
+    # Açık bir başlangıç değeri (ör. kapak sayıldığı için roman iii'ten) bilinçli tercihtir.
+    explicit = front_matter() + main_matter().replace(
+        sect("decimal"), '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/>' + MARGINS
+        + '<w:pgNumType w:fmt="decimal" w:start="3"/></w:sectPr>')
+    result = check(parse_package(open_docx(thesis(explicit))), RULES)
+    assert "page_numbering.restart" not in {f.rule_id for f in result.findings}
+
+
 def test_chapter_top_margin_rule() -> None:
     # Çankaya/Karabük deseni: kılavuz bölüm başlığını üst kenardan daha aşağıda başlatır;
     # şablonlar bunu bölüm başı bölümlerinde büyük üst kenarla uygular. chapter_top verilince

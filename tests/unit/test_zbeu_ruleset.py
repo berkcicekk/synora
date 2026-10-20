@@ -43,7 +43,8 @@ FOOTER_REF = '<w:footerReference w:type="default" r:id="rIdF"/>'
 
 
 def sect(fmt: str) -> str:
-    return f'<w:sectPr>{FOOTER_REF}{A4}{ZBEU_MARGINS}<w:pgNumType w:fmt="{fmt}"/></w:sectPr>'
+    return (f'<w:sectPr>{FOOTER_REF}{A4}{ZBEU_MARGINS}'
+            f'<w:pgNumType w:fmt="{fmt}" w:start="1"/></w:sectPr>')
 
 
 def page_field(before: str = "", after: str = "") -> str:

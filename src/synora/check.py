@@ -47,9 +47,8 @@ class CheckResult:
 
 
 SKIPPED_ROLES = frozenset(
-    {Role.EMPTY, Role.UNKNOWN, Role.TABLE_CELL, Role.TEXTBOX, Role.HEADER_FOOTER, Role.TOC_ENTRY,
-     Role.COVER}
-)
+    {Role.EMPTY, Role.UNKNOWN, Role.TEXTBOX, Role.HEADER_FOOTER, Role.TOC_ENTRY, Role.COVER}
+)  # table_cell atlanmaz: kural seti table_cell kuralı tanımlıyorsa hücre metni denetlenir
 
 
 UserRoles = Mapping[str, Role]  # para_id → öğrencinin seçtiği rol
@@ -232,6 +231,8 @@ def rule_catalog(rules: Ruleset) -> list[str]:
     pn = rules.page_numbering
     if pn.formats_in_order:
         out.append("page_numbering.formats")
+    if len(pn.formats_in_order) >= 2:
+        out.append("page_numbering.restart")
     if pn.position:
         out.append("page_numbering.position")
     if pn.forbid_decoration:
@@ -239,6 +240,8 @@ def rule_catalog(rules: Ruleset) -> list[str]:
     simple = ("size_pt", "bold", "italic", "all_caps", "alignment", "first_line_indent_cm",
               "indent_left_cm", "space_before_pt", "space_after_pt", "position", "case")
     for role, rr in rules.roles.items():
+        if role in SKIPPED_ROLES:
+            continue  # denetlenmeyen rolün kuralı "denetlendi ve uygun" diye iddia edilemez
         prefix = role.value
         if rr.font or rules.fonts.allowed:
             out.append(f"{prefix}.font")
@@ -263,6 +266,21 @@ def _page_numbering(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[F
         # Hangi bölümün ön bölüm olduğu tahmin edilmez: yalnızca grup sayısı eşleşiyorsa düzeltilir.
         yield Finding("page_numbering.formats", Severity.ERROR, ",".join(expected),
                       ",".join(actual), len(actual) == len(expected))
+    if len(expected) >= 2:
+        # Ana metne (son biçime, tipik olarak Arap rakamına) geçen bölümde numara 1'den
+        # başlamalı ("Giriş'ten itibaren 1, 2, 3…"). Word, start verilmezse saymayı önceki
+        # bölümden sürdürür; bu yaygın bir öğrenci hatasıdır. Ön sayfa geçişlerine karışılmaz
+        # (kapak sayıldığı için roman numaranın ii/iii'ten sürmesi meşru gelenektir) ve açık
+        # bir start değeri bilinçli tercih sayılır.
+        body_fmt = expected[-1]
+        prev: str | None = None
+        for s in sections:
+            fmt = s.page_number_format or "decimal"
+            if (prev is not None and fmt != prev and fmt == body_fmt
+                    and s.page_number_start is None):
+                yield Finding("page_numbering.restart", Severity.ERROR, "1",
+                              "önceki bölümden devam", False, section_index=s.index)
+            prev = fmt
 
 
 # --- Paragraf ---------------------------------------------------------------------------

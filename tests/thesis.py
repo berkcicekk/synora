@@ -32,7 +32,8 @@ MARGINS = '<w:pgMar w:top="1701" w:bottom="1417" w:left="1985" w:right="1417"/>'
 
 
 def sect(fmt: str, *, page: str = A4, margins: str = MARGINS) -> str:
-    return f'<w:sectPr>{page}{margins}<w:pgNumType w:fmt="{fmt}"/></w:sectPr>'
+    # start="1": biçim değişen bölümde numara 1'den başlar (page_numbering.restart kuralı).
+    return f'<w:sectPr>{page}{margins}<w:pgNumType w:fmt="{fmt}" w:start="1"/></w:sectPr>'
 
 
 def h1(text: str) -> str:
