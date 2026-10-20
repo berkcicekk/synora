@@ -21,8 +21,12 @@ class Settings:
     default_ruleset: str = "zbeu-tip"
     base_url: str = "http://127.0.0.1:8000"
     # Yalnızca bu alan adlarındaki e-postalar giriş yapabilir. Boş = herkes (yalnızca dev).
+    # Nokta ile başlayan girdi sonek kuralıdır: ".edu.tr" → *.edu.tr biten her alan adı.
     allowed_domains: tuple[str, ...] = ("beun.edu.tr", "ogrenci.beun.edu.tr")
     dev: bool = False  # e-posta yerine bağlantıyı konsola yaz, çerezler Secure değil
+    # 0: bağlantı gönderilmez; kayıt formu e-postayı whitelist'e yazar ve oturumu hemen açar.
+    # Adres sahipliği DOĞRULANMAZ (demo kipi); pilotta 1 olmalı.
+    email_verification: bool = True
     retention_hours: float = 24.0
     session_hours: float = 12.0
     login_token_minutes: float = 15.0
@@ -52,10 +56,11 @@ class Settings:
         if not self.base_url.startswith("https://"):
             found.append("SYNORA_BASE_URL https:// ile başlamalı (Secure çerezler ve "
                          "giriş bağlantıları için)")
-        if not self.smtp_host:
-            found.append("SYNORA_SMTP_HOST boş: giriş bağlantıları gönderilemez")
-        if self.smtp_from.endswith(".local>") or self.smtp_from.endswith(".local"):
-            found.append("SYNORA_SMTP_FROM gerçek bir gönderici adresi olmalı")
+        if self.email_verification:
+            if not self.smtp_host:
+                found.append("SYNORA_SMTP_HOST boş: giriş bağlantıları gönderilemez")
+            if self.smtp_from.endswith(".local>") or self.smtp_from.endswith(".local"):
+                found.append("SYNORA_SMTP_FROM gerçek bir gönderici adresi olmalı")
         if not self.allowed_domains:
             found.append("SYNORA_ALLOWED_DOMAINS boş: herkes giriş yapabilirdi")
         if not (self.rulesets_dir / f"{self.default_ruleset}.yaml").is_file():
@@ -74,6 +79,7 @@ class Settings:
             base_url=_env("BASE_URL", cls.base_url).rstrip("/"),
             allowed_domains=domains or cls.allowed_domains,
             dev=_env("DEV", "0") == "1",
+            email_verification=_env("EMAIL_VERIFICATION", "1") == "1",
             retention_hours=float(_env("RETENTION_HOURS", str(cls.retention_hours))),
             workers=int(_env("WORKERS", str(cls.workers))),
             smtp_host=_env("SMTP_HOST", ""),

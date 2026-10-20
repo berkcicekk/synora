@@ -173,6 +173,18 @@ class Database:
                            (token_hash,)).fetchone()
         return row is not None and not row[1] and row[0] >= time.time()
 
+    def register_user(self, email: str, consent_version: str) -> None:
+        """Doğrulamasız kayıt (demo kipi): kullanıcı satırı (whitelist) ve onay kaydı.
+
+        Adres sahipliği doğrulanmadığı için onay, formu gönderenin beyanıdır.
+        """
+        now = time.time()
+        self.execute(
+            "INSERT INTO users (email, created_at, consent_version, consent_at) "
+            "VALUES (?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET "
+            "consent_version=excluded.consent_version, consent_at=excluded.consent_at",
+            (email, now, consent_version, now))
+
     def user_consent(self, email: str) -> tuple[str, float] | None:
         """Kullanıcının onayladığı aydınlatma metni sürümü ve zamanı; onay yoksa None."""
         row = self.execute("SELECT consent_version, consent_at FROM users WHERE email=?",

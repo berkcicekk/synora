@@ -424,7 +424,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if not settings.allowed_domains:
             return settings.dev
         domain = email.rsplit("@", 1)[1].lower()
-        return domain in settings.allowed_domains
+        # Nokta ile başlayan girdi sonek kuralı: ".edu.tr" → *.edu.tr biten her alan adı.
+        return any(domain == d or (d.startswith(".") and domain.endswith(d))
+                   for d in settings.allowed_domains)
 
     # --- Sayfalar ----------------------------------------------------------------------------
 
@@ -459,12 +461,25 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                   error: str | None = None, email: str = "") -> HTMLResponse:
         token = pre_csrf(request)
         resp = render(request, "auth.html", status=status, csrf=token, mode=mode,
-                      domains=settings.allowed_domains, error=error, email=email)
+                      domains=settings.allowed_domains, error=error, email=email,
+                      direct=not settings.email_verification)
         set_pre_csrf(resp, token)
         return resp
 
-    async def send_link(request: Request, mode: Literal["login", "register"]) -> HTMLResponse:
-        """Giriş ve kayıt ortak akışı: denetimler, tek kullanımlık bağlantı, e-posta."""
+    def open_session(email: str) -> RedirectResponse:
+        sid = secrets.token_urlsafe(32)
+        db.add_session(_hash(sid), email, secrets.token_urlsafe(24),
+                       settings.session_hours * 3600)
+        resp = RedirectResponse("/", status_code=303)
+        resp.set_cookie(SESSION_COOKIE, sid, httponly=True, samesite="lax",
+                        secure=settings.secure_cookies, max_age=int(settings.session_hours * 3600))
+        resp.delete_cookie(PRE_CSRF_COOKIE)
+        return resp
+
+    async def send_link(request: Request, mode: Literal["login", "register"]) -> Response:
+        """Giriş ve kayıt ortak akışı: denetimler, tek kullanımlık bağlantı, e-posta.
+
+        email_verification kapalıyken (demo kipi) bağlantı yerine oturum hemen açılır."""
         form = await small_form(request)
         email = str(form.get("email", "")).strip().lower()
         expected, provided = request.cookies.get(PRE_CSRF_COOKIE, ""), str(form.get("csrf", ""))
@@ -489,6 +504,15 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             consent = TERMS_VERSION
         if db.login_requests_since(email, time.time() - 3600) >= settings.login_requests_per_hour:
             return fail("Çok fazla giriş isteği gönderildi. Bir saat sonra yeniden deneyin.")
+        if not settings.email_verification:
+            # Demo kipi: adres sahipliği doğrulanmadan oturum açılır (bkz. Settings).
+            # ttl=0 bağlantısı kullanılamaz; yalnızca saatlik istek sayacına yazılır.
+            db.add_login_token(_hash(secrets.token_urlsafe(32)), email, 0)
+            if mode == "register":
+                db.register_user(email, TERMS_VERSION)
+            elif db.user_consent(email) is None:
+                return fail("Bu adres kayıtlı değil. Önce kayıt olun.")
+            return open_session(email)
         login_token = secrets.token_urlsafe(32)
         token_hash = _hash(login_token)
         db.add_login_token(token_hash, email, settings.login_token_minutes * 60, consent=consent)
@@ -524,11 +548,11 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                       link_minutes=int(settings.login_token_minutes), version=TERMS_VERSION)
 
     @app.post("/login", response_class=HTMLResponse)
-    async def login(request: Request) -> HTMLResponse:
+    async def login(request: Request) -> Response:
         return await send_link(request, "login")
 
     @app.post("/kayit", response_class=HTMLResponse)
-    async def register(request: Request) -> HTMLResponse:
+    async def register(request: Request) -> Response:
         return await send_link(request, "register")
 
     @app.get("/auth", response_class=HTMLResponse)
@@ -560,14 +584,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         email = db.consume_login_token(_hash(token), consent_confirmed=form.get("kvkk") == "1")
         if email is None:
             return RedirectResponse("/auth", status_code=303)
-        sid = secrets.token_urlsafe(32)
-        db.add_session(_hash(sid), email, secrets.token_urlsafe(24),
-                       settings.session_hours * 3600)
-        resp = RedirectResponse("/", status_code=303)
-        resp.set_cookie(SESSION_COOKIE, sid, httponly=True, samesite="lax",
-                        secure=settings.secure_cookies, max_age=int(settings.session_hours * 3600))
-        resp.delete_cookie(PRE_CSRF_COOKIE)
-        return resp
+        return open_session(email)
 
     @app.post("/logout")
     async def logout(request: Request) -> Response:

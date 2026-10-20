@@ -12,13 +12,23 @@
 {% if register %}
 <span class="eyebrow">Yeni hesap</span>
 <h1 class="auth-title">Hesabınızı oluşturun.</h1>
+{% if direct %}
+<p class="auth-lead">Üniversite e&#8209;postanız yeterli. Parola yok: adresinizi yazıp aydınlatma
+   metnini onayladığınızda hesabınız hazır.</p>
+{% else %}
 <p class="auth-lead">Üniversite e&#8209;postanız yeterli. Parola yok: adresinize tek kullanımlık bir
    bağlantı gönderiyoruz, açtığınızda hesabınız hazır.</p>
+{% endif %}
 {% else %}
 <span class="eyebrow">Giriş</span>
 <h1 class="auth-title">Tekrar hoş geldiniz.</h1>
+{% if direct %}
+<p class="auth-lead">Kayıtlı üniversite e&#8209;postanızı yazın, doğrudan giriş yapın.
+   Parola gerekmez.</p>
+{% else %}
 <p class="auth-lead">Üniversite e&#8209;postanızı yazın; tek kullanımlık bir giriş bağlantısı
    gönderelim. Parola gerekmez.</p>
+{% endif %}
 {% endif %}
 <form method="post" action="{{ '/kayit' if register else '/login' }}" class="auth-form">
   <input type="hidden" name="csrf" value="{{ csrf }}">
@@ -27,7 +37,7 @@
   <input id="email" name="email" type="email" required autocomplete="email"
          {% if error %}aria-invalid="true" {% endif %}{% if error or domains %}aria-describedby="{{ 'auth-error ' if error }}{{ 'email-hint' if domains }}"{% endif %}
          placeholder="ad.soyad@beun.edu.tr" value="{{ email or '' }}">
-  {% if domains %}<p class="auth-hint" id="email-hint">Kabul edilen adresler: {% for d in domains %}@{{ d }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+  {% if domains %}<p class="auth-hint" id="email-hint">Kabul edilen adresler: {% for d in domains %}{% if d.startswith('.') %}*{{ d }}{% else %}@{{ d }}{% endif %}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
   {% if register %}
   <label class="check" for="kvkk">
     <input id="kvkk" name="kvkk" type="checkbox" value="1" required>
@@ -35,13 +45,15 @@
       denetimi için, metni okunmadan işlenmesini kabul ediyorum.</span>
   </label>
   {% endif %}
-  <button class="btn primary auth-submit" type="submit"><span class="lbl">{% if register %}Hesabı oluştur{% else %}Giriş bağlantısı gönder{% endif %}</span>{{ arrow() }}</button>
+  <button class="btn primary auth-submit" type="submit"><span class="lbl">{% if register %}Hesabı oluştur{% elif direct %}Giriş yap{% else %}Giriş bağlantısı gönder{% endif %}</span>{{ arrow() }}</button>
 </form>
 {% if register %}
 <ol class="auth-steps">
   <li><span>01</span>E-postanızı yazın</li>
-  <li><span>02</span>Gelen bağlantıyı açın</li>
+  {% if not direct %}<li><span>02</span>Gelen bağlantıyı açın</li>
   <li><span>03</span>Tezinizi yükleyin</li>
+  {% else %}<li><span>02</span>Tezinizi yükleyin</li>
+  {% endif %}
 </ol>
 <p class="auth-alt">Zaten hesabınız var mı? <a class="textlink" href="/giris">Giriş yapın</a></p>
 {% else %}
