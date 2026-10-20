@@ -11,7 +11,13 @@ name: "İzmir Yüksek Teknoloji Enstitüsü · Lisansüstü Eğitim Enstitüsü 
 source: "IZTECH Guide to Writing Theses (site yüklemesi 2019/12)"
 institution: "İzmir Yüksek Teknoloji Enstitüsü"
 source_url: https://lee.iyte.edu.tr/wp-content/uploads/sites/110/2019/12/Tez-yaz%C4%B1m-k%C4%B1lavuzu-n.pdf
-uyari: "TEST kural seti: kullanıcı isteğiyle deneme amaçlı eklendi, enstitü tarafından doğrulanmadı. Bulguları danışmanınızla teyit edin."
+uyari: "TEST kural seti: kullanıcı isteğiyle deneme amaçlı eklendi, enstitü tarafından doğrulanmadı. Bulguları danışmanınızla teyit edin. (Aynı kılavuzun olağan seti: iyte-lee.)"
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
 
 page:
   size: A4                      # 2.1 "A4 (210 by 297 mm)"
@@ -26,6 +32,7 @@ roles:
     line_spacing: 1.5           # 2.4 "Standard 1.5 spacing must be used throughout the text"
     alignment: justify          # 2.2 "left and right justified"
     first_line_indent_cm: 1.27  # 2.7 "Paragraphs must be indented by tab of 1.27 cm"
+    space_after_pt: 0           # 2.7 "there must be no spaces between two paragraphs"
   heading_1:
     size_pt: 16                 # 2.3 "Chapter headings: 16 points"; 3.2.1
     all_caps: true              # 3.2.1 "in all capital letters"
