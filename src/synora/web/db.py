@@ -185,6 +185,10 @@ class Database:
             "consent_version=excluded.consent_version, consent_at=excluded.consent_at",
             (email, now, consent_version, now))
 
+    def user_count(self) -> int:
+        """Kayıtlı kullanıcı sayısı (tanıtım sayfasındaki sayılar şeridi için)."""
+        return int(self.execute("SELECT COUNT(*) FROM users").fetchone()[0])
+
     def user_consent(self, email: str) -> tuple[str, float] | None:
         """Kullanıcının onayladığı aydınlatma metni sürümü ve zamanı; onay yoksa None."""
         row = self.execute("SELECT consent_version, consent_at FROM users WHERE email=?",

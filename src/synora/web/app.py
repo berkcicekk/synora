@@ -280,6 +280,14 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         page_spec(ordered_rulesets[0].rules) if ordered_rulesets else None
     )
     login_tiles: list[RuleTile] = rule_tiles(ordered_rulesets[0].rules) if ordered_rulesets else []
+    # Sayılar şeridi: kural seti / üniversite sayısı keşiften; doğruluk oranı 37 resmi şablonda
+    # 1840 denemelik bozma ölçümünden (.gece/CAPRAZ_DOGRULAMA.md, 2026-10-20: yakalama %97,1).
+    landing_stats = {
+        "formats": len(rulesets),
+        "universities": len({r.rules.institution for r in rulesets.values()
+                             if r.rules.institution}),
+        "accuracy": "%97,1",
+    }
     # LaTeX şablonu ilk istendiğinde kural setinden üretilip saklanır (kullanıcı girdisi yok;
     # yalnızca keşfedilmiş kural seti kimlikleri kabul edilir).
     latex_zips: dict[str, bytes] = {}
@@ -434,7 +442,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     def home(request: Request) -> HTMLResponse:
         user = current_user(request)
         if user is None:
-            return render(request, "login.html", page=login_page, tiles=login_tiles)
+            return render(request, "login.html", page=login_page, tiles=login_tiles,
+                          stats={**landing_stats, "users": db.user_count()})
         jobs = [j for j in db.recent_jobs(user.email) if not expired(j)]
         return render(request, "upload.html", user=user, active="docs", rulesets=ordered_rulesets,
                       ruleset_groups=ruleset_groups,

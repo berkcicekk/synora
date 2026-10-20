@@ -329,6 +329,20 @@ def test_landing_anchors_exist(client: TestClient) -> None:
         assert f'id="{anchor}"' in html, anchor
 
 
+def test_landing_stats_strip(client: TestClient) -> None:
+    # Sayılar şeridi: kural seti ve üniversite sayısı keşfedilen kural setlerinden,
+    # kullanıcı sayısı veritabanından gelir; doğruluk oranı ölçümden sabittir.
+    from synora.web.app import discover_rulesets
+
+    rulesets = discover_rulesets(Path(__file__).resolve().parents[2] / "rulesets")
+    unis = {r.rules.institution for r in rulesets.values() if r.rules.institution}
+    html = client.get("/").text
+    assert f'<span class="zero">{len(rulesets)}</span>' in html
+    assert f'<span class="zero">{len(unis)}</span>' in html
+    assert "%97,1" in html
+    assert '<span class="zero">0</span><span>kayıtlı kullanıcı' in html  # test db boş
+
+
 def test_logged_in_nav_anchor_exists(client: TestClient, mailer: ConsoleMailer) -> None:
     login(client, mailer)
     html = client.get("/").text
