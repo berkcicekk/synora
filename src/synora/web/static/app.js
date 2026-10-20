@@ -480,6 +480,14 @@
   const rolesBar = document.getElementById("roles-bar");
   if (outputs && rolesBar) {
     const rolesStatus = document.getElementById("roles-status");
+    const collect = document.getElementById("collect");
+    if (collect) collect.addEventListener("change", () => {
+      fetch("/jobs/" + outputs.dataset.job + "/roles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-CSRF-Token": outputs.dataset.csrf },
+        body: JSON.stringify({ roles: {}, collect: collect.checked }),
+      }).catch(() => {});
+    });
     document.querySelectorAll("select[data-pid]").forEach((sel) => {
       sel.addEventListener("click", (e) => e.stopPropagation());
       sel.addEventListener("change", async () => {

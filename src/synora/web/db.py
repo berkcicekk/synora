@@ -55,6 +55,14 @@ CREATE TABLE IF NOT EXISTS feedback (
     created_at REAL NOT NULL,
     PRIMARY KEY (job_id, rule_id, para_id)
 );
+-- F6: açık rızayla toplanan eğitim verisi. Metin, iş kimliği ve e-posta YOK;
+-- yalnızca özellik vektörü (ParaFeatures, str alanı yok) + seçilen rol + kural seti.
+CREATE TABLE IF NOT EXISTS training (
+    features TEXT NOT NULL,
+    label TEXT NOT NULL,
+    ruleset TEXT NOT NULL,
+    created_at REAL NOT NULL
+);
 -- Kural seti sürümüne bağlı toplu sayım: iş silinse de kalır (pilot yanlış alarm ölçüsü).
 CREATE TABLE IF NOT EXISTS feedback_counts (
     ruleset TEXT NOT NULL,
@@ -107,6 +115,7 @@ class Job:
     report: str | None
     source_sha256: str | None = None  # yeniden yüklemede "aynı dosya mı" denetimi için
     user_roles: str | None = None  # JSON {para_id: rol}: öğrencinin kaydettiği rol seçimleri
+    collect: int = 0  # 1: rol seçimleri rızayla, metinsiz eğitim verisi olarak kullanılabilir
 
 
 class Database:
@@ -128,6 +137,9 @@ class Database:
                 self._conn.execute("ALTER TABLE jobs ADD COLUMN source_sha256 TEXT")
             if "user_roles" not in columns:
                 self._conn.execute("ALTER TABLE jobs ADD COLUMN user_roles TEXT")
+            if "collect" not in columns:
+                self._conn.execute(
+                    "ALTER TABLE jobs ADD COLUMN collect INTEGER NOT NULL DEFAULT 0")
             # Yeniden başlatmada yarıda kalan işler: dosya bellekteydi, artık yok.
             self._conn.execute(
                 "UPDATE jobs SET status='failed', error_code='INTERRUPTED', finished_at=? "
@@ -246,6 +258,17 @@ class Database:
     def requeue(self, job_id: str) -> None:
         """Aynı dosyayla yeniden denetim: rapor yeni sonuç gelene kadar korunur."""
         self.execute("UPDATE jobs SET status='queued' WHERE id=?", (job_id,))
+
+    def set_collect(self, job_id: str, collect: bool) -> None:
+        self.execute("UPDATE jobs SET collect=? WHERE id=?", (int(collect), job_id))
+
+    def add_training(self, rows: list[tuple[str, str, str]]) -> None:
+        """(features_json, label, ruleset) satırları — metin, iş kimliği, e-posta yok."""
+        now = time.time()
+        with self._lock:
+            self._conn.executemany(
+                "INSERT INTO training (features, label, ruleset, created_at) "
+                "VALUES (?, ?, ?, ?)", [(f, lb, rs, now) for f, lb, rs in rows])
 
     def set_user_roles(self, job_id: str, roles: str | None) -> None:
         self.execute("UPDATE jobs SET user_roles=? WHERE id=?", (roles, job_id))

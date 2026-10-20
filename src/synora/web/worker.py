@@ -82,7 +82,7 @@ def run_isolated(data: bytes, ruleset_path: str, job_id: str, timeout: float,
                  user_roles: UserRoles = None) -> PipelineResult:
     result = _spawn("check", data, ruleset_path, job_id, timeout, user_roles)
     if isinstance(result, str):
-        return {"report": None, "error_code": result, "source_sha256": None}
+        return {"report": None, "error_code": result, "source_sha256": None, "training": []}
     return result  # type: ignore[return-value]
 
 
@@ -139,6 +139,11 @@ class JobRunner:
         # Kullanıcı bu arada silmişse UPDATE hiçbir satıra dokunmaz.
         self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"],
                            source_sha256=result["source_sha256"])
+        if result.get("training"):
+            # F6: yalnızca açık rıza işaretli işlerde; satırlar metinsiz ve iş kimliksizdir.
+            job = self.db.get_job(job_id)
+            if job is not None and job.collect:
+                self.db.add_training(result["training"])
 
     def make_output(
         self, kind: OutputKind, job_id: str, data: bytes, ruleset_path: str,

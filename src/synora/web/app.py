@@ -749,6 +749,10 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             else:
                 pending.pop(pid, None)
         db.set_user_roles(job_id, json.dumps(pending, sort_keys=True))
+        if isinstance(body.get("collect"), bool):
+            # F6 açık rızası: işaretliyse uygulanan seçimler, metinsiz özellik vektörü +
+            # rol olarak eğitim verisine yazılır (yazma anı: worker, yeniden denetimde).
+            db.set_collect(job_id, body["collect"])
         return JSONResponse({"roles": pending, "changed": pending != applied_roles(report)})
 
     @app.post("/jobs/{job_id}/feedback")

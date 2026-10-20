@@ -247,6 +247,11 @@
     <div class="roles-bar" id="roles-bar" data-job="{{ job.id }}"{% if not view.roles_changed %} hidden{% endif %}>
       <p><strong>Paragraf türü seçimleriniz kaydedildi.</strong> Raporun bunlara göre güncellenmesi için
          yeniden denetleyin.</p>
+      <label class="check small" for="collect">
+        <input id="collect" type="checkbox"{% if job.collect %} checked{% endif %}>
+        <span>Seçimlerim, tezimin metni olmadan (yalnızca biçim ölçüleri) sınıflandırıcıyı
+          geliştirmek için kullanılsın. İsteğe bağlıdır.</span>
+      </label>
       <button type="button" class="btn small primary" data-output="recheck"><span class="lbl">Yeniden denetle</span>{{ arrow() }}</button>
     </div>
     <p id="roles-status" class="status small" role="status" aria-live="polite"></p>
