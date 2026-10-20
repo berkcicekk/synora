@@ -123,14 +123,14 @@ class _Builder:
         base, size_opt, size_note = _base_class(self.body_pt)
         self.emit(
             f"% {self.t.class_name}.cls",
-            f"% Synora tarafından \"{r.ruleset}\" kural setinin {r.version}. sürümünden üretildi.",
+            f"% Payper tarafından \"{r.ruleset}\" kural setinin {r.version}. sürümünden üretildi.",
             f"% Kılavuz: {_comment(r.name)}",
             *([f"% Kaynak: {_comment(r.source)}"] if r.source else []),
-            "% Bu dosyayı değiştirmeyin: kılavuz değişince Synora'dan yenisini indirin.",
+            "% Bu dosyayı değiştirmeyin: kılavuz değişince Payper'dan yenisini indirin.",
             "% Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.",
             "\\NeedsTeXFormat{LaTeX2e}[2022-06-01]",
             f"\\ProvidesClass{{{self.t.class_name}}}[{GENERATOR_DATE} "
-            f"v{GENERATOR_VERSION}.{r.version} Synora tez sablonu]",
+            f"v{GENERATOR_VERSION}.{r.version} Payper tez sablonu]",
             f"\\DeclareOption*{{\\PassOptionsToClass{{\\CurrentOption}}{{{base}}}}}",
             "\\ProcessOptions\\relax",
             f"\\LoadClass[{size_opt},oneside,openany]{{{base}}}",
@@ -494,10 +494,10 @@ class _Builder:
         lines = [
             f"# {r.name} · LaTeX şablonu",
             "",
-            f"Synora, \"{r.ruleset}\" kural setinin {r.version}. sürümünden üretti."
+            f"Payper, \"{r.ruleset}\" kural setinin {r.version}. sürümünden üretti."
             + (f" Kaynak: {r.source}." if r.source else ""),
             "",
-            "**Resmi bir şablon değildir.** Biçim kuralları Synora'nın .docx denetiminde",
+            "**Resmi bir şablon değildir.** Biçim kuralları Payper'ın .docx denetiminde",
             "kullandığı kural setinden alınmıştır. Son onay fakültenizde ya da enstitünüzdedir.",
             "",
             "## Overleaf'te kullanım",
@@ -552,7 +552,7 @@ def _md(text: str) -> str:
     return text.replace("|", "\\|")
 
 
-SAMPLE = r"""% tez.tex — Synora örnek tez iskeleti ({name})
+SAMPLE = r"""% tez.tex — Payper örnek tez iskeleti ({name})
 % Biçim ayarları {cls}.cls içinde. Bu dosyada yalnızca içerik var.
 \documentclass{{{cls}}}
 

@@ -310,7 +310,7 @@ def test_every_page_has_accessible_structure(client: TestClient, mailer: Console
         assert '<main id="main">' in html, name
         assert 'class="skip" href="#main"' in html, name
         title = re.search(r"<title>([^<]+)</title>", html)
-        assert title and "Synora" in title.group(1), name
+        assert title and "Payper" in title.group(1), name
         titles.add(title.group(1))
         # Her form alanının bir etiketi olmalı (gizli alanlar ve dosya seçici hariç).
         for field in re.findall(r"<(?:input|select)\b[^>]*>", html):

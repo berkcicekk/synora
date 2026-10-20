@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_marks.html" import arrow %}
 {% from "_steps.html" import steps %}
-{% block title %}Belgelerim · Synora{% endblock %}
+{% block title %}Belgelerim · Payper{% endblock %}
 {% block content %}
 <section class="app-head">
   <div class="wrap">
@@ -64,7 +64,7 @@
     {% if rulesets %}
     <details class="prep latex">
       <summary>LaTeX ile mi yazıyorsunuz?</summary>
-      <p>Synora Word belgelerini denetler. LaTeX kullanıyorsanız kılavuzun biçim kuralları (kâğıt, kenar boşlukları, yazı tipi, satır aralığı, başlıklar, sayfa numaraları) hazır ayarlanmış şablonu indirin. Overleaf'te <em>New Project › Upload Project</em> ile açabilirsiniz.</p>
+      <p>Payper Word belgelerini denetler. LaTeX kullanıyorsanız kılavuzun biçim kuralları (kâğıt, kenar boşlukları, yazı tipi, satır aralığı, başlıklar, sayfa numaraları) hazır ayarlanmış şablonu indirin. Overleaf'te <em>New Project › Upload Project</em> ile açabilirsiniz.</p>
       <p><a id="latex-link" class="textlink" href="/sablon/{{ rulesets[0].id }}/latex.zip" download>Seçili kılavuzun LaTeX şablonunu indirin (.zip)</a><br>
         <span id="latex-name" class="latex-name">{{ rulesets[0].name }}</span></p>
       <p class="latex-note">Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.</p>

@@ -21,7 +21,7 @@ from synora.parse import parse_package
 from synora.report import ingest_message, to_json, to_text
 from synora.ruleset import load_ruleset
 
-app = typer.Typer(no_args_is_help=True, add_completion=False, help="Synora tez biçim denetimi.")
+app = typer.Typer(no_args_is_help=True, add_completion=False, help="Payper tez biçim denetimi.")
 
 
 class OutputFormat(StrEnum):
@@ -31,7 +31,7 @@ class OutputFormat(StrEnum):
 
 @app.callback()
 def main() -> None:
-    """Synora: tezleri enstitü yazım kılavuzuna göre denetler."""
+    """Payper: tezleri enstitü yazım kılavuzuna göre denetler."""
     # Windows konsolu (cp1254) bazı karakterleri yazamaz: çökmek yerine yer tutucu bas.
     for stream in (sys.stdout, sys.stderr):
         reconfigure = getattr(stream, "reconfigure", None)

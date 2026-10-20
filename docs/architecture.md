@@ -1,4 +1,8 @@
-# Synora — Mimari
+# Payper — Mimari
+
+> Ürün adı **Payper** (2026-10-20'de Synora'dan değişti). Kod tarafındaki adlar (paket `synora`,
+> `SYNORA_*` ortam değişkenleri, CLI `synora`, hata sınıfları) bilinçli olarak eskisi gibi kaldı;
+> metinde geçen "Synora" ürünü, yani Payper'ı anlatır.
 
 > Durum: **Taslak v0.2** (2026-10-12). `[KARAR?]` ile işaretli yerler henüz netleşmedi.
 

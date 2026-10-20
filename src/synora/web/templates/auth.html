@@ -1,7 +1,7 @@
 {% extends "auth_base.html" %}
 {% from "_marks.html" import arrow %}
 {% set register = mode == "register" %}
-{% block title %}{% if register %}Kayıt ol{% else %}Giriş yap{% endif %} · Synora{% endblock %}
+{% block title %}{% if register %}Kayıt ol{% else %}Giriş yap{% endif %} · Payper{% endblock %}
 {% block auth_switch %}
 <nav class="auth-tabs" aria-label="Hesap">
   <a href="/giris" {% if not register %}aria-current="page"{% endif %}>Giriş yap</a>

@@ -64,12 +64,12 @@ def test_body_fixes_are_resolved(name: str) -> None:
     assert content_fingerprint(open_docx(fixed.docx)) == content_fingerprint(open_docx(data))
 
 
-def test_changes_are_tracked_as_synora() -> None:
+def test_changes_are_tracked_as_payper() -> None:
     data = thesis(front_matter() + main_matter(extra=BAD_PARAGRAPHS["many"]))
     xml = doc_xml(fix_document(data, RULES).docx)
     assert xml.count("<w:pPrChange") == 1  # paragraf başına tek kayıt
     assert xml.count("<w:rPrChange") == 1
-    assert 'w:author="Synora"' in xml
+    assert 'w:author="Payper"' in xml
     # Eski değerler kayıtta saklanır: öğrenci reddederse geri döner.
     change = xml[xml.index("<w:pPrChange"):]
     assert 'w:line="240"' in change.split("</w:pPrChange>")[0]

@@ -194,7 +194,7 @@ def to_json(result: CheckResult, rules: Ruleset) -> str:
 
 def to_text(result: CheckResult, rules: Ruleset, *, max_locations: int = 8) -> str:
     s = summary(result)
-    lines = [f"Synora · {rules.name} (kural seti {rules.ruleset} v{rules.version})", ""]
+    lines = [f"Payper · {rules.name} (kural seti {rules.ruleset} v{rules.version})", ""]
     if not result.findings:
         lines.append("Kılavuza aykırı biçim bulunamadı.")
     else:

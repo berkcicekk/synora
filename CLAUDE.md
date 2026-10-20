@@ -1,7 +1,8 @@
-# CLAUDE.md — Synora
+# CLAUDE.md — Payper (kod adı: synora)
 
 ## Proje
-Synora: .docx tezleri enstitü kural setine göre denetleyen/düzelten web aracı. Pilot: ZBEÜ.
+Payper (eski adı Synora; paket/env/CLI adları `synora`/`SYNORA_*` olarak kalır): .docx tezleri
+enstitü kural setine göre denetleyen/düzelten web aracı. Pilot: ZBEÜ. Demo: https://demo.payper.live
 Mimari: @docs/architecture.md (değişmez kurallar oradaki "Tasarım ilkeleri"nde)
 Arayüz: Synora marka kiti (https://claude.ai/artifact/Bg7bwS9wQZqqiyaEWTHzMK) dışına çıkma.
 

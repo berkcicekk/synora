@@ -58,7 +58,7 @@ def test_login_page_split_layout(client: TestClient) -> None:
     assert 'name="kvkk"' not in form
     assert re.search(r'<a href="/giris"[^>]*aria-current="page">Giriş yap</a>', html)
     assert 'href="/kayit"' in html
-    assert "<title>Giriş yap · Synora</title>" in html
+    assert "<title>Giriş yap · Payper</title>" in html
     assert 'class="site-nav"' not in html  # odaklı sayfa: üst menü ve altbilgi yok
 
 
@@ -71,7 +71,7 @@ def test_register_page_requires_consent_checkbox(client: TestClient) -> None:
     assert 'for="kvkk"' in form or '<label class="check"' in form
     assert 'href="/aydinlatma"' in form
     assert re.search(r'<a href="/kayit"[^>]*aria-current="page">Kayıt ol</a>', html)
-    assert "<title>Kayıt ol · Synora</title>" in html
+    assert "<title>Kayıt ol · Payper</title>" in html
 
 
 def test_auth_pages_set_pre_login_csrf_cookie(client: TestClient) -> None:

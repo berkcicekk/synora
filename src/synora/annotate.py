@@ -34,7 +34,7 @@ def _comment_lines(findings: list[Finding]) -> list[str]:
         role = ROLE_NAMES.get(f.role, "") if f.role else ""
         prefix = f"[{SEVERITY_NAMES[f.severity]}] " + (f"{role}: " if role else "")
         lines.append(prefix + message(f))
-    lines.append("Synora otomatik biçim denetimi")
+    lines.append("Payper otomatik biçim denetimi")
     return lines
 
 

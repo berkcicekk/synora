@@ -29,7 +29,7 @@ from synora.ooxml import W_NS, w
 from synora.package import story_parts
 from synora.parse import parse_package
 
-AUTHOR = "Synora"
+AUTHOR = "Payper"
 
 # OOXML şeması çocuk sırasını zorunlu kılar; Word sırası bozuk belgeyi "bozuk" sayar.
 PPR_ORDER = [w(t) for t in (
@@ -145,7 +145,7 @@ def tracked_edit(
     """`container` (pPr/rPr/sectPr) üzerinde `edit`'i izlenen biçim değişikliği olarak uygular.
 
     Eski hâl `<w:xxxChange><w:xxx>…eski…</w:xxx></w:xxxChange>` olarak saklanır; Word bunu
-    "Synora tarafından biçimlendirildi" diye gösterir ve öğrenci kabul/ret edebilir.
+    "Payper tarafından biçimlendirildi" diye gösterir ve öğrenci kabul/ret edebilir.
     Kapta zaten bir değişiklik kaydı varsa (öğrencinin kendi izlenen değişikliği) dokunulmaz.
     Gerçek bir değişiklik olmadıysa kayıt eklenmez ve False döner.
     """

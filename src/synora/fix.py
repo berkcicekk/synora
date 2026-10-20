@@ -1,7 +1,7 @@
 """A5 — Düzeltici: düzeltilebilir bulguları izlenen biçim değişikliği olarak uygular.
 
 Yalnızca biçim kapları (w:pPr, w:rPr, w:sectPr) değişir. Her paragraf/run/bölüm için tek bir
-değişiklik kaydı (pPrChange/rPrChange/sectPrChange) oluşur; Word'de "Synora" adıyla görünür.
+değişiklik kaydı (pPrChange/rPrChange/sectPrChange) oluşur; Word'de "Payper" adıyla görünür.
 Çıktı write.verify_output kapılarından geçmezse hiçbir dosya üretilmez.
 """
 
