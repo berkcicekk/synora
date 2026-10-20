@@ -174,6 +174,43 @@ def _page_rules(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[Findi
                     yield finding(f"page.margin.{side}", f"{_num(expected)}cm", shown)
 
 
+def rule_catalog(rules: Ruleset) -> list[str]:
+    """Bu kural setinin denetlediği tüm kural kimlikleri (bulgu çıkmasa da).
+
+    Buradaki adlandırma bu dosyadaki Finding üreticileriyle birebir aynı kalmalı;
+    rapor 'denetlendi ve uygun' maddelerini bu listeden çıkarır (Ö2).
+    """
+    out: list[str] = []
+    page = rules.page
+    if page.size:
+        out.append("page.size")
+    if page.orientation:
+        out.append("page.orientation")
+    margins = page.margins_cm
+    if margins is not None:
+        out.extend(f"page.margin.{side}" for side in ("top", "bottom", "left", "right")
+                   if getattr(margins, side) is not None)
+    pn = rules.page_numbering
+    if pn.formats_in_order:
+        out.append("page_numbering.formats")
+    if pn.position:
+        out.append("page_numbering.position")
+    if pn.forbid_decoration:
+        out.append("page_numbering.decoration")
+    simple = ("size_pt", "bold", "italic", "all_caps", "alignment", "first_line_indent_cm",
+              "indent_left_cm", "space_before_pt", "space_after_pt", "position", "case")
+    for role, rr in rules.roles.items():
+        prefix = role.value
+        if rr.font or rules.fonts.allowed:
+            out.append(f"{prefix}.font")
+        out.extend(f"{prefix}.{name}" for name in simple if getattr(rr, name) is not None)
+        if rr.spacing_rule() is not None:
+            out.append(f"{prefix}.line_spacing")
+        if rr.page_break_before:
+            out.append(f"{prefix}.page_break_before")
+    return out
+
+
 def _page_numbering(sections: tuple[Section, ...], rules: Ruleset) -> Iterator[Finding]:
     expected = [f.value for f in rules.page_numbering.formats_in_order]
     if not expected:

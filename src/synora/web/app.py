@@ -238,6 +238,7 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
     return {"summary": report["summary"], "ruleset": report["ruleset"], "cards": cards,
             "finding_count": len(report["findings"]), "blocks": blocks, "outline": _outline(blocks),
             "role_choices": [(r, _role_name(r)) for r in ROLE_CHOICES],
+            "checked": report.get("checked_rules") or [],  # eski raporlarda alan yok
             "editable": sum(1 for b in blocks if "pid" in b)}
 
 

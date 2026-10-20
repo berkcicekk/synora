@@ -36,3 +36,8 @@ def test_demo_is_cached_and_deterministic(client: TestClient) -> None:
 
 def test_landing_links_to_demo(client: TestClient) -> None:
     assert 'href="/demo"' in client.get("/").text
+
+
+def test_demo_shows_checked_rules(client: TestClient) -> None:
+    html = client.get("/demo").text
+    assert "Denetlendi ve uygun:" in html

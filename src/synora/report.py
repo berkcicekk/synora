@@ -12,7 +12,7 @@ from dataclasses import asdict
 from typing import Any
 
 from synora import __version__
-from synora.check import CheckResult, Finding, Severity
+from synora.check import CheckResult, Finding, Severity, rule_catalog
 from synora.errors import ErrorCode
 from synora.model import Alignment, Role
 from synora.ruleset import Ruleset
@@ -85,6 +85,40 @@ def _spacing(value: str) -> str:
     if value.startswith("at_least:"):
         return "en az " + _tr_num(value.removeprefix("at_least:").removesuffix("pt")) + " pt"
     return _tr_num(value)
+
+
+PROP_LABELS = {
+    "font": "yazı tipi", "size_pt": "punto", "bold": "kalınlık", "italic": "italik",
+    "all_caps": "büyük harf", "alignment": "hizalama", "line_spacing": "satır aralığı",
+    "first_line_indent_cm": "ilk satır girintisi", "indent_left_cm": "sol girinti",
+    "space_before_pt": "öncesindeki boşluk", "space_after_pt": "sonrasındaki boşluk",
+    "page_break_before": "yeni sayfada başlama", "position": "konum",
+    "case": "büyük/küçük harf düzeni",
+}
+_PAGE_LABELS = {
+    "page.size": "Kağıt boyutu", "page.orientation": "Sayfa yönü",
+    "page_numbering.formats": "Sayfa numarası biçim sırası",
+    "page_numbering.position": "Sayfa numarası konumu",
+    "page_numbering.decoration": "Sayfa numarası (süssüz)",
+}
+_ROLE_BY_VALUE = {role.value: name for role, name in ROLE_NAMES.items()}
+
+
+def rule_label(rule_id: str) -> str:
+    if rule_id in _PAGE_LABELS:
+        return _PAGE_LABELS[rule_id]
+    if rule_id.startswith("page.margin."):
+        return f"{SIDE_NAMES.get(rule_id.rsplit('.', 1)[1], '')} kenar boşluğu"
+    head, _, prop = rule_id.partition(".")
+    role_name = _ROLE_BY_VALUE.get(head, head)
+    return f"{role_name} · {PROP_LABELS.get(prop, prop)}"
+
+
+def checked_rules(result: CheckResult, rules: Ruleset) -> list[dict[str, str]]:
+    """Denetlenen ve bulgu çıkmayan kurallar: 'kontrol edildi, uygun' listesi (Ö2)."""
+    found = {f.rule_id for f in result.findings}
+    return [{"rule_id": rid, "label": rule_label(rid)}
+            for rid in rule_catalog(rules) if rid not in found]
 
 
 def message(f: Finding) -> str:
@@ -188,6 +222,7 @@ def to_json(result: CheckResult, rules: Ruleset) -> str:
         "ruleset": {"id": rules.ruleset, "version": rules.version, "name": rules.name},
         "summary": summary(result),
         "findings": findings,
+        "checked_rules": checked_rules(result, rules),
     }
     return json.dumps(doc, ensure_ascii=False, indent=2)
 
@@ -202,6 +237,9 @@ def to_text(result: CheckResult, rules: Ruleset, *, max_locations: int = 8) -> s
             f"{s['errors']} hata, {s['warnings']} uyarı. "
             f"Otomatik düzeltilebilir: {s['fixable']}."
         )
+        compliant = checked_rules(result, rules)
+        if compliant:
+            lines.append(f"{len(compliant)} madde daha denetlendi ve uygun bulundu.")
     if s["cover_paragraphs"]:
         lines.append(
             f"Kapak sayfası ({s['cover_paragraphs']} satır) denetlenmedi; "

@@ -312,6 +312,14 @@
       {% endfor %}
     </ol>
     <p id="filter-empty" class="muted small" hidden>Bu süzgeçte bulgu yok.</p>
+    {% if view.checked %}
+    <details class="checked-rules">
+      <summary>Denetlendi ve uygun: {{ view.checked|length }} madde</summary>
+      <ul>
+        {% for c in view.checked %}<li>{{ c.label }}</li>{% endfor %}
+      </ul>
+    </details>
+    {% endif %}
     <div class="pane-foot">
       {% if demo %}
       <p class="fineprint">Bu, bilerek hatalı hazırlanmış <strong>sentetik</strong> bir örnek tezin gerçek

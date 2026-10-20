@@ -159,3 +159,32 @@ def test_cli_malformed_yaml_exit_2(tmp_path: Path, content: str) -> None:
     res = runner.invoke(app, ["check", str(write(tmp_path, thesis())), "-r", str(bad)])
     assert res.exit_code == 2
     assert res.exception is None or isinstance(res.exception, SystemExit)
+
+
+# --- Denetlenen maddeler (Ö2): bulgu çıkmayan kurallar da raporda görünür ------------------------
+
+
+def test_report_lists_checked_and_compliant_rules() -> None:
+    result = check(parse_package(open_docx(thesis())), RULES)
+    doc = json.loads(to_json(result, RULES))
+    ids = [c["rule_id"] for c in doc["checked_rules"]]
+    assert "body.line_spacing" in ids
+    assert "page.margin.left" in ids
+    assert "heading_1.page_break_before" in ids
+    assert all(c["label"] for c in doc["checked_rules"])
+
+
+def test_rule_with_finding_is_not_listed_as_compliant() -> None:
+    bad = p("Satır aralığı bozuk paragraf.", ppr='<w:spacing w:line="240" w:lineRule="auto"/>')
+    data = thesis(front_matter() + main_matter(extra=bad))
+    result = check(parse_package(open_docx(data)), RULES)
+    doc = json.loads(to_json(result, RULES))
+    assert "body.line_spacing" in {f["rule_id"] for f in doc["findings"]}
+    assert "body.line_spacing" not in {c["rule_id"] for c in doc["checked_rules"]}
+
+
+def test_text_report_mentions_compliant_count() -> None:
+    bad = p("Satır aralığı bozuk paragraf.", ppr='<w:spacing w:line="240" w:lineRule="auto"/>')
+    data = thesis(front_matter() + main_matter(extra=bad))
+    result = check(parse_package(open_docx(data)), RULES)
+    assert "madde daha denetlendi ve uygun bulundu" in to_text(result, RULES)
