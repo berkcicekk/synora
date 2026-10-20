@@ -63,6 +63,14 @@ CREATE TABLE IF NOT EXISTS training (
     ruleset TEXT NOT NULL,
     created_at REAL NOT NULL
 );
+-- Anonim bulgu sayacı: hangi kural ne kadar sık ihlal ediliyor (yalnızca rule_id + sayı;
+-- iş, e-posta, metin yok). Raporlar silinse de kalır; "en sık 10 hata" buradan.
+CREATE TABLE IF NOT EXISTS finding_counts (
+    ruleset TEXT NOT NULL,
+    rule_id TEXT NOT NULL,
+    n INTEGER NOT NULL,
+    PRIMARY KEY (ruleset, rule_id)
+);
 -- Kural seti sürümüne bağlı toplu sayım: iş silinse de kalır (pilot yanlış alarm ölçüsü).
 CREATE TABLE IF NOT EXISTS feedback_counts (
     ruleset TEXT NOT NULL,
@@ -269,6 +277,20 @@ class Database:
             self._conn.executemany(
                 "INSERT INTO training (features, label, ruleset, created_at) "
                 "VALUES (?, ?, ?, ?)", [(f, lb, rs, now) for f, lb, rs in rows])
+
+    def add_finding_counts(self, ruleset: str, counts: dict[str, int]) -> None:
+        """Anonim bulgu sayacı: rule_id → adet. Kimlik ya da metin taşımaz."""
+        with self._lock:
+            self._conn.executemany(
+                "INSERT INTO finding_counts (ruleset, rule_id, n) VALUES (?, ?, ?) "
+                "ON CONFLICT(ruleset, rule_id) DO UPDATE SET n = n + excluded.n",
+                [(ruleset, rid, n) for rid, n in counts.items()])
+
+    def top_findings(self, limit: int = 10) -> list[tuple[str, int]]:
+        rows = self.execute(
+            "SELECT rule_id, SUM(n) AS total FROM finding_counts "
+            "GROUP BY rule_id ORDER BY total DESC LIMIT ?", (limit,)).fetchall()
+        return [(str(r[0]), int(r[1])) for r in rows]
 
     def set_user_roles(self, job_id: str, roles: str | None) -> None:
         self.execute("UPDATE jobs SET user_roles=? WHERE id=?", (roles, job_id))

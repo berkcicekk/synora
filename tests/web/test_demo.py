@@ -41,3 +41,14 @@ def test_landing_links_to_demo(client: TestClient) -> None:
 def test_demo_shows_checked_rules(client: TestClient) -> None:
     html = client.get("/demo").text
     assert "Denetlendi ve uygun:" in html
+
+
+def test_top_findings_section_needs_data(client: TestClient) -> None:
+    from synora.web.db import Database
+
+    db: Database = client.app.state.db  # type: ignore[attr-defined]
+    assert "sik-hatalar" not in client.get("/").text  # eşik altında bölüm yok
+    db.add_finding_counts("example", {"body.line_spacing": 20, "page.margin.left": 10})
+    html = client.get("/").text
+    assert 'id="sik-hatalar"' in html
+    assert "satır aralığı" in html and "×20" in html

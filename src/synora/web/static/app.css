@@ -374,6 +374,15 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
   .sf-upload-side { grid-template-columns: 1fr 1fr; width: 100%; }
 }
 
+.top-findings { background: var(--paper); padding-block: clamp(4rem, 8vw, 6rem); }
+.tf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--hair); border-block: 1px solid var(--hair); counter-reset: tf; }
+@media (min-width: 900px) { .tf-list { grid-template-columns: 1fr 1fr; } }
+.tf-list li { display: flex; align-items: baseline; gap: 1rem; padding: 1rem 1.2rem 1rem 0; background: var(--paper); transition: background-color .25s; }
+@media (hover: hover) { .tf-list li:hover { background: var(--card); } }
+.tf-no { font-family: var(--mono); font-size: .72rem; color: var(--blue); }
+.tf-label { flex: 1; font-size: 1.02rem; }
+.tf-count { font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+
 .zeros { list-style: none; margin: clamp(3rem, 7vw, 5rem) 0 0; padding: 0; display: grid; gap: 1px; background: var(--hair); border-block: 1px solid var(--hair); }
 @media (min-width: 640px) { .zeros { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1100px) { .zeros { grid-template-columns: repeat(4, 1fr); } }

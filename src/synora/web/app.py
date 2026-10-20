@@ -37,7 +37,7 @@ from synora.check import USER_ROLES
 from synora.errors import ErrorCode
 from synora.latex import build_zip
 from synora.log import log_event
-from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message
+from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message, rule_label
 from synora.ruleset import Ruleset, load_ruleset
 from synora.web.db import Database, Job
 from synora.web.mailer import Mailer, make_mailer
@@ -445,8 +445,12 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     def home(request: Request) -> HTMLResponse:
         user = current_user(request)
         if user is None:
+            top = db.top_findings(10)
             return render(request, "login.html", page=login_page, tiles=login_tiles,
-                          stats={**landing_stats, "users": db.user_count()})
+                          stats={**landing_stats, "users": db.user_count()},
+                          # Anonim sayaç; az veriyle yanıltıcı olmasın diye eşik var.
+                          top_findings=([(rule_label(rid), n) for rid, n in top]
+                                        if sum(n for _, n in top) >= 25 else []))
         jobs = [j for j in db.recent_jobs(user.email) if not expired(j)]
         return render(request, "upload.html", user=user, active="docs", rulesets=ordered_rulesets,
                       ruleset_groups=ruleset_groups,

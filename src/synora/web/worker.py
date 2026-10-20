@@ -9,10 +9,12 @@
 from __future__ import annotations
 
 import contextlib
+import json
 import multiprocessing as mp
 import queue
 import sys
 import threading
+from collections import Counter
 from multiprocessing.connection import Connection
 
 from synora.log import log_event
@@ -144,6 +146,13 @@ class JobRunner:
             job = self.db.get_job(job_id)
             if job is not None and job.collect:
                 self.db.add_training(result["training"])
+        if result["report"]:
+            # Anonim bulgu sayacı ("en sık yapılan hatalar"); kimlik ya da metin yok.
+            report = json.loads(result["report"])
+            counts = Counter(f["rule_id"] for f in report.get("findings") or [])
+            job = self.db.get_job(job_id)
+            if counts and job is not None:
+                self.db.add_finding_counts(job.ruleset, dict(counts))
 
     def make_output(
         self, kind: OutputKind, job_id: str, data: bytes, ruleset_path: str,

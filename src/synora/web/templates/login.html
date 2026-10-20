@@ -144,6 +144,25 @@
   </div>
 </section>
 
+{% if top_findings %}
+{# 4a — En sık hatalar: anonim sayaçtan; kimlik ya da metin içermez. #}
+<section class="top-findings" id="sik-hatalar">
+  <div class="wrap">
+    <div class="split-head reveal">
+      <h2>En sık yapılan<br>biçim hataları.</h2>
+      <p>Payper'da denetlenen belgelerden, kimliksiz toplu sayımla. Teslimden önce
+         en çok bunlara bakın.</p>
+    </div>
+    <ol class="tf-list">
+      {% for label, n in top_findings %}
+      <li class="reveal d{{ loop.index0 % 5 + 1 }}"><span class="tf-no">{{ "%02d" | format(loop.index) }}</span>
+        <span class="tf-label">{{ label }}</span><span class="tf-count">×{{ n }}</span></li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endif %}
+
 {# 5 — Başlayın: giriş ve kayıt ayrı sayfalarda (bölünmüş panel). #}
 <section class="join" id="giris">
   <div class="wrap join-grid">
