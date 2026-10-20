@@ -212,6 +212,74 @@ def test_gate_catches_new_findings() -> None:
     assert exc.value.code is ErrorCode.WRITE_NEW_FINDINGS
 
 
+# --- Düzeltme döngüsü (Ö11) --------------------------------------------------------------------
+# Gerçek belgelerde bir düzeltme (ör. pageBreakBefore) sayfa geometrisini değiştirip bazı
+# paragrafları yeniden sınıflandırabilir; o paragrafların zaten var olan hataları ancak o zaman
+# görünür olur. Döngü bunları da düzeltir; kapılar son çıktıya aynen uygulanır.
+
+
+def test_fix_loop_fixes_findings_revealed_by_earlier_fix(
+        monkeypatch: pytest.MonkeyPatch) -> None:
+    import dataclasses
+
+    from synora import fix as fix_mod
+
+    data = thesis(front_matter() + main_matter(
+        extra=BAD_PARAGRAPHS["line_spacing"] + BAD_PARAGRAPHS["alignment"]))
+    real_check = fix_mod.check
+    calls = []
+
+    def fake_check(doc, rules, user_roles=None):
+        # 1. turda hizalama bulgusunu gizle (rolü sonradan netleşen paragraf gibi);
+        # satır aralığı düzeltilince görünür olsun.
+        result = real_check(doc, rules, user_roles)
+        calls.append(len(result.findings))
+        if any(f.rule_id == "body.line_spacing" for f in result.findings):
+            return dataclasses.replace(result, findings=tuple(
+                f for f in result.findings if f.rule_id != "body.alignment"))
+        return result
+
+    monkeypatch.setattr(fix_mod, "check", fake_check)
+    out = fix_mod.fix_document(data, RULES)
+    assert out.fixed == 2  # iki tur: önce satır aralığı, sonra görünür olan hizalama
+    assert doc_xml(out.docx).count("<w:pPrChange") == 2
+    assert content_fingerprint(open_docx(out.docx)) == content_fingerprint(open_docx(data))
+    assert len(calls) <= 4  # en fazla 3 tur + son kapı denetimi
+
+
+def test_fix_loop_still_refuses_unexplained_new_findings(
+        monkeypatch: pytest.MonkeyPatch) -> None:
+    import dataclasses
+
+    from synora import fix as fix_mod
+
+    data = thesis(front_matter() + main_matter(extra=BAD_PARAGRAPHS["line_spacing"]))
+    real_check = fix_mod.check
+    phantom_target: list[str] = []
+
+    def fake_check(doc, rules, user_roles=None):
+        # Düzeltmeden sonra düzeltilEMEZ yeni bir bulgu beliriyor: kapı kopyayı vermemeli.
+        result = real_check(doc, rules, user_roles)
+        if any(f.rule_id == "body.line_spacing" for f in result.findings):
+            phantom_target.append("armed")
+            return result
+        phantom = dataclasses.replace(result.findings[0] if result.findings else _finding(),
+                                      rule_id="page.size", para_id=None, section_index=0,
+                                      fixable=False)
+        return dataclasses.replace(result, findings=(*result.findings, phantom))
+
+    def _finding():
+        from synora.check import Finding
+        return Finding(rule_id="page.size", para_id=None, section_index=0,
+                       severity="error", expected="A4", actual="letter",
+                       fixable=False, source="rule")
+
+    monkeypatch.setattr(fix_mod, "check", fake_check)
+    with pytest.raises(WriteError) as exc:
+        fix_mod.fix_document(data, RULES)
+    assert exc.value.code is ErrorCode.WRITE_NEW_FINDINGS
+
+
 # --- Yorumlu kopya ---------------------------------------------------------------------------
 
 

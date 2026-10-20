@@ -244,63 +244,93 @@ def _page_number_ops(f: Finding, sections: int, current: list[str]) -> dict[int,
 # --- Uygulama ------------------------------------------------------------------------------------
 
 
+MAX_FIX_ROUNDS = 3  # düzeltme, rolleri değiştirip var olan hataları görünür kılabilir (Ö11)
+
+
 def fix_document(
     data: bytes, rules: Ruleset, user_roles: UserRoles | None = None
 ) -> FixResult:
-    pkg = open_docx(data)
-    parsed = parse_document(pkg)
-    result = check(parsed.doc, rules, user_roles)
-    fixable = [f for f in result.findings if f.fixable]
-    if not fixable:
+    """Düzeltilebilir bulguları en fazla MAX_FIX_ROUNDS turda uygular.
+
+    Bir düzeltme (ör. başlığa pageBreakBefore) sayfa geometrisini değiştirip bazı
+    paragrafları yeniden sınıflandırabilir; o paragrafların zaten var olan hataları ancak
+    o zaman görünür olur. Her tur yeniden denetler ve yeni görünen düzeltilebilir bulguları
+    da düzeltir. Kapılar (metin aynılığı, yapı, açıklanamayan yeni bulgu yok) tur başına
+    değil, özgün girdiyle son çıktı arasında uygulanır; geçmezse kopya verilmez.
+    """
+    original = open_docx(data)
+    before_keys: set[FindingKey] | None = None
+    seen_fixable: set[FindingKey] = set()
+    applied_all: list[Finding] = []
+    modified_all: set[str] = set()
+    current = data
+
+    for _ in range(MAX_FIX_ROUNDS):
+        pkg = open_docx(current)
+        parsed = parse_document(pkg)
+        result = check(parsed.doc, rules, user_roles)
+        if before_keys is None:
+            before_keys = {key(f) for f in result.findings}
+        done = {key(f) for f in applied_all}
+        fixable = [f for f in result.findings if f.fixable and key(f) not in done]
+        if not fixable:
+            break
+        seen_fixable |= {key(f) for f in fixable}
+
+        ids = RevisionIds.for_roots(parsed.roots.values())
+        para_part = {p.para_id: p.part for p in parsed.doc.paragraphs}
+        modified: set[str] = set()
+        applied: list[Finding] = []
+
+        by_para: dict[str, list[Finding]] = defaultdict(list)
+        by_section: dict[int, list[tuple[Finding, PPrOp]]] = defaultdict(list)
+        for f in fixable:
+            if f.para_id is not None:
+                by_para[f.para_id].append(f)
+            elif f.rule_id == "page_numbering.formats":
+                current_fmt = [s.page_number_format or "decimal" for s in parsed.doc.sections]
+                for i, op in _page_number_ops(f, len(parsed.doc.sections), current_fmt).items():
+                    by_section[i].append((f, op))
+            elif f.section_index is not None:
+                section_op = _section_op(f, rules)
+                if section_op is not None:
+                    by_section[f.section_index].append((f, section_op))
+
+        for pid, findings in by_para.items():
+            if _apply_paragraph(parsed, pid, findings, ids):
+                applied.extend(findings)
+                modified.add(para_part[pid])
+
+        section_done: dict[Finding, bool] = {}
+        for index, ops in sorted(by_section.items()):
+            ok = _apply_section(parsed, index, [op for _, op in ops], ids)
+            for f, _ in ops:
+                section_done[f] = section_done.get(f, True) and ok
+            if ok:
+                modified.add(pkg.main_part)
+        applied.extend(f for f, ok in section_done.items() if ok)
+
+        if not applied:
+            break
+        applied_all.extend(applied)
+        modified_all |= modified
+        replaced = {part: serialize(parsed.roots[part]) for part in modified}
+        current = repackage(pkg, replaced)
+
+    if not applied_all:
         raise WriteError(ErrorCode.NOTHING_TO_FIX)
-
-    ids = RevisionIds.for_roots(parsed.roots.values())
-    para_part = {p.para_id: p.part for p in parsed.doc.paragraphs}
-    modified: set[str] = set()
-    applied: list[Finding] = []
-
-    by_para: dict[str, list[Finding]] = defaultdict(list)
-    by_section: dict[int, list[tuple[Finding, PPrOp]]] = defaultdict(list)
-    for f in fixable:
-        if f.para_id is not None:
-            by_para[f.para_id].append(f)
-        elif f.rule_id == "page_numbering.formats":
-            current = [s.page_number_format or "decimal" for s in parsed.doc.sections]
-            for i, op in _page_number_ops(f, len(parsed.doc.sections), current).items():
-                by_section[i].append((f, op))
-        elif f.section_index is not None:
-            section_op = _section_op(f, rules)
-            if section_op is not None:
-                by_section[f.section_index].append((f, section_op))
-
-    for pid, findings in by_para.items():
-        if _apply_paragraph(parsed, pid, findings, ids):
-            applied.extend(findings)
-            modified.add(para_part[pid])
-
-    section_done: dict[Finding, bool] = {}
-    for index, ops in sorted(by_section.items()):
-        ok = _apply_section(parsed, index, [op for _, op in ops], ids)
-        for f, _ in ops:
-            section_done[f] = section_done.get(f, True) and ok
-        if ok:
-            modified.add(pkg.main_part)
-    applied.extend(f for f, ok in section_done.items() if ok)
-
-    if not applied:
-        raise WriteError(ErrorCode.NOTHING_TO_FIX)
-    replaced = {part: serialize(parsed.roots[part]) for part in modified}
-    output = repackage(pkg, replaced)
+    assert before_keys is not None
     verify_output(
-        pkg, output,
-        modified_parts=modified,
+        original, current,
+        modified_parts=modified_all,
         expected_structure_delta=Counter(),
         check_findings=lambda p: findings_of(p, rules, user_roles),
-        before_findings={key(f) for f in result.findings},
-        must_disappear={key(f) for f in applied},
+        before_findings=before_keys,
+        must_disappear={key(f) for f in applied_all},
         allowed_new=ALLOWED_NEW_FINDINGS,
     )
-    return FixResult(output, fixed=len(applied), skipped=len(fixable) - len(applied))
+    return FixResult(current, fixed=len(applied_all),
+                     skipped=len(seen_fixable) - len(applied_all))
 
 
 def _apply_paragraph(
