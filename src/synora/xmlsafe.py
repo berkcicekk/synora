@@ -37,11 +37,20 @@ def _new_parser() -> etree.XMLParser:
     )
 
 
-def parse(data: bytes, *, max_bytes: int = DEFAULT_MAX_BYTES) -> etree._Element:
+def screen(data: bytes, *, max_bytes: int = DEFAULT_MAX_BYTES) -> None:
+    """Parse etmeden bayt düzeyi süzgeçler: boyut sınırı ve DOCTYPE yasağı.
+
+    Synora'nın hiç okumadığı part'lar için (Ö10): parse edilmeyen veri saldırı yüzeyi
+    oluşturmaz, ama DOCTYPE/boyut sınırları her XML part'ında geçerli kalır.
+    """
     if len(data) > max_bytes:
         raise UnsafeXmlError(ErrorCode.XML_TOO_LARGE)
     if any(p in data for p in _DOCTYPE_PATTERNS):
         raise UnsafeXmlError(ErrorCode.XML_DOCTYPE)
+
+
+def parse(data: bytes, *, max_bytes: int = DEFAULT_MAX_BYTES) -> etree._Element:
+    screen(data, max_bytes=max_bytes)
     try:
         root = etree.fromstring(data, parser=_new_parser())
     except (etree.LxmlError, ValueError):

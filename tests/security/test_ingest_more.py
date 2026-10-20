@@ -213,3 +213,41 @@ def test_alt_chunk_produces_warning() -> None:
     report = json.loads(result["report"] or "{}")
     assert any(f["severity"] == "warning" and "chunk" in f["rule_id"].lower()
                for f in report["findings"])
+
+
+# --- Okunmayan part'lar (Ö10): katı parse yalnızca Synora'nın okuduğu part'lara ------------------
+# Word, customXml gibi hiç okumadığımız part'larda geçersiz xmlns'i hoş görür (Bingöl/Fırat
+# şablonları). Okunmayan part parse edilmez, bayt süzgeçlerinden geçer ve olduğu gibi korunur.
+
+
+def test_custom_xml_with_invalid_xmlns_is_accepted() -> None:
+    parts = minimal_parts()
+    bad = '<?xml version="1.0"?><root xmlns="Fırat Üniversitesi-FBE"/>'.encode()
+    parts["customXml/item1.xml"] = bad
+    pkg = open_docx(zip_parts(parts))
+    assert pkg.parts["customXml/item1.xml"] == bad  # olduğu gibi korunur
+
+
+def test_custom_xml_with_doctype_is_still_rejected() -> None:
+    parts = minimal_parts()
+    parts["customXml/item1.xml"] = b'<?xml version="1.0"?><!DOCTYPE r [<!ENTITY x "y">]><r/>'
+    assert code_of(zip_parts(parts)) is ErrorCode.XML_DOCTYPE
+
+
+def test_unread_xml_part_over_byte_limit_is_still_rejected() -> None:
+    parts = minimal_parts()
+    parts["customXml/item1.xml"] = b"<r>" + b"a" * 2048 + b"</r>"
+    limits = Limits(max_xml_bytes=1024)
+    assert code_of(zip_parts(parts), limits) is ErrorCode.XML_TOO_LARGE
+
+
+def test_read_part_with_invalid_xml_is_still_rejected() -> None:
+    parts = minimal_parts()
+    parts["word/styles.xml"] = b"<w:styles><"  # bozuk: okunan part katı kalır
+    assert code_of(zip_parts(parts)) is ErrorCode.XML_MALFORMED
+
+
+def test_rels_with_invalid_xml_is_still_rejected() -> None:
+    parts = minimal_parts()
+    parts["word/_rels/document.xml.rels"] = b"<Relationships><"
+    assert code_of(zip_parts(parts)) is ErrorCode.XML_MALFORMED

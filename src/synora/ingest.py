@@ -98,8 +98,16 @@ def open_docx(data: bytes, limits: Limits | None = None) -> DocxPackage:
         raise IngestError(ErrorCode.MISSING_CONTENT_TYPES)
 
     for name, blob in parts.items():
-        if _is_xml_part(name):
+        if not _is_xml_part(name):
+            continue
+        if _is_read_part(name):
             xmlsafe.parse(blob, max_bytes=limits.max_xml_bytes)
+        else:
+            # Synora'nın hiç okumadığı part (ör. customXml): parse edilmez, bayt süzgeçleri
+            # uygulanır ve olduğu gibi korunur. Word geçersiz xmlns'i hoş görür; katı parse
+            # burada resmi şablonları gereksiz yere reddediyordu (Ö10). Okunan her part,
+            # kullanım anında da xmlsafe.parse'tan geçer (tek giriş kapısı değişmez).
+            xmlsafe.screen(blob, max_bytes=limits.max_xml_bytes)
 
     content_types = _resolve_content_types(parts, ct_name)
     _reject_macros(parts, content_types)
@@ -194,6 +202,23 @@ def _read_entries(
 def _is_xml_part(name: str) -> bool:
     folded = name.casefold()
     return folded.endswith((".xml", ".rels"))
+
+
+# Synora'nın okuyabileceği part'lar: içerik türleri, ilişkiler, hikâye part'ları ve stil/
+# numaralandırma/tema. Bunlar girişte katı parse edilir (erken ve net hata); listede
+# olmayan bir part sonradan okunursa kullanım anındaki xmlsafe.parse yine korur.
+_READ_PART_PREFIXES = ("word/header", "word/footer", "word/theme/")
+_READ_PART_NAMES = frozenset({
+    CONTENT_TYPES_PART.casefold(), "word/document.xml", "word/styles.xml",
+    "word/numbering.xml", "word/settings.xml", "word/footnotes.xml", "word/endnotes.xml",
+    "word/comments.xml",
+})
+
+
+def _is_read_part(name: str) -> bool:
+    folded = name.casefold()
+    return (folded.endswith(".rels") or folded in _READ_PART_NAMES
+            or folded.startswith(_READ_PART_PREFIXES))
 
 
 def _resolve_content_types(parts: Mapping[str, bytes], ct_name: str) -> dict[str, str]:
