@@ -299,6 +299,12 @@ def render(tallies: dict[str, Tally]) -> str:
     return "\n".join(lines)
 
 
+def tally_json(t: Tally) -> dict[str, Any]:
+    # asdict, Counter'ı Counter((anahtar, değer) çiftleri) olarak yeniden kurup tuple
+    # anahtar üretir; json bunu kabul etmez.
+    return {**asdict(t), "refused": dict(t.refused)}
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("pairs", nargs="+", help="belge.docx:kural_seti.yaml")
@@ -315,7 +321,7 @@ def main(argv: list[str]) -> int:
         tallies = evaluate(Path(doc_path).read_bytes(), rules, args.per_type, args.seed, label)
         print(f"\n## {label} ({rules.ruleset})\n{render(tallies)}")
         merge(overall, tallies)
-        per_doc[label] = {k: asdict(v) for k, v in tallies.items()}
+        per_doc[label] = {k: tally_json(v) for k, v in tallies.items()}
     if len(args.pairs) > 1:
         print(f"\n## Hepsi\n{render(overall)}")
     if args.json:

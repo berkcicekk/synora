@@ -4,6 +4,7 @@ düzeltilmeli; metin hiçbir koşulda değişmemeli. Gerçek belgelerdeki oranla
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -33,3 +34,13 @@ def test_every_mutation_on_compliant_thesis_is_detected_and_fixed() -> None:
 def test_report_has_a_total_line() -> None:
     tallies = mutation_eval.evaluate(thesis(), RULES, per_type=1)
     assert "TOPLAM" in mutation_eval.render(tallies)
+
+
+def test_tally_json_with_gate_refusals_round_trips() -> None:
+    # dataclasses.asdict bir Counter'ı Counter((k, v) çiftleri) olarak yeniden kurup
+    # tuple anahtar üretiyordu; json.dumps bunu reddediyordu.
+    t = mutation_eval.Tally(applied=3, detected=3)
+    t.refused["WRITE_NEW_FINDINGS"] += 2
+    data = json.loads(json.dumps(mutation_eval.tally_json(t)))
+    assert data["refused"] == {"WRITE_NEW_FINDINGS": 2}
+    assert data["applied"] == 3
