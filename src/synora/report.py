@@ -101,6 +101,7 @@ _PAGE_LABELS = {
     "page_numbering.position": "Sayfa numarası konumu",
     "page_numbering.decoration": "Sayfa numarası (süssüz)",
     "page_numbering.restart": "Sayfa numarası yeni biçimde 1'den başlar",
+    "document.missing_section": "Zorunlu bölümler",
 }
 _ROLE_BY_VALUE = {role.value: name for role, name in ROLE_NAMES.items()}
 
@@ -130,6 +131,9 @@ def message(f: Finding) -> str:
     if rid == "document.alt_chunk":
         return (f"Belgede başka bir dosyadan gömülü içerik var ({act} parça); bu kısım "
                 "denetlenmedi. İçeriği Word'de belgeye metin olarak aktarmanız önerilir.")
+    if rid == "document.missing_section":
+        return (f"Kılavuzun zorunlu saydığı “{exp}” bölümü bulunamadı. Bölümü ekleyin "
+                "ya da başlığını kılavuzdaki adıyla yazın.")
     if rid == "document.embedded_object":
         return (f"Belgede gömülü nesne var ({act} adet; ör. OLE/Excel nesnesi); içeriği "
                 "denetlenmedi ve dokunulmadı.")

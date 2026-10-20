@@ -63,15 +63,25 @@ FIGURE = p('<w:r><w:drawing/></w:r>', ppr='<w:jc w:val="center"/>' + NO_INDENT)
 
 
 def zbeu_thesis(extra: str = "", footer: str = RIGHT_FOOTER) -> bytes:
+    # Kılavuzun zorunlu saydığı tüm bölümleri içerir (required_sections).
     body = (
-        h1("ÖNSÖZ") + p(BODY_TEXT, ppr=sect("lowerRoman"))
+        h1("İÇİNDEKİLER") + p(BODY_TEXT)
+        + h1("ÖNSÖZ") + p(BODY_TEXT)
+        + h1("ÖZET") + p(BODY_TEXT)
+        + h1("SUMMARY") + p(BODY_TEXT, ppr=sect("lowerRoman"))
         + h1("GİRİŞ") + p(BODY_TEXT)
+        + h1("GENEL BİLGİLER")
         + h2("2.1. Genel Bilgiler")
         + p(r(BODY_TEXT), '<w:r><w:footnoteReference w:id="1"/></w:r>')
         + p("Tablo 2.1. Hasta grupları", ppr='<w:pStyle w:val="Caption"/>') + table()
         + FIGURE
         + p("Şekil 2.1. Çalışma akışı", ppr='<w:pStyle w:val="Caption"/>')
+        + h1("GEREÇ VE YÖNTEM") + p(BODY_TEXT)
+        + h1("BULGULAR") + p(BODY_TEXT)
+        + h1("TARTIŞMA") + p(BODY_TEXT)
         + extra
+        + h1("SONUÇLAR") + p(BODY_TEXT)
+        + h1("KAYNAKLAR") + p(BODY_TEXT)
         + sect("decimal")
     )
     notes = notes_xml("footnote", {1: p("Dipnot.", ppr='<w:pStyle w:val="FootnoteText"/>')})
@@ -123,7 +133,8 @@ def test_single_spaced_preface_is_allowed() -> None:
         h1("ÖNSÖZ") + single + p(BODY_TEXT, ppr=sect("lowerRoman"))
         + h1("GİRİŞ") + p(BODY_TEXT) + sect("decimal"),
         styles=STYLES, footers={"rIdF": RIGHT_FOOTER})
-    assert run(data) == []
+    # Küçültülmüş belge: zorunlu bölüm bulguları bu testin konusu değil.
+    assert [f for f in run(data) if f[0] != "document.missing_section"] == []
 
 
 def test_single_spacing_in_body_is_still_an_error() -> None:

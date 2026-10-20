@@ -82,6 +82,7 @@ def check(
             roles[pid] = RoleDecision(role=role, confidence=1.0)
     findings: list[Finding] = []
     findings.extend(_document_rules(doc, rules))
+    findings.extend(_required_sections(doc, rules))
     findings.extend(_page_rules(doc.sections, rules, _chapter_sections(doc, roles)))
     findings.extend(_page_numbering(doc.sections, rules))
     findings.extend(_page_number_position(doc, rules))
@@ -145,6 +146,26 @@ def _document_rules(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
     if doc.embedded_objects:
         yield Finding("document.embedded_object", Severity.WARNING, "0",
                       str(doc.embedded_objects), False)
+
+
+def _required_sections(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
+    """Kılavuzun zorunlu saydığı bölümler belgede var mı? Yalnızca bölüm ADLARI (kural
+    setinden) raporlanır; tez metni rapora girmez."""
+    if not rules.required_sections:
+        return
+    headings: list[str] = []
+    for p in doc.body():
+        if p.in_table or p.in_textbox:
+            continue
+        text = p.text.strip()
+        if text and len(text) <= 80:  # bölüm başlığı olabilecek kısa satırlar
+            headings.append(_tr_lower(_PREFIX_RE.sub("", text).strip()))
+    for name in rules.required_sections:
+        # "SONUÇLAR|SONUÇ": kılavuzun kabul ettiği alternatif yazımlar; raporda ilki gösterilir.
+        alts = [a.strip() for a in name.split("|") if a.strip()]
+        if not any(h.startswith(_tr_lower(a)) for a in alts for h in headings):
+            yield Finding("document.missing_section", Severity.ERROR, alts[0],
+                          "bulunamadı", False)
 
 
 def _chapter_sections(doc: DocModel, roles: dict[str, RoleDecision]) -> set[int]:
@@ -219,6 +240,7 @@ def rule_catalog(rules: Ruleset) -> list[str]:
     rapor 'denetlendi ve uygun' maddelerini bu listeden çıkarır (Ö2).
     """
     out: list[str] = []
+    out.extend("document.missing_section" for _ in rules.required_sections[:1])
     page = rules.page
     if page.size:
         out.append("page.size")

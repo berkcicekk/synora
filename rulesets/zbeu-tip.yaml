@@ -14,6 +14,20 @@ tolerance:
   spacing_pt: 0.5
   line_multiple: 0.05
 
+# Kılavuzun zorunlu saydığı bölümler (4.1-4.7 ana metin; 5.3-5.4 önsöz ve özetler; 6.1 içindekiler)
+required_sections:
+  - "İÇİNDEKİLER"               # 6.1
+  - "ÖNSÖZ"                     # 5.3
+  - "ÖZET"                      # 5.4.1 Türkçe özet
+  - "SUMMARY"                   # 5.4 İngilizce özet, "SUMMARY" başlığı altında
+  - "GİRİŞ"                     # 4.1
+  - "GENEL BİLGİLER"            # 4.2
+  - "GEREÇ VE YÖNTEM|GEREÇ YÖNTEM"  # 4.3 (kılavuzda iki yazım da geçiyor)
+  - "BULGULAR"                  # 4.4
+  - "TARTIŞMA"                  # 4.5
+  - "SONUÇLAR|SONUÇ"            # 4.6
+  - "KAYNAKLAR"                 # 4.7
+
 page:
   size: A4                      # 3.1
   orientation: portrait

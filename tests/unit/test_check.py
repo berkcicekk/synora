@@ -65,6 +65,25 @@ def test_left_margin_wrong_even_with_gutter() -> None:
     assert (left.expected, left.actual) == ("3.5cm", "2cm (cilt payı 0.5cm)")
 
 
+def test_required_sections() -> None:
+    # Kılavuzların en temel maddesi: zorunlu bölümler (ÖZET, KAYNAKLAR…) var mı?
+    need = RULES.model_copy(update={"required_sections": ("ÖZET", "KAYNAKLAR")})
+    result = check(parse_package(open_docx(thesis())), need)
+    missing = {f.expected for f in result.findings if f.rule_id == "document.missing_section"}
+    assert missing == {"ÖZET", "KAYNAKLAR"}  # fikstürde ikisi de yok
+    # Başlık olarak geçince bulgu düşer; numaralı başlık ve küçük/büyük harf farkı tolere edilir.
+    body = (front_matter() + h1("Özet") + p(BODY_TEXT)
+            + main_matter(extra=h1("7. KAYNAKLAR") + p("Kaynak girdisi.")))
+    result = check(parse_package(open_docx(thesis(body))), need)
+    assert not any(f.rule_id == "document.missing_section" for f in result.findings)
+    # Alternatif yazımlar: "SONUÇLAR|SONUÇ" — belgede SONUÇ varsa yeter; raporda ilki görünür.
+    need = RULES.model_copy(update={"required_sections": ("SONUÇLAR|SONUÇ", "EKLER")})
+    body = front_matter() + main_matter(extra=h1("SONUÇ") + p(BODY_TEXT))
+    result = check(parse_package(open_docx(thesis(body))), need)
+    missing = {f.expected for f in result.findings if f.rule_id == "document.missing_section"}
+    assert missing == {"EKLER"}
+
+
 def test_table_cell_rules_are_enforced_when_defined() -> None:
     # 9 kural seti table_cell kuralı tanımlıyor ama denetim rolü atlıyordu (ölü harf).
     from synora.model import Role

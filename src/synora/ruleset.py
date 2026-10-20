@@ -123,6 +123,10 @@ class Ruleset(_Strict):
     # Kullanıcıya gösterilecek uyarı: ör. enstitünün güncel şablonu bu kılavuzla çelişiyor.
     uyari: str | None = None
     tolerance: Tolerance = Tolerance()
+    # Kılavuzun zorunlu saydığı bölüm başlıkları (ör. ÖZET, KAYNAKLAR). Başlık metniyle
+    # büyük/küçük harf ve numara öneki tolere edilerek eşleştirilir; bulunamayan bölüm
+    # document.missing_section hatası üretir.
+    required_sections: tuple[str, ...] = ()
     page: PageRules = PageRules()
     fonts: FontRules = FontRules()
     roles: dict[Role, RoleRules] = {}

@@ -11,8 +11,15 @@ from __future__ import annotations
 import io
 import zipfile
 
+from synora.features import Keyword, keyword
 from synora.model import Role
 from synora.ruleset import LineSpacingRule, RoleRules, Ruleset
+
+_TR_FOLD = str.maketrans({"I": "ı", "İ": "i"})
+
+
+def _fold(text: str) -> str:
+    return text.translate(_TR_FOLD).lower()
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
@@ -199,15 +206,41 @@ def _sample_body(rules: Ruleset, footer_rel: str | None, header_rel: str | None)
     def h1_text(upper: str, mixed: str) -> str:
         return mixed if plain_h1 else upper
 
+    # Kılavuzun zorunlu saydığı bölümler şablonda hazır gelir (document.missing_section).
+    planned = ["önsöz", "giriş", "kaynaklar", "ekler"]
+    front_extra: list[str] = []
+    main_extra: list[str] = []
+    for req in rules.required_sections:
+        alt = req.split("|")[0].strip()
+        if any(h.startswith(_fold(alt)) or _fold(alt).startswith(h) for h in planned):
+            continue
+        planned.append(_fold(alt))
+        bucket = front_extra if keyword(alt) is Keyword.FRONT_TITLE else main_extra
+        bucket.append(alt)
+
+    front_style = "OnSayfa" if Role.FRONT_MATTER in rules.roles else None
+
+    def extra_blocks(names: list[str]) -> list[str]:
+        out: list[str] = []
+        for name in names:
+            mixed = name.capitalize() if name.isupper() else name
+            out.append(_p(h1_text(name, mixed), "Heading1"))
+            out.append(_p(body_sample, front_style if name in front_extra else None))
+        return out
+
     parts: list[str] = []
     multi = len(fmts) >= 2
     if multi:
         parts.append(_p(h1_text("ÖNSÖZ", "Önsöz"), "Heading1"))
-        parts.append(_p(body_sample, "OnSayfa" if Role.FRONT_MATTER in rules.roles else None))
+        parts.append(_p(body_sample, front_style))
+        parts.extend(extra_blocks(front_extra))
         front_sect = _sect_pr(rules, fmts[0], footer_rel=footer_rel, header_rel=header_rel)
         parts.append(f"<w:p><w:pPr>{front_sect}</w:pPr></w:p>")
+    else:
+        parts.extend(extra_blocks(front_extra))
     parts.append(_p(h1_text("GİRİŞ", "Giriş"), "Heading1"))
     parts.append(_p(body_sample, None))
+    parts.extend(extra_blocks(main_extra))
     def heading_sample(role: Role, title_text: str, sentence_text: str) -> str:
         rr = rules.roles.get(role)
         return title_text if rr is not None and rr.case == "title" else sentence_text
