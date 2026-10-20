@@ -114,7 +114,7 @@ Bağımlılık önerileri de burada.
   "Giriş yap" görüyor. `render(..., user=current_user(request))` eklenmeli.
 
 ## Ö10 — İki üniversitenin resmi şablonu customXml yüzünden tümden reddediliyor (A1)
-> **Durum (2026-10-20): açık — kullanıcı kod değişikliğini şimdilik erteledi.**
+> **Durum (2026-10-20): çözüldü — `f65ba98` (kullanıcı onayıyla; okunmayan part'lara bayt süzgeci).**
 - **Gözlem:** 40 resmi enstitü şablonuyla çapraz doğrulamada Bingöl FBE ve Fırat FBE şablonları
   `XML_MALFORMED` ile reddedildi. Neden: `customXml/item*.xml` içindeki `xmlns="Fırat
   Üniversitesi-FBE"` geçerli bir URI değil; Word hoş görüyor, lxml katı modda reddediyor.
@@ -126,7 +126,7 @@ Bağımlılık önerileri de burada.
 - **Test:** `tests/security/` içine geçersiz xmlns'li customXml fixture'ı; kabul + fingerprint.
 
 ## Ö11 — Düzeltme rolleri değiştirince kapı kopyayı reddediyor (A5)
-> **Durum (2026-10-20): açık — kullanıcı kod değişikliğini şimdilik erteledi.**
+> **Durum (2026-10-20): çözüldü — `0039906` (kullanıcı onayıyla; en fazla 3 tur, kapılar son çıktıya).**
 - **Gözlem:** 37 şablonun 14'ünde `WRITE_NEW_FINDINGS`: düzeltme (ör. başlığa `pageBreakBefore`)
   sayfa geometrisini değiştiriyor, sınıflandırıcı bazı paragrafları yeniden sınıflandırıyor
   (front_matter→body, cover→heading_1; `scratchpad` kanıtı: karabuk-lee-fen, ahievran-sabe,

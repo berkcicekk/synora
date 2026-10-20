@@ -134,6 +134,7 @@ h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -.025em; line-height: 
 .hero-title { display: grid; gap: 1.2rem; min-width: 0; }
 .hero h1 { font-size: clamp(2.8rem, min(6.2vw, 11vh), 7rem); line-height: .95; letter-spacing: -.035em; }
 .hero-aside { display: grid; gap: 1.5rem; justify-items: start; max-width: 30rem; padding-bottom: .4rem; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: .7rem; }
 .hero-aside p { font-size: 1.02rem; line-height: 1.65; color: var(--on-blue-soft); }
 /* Açılış: başlık satır satır yükselir. */
 .hero-title > *, .hero-aside { animation: rise .9s cubic-bezier(.2, .7, .2, 1) both; }

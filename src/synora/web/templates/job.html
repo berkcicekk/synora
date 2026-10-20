@@ -2,18 +2,20 @@
 {% from "_marks.html" import arrow, mark %}
 {% from "_steps.html" import steps %}
 {% from "_howto.html" import howto %}
-{% block title %}Denetim raporu · Payper{% endblock %}
+{% set demo = demo | default(false) %}
+{% block title %}{% if demo %}Örnek rapor{% else %}Denetim raporu{% endif %} · Payper{% endblock %}
 {% block body_class %}{% if job.status == "done" %}editor{% endif %}{% endblock %}
 
 {% block topbar %}
 {% if job.status == "done" %}
 {% set s = view.summary %}
-<header class="toolbar" id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}">
+{# demo'da id "outputs" olmaz: app.js'teki kopya üretim kodu hiç devreye girmez #}
+<header class="toolbar" {% if demo %}id="demo-toolbar"{% else %}id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}"{% endif %}>
   <div class="toolbar-left">
-    <a class="brand compact" href="/" aria-label="Belgelerime dön">{{ mark() }}</a>
+    <a class="brand compact" href="/" aria-label="{{ 'Ana sayfaya dön' if demo else 'Belgelerime dön' }}">{{ mark() }}</a>
     <div class="doc-heading">
-      <a class="back" href="/">← Belgelerim</a>
-      <span class="doc-name">Denetim raporu · {{ job.created_at | when }}</span>
+      <a class="back" href="/">← {{ "Ana sayfa" if demo else "Belgelerim" }}</a>
+      <span class="doc-name">{% if demo %}Örnek rapor · sentetik tez{% else %}Denetim raporu · {{ job.created_at | when }}{% endif %}</span>
     </div>
   </div>
   <div class="toolbar-mid" aria-label="Özet">
@@ -22,6 +24,9 @@
     <span class="chip ghost">{{ view.ruleset.name }}</span>
   </div>
   <div class="toolbar-right">
+    {% if demo %}
+    <a class="btn small primary" href="/kayit"><span class="lbl">Kendi tezinizle deneyin</span>{{ arrow() }}</a>
+    {% else %}
     {% if s.errors or s.warnings %}
     <button type="button" class="btn small" data-output="annotated"><span class="lbl">Yorumlu kopya</span>{{ arrow() }}</button>
     {% if s.fixable %}
@@ -30,6 +35,7 @@
     {% endif %}
     <input type="file" id="output-file" class="visually-hidden" tabindex="-1" aria-hidden="true"
            accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    {% endif %}
   </div>
   <div class="output-panel" id="output-panel" role="dialog" aria-labelledby="output-title" hidden>
     <div class="output-panel-head">
@@ -307,6 +313,11 @@
     </ol>
     <p id="filter-empty" class="muted small" hidden>Bu süzgeçte bulgu yok.</p>
     <div class="pane-foot">
+      {% if demo %}
+      <p class="fineprint">Bu, bilerek hatalı hazırlanmış <strong>sentetik</strong> bir örnek tezin gerçek
+         raporudur; hiçbir gerçek tezden gelmez. <a class="textlink" href="/kayit">Kayıt olun</a>,
+         kendi belgenizle deneyin.</p>
+      {% else %}
       <a class="textlink" href="/jobs/{{ job.id }}/report.json">Raporu indir (JSON)</a>
       <form method="post" action="/jobs/{{ job.id }}/delete" class="delete-form">
         <input type="hidden" name="csrf" value="{{ user.csrf }}">
@@ -315,6 +326,7 @@
         <button type="button" class="linkbtn" data-cancel-delete hidden>Vazgeç</button>
       </form>
       <p class="fineprint">Bu rapor {{ retention }} saat sonra kendiliğinden silinir.</p>
+      {% endif %}
       <p class="fineprint">Payper, teslimden önce kendi denetiminiz içindir; biçim kontrolünün son onayı
          fakültenizde ya da enstitünüzdedir.</p>
     </div>

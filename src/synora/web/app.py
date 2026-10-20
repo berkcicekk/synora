@@ -41,6 +41,7 @@ from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message
 from synora.ruleset import Ruleset, load_ruleset
 from synora.web.db import Database, Job
 from synora.web.mailer import Mailer, make_mailer
+from synora.web.pipeline import run_pipeline
 from synora.web.presentation import PageSpec, RuleTile, page_spec, pixel_blocks, rule_tiles
 from synora.web.settings import Settings
 from synora.web.worker import JobRunner
@@ -536,6 +537,34 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                              error="E-posta gönderilemedi. Birkaç dakika sonra yeniden deneyin.")
         return render(request, "login_sent.html", email=email, mode=mode,
                       minutes=int(settings.login_token_minutes))
+
+    demo_state: dict[str, Any] = {}
+
+    @app.get("/demo", response_class=HTMLResponse)
+    def demo_page(request: Request) -> HTMLResponse:
+        """Girişsiz örnek rapor: pakete gömülü sentetik tez, varsayılan kural setiyle.
+
+        Kullanıcı girdisi yok; sonuç deterministik olduğundan ilk istekte üretilip
+        bellekte tutulur. Rol düzenleme ve kopya üretimi kapalıdır.
+        """
+        if "report" not in demo_state:
+            sample = (HERE / "static" / "ornek-tez.docx").read_bytes()
+            default = rulesets[settings.default_ruleset]
+            outcome = run_pipeline(sample, str(default.path), job_id="demo")
+            if outcome["report"] is None:  # pragma: no cover - sentetik belge hep geçer
+                raise HTTPException(503, SERVER_BUSY)
+            demo_state["report"] = json.loads(outcome["report"])
+        view = report_view(demo_state["report"])
+        view["pending"] = {}
+        view["roles_changed"] = False
+        view["editable"] = 0
+        for b in view["blocks"]:
+            b.pop("pid", None)  # rol düzenleme demo'da kapalı
+        job = Job(id="demo", email="", ruleset=settings.default_ruleset, status="done",
+                  created_at=time.time(), finished_at=None, error_code=None, report=None)
+        return render(request, "job.html", user=current_user(request), job=job, view=view,
+                      demo=True, error=None, ruleset=rulesets.get(settings.default_ruleset),
+                      retention=int(settings.retention_hours))
 
     @app.get("/giris", response_class=HTMLResponse)
     def login_page_view(request: Request) -> Response:
