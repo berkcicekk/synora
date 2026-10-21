@@ -131,6 +131,9 @@ def message(f: Finding) -> str:
     if rid == "document.alt_chunk":
         return (f"Belgede başka bir dosyadan gömülü içerik var ({act} parça); bu kısım "
                 "denetlenmedi. İçeriği Word'de belgeye metin olarak aktarmanız önerilir.")
+    if rid == "document.toc_stale":
+        return (f"İçindekiler güncel görünmüyor ({act}). Word'de dizine sağ tıklayıp "
+                "'Alanı Güncelleştir' deyin (ya da dizini seçip F9).")
     if rid == "document.missing_section":
         return (f"Kılavuzun zorunlu saydığı “{exp}” bölümü bulunamadı. Bölümü ekleyin "
                 "ya da başlığını kılavuzdaki adıyla yazın.")

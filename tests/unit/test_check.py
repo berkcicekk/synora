@@ -65,6 +65,27 @@ def test_left_margin_wrong_even_with_gutter() -> None:
     assert (left.expected, left.actual) == ("3.5cm", "2cm (cilt payı 0.5cm)")
 
 
+def test_toc_staleness() -> None:
+    # Öğrenci başlığı değiştirir ama Word'de dizini güncellemez: İçindekiler alan sonucu
+    # (önbellek) eski kalır. Dizindeki satırlarla gerçek başlıklar karşılaştırılır.
+    def toc(*entries: str) -> str:
+        return h1("İÇİNDEKİLER") + "".join(p(f"{e} {'.' * 30} {i + 1}")
+                                           for i, e in enumerate(entries))
+
+    fresh = (front_matter() + toc("ÖNSÖZ", "GİRİŞ", "1.1 Amaç") + main_matter())
+    result = check(parse_package(open_docx(thesis(fresh))), RULES)
+    assert "document.toc_stale" not in {f.rule_id for f in result.findings}
+
+    stale = (front_matter() + toc("ÖNSÖZ", "ESKİ BAŞLIK ADI", "1.1 Amaç") + main_matter())
+    result = check(parse_package(open_docx(thesis(stale))), RULES)
+    stale_findings = [f for f in result.findings if f.rule_id == "document.toc_stale"]
+    assert len(stale_findings) == 1 and stale_findings[0].severity.value == "warning"
+
+    # Dizin hiç yoksa bu kural susar (varlık denetimi required_sections'ın işi).
+    result = check(parse_package(open_docx(thesis())), RULES)
+    assert "document.toc_stale" not in {f.rule_id for f in result.findings}
+
+
 def test_required_sections() -> None:
     # Kılavuzların en temel maddesi: zorunlu bölümler (ÖZET, KAYNAKLAR…) var mı?
     need = RULES.model_copy(update={"required_sections": ("ÖZET", "KAYNAKLAR")})

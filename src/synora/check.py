@@ -10,7 +10,7 @@ from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from synora.features import page_tops
+from synora.features import Keyword, keyword, page_tops
 from synora.model import Alignment, DocModel, LineRule, Paragraph, Role, Section, Story
 from synora.roles import RoleDecision, assign_roles
 from synora.ruleset import PAGE_SIZES_CM, LineSpacingRule, RoleRules, Ruleset
@@ -83,6 +83,7 @@ def check(
     findings: list[Finding] = []
     findings.extend(_document_rules(doc, rules))
     findings.extend(_required_sections(doc, rules))
+    findings.extend(_toc_freshness(doc, roles))
     findings.extend(_page_rules(doc.sections, rules, _chapter_sections(doc, roles)))
     findings.extend(_page_numbering(doc.sections, rules))
     findings.extend(_page_number_position(doc, rules))
@@ -146,6 +147,48 @@ def _document_rules(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
     if doc.embedded_objects:
         yield Finding("document.embedded_object", Severity.WARNING, "0",
                       str(doc.embedded_objects), False)
+
+
+_TOC_TAIL_RE = re.compile(r"(?:(?:\s*[.·…]){2,}|\t)\s*\d+\s*$|\s+\d+\s*$")
+
+
+def _toc_freshness(doc: DocModel, roles: dict[str, RoleDecision]) -> Iterator[Finding]:
+    """İçindekiler alan sonucu (önbellek) gerçek başlıklarla örtüşüyor mu?
+
+    Öğrenci başlığı değiştirip Word'de dizini güncellemezse (F9) dizin eski kalır.
+    Yalnızca ana bölüm başlıkları aranır (ön sayfaların dizinde yer alıp almayacağı
+    kılavuzdan kılavuza değişir); rapora başlık metni değil yalnızca sayı çıkar.
+    """
+    def norm(text: str) -> str:
+        text = _TOC_TAIL_RE.sub("", text.strip())
+        return " ".join(_tr_lower(_PREFIX_RE.sub("", text)).split())
+
+    toc_entries: list[str] = []
+    chapter_heads: list[str] = []
+    for p in doc.body():
+        if p.in_table or p.in_textbox or not p.text.strip():
+            continue
+        decision = roles[p.para_id]
+        if decision.role is Role.TOC_ENTRY:
+            toc_entries.append(norm(p.text))
+        elif (decision.role is Role.HEADING_1 and decision.confidence >= 0.9
+              and keyword(p.text) is not Keyword.FRONT_TITLE):
+            # Yalnızca stil/alan destekli başlıklar: desen tahmini (kapak satırı vb.)
+            # dizinde doğal olarak bulunmaz, yanlış alarm olurdu.
+            chapter_heads.append(norm(p.text))
+    if len(toc_entries) < 2 or not chapter_heads:
+        return
+
+    def listed(head: str) -> bool:
+        return any(e.startswith(head[:50]) or (len(e) >= 3 and head.startswith(e[:50]))
+                   for e in toc_entries)
+
+    # Parantezli ya da çok uzun 'başlıklar' şablon yönergesi kalıbıdır (ör. '(yoksa silinir)').
+    candidates = [h for h in chapter_heads if 3 <= len(h) <= 60 and "(" not in h]
+    missing = [h for h in candidates if not listed(h)]
+    if missing:
+        yield Finding("document.toc_stale", Severity.WARNING, "güncel",
+                      f"{len(missing)} başlık dizinde yok", False)
 
 
 def _required_sections(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
