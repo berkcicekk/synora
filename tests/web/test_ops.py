@@ -62,3 +62,12 @@ def test_robots_and_security_txt(client: TestClient) -> None:
     sec = client.get("/.well-known/security.txt")
     assert sec.status_code == 200
     assert "Contact:" in sec.text and "Expires:" in sec.text
+
+
+def test_llms_txt_introduces_site_to_ai_assistants(client: TestClient) -> None:
+    # llmstxt.org: H1 başlık + özet; metin dokunulmazlığı AI'lara da açıkça söylenir.
+    res = client.get("/llms.txt")
+    assert res.status_code == 200
+    assert "markdown" in res.headers["content-type"]
+    assert res.text.startswith("# Payper")
+    assert "/demo" in res.text and "metni" in res.text

@@ -615,6 +615,37 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         )
         return Response(body, media_type="text/plain; charset=utf-8")
 
+    @app.get("/llms.txt", response_class=Response)
+    def llms_txt() -> Response:
+        """llmstxt.org: yapay zekâ asistanlarına site tanıtımı. Tez metni içermez;
+        yalnızca herkese açık sayfalar ve gizlilik ilkeleri anlatılır."""
+        body = (
+            "# Payper\n\n"
+            "> Payper, .docx tezleri üniversitenin resmi yazım kılavuzuna göre denetleyen "
+            "ve biçim hatalarını düzelten ücretsiz bir web aracıdır. "
+            f"{len(rulesets)} üniversite kural seti hazır yüklüdür.\n\n"
+            "Önemli: Payper tezin metnini ASLA değiştirmez ve hiçbir yapay zekâ modeli tez "
+            "metnini görmez; yalnızca biçim (kenar boşluğu, yazı tipi, satır aralığı, başlık "
+            "stilleri, sayfa numarası) denetlenir ve düzeltilir. Yüklenen dosya diske "
+            "yazılmaz; rapor 24 saat içinde silinir.\n\n"
+            "## Sayfalar\n\n"
+            f"- [Ana sayfa]({settings.base_url}/): yükle → rapor → düzeltilmiş kopyayı indir\n"
+            f"- [Örnek rapor]({settings.base_url}/demo): kayıt olmadan canlı örnek denetim\n"
+            f"- [Kayıt]({settings.base_url}/kayit): üniversite e-postasıyla, ücretsiz\n"
+            f"- [Fiyatlandırma]({settings.base_url}/fiyatlandirma)\n"
+            f"- [KVKK aydınlatma metni]({settings.base_url}/aydinlatma)\n\n"
+            "## Kaynaklar\n\n"
+            "- [GitHub](https://github.com/berkcicekk/synora): kaynak kod ve kural setleri\n"
+            f"- [security.txt]({settings.base_url}/.well-known/security.txt)\n\n"
+            "## English summary\n\n"
+            "Payper checks Turkish university theses (.docx) against the institution's "
+            "official formatting guide and fixes formatting errors without ever modifying "
+            "the thesis text. No AI model sees the text; uploads are processed in memory "
+            "and never written to disk. Free during the pilot; sign in with a university "
+            "e-mail address.\n"
+        )
+        return Response(body, media_type="text/markdown; charset=utf-8")
+
     @app.get("/demo", response_class=HTMLResponse)
     def demo_page(request: Request) -> HTMLResponse:
         """Girişsiz örnek rapor: pakete gömülü sentetik tez, varsayılan kural setiyle.
