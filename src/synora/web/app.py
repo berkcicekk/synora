@@ -596,6 +596,25 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     demo_state: dict[str, Any] = {}
 
+    @app.get("/robots.txt", response_class=Response)
+    def robots() -> Response:
+        # Meşruiyet sinyali (güvenlik filtreleri ve tarayıcılar için): gezinmeye açık,
+        # kullanıcıya özel sayfalar zaten girişsiz erişilemez.
+        return Response("User-agent: *\nAllow: /\nDisallow: /jobs/\n",
+                        media_type="text/plain; charset=utf-8")
+
+    @app.get("/.well-known/security.txt", response_class=Response)
+    def security_txt() -> Response:
+        """RFC 9116: güvenlik bildirimleri için iletişim. Kişisel e-posta yayımlanmaz;
+        iletişim herkese açık GitHub deposu üzerinden."""
+        body = (
+            "Contact: https://github.com/berkcicekk/synora/issues\n"
+            f"Canonical: {settings.base_url}/.well-known/security.txt\n"
+            "Preferred-Languages: tr, en\n"
+            "Expires: 2027-10-01T00:00:00.000Z\n"
+        )
+        return Response(body, media_type="text/plain; charset=utf-8")
+
     @app.get("/demo", response_class=HTMLResponse)
     def demo_page(request: Request) -> HTMLResponse:
         """Girişsiz örnek rapor: pakete gömülü sentetik tez, varsayılan kural setiyle.

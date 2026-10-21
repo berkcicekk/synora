@@ -53,3 +53,12 @@ def test_versioned_static_files_are_cached_long(client: TestClient) -> None:
     res = client.get(f"/static/app.css?v={css}")
     assert "immutable" in res.headers["cache-control"]
     assert "immutable" not in client.get("/static/app.css").headers.get("cache-control", "")
+
+
+def test_robots_and_security_txt(client: TestClient) -> None:
+    # Güvenlik filtrelerinin (ör. Cisco Umbrella) baktığı meşruiyet sinyalleri.
+    robots = client.get("/robots.txt")
+    assert robots.status_code == 200 and "User-agent" in robots.text
+    sec = client.get("/.well-known/security.txt")
+    assert sec.status_code == 200
+    assert "Contact:" in sec.text and "Expires:" in sec.text
