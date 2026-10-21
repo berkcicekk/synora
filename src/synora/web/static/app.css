@@ -862,3 +862,40 @@ body.editor main { display: flex; min-height: 0; }
 .privacy ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .6rem; line-height: 1.6; }
 .privacy p { line-height: 1.6; }
 .privacy .alert { color: var(--warning); border-left-color: var(--warning); }
+
+/* İstek / öneri: sağ altta sabit düğme + <dialog> popup */
+.suggest-fab {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 40;
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .6rem 1rem; border-radius: 999px; cursor: pointer;
+  background: var(--night); color: #fff; border: 1px solid var(--night-2);
+  font: 500 .85rem/1 var(--sans); letter-spacing: .01em;
+  box-shadow: 0 8px 22px -8px rgba(13, 22, 38, .5);
+  transition: transform .18s, background .18s;
+}
+.suggest-fab:hover { background: var(--blue); transform: translateY(-2px); }
+.suggest-fab svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 640px) {
+  .suggest-fab { padding: .75rem; }
+  .suggest-fab span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+.suggest-dialog {
+  border: 1px solid var(--hair); border-top: 3px solid var(--blue); border-radius: 3px;
+  padding: 1.4rem 1.5rem; width: min(calc(100vw - 2rem), 440px);
+  background: var(--card); color: var(--ink);
+  box-shadow: 0 28px 70px -20px rgba(13, 22, 38, .55);
+}
+.suggest-dialog::backdrop { background: rgba(13, 22, 38, .45); }
+.suggest-dialog h2 { font-size: 1.35rem; font-weight: 400; }
+.suggest-note { color: var(--muted); font-size: .88rem; line-height: 1.5; margin-top: .35rem; }
+.suggest-dialog label { display: block; font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 1rem 0 .35rem; }
+.suggest-dialog label .opt { text-transform: none; letter-spacing: 0; }
+.suggest-dialog textarea, .suggest-dialog input[type=email] {
+  width: 100%; border: 1px solid var(--border); border-radius: 3px;
+  padding: .6rem .7rem; font: 400 .95rem/1.5 var(--sans);
+  background: var(--card); color: var(--ink);
+}
+.suggest-dialog textarea { resize: vertical; min-height: 6rem; }
+.suggest-status { min-height: 1.3rem; font-size: .85rem; color: var(--ok); margin-top: .6rem; }
+.suggest-status.error { color: var(--error); }
+.suggest-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: .9rem; }

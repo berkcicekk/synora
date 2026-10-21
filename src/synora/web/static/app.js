@@ -539,6 +539,61 @@
     });
   }
 
+  // --- İstek / Öneri popup'ı -----------------------------------------------------------------
+  const suggest = document.getElementById("suggest");
+  const suggestDialog = document.getElementById("suggest-dialog");
+  if (suggest && suggestDialog && typeof suggestDialog.showModal === "function") {
+    const openBtn = document.getElementById("suggest-open");
+    const cancelBtn = document.getElementById("suggest-cancel");
+    const sform = document.getElementById("suggest-form");
+    const sstatus = document.getElementById("suggest-status");
+    const smessage = document.getElementById("suggest-message");
+    const ssay = (msg, isError) => {
+      sstatus.textContent = msg;
+      sstatus.classList.toggle("error", Boolean(isError));
+    };
+    openBtn.hidden = false; // JS yoksa düğme hiç görünmez (dialog JS'siz açılamaz)
+    openBtn.addEventListener("click", () => {
+      ssay("");
+      suggestDialog.showModal();
+      smessage.focus();
+    });
+    cancelBtn.addEventListener("click", () => suggestDialog.close());
+    // Karartılmış arka plana tıklanınca kapanır; form kutusu tıklamayı kendi yutar.
+    suggestDialog.addEventListener("click", (e) => { if (e.target === suggestDialog) suggestDialog.close(); });
+    sform.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!smessage.value.trim()) { ssay("Mesaj boş olamaz.", true); smessage.focus(); return; }
+      const sendBtn = sform.querySelector("[type=submit]");
+      sendBtn.disabled = true;
+      ssay("Gönderiliyor…");
+      const body = new URLSearchParams({ message: smessage.value, page: location.pathname });
+      const semail = document.getElementById("suggest-email");
+      if (semail && semail.value) body.set("email", semail.value);
+      const honeypot = sform.querySelector("[name=website]");
+      if (honeypot && honeypot.value) body.set("website", honeypot.value);
+      const headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Requested-With": "fetch",
+      };
+      if (suggest.dataset.csrf) headers["X-CSRF-Token"] = suggest.dataset.csrf;
+      try {
+        const res = await fetch("/oneri", { method: "POST", headers, body });
+        if (res.ok) {
+          ssay("Teşekkürler! Öneriniz bize ulaştı.");
+          sform.reset();
+          setTimeout(() => suggestDialog.close(), 1600);
+        } else {
+          const data = await res.json().catch(() => ({}));
+          ssay(data.error || "Gönderilemedi. Birkaç dakika sonra yeniden deneyin.", true);
+        }
+      } catch (err) {
+        ssay("Bağlantı hatası. Yeniden deneyin.", true);
+      }
+      sendBtn.disabled = false;
+    });
+  }
+
   // --- Silme onayı (tarayıcı confirm() yerine sayfa içi) ------------------------------------
   document.querySelectorAll("[data-confirm]").forEach((btn) => {
     const real = btn.parentElement.querySelector("button[type=submit]");

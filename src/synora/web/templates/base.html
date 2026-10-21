@@ -46,6 +46,33 @@
   <main id="main">
     {% block content %}{% endblock %}
   </main>
+  {# İstek/öneri kutusu: her sayfada sağ altta; JS olmadan düğme işlevsizdir, JS açılışta gösterir. #}
+  <div id="suggest" {% if user %}data-csrf="{{ user.csrf }}"{% endif %}>
+    <button class="suggest-fab" id="suggest-open" type="button" hidden
+            aria-haspopup="dialog" aria-controls="suggest-dialog">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-8 8H4l2.4-2.9A8 8 0 1 1 21 12Z"/><path d="M8 10h8M8 14h5"/></svg>
+      <span>İstek / Öneri</span>
+    </button>
+    <dialog id="suggest-dialog" class="suggest-dialog" aria-labelledby="suggest-title">
+      <form id="suggest-form" novalidate>
+        <h2 id="suggest-title">İstek &amp; Öneri</h2>
+        <p class="suggest-note">Eksik bir özellik, yanlış bir bulgu, aklınızdaki her şey —
+          hepsini okuyoruz.</p>
+        <label for="suggest-message">Mesajınız</label>
+        <textarea id="suggest-message" name="message" rows="5" maxlength="2000" required></textarea>
+        {% if not user %}
+        <label for="suggest-email">E-posta <span class="opt">(isteğe bağlı; yanıt isterseniz)</span></label>
+        <input id="suggest-email" name="email" type="email" maxlength="254" autocomplete="email">
+        {% endif %}
+        <input class="visually-hidden" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="suggest-status" id="suggest-status" role="status"></p>
+        <div class="suggest-actions">
+          <button class="btn small" type="button" id="suggest-cancel"><span class="lbl">Vazgeç</span></button>
+          <button class="btn small primary" type="submit"><span class="lbl">Gönder</span>{{ arrow() }}</button>
+        </div>
+      </form>
+    </dialog>
+  </div>
   {% block footer %}
   <footer class="footer">
     <div class="wrap footer-grid">

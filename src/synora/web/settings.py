@@ -35,6 +35,9 @@ class Settings:
     # bellek içi, hash'li ve pencere dolunca düşer (KVKK).
     login_requests_per_ip_hour: int = 10
     login_requests_per_minute: int = 60
+    # İstek/öneri kutusu (popup): girişsiz de gönderilebildiği için ayrı, sıkı sınır.
+    suggestions_per_ip_hour: int = 5
+    suggestions_per_minute: int = 20
     max_active_jobs: int = 2
     max_daily_jobs: int = 20
     max_queued_jobs: int = 20  # kuyrukta bekleyen her iş belleği 100 MB'a kadar tutar

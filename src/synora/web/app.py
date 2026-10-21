@@ -500,34 +500,41 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         set_pre_csrf(resp, token)
         return resp
 
-    # Ö7: istemci başına giriş isteği sınırı. Bellek içi ve hash'li: ham IP hiçbir yerde
+    # Ö7: istemci başına istek sınırı. Bellek içi ve hash'li: ham IP hiçbir yerde
     # tutulmaz, pencere dolunca kayıt düşer. Uygulamaya yalnızca 127.0.0.1 (tünel/vekil)
     # üzerinden ulaşılabildiği için CF-Connecting-IP başlığı güvenilirdir; yoksa soket adresi.
-    login_hits: dict[str, list[float]] = {}
-    login_recent: list[float] = []
-
     def _client_key(request: Request) -> str:
         ip = (request.headers.get("cf-connecting-ip")
               or (request.client.host if request.client else "?"))
         return hashlib.sha256(ip.encode()).hexdigest()[:16]
 
-    def login_rate_ok(request: Request) -> bool:
-        now = time.time()
-        key = _client_key(request)
-        hits = [t for t in login_hits.get(key, []) if t > now - 3600]
-        recent = [t for t in login_recent if t > now - 60]
-        login_recent[:] = recent
-        if (len(hits) >= settings.login_requests_per_ip_hour
-                or len(recent) >= settings.login_requests_per_minute):
-            login_hits[key] = hits
-            return False
-        hits.append(now)
-        login_hits[key] = hits
-        login_recent.append(now)
-        if len(login_hits) > 1000:  # sözlük sınırsız büyümesin
-            for stale in [k for k, v in login_hits.items() if not v or v[-1] <= now - 3600]:
-                del login_hits[stale]
-        return True
+    def make_rate_limiter(per_ip_hour: int, per_minute: int) -> Callable[[Request], bool]:
+        all_hits: dict[str, list[float]] = {}
+        all_recent: list[float] = []
+
+        def rate_ok(request: Request) -> bool:
+            now = time.time()
+            key = _client_key(request)
+            hits = [t for t in all_hits.get(key, []) if t > now - 3600]
+            recent = [t for t in all_recent if t > now - 60]
+            all_recent[:] = recent
+            if len(hits) >= per_ip_hour or len(recent) >= per_minute:
+                all_hits[key] = hits
+                return False
+            hits.append(now)
+            all_hits[key] = hits
+            all_recent.append(now)
+            if len(all_hits) > 1000:  # sözlük sınırsız büyümesin
+                for stale in [k for k, v in all_hits.items() if not v or v[-1] <= now - 3600]:
+                    del all_hits[stale]
+            return True
+
+        return rate_ok
+
+    login_rate_ok = make_rate_limiter(settings.login_requests_per_ip_hour,
+                                      settings.login_requests_per_minute)
+    suggestion_rate_ok = make_rate_limiter(settings.suggestions_per_ip_hour,
+                                           settings.suggestions_per_minute)
 
     def open_session(email: str) -> RedirectResponse:
         sid = secrets.token_urlsafe(32)
@@ -645,6 +652,36 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             "e-mail address.\n"
         )
         return Response(body, media_type="text/markdown; charset=utf-8")
+
+    @app.post("/oneri")
+    async def suggest(request: Request) -> JSONResponse:
+        """İstek/öneri kutusu (her sayfadaki popup). Girişsiz de gönderilebilir.
+
+        CSRF: yalnızca fetch kabul edilir — siteler arası klasik form özel başlık
+        koyamaz; koyarsa CORS ön denetimi keser. Girişliyse oturum CSRF'si de aranır.
+        """
+        if request.headers.get("x-requested-with") != "fetch":
+            raise HTTPException(403, "CSRF")
+        user = current_user(request)
+        if user is not None:
+            check_csrf(user.csrf, request.headers.get("x-csrf-token"))
+        form = await small_form(request)
+        if str(form.get("website", "")):  # bal küpü: insan görmez, bot doldurur
+            return JSONResponse({"ok": True})
+        message = " ".join(str(form.get("message", "")).split())
+        if not message or len(message) > 2000:
+            raise HTTPException(400, "Mesaj boş olamaz (en çok 2000 karakter).")
+        email = user.email if user else str(form.get("email", "")).strip()
+        if email and user is None and not EMAIL_RE.fullmatch(email):
+            raise HTTPException(400, "E-posta adresi geçersiz görünüyor.")
+        page = str(form.get("page", ""))[:200]
+        if not page.startswith("/"):
+            page = ""
+        if not suggestion_rate_ok(request):
+            raise HTTPException(429, "Çok sık gönderildi. Birkaç dakika sonra yeniden deneyin.")
+        db.add_suggestion(message, email, page)
+        log_event("suggestion.added", count=len(message))
+        return JSONResponse({"ok": True})
 
     @app.get("/demo", response_class=HTMLResponse)
     def demo_page(request: Request) -> HTMLResponse:

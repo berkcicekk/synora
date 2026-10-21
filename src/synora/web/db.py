@@ -80,6 +80,15 @@ CREATE TABLE IF NOT EXISTS feedback_counts (
     n INTEGER NOT NULL,
     PRIMARY KEY (ruleset, ruleset_version, rule_id, verdict)
 );
+-- İstek/öneri kutusu (popup): gönüllü mesajlar. Tez metni yok; e-posta isteğe bağlı
+-- (yanıt isteyen kendisi yazar). İş/rapor saklama süresinden bağımsızdır.
+CREATE TABLE IF NOT EXISTS suggestions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    message TEXT NOT NULL,
+    email TEXT NOT NULL DEFAULT '',
+    page TEXT NOT NULL DEFAULT '',
+    created_at REAL NOT NULL
+);
 CREATE TABLE IF NOT EXISTS users (
     email TEXT PRIMARY KEY,
     created_at REAL NOT NULL,
@@ -347,6 +356,17 @@ class Database:
     def feedback_count(self, job_id: str) -> int:
         row = self.execute("SELECT COUNT(*) FROM feedback WHERE job_id=?", (job_id,)).fetchone()
         return int(row[0])
+
+    # --- İstek / öneri ------------------------------------------------------------------------
+
+    def add_suggestion(self, message: str, email: str, page: str) -> None:
+        self.execute("INSERT INTO suggestions (message, email, page, created_at) "
+                     "VALUES (?, ?, ?, ?)", (message, email, page, time.time()))
+
+    def suggestions(self, limit: int = 200) -> list[tuple[Any, ...]]:
+        return self.execute(
+            "SELECT created_at, page, email, message FROM suggestions "
+            "ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
 
     # --- Saklama süresi ---------------------------------------------------------------------
 
