@@ -22,6 +22,9 @@ page:
 fonts:
   allowed: [Times New Roman]    # 2.3
 
+figures:
+  alignment: center            # 2.7 "All materials must be centered between the text margins"
+
 roles:
   body:
     size_pt: 12                 # 2.3 "Text ...: 12 points"

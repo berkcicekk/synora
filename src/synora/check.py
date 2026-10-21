@@ -99,8 +99,17 @@ def check(
             unknown += 1
         elif decision.role is Role.COVER:
             cover += 1
+        if para.has_drawing and not para.in_table and not para.in_textbox:
+            # Rolü ne olursa olsun (çizim paragrafı çoğu zaman 'boş' sayılır): görsel kuralları.
+            for f in _figure_rules(para, doc, rules):
+                findings.append(_locate(f, para, decision.role,
+                                        body_index.get(para.para_id)))
         if decision.role in SKIPPED_ROLES:
             continue
+        if rules.document.typography and not para.in_table:
+            for f in _typography(para):
+                findings.append(_locate(f, para, decision.role,
+                                        body_index.get(para.para_id)))
         role_rules = rules.roles.get(decision.role)
         if role_rules is None:
             continue
@@ -151,6 +160,52 @@ def _document_rules(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
 
 
 _TOC_TAIL_RE = re.compile(r"(?:(?:\s*[.·…]){2,}|\t)\s*\d+\s*$|\s+\d+\s*$")
+
+
+# Mikro-tipografi: desenler sunucuda, yerel olarak aranır; rapora yalnızca tür ve adet çıkar.
+_TYPOGRAPHY = (
+    ("typography.double_space", "tek boşluk", re.compile(r"\S {2,}\S")),
+    # ":" dahil edilmez: form hizalaması ("Danışman :") yaygın ve meşru bir düzen.
+    ("typography.space_before_punct", "noktalamadan önce boşluksuz",
+     re.compile(r" [,;!?]| \.(?!\.)")),
+    # Harf,harf: ondalık sayılar (3,5) serbest.
+    ("typography.missing_space_after_comma", "virgülden sonra boşluk",
+     re.compile(r"(?<=[^\W\d_]),(?=[^\W\d_])")),
+)
+# Elle nokta/üç-nokta kılavuz çizgisi taşıyan satırlar (içindekiler, formlar) tipografiden muaf.
+_LEADER_RE = re.compile(r"\.{4,}|…")
+
+
+def _typography(p: Paragraph) -> Iterator[Finding]:
+    if _LEADER_RE.search(p.text):
+        return
+    for rule_id, expected, pattern in _TYPOGRAPHY:
+        n = len(pattern.findall(p.text))
+        if n:
+            yield Finding(rule_id, Severity.WARNING, expected, f"×{n}", False,
+                          para_id=p.para_id)
+
+
+def _figure_rules(p: Paragraph, doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
+    """Görsel taşıyan paragraf: hizalama (kural setindeyse) ve metin bloğuna sığma."""
+    figures = rules.figures
+    if figures.alignment is not None:
+        actual = p.props.alignment.value if p.props.alignment else "left"
+        if actual != figures.alignment.value:
+            yield Finding("figure.alignment", Severity.ERROR, figures.alignment.value,
+                          actual, True)
+    width = p.drawing_width_cm
+    if width is None or p.section_index is None or p.section_index >= len(doc.sections):
+        return
+    s = doc.sections[p.section_index]
+    m = s.margins
+    if s.page_width_cm is None or m.left_cm is None or m.right_cm is None:
+        return
+    text_width = s.page_width_cm - m.left_cm - m.right_cm - (m.gutter_cm or 0)
+    if width > text_width + 2 * rules.tolerance.length_cm:
+        # Metin değil, çizim boyutu: küçültme kararı yazara ait — otomatik düzeltilmez.
+        yield Finding("figure.overflow", Severity.ERROR, f"≤ {_num(text_width)}cm",
+                      f"{_num(width)}cm", False)
 
 
 _CAPTION_NUM_RE = re.compile(
@@ -321,6 +376,8 @@ def rule_catalog(rules: Ruleset) -> list[str]:
     """
     out: list[str] = []
     out.extend("document.missing_section" for _ in rules.required_sections[:1])
+    if rules.document.typography:
+        out.extend(rule_id for rule_id, _, _ in _TYPOGRAPHY)
     page = rules.page
     if page.size:
         out.append("page.size")
@@ -330,6 +387,8 @@ def rule_catalog(rules: Ruleset) -> list[str]:
     if margins is not None:
         out.extend(f"page.margin.{side}" for side in ("top", "bottom", "left", "right")
                    if getattr(margins, side) is not None)
+    if rules.figures.alignment is not None:
+        out.append("figure.alignment")
     pn = rules.page_numbering
     if pn.formats_in_order:
         out.append("page_numbering.formats")

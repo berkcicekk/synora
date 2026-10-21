@@ -109,8 +109,16 @@ class PageNumbering(_Strict):
     forbid_decoration: bool = False
 
 
+class FigureRules(_Strict):
+    # Görsel taşıyan paragrafın hizalanması (ör. İYTE 2.7 "centered between the text margins").
+    alignment: Alignment | None = None
+
+
 class DocumentRules(_Strict):
     forbid_tracked_changes: bool = True
+    # Mikro-tipografi uyarıları: çift boşluk, noktalamadan önce boşluk, virgülden sonra
+    # boşluk eksikliği. Yalnızca uyarı üretir; metin hiçbir koşulda otomatik değiştirilmez.
+    typography: bool = True
 
 
 class Ruleset(_Strict):
@@ -129,6 +137,7 @@ class Ruleset(_Strict):
     required_sections: tuple[str, ...] = ()
     page: PageRules = PageRules()
     fonts: FontRules = FontRules()
+    figures: FigureRules = FigureRules()
     roles: dict[Role, RoleRules] = {}
     page_numbering: PageNumbering = PageNumbering()
     document: DocumentRules = DocumentRules()

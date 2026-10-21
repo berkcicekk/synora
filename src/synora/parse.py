@@ -236,6 +236,7 @@ class _StoryWalker:
                 in_textbox=in_textbox,
                 has_page_break=page_break,
                 has_drawing=_has_drawing(p),
+                drawing_width_cm=_drawing_width_cm(p),
                 field_kinds=frozenset(kinds),
                 text="".join(texts),
             )
@@ -287,6 +288,34 @@ def _has_drawing(p: Any) -> bool:
         if owner is p:
             return True
     return False
+
+
+_WP_NS = "{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}"
+_WP_INLINE = _WP_NS + "inline"
+_WP_EXTENT = _WP_NS + "extent"
+_EMU_PER_CM = 360000
+
+
+def _drawing_width_cm(p: Any) -> float | None:
+    """Paragraftaki en geniş SATIR İÇİ çizimin genişliği (kenar taşması denetimi için).
+
+    Yüzen (wp:anchor) görseller bilerek metin bloğunu aşabilir (kapak şeridi vb.);
+    onlara karışılmaz."""
+    widest: float | None = None
+    for inline in p.iter(_WP_INLINE):
+        owner = next(inline.iterancestors(w("p")), None)
+        if owner is not p:
+            continue
+        extent = inline.find(_WP_EXTENT)
+        if extent is None:
+            continue
+        try:
+            width = int(extent.get("cx", "")) / _EMU_PER_CM
+        except ValueError:
+            continue
+        if widest is None or width > widest:
+            widest = width
+    return widest
 
 
 def _dominant(runs: list[RunInfo]) -> RunProps:

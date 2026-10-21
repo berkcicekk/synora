@@ -65,6 +65,62 @@ def test_left_margin_wrong_even_with_gutter() -> None:
     assert (left.expected, left.actual) == ("3.5cm", "2cm (cilt payı 0.5cm)")
 
 
+WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+
+
+def drawing(width_cm: float, ppr: str = "") -> str:
+    cx = round(width_cm * 360000)  # EMU
+    return p(f'<w:r><w:drawing><wp:inline xmlns:wp="{WP_NS}">'
+             f'<wp:extent cx="{cx}" cy="3600000"/></wp:inline></w:drawing></w:r>', ppr=ppr)
+
+
+def test_figure_overflow() -> None:
+    # A4 + örnek kenarlar (sol 3,5 sağ 2,5) → metin bloğu 15 cm. 18 cm görsel taşar.
+    wide = front_matter() + main_matter(extra=drawing(18.0, ppr='<w:jc w:val="center"/>'))
+    result = check(parse_package(open_docx(thesis(wide))), RULES)
+    over = [f for f in result.findings if f.rule_id == "figure.overflow"]
+    assert len(over) == 1 and not over[0].fixable
+    fits = front_matter() + main_matter(extra=drawing(12.0, ppr='<w:jc w:val="center"/>'))
+    result = check(parse_package(open_docx(thesis(fits))), RULES)
+    assert "figure.overflow" not in {f.rule_id for f in result.findings}
+
+
+def test_figure_alignment_rule_and_fix() -> None:
+    from synora.fix import fix_document
+    from synora.ruleset import FigureRules
+
+    centered = RULES.model_copy(update={"figures": FigureRules(alignment="center")})
+    body = front_matter() + main_matter(extra=drawing(10.0))  # hizasız (sol)
+    data = thesis(body)
+    result = check(parse_package(open_docx(data)), centered)
+    hits = [f for f in result.findings if f.rule_id == "figure.alignment"]
+    assert len(hits) == 1 and hits[0].fixable
+    fixed = fix_document(data, centered)
+    after = check(parse_package(open_docx(fixed.docx)), centered)
+    assert "figure.alignment" not in {f.rule_id for f in after.findings}
+    # Kural verilmemişse görsel hizasına karışılmaz.
+    result = check(parse_package(open_docx(data)), RULES)
+    assert "figure.alignment" not in {f.rule_id for f in result.findings}
+
+
+def test_micro_typography() -> None:
+    # Metne dokunulmaz: tipografi bulguları hiçbir zaman otomatik düzeltilmez (fixable=False).
+    body = front_matter() + main_matter(
+        extra=p("Çift  boşluk içeren bir cümle.")
+        + p("Noktalamadan önce boşluk , böyle olmaz.")
+        + p("Virgülden sonra boşluk yok,böyle de olmaz; ama 3,5 gibi ondalıklar serbesttir."))
+    result = check(parse_package(open_docx(thesis(body))), RULES)
+    typo = {f.rule_id: f for f in result.findings if f.rule_id.startswith("typography.")}
+    assert set(typo) == {"typography.double_space", "typography.space_before_punct",
+                         "typography.missing_space_after_comma"}
+    assert all(f.severity.value == "warning" and not f.fixable for f in typo.values())
+    # Kural seti kapatabilir.
+    quiet = RULES.model_copy(update={
+        "document": RULES.document.model_copy(update={"typography": False})})
+    result = check(parse_package(open_docx(thesis(body))), quiet)
+    assert not any(f.rule_id.startswith("typography.") for f in result.findings)
+
+
 def test_caption_numbering_sequence() -> None:
     # Şekil/Tablo numaraları sırayı izlemeli: yinelenen, geri giden ya da atlayan numara uyarıdır.
     def cap(text: str) -> str:

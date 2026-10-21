@@ -102,6 +102,11 @@ _PAGE_LABELS = {
     "page_numbering.decoration": "Sayfa numarası (süssüz)",
     "page_numbering.restart": "Sayfa numarası yeni biçimde 1'den başlar",
     "document.missing_section": "Zorunlu bölümler",
+    "figure.alignment": "Görsel hizalaması",
+    "figure.overflow": "Görsel metin bloğuna sığar",
+    "typography.double_space": "Tipografi · çift boşluk yok",
+    "typography.space_before_punct": "Tipografi · noktalama öncesi boşluk yok",
+    "typography.missing_space_after_comma": "Tipografi · virgülden sonra boşluk",
 }
 _ROLE_BY_VALUE = {role.value: name for role, name in ROLE_NAMES.items()}
 
@@ -131,6 +136,19 @@ def message(f: Finding) -> str:
     if rid == "document.alt_chunk":
         return (f"Belgede başka bir dosyadan gömülü içerik var ({act} parça); bu kısım "
                 "denetlenmedi. İçeriği Word'de belgeye metin olarak aktarmanız önerilir.")
+    if rid == "figure.overflow":
+        return (f"Görsel metin bloğundan geniş ({act}; en çok {exp.lstrip('≤ ')} olmalı). "
+                "Word'de görseli seçip genişliğini metin bloğuna sığacak şekilde küçültün.")
+    if rid == "figure.alignment":
+        names = {"center": "ortalı", "left": "solda", "right": "sağda", "justify": "iki yana"}
+        return (f"Görsel {names.get(act, act)}. Kılavuz {names.get(exp, exp)} olmasını istiyor.")
+    if rid == "typography.double_space":
+        return f"Sözcükler arasında birden çok boşluk var ({act}). Tek boşluk kullanın."
+    if rid == "typography.space_before_punct":
+        return (f"Noktalama işaretinden önce boşluk var ({act}). Boşluk işaretten sonra "
+                "gelir: 'kelime, devam'.")
+    if rid == "typography.missing_space_after_comma":
+        return f"Virgülden sonra boşluk eksik ({act}). Ondalık sayılar (3,5) bunun dışındadır."
     if rid == "document.toc_stale":
         return (f"İçindekiler güncel görünmüyor ({act}). Word'de dizine sağ tıklayıp "
                 "'Alanı Güncelleştir' deyin (ya da dizini seçip F9).")

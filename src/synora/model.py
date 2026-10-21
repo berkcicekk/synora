@@ -164,7 +164,8 @@ class Paragraph:
     has_page_break: bool  # paragraf içinde elle sayfa sonu
     has_drawing: bool  # paragraf bir resim/çizim/nesne taşıyor (şekil)
     field_kinds: frozenset[str]
-    text: str = field(repr=False)
+    text: str = field(repr=False)  # tez metni: repr/log'a asla çıkmaz
+    drawing_width_cm: float | None = None  # paragraftaki en geniş çizimin genişliği (wp:extent)
 
     @property
     def char_count(self) -> int:
