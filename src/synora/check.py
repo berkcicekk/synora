@@ -84,6 +84,7 @@ def check(
     findings.extend(_document_rules(doc, rules))
     findings.extend(_required_sections(doc, rules))
     findings.extend(_toc_freshness(doc, roles))
+    findings.extend(_caption_sequence(doc, roles))
     findings.extend(_page_rules(doc.sections, rules, _chapter_sections(doc, roles)))
     findings.extend(_page_numbering(doc.sections, rules))
     findings.extend(_page_number_position(doc, rules))
@@ -150,6 +151,42 @@ def _document_rules(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
 
 
 _TOC_TAIL_RE = re.compile(r"(?:(?:\s*[.·…]){2,}|\t)\s*\d+\s*$|\s+\d+\s*$")
+
+
+_CAPTION_NUM_RE = re.compile(
+    r"^\s*(Şekil|Tablo|Çizelge|Grafik|Resim|Harita|Fotoğraf)\s+(\d+(?:\.\d+)*)", re.IGNORECASE)
+
+
+def _caption_sequence(doc: DocModel, roles: dict[str, RoleDecision]) -> Iterator[Finding]:
+    """Şekil/Tablo numaraları sırayı izliyor mu? (Silinen görselden sonra numara
+    güncellenmemesi yaygın hatadır; metindeki göndermeler de kırılır.)
+
+    Geçerli adımlar: son basamak +1 (1.1→1.2) ya da üst numara büyüyüp son basamağın
+    1'e dönmesi (1.4→2.1). Harfli diziler (Şekil A.1) karışılmadan atlanır."""
+    last: dict[str, tuple[int, ...]] = {}
+    for p in doc.body():
+        if p.in_table or p.in_textbox:
+            continue
+        role = roles[p.para_id].role
+        if role not in (Role.FIGURE_CAPTION, Role.TABLE_CAPTION):
+            continue
+        m = _CAPTION_NUM_RE.match(p.text)
+        if m is None:
+            continue
+        kind_word = m.group(1)
+        kind = _tr_lower(kind_word)
+        nums = tuple(int(x) for x in m.group(2).split("."))
+        prev = last.get(kind)
+        if prev is not None:
+            step = (*prev[:-1], prev[-1] + 1)
+            new_chapter = nums[-1] == 1 and nums[:-1] > prev[:-1]
+            if nums != step and not new_chapter:
+                expected = f"{kind_word} {'.'.join(str(n) for n in step)}"
+                actual = f"{kind_word} {m.group(2)}"
+                yield Finding(f"{role.value}.sequence", Severity.WARNING, expected, actual,
+                              False, para_id=p.para_id)
+                continue  # sayaç sapana kilitlenmesin: tek anomali tek bulgu
+        last[kind] = nums
 
 
 def _toc_freshness(doc: DocModel, roles: dict[str, RoleDecision]) -> Iterator[Finding]:

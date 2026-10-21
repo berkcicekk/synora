@@ -167,6 +167,10 @@ def message(f: Finding) -> str:
                 "Sayfa Numarası Biçimi → Başlangıç: 1 seçin.")
 
     prop = rid.split(".", 1)[1] if "." in rid else rid
+    if prop == "sequence":
+        thing = "Tablo numarası" if rid.startswith("table") else "Şekil numarası"
+        return (f"{thing} sırayı izlemiyor: {act} ({exp} beklenirdi). Silinen ya da taşınan "
+                "görselden sonra numaraları ve metindeki göndermeleri güncelleyin.")
     if prop == "position":
         thing = "Tablo başlığı tablonun" if rid.startswith("table") else "Şekil yazısı şeklin"
         where = {"above": "üstünde", "below": "altında"}

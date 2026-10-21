@@ -65,6 +65,30 @@ def test_left_margin_wrong_even_with_gutter() -> None:
     assert (left.expected, left.actual) == ("3.5cm", "2cm (cilt payı 0.5cm)")
 
 
+def test_caption_numbering_sequence() -> None:
+    # Şekil/Tablo numaraları sırayı izlemeli: yinelenen, geri giden ya da atlayan numara uyarıdır.
+    def cap(text: str) -> str:
+        return p(text, ppr='<w:pStyle w:val="Caption"/>')
+
+    def seq_findings(extra: str) -> list[tuple[str, str, str]]:
+        result = check(parse_package(open_docx(thesis(front_matter() + main_matter(extra=extra)))),
+                       RULES)
+        return [(f.rule_id, f.expected, f.actual) for f in result.findings
+                if f.rule_id.endswith(".sequence")]
+
+    # Fikstürde Şekil 1.1 ve Tablo 1.1 zaten var; uyumlu devam → bulgu yok.
+    assert seq_findings(cap("Şekil 1.2 Ek örnek") + cap("Şekil 2.1 Yeni bölüm")) == []
+    # Yinelenen numara
+    assert seq_findings(cap("Şekil 1.1 Yinelenen")) == [
+        ("figure_caption.sequence", "Şekil 1.2", "Şekil 1.1")]
+    # Atlanan numara
+    assert seq_findings(cap("Şekil 1.3 Atlanmış")) == [
+        ("figure_caption.sequence", "Şekil 1.2", "Şekil 1.3")]
+    # Geri giden tablo numarası
+    assert seq_findings(cap("Tablo 1.2 Uyumlu") + cap("Tablo 1.1 Geri dönen")) == [
+        ("table_caption.sequence", "Tablo 1.3", "Tablo 1.1")]
+
+
 def test_toc_staleness() -> None:
     # Öğrenci başlığı değiştirir ama Word'de dizini güncellemez: İçindekiler alan sonucu
     # (önbellek) eski kalır. Dizindeki satırlarla gerçek başlıklar karşılaştırılır.
