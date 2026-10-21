@@ -52,8 +52,10 @@ _CHUNK = 64 * 1024
 
 @dataclass(frozen=True, slots=True)
 class Limits:
-    max_file_bytes: int = 50 * MB
-    max_total_uncompressed: int = 300 * MB
+    # Görsel yoğun tezler 50 MB'ı aşabiliyor; Cloudflare tüneli istek başına 100 MB'a
+    # izin verdiği için tavan 100 MB (üstü zaten ağ katmanında kesilir).
+    max_file_bytes: int = 100 * MB
+    max_total_uncompressed: int = 600 * MB
     max_parts: int = 2000
     max_ratio: int = 100
     # Oran denetimi bu boyutun üzerindeki parçalara uygulanır; küçük ve tekrarlı

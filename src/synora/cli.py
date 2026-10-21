@@ -59,7 +59,7 @@ def check_command(
 
     limits = Limits()
     if docx.stat().st_size > limits.max_file_bytes:
-        typer.echo("Dosya çok büyük. En fazla 50 MB yükleyebilirsiniz.", err=True)
+        typer.echo("Dosya çok büyük. En fazla 100 MB yükleyebilirsiniz.", err=True)
         raise typer.Exit(2)
     try:
         doc = parse_package(open_docx(docx.read_bytes(), limits))
@@ -103,7 +103,7 @@ def fix_command(
         raise typer.Exit(2)
     limits = Limits()
     if docx.stat().st_size > limits.max_file_bytes:
-        typer.echo("Dosya çok büyük. En fazla 50 MB yükleyebilirsiniz.", err=True)
+        typer.echo("Dosya çok büyük. En fazla 100 MB yükleyebilirsiniz.", err=True)
         raise typer.Exit(2)
     try:
         result = fix_document(docx.read_bytes(), rules)

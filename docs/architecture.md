@@ -177,8 +177,8 @@ Her alan bir `rule_id`'ye karşılık gelir (`roles.body.line_spacing` → `body
 
 | Sınır | Değer |
 |-------|-------|
-| Girdi dosya boyutu | ≤ 50 MB |
-| Açılmış toplam boyut | ≤ 300 MB |
+| Girdi dosya boyutu | ≤ 100 MB (Cloudflare tüneli istek tavanı da 100 MB) |
+| Açılmış toplam boyut | ≤ 600 MB |
 | Sıkıştırma oranı (part başına) | ≤ 100:1 |
 | Part sayısı | ≤ 2000 |
 | Part adı | `..`, mutlak yol, ters bölü yok |

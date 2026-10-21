@@ -37,8 +37,8 @@ class Settings:
     login_requests_per_minute: int = 60
     max_active_jobs: int = 2
     max_daily_jobs: int = 20
-    max_queued_jobs: int = 20  # kuyrukta bekleyen her iş belleği 50 MB'a kadar tutar
-    max_upload_bytes: int = 50 * 1024 * 1024
+    max_queued_jobs: int = 20  # kuyrukta bekleyen her iş belleği 100 MB'a kadar tutar
+    max_upload_bytes: int = 100 * 1024 * 1024
     job_timeout_seconds: float = 120.0
     workers: int = 2
     isolate_jobs: bool = True  # her iş ayrı süreçte (testlerde kapatılabilir)

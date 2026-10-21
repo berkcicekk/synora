@@ -172,3 +172,11 @@ def test_malformed_xml_part() -> None:
     parts = minimal_parts()
     parts["word/document.xml"] = b"<w:document><w:body>"
     reject(zip_parts(parts), ErrorCode.XML_MALFORMED)
+
+
+def test_default_size_limits_fit_image_heavy_theses() -> None:
+    # Görsel yoğun doktora tezleri 50 MB'ı aşabiliyor (saha geri bildirimi);
+    # Cloudflare tüneli istek başına 100 MB'a izin verdiği için tavan 100 MB.
+    limits = Limits()
+    assert limits.max_file_bytes == 100 * 1024 * 1024
+    assert limits.max_total_uncompressed == 600 * 1024 * 1024
