@@ -96,13 +96,13 @@ def test_processing_poll_stops_on_errors_and_after_a_while() -> None:
 def test_upload_copy_and_state_on_touch_devices(client: TestClient,
                                                 mailer: ConsoleMailer) -> None:
     login(client, mailer)
-    html = client.get("/").text
+    html = client.get("/yukle").text
     assert 'class="t-touch"' in html and 'class="t-pointer"' in html
     assert re.search(r'<button id="submit"[^>]*aria-describedby="upload-status"', html)
     assert ".t-touch { display: inline; }" in _media("(hover: none)")
     choose = JS[JS.index("const choose = (f) => {"):JS.index('input.addEventListener("change"')]
     assert 'drop.classList.remove("has-file")' in choose
-    assert "min-height: 180px" in _media("(max-width: 760px)")
+    assert "min-height: 220px" in _media("(max-width: 760px)")
 
 
 # --- Giriş / kayıt / tanıtım ----------------------------------------------------------------
@@ -134,7 +134,7 @@ def test_invalid_link_wording_covers_used_links(client: TestClient) -> None:
 
 def test_landing_primary_action_goes_to_register(client: TestClient) -> None:
     html = client.get("/").text
-    hero = html[html.index('<div class="hero-aside">'):html.index("</section>")]
+    hero = html[html.index("hero-aside"):html.index("</section>")]
     assert 'href="/kayit"' in hero
 
 
@@ -146,15 +146,8 @@ def test_placeholder_is_readable_on_paper_too() -> None:
     assert color and contrast(color.group(1), _tokens()["paper"]) >= 4.5
 
 
-def test_inactive_story_steps_keep_body_text_readable() -> None:
-    desktop = _media("(min-width: 1000px)")
-    step = re.search(r"\.story-step \{[^}]*\}", desktop)
-    assert step and "opacity" not in step.group(0)  # paragraf soluklaştırılmaz
-    assert ".story-step:not(.active) h3" in desktop
-
-
 def test_input_borders_meet_non_text_contrast() -> None:
-    assert re.search(r"\.picker-btn \{[^}]*border: 1px solid var\(--border\)", CSS)
+    assert re.search(r"\.fld select \{[^}]*border: 1px solid var\(--border\)", CSS)
     assert re.search(r"\.role-pick select \{[^}]*border: 1px solid var\(--border\)", CSS)
     assert contrast(_tokens()["border"], _tokens()["paper"]) >= 3
 

@@ -1,0 +1,106 @@
+{% extends "app_base.html" %}
+{% block title %}Panel · Payper{% endblock %}
+{% set latest = panel.latest %}
+{% block content %}
+<div class="apphead">
+  <h1 class="steptitle">
+    <a href="/yukle">Yükle</a>
+    <span aria-current="page">Denetle</span>
+    {% if latest %}<a href="/jobs/{{ latest.id }}">Teslim et</a>{% else %}<span class="is-off" aria-hidden="true">Teslim et</span>{% endif %}
+  </h1>
+  <nav aria-label="Panel bölümleri" class="subnav">
+    <a href="#genel" aria-current="page">Genel bakış</a>
+    <a href="#son">Son denetimler</a>
+  </nav>
+</div>
+
+<div id="genel" class="cardgrid">
+  {% if latest %}
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Denetim raporu</h2>
+      <p class="pcard-sub">{{ latest.ruleset_name }} · {{ latest.when }}</p></div></div>
+    <div class="pcard-body"><div class="bignum-row"><span class="bignum">{{ latest.findings }}</span>
+      <span class="bignum-note">bulgu · {{ latest.errors }} hata,<br>{{ latest.warnings }} uyarı · {{ latest.fixable }} düzeltilebilir</span></div></div>
+    <div class="pcard-foot"><span class="hint">Raporu aç</span>
+      <a class="actionbtn" href="/jobs/{{ latest.id }}" aria-label="Raporu aç"><svg viewBox="0 0 16 16"><path d="M4 12L12 4M6 4h6v6"/></svg></a></div>
+  </article>
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Düzeltilmiş kopya</h2>
+      <p class="pcard-sub">İzlenen değişiklik · yazar "Payper"</p></div></div>
+    <div class="pcard-body pcard-serif">
+      <div>Biçim düzeltmeleri Word'de <u class="now">izlenen değişiklik</u> olarak gelir;
+        tek tıkla kabul edersiniz.</div>
+    </div>
+    <div class="pcard-foot"><span class="hint">Rapor sayfasından indirilir</span>
+      <a class="actionbtn" href="/jobs/{{ latest.id }}" aria-label="Düzeltilmiş kopya için rapora git"><svg viewBox="0 0 16 16"><path d="M8 3v8M4.5 7.5L8 11l3.5-3.5M3 13.5h10"/></svg></a></div>
+  </article>
+  {% if panel.frequent %}
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Sık bulgular</h2>
+      <p class="pcard-sub">Bu tezde en çok tekrar edenler</p></div></div>
+    <div class="pcard-body meterline">
+      {% for label, n in panel.frequent %}
+      <div><div class="mrow"><span>{{ label }}</span><strong>{{ n }}</strong></div>
+      <div class="meter"><i data-w="{{ (n / panel.frequent[0][1] * 100) | round | int }}"></i></div></div>
+      {% endfor %}
+    </div>
+  </article>
+  {% endif %}
+  {% else %}
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Henüz denetim yok</h2>
+      <p class="pcard-sub">İlk raporunuz birkaç saniyede hazır olur</p></div></div>
+    <div class="pcard-body"><p class="pcard-text">
+      Tezinizi yükleyin; kılavuza aykırı biçimler belge üzerinde işaretlenir, düzeltilmiş
+      kopyayı indirebilirsiniz.</p></div>
+    <div class="pcard-foot"><span class="hint">Tez yükle</span>
+      <a class="actionbtn" href="/yukle" aria-label="Tez yükle"><svg viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5L8 3l3.5 3.5M3 13.5h10"/></svg></a></div>
+  </article>
+  {% endif %}
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Kılavuz</h2>
+      <p class="pcard-sub">{{ panel.ruleset_name }}</p></div></div>
+    <div class="pcard-body chip-row">
+      {% for c in panel.chips %}<span class="chip-tag">{{ c }}</span>{% endfor %}
+    </div>
+    <div class="pcard-foot"><span class="hint">Boş Word şablonunu indir</span>
+      <a class="actionbtn" href="{{ panel.template_href }}" download aria-label="Word şablonunu indir"><svg viewBox="0 0 16 16"><path d="M8 3v8M4.5 7.5L8 11l3.5-3.5M3 13.5h10"/></svg></a></div>
+  </article>
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Gizlilik</h2>
+      <p class="pcard-sub">Raporlar otomatik silinir</p></div></div>
+    <div class="pcard-body"><p class="pcard-text">
+      {% if latest %}Son raporunuzun silinmesine {{ latest.hours_left }} saat kaldı. {% endif %}Tez
+      dosyanız diske hiç yazılmadı; raporda metniniz yer almaz.</p></div>
+    <div class="pcard-foot"><span class="hint"><a class="textlink" href="/aydinlatma">Aydınlatma metni</a></span></div>
+  </article>
+</div>
+
+<section id="son" aria-labelledby="son-h" class="pcard table-card">
+  <div class="table-head">
+    <h2 id="son-h" class="pcard-title">Son denetimler</h2>
+    <span class="pcard-sub">Raporlar {{ retention }} saat saklanır</span>
+  </div>
+  {% if panel.rows %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Denetim</th><th scope="col">Kılavuz</th><th scope="col">Bulgu</th><th scope="col">Silinmesine</th><th scope="col">İşlem</th></tr></thead>
+    <tbody>
+      {% for r in panel.rows %}
+      <tr>
+        <td>{{ r.when }}</td>
+        <td>{{ r.ruleset_name }}</td>
+        <td class="num">{% if r.findings is not none %}{{ r.findings }}{% else %}<span class="state state-{{ r.status }}">{{ {"queued": "sırada", "running": "denetleniyor", "failed": "başarısız"}.get(r.status, r.status) }}</span>{% endif %}</td>
+        <td>{{ r.hours_left }} sa</td>
+        <td><a href="/jobs/{{ r.id }}">Raporu aç</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Henüz bir denetiminiz yok. İlk tezinizi
+    <a class="textlink" href="/yukle">yükleme sayfasından</a> gönderin.</p>
+  {% endif %}
+</section>
+{% endblock %}

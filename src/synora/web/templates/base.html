@@ -4,25 +4,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1447B4">
+  <meta name="theme-color" content="#F7F7F9">
   <title>{% block title %}Payper{% endblock %}</title>
   <link rel="stylesheet" href="/static/fonts.css?v={{ asset_v }}">
   <link rel="stylesheet" href="/static/app.css?v={{ asset_v }}">
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <script src="/static/app.js?v={{ asset_v }}" defer></script>
 </head>
-<body class="{% block body_class %}app{% endblock %}">
+<body class="{% block body_class %}landing{% endblock %}">
   <a class="skip" href="#main">İçeriğe geç</a>
+  {% block shell %}
   {% block topbar %}
   <header class="site-nav">
     <div class="wrap nav-inner">
-      <a class="brand" href="/" aria-label="Payper ana sayfa">{{ mark() }}<span class="word">Payper</span></a>
+      <a class="brand" href="/" aria-label="Payper ana sayfa"><span class="brand-badge">{{ mark() }}</span><span class="word">Payper</span></a>
       <nav class="pill" aria-label="Site">
         {% if user %}
-        <a href="/" {% if active == "docs" %}aria-current="page"{% endif %}>Belgelerim</a>
-        <a href="/#yeni">Yeni denetim</a>
+        <a href="/" {% if active == "panel" %}aria-current="page"{% endif %}>Denetle</a>
+        <a href="/yukle" {% if active == "yukle" %}aria-current="page"{% endif %}>Yükle</a>
         {% else %}
-        <a href="/#urun">Ürün</a>
+        <a href="/#panel">Ürün</a>
         <a href="/#gizlilik">Gizlilik</a>
         <a href="/#kilavuz">Kılavuz</a>
         <a href="/fiyatlandirma" {% if active == "pricing" %}aria-current="page"{% endif %}>Fiyatlandırma</a>
@@ -30,14 +31,14 @@
       </nav>
       <div class="nav-end">
         {% if user %}
-        <span class="who">{{ user.email }}</span>
+        <span class="who-chip"><span class="who-ava" aria-hidden="true">{{ user.email[:2] | upper }}</span><span class="who">{{ user.email }}</span></span>
         <form method="post" action="/logout">
           <input type="hidden" name="csrf" value="{{ user.csrf }}">
-          <button class="btn small" type="submit"><span class="lbl">Çıkış</span>{{ arrow() }}</button>
+          <button class="nav-link" type="submit">Çıkış</button>
         </form>
         {% else %}
         <a class="nav-link" href="/giris">Giriş yap</a>
-        <a class="btn small" href="/kayit"><span class="lbl">Kayıt ol</span>{{ arrow() }}</a>
+        <a class="btn primary" href="/kayit"><span class="lbl">Başlayın</span></a>
         {% endif %}
       </div>
     </div>
@@ -46,6 +47,20 @@
   <main id="main">
     {% block content %}{% endblock %}
   </main>
+  {% block footer %}
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <a class="brand" href="/">{{ mark() }}<span class="word">Payper</span></a>
+      <p>Tez biçim denetimi · ZBEÜ pilotu. Metniniz değiştirilmez, yapay zekâ tarafından okunmaz;
+         rapor 24 saat sonra silinir. Son biçim onayı fakültenize aittir.</p>
+      <div class="footer-links">
+        <a href="/aydinlatma">Aydınlatma metni</a>
+        <a href="https://github.com/berkcicekk/synora">GitHub</a>
+      </div>
+    </div>
+  </footer>
+  {% endblock %}
+  {% endblock %}
   {# İstek/öneri kutusu: her sayfada sağ altta; JS olmadan düğme işlevsizdir, JS açılışta gösterir. #}
   <div id="suggest" {% if user %}data-csrf="{{ user.csrf }}"{% endif %}>
     <button class="suggest-fab" id="suggest-open" type="button" hidden
@@ -73,26 +88,5 @@
       </form>
     </dialog>
   </div>
-  {% block footer %}
-  <footer class="footer">
-    <div class="wrap footer-grid">
-      <div class="footer-brand">
-        <a class="brand" href="/">{{ mark() }}<span class="word">Payper</span></a>
-        <p>Tez biçim denetimi. Zonguldak Bülent Ecevit Üniversitesi pilotu.</p>
-      </div>
-      <div class="footer-col">
-        <span class="meta">Gizlilik</span>
-        <p>Metniniz değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız yalnızca bellekte işlenir;
-           rapor 24 saat sonra silinir.
-           <a href="/aydinlatma">Aydınlatma metni</a></p>
-      </div>
-      <div class="footer-col">
-        <span class="meta">Kılavuz</span>
-        <p>ZBEÜ Tıp Fakültesi Tez Yazım Kılavuzu (2019) temel alınmıştır. Payper teslimden önce kendi
-           denetiminiz içindir; biçimin son onayı fakültenizdedir.</p>
-      </div>
-    </div>
-  </footer>
-  {% endblock %}
 </body>
 </html>

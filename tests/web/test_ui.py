@@ -25,7 +25,14 @@ JS = (STATIC / "app.js").read_text(encoding="utf-8")
 
 def _tokens() -> dict[str, str]:
     root = CSS.split(":root {", 1)[1].split("}", 1)[0]
-    return dict(re.findall(r"--([a-z0-9-]+):\s*(#[0-9A-Fa-f]{6})", root))
+    raw = dict(re.findall(r"--([a-z0-9-]+):\s*(#[0-9A-Fa-f]{6}|var\(--[a-z0-9-]+\))", root))
+
+    def resolve(value: str) -> str:
+        while value.startswith("var("):
+            value = raw[value[6:-1]]
+        return value
+
+    return {k: resolve(v) for k, v in raw.items()}
 
 
 def _luminance(hex_color: str) -> float:
@@ -48,8 +55,8 @@ TEXT_PAIRS = [
     ("ok", "card"), ("on-blue", "blue"), ("on-blue-soft", "blue"), ("cyan", "night"),
 ]
 # Odak çerçevesi (WCAG 1.4.11, metin dışı öğe) için 3:1
-FOCUS_PAIRS = [("blue", "paper"), ("blue", "card"), ("blue", "desk"), ("cyan", "blue"),
-               ("cyan", "night")]
+FOCUS_PAIRS = [("blue", "paper"), ("blue", "card"), ("blue", "desk"), ("cyan", "night"),
+               ("accent", "bg")]
 
 
 def test_text_color_pairs_meet_aa() -> None:
@@ -71,14 +78,12 @@ def test_placeholder_text_is_readable() -> None:
     assert contrast(color.group(1), _tokens()["card"]) >= 4.5
 
 
-def test_cyan_focus_only_on_dark_surfaces() -> None:
-    # Camgöbeği odak çerçevesi fildişi zeminde 1,6:1 kalır; tanıtımın açık bölümlerinde mavi olmalı.
-    assert ".landing :focus-visible { outline-color: var(--cyan); }" not in CSS
-    rule = re.search(r"([^{}]+)\{ outline-color: var\(--cyan\); \}", CSS)
-    assert rule, "koyu yüzeyler için camgöbeği odak kuralı yok"
-    selectors = rule.group(1)
-    for dark in (".hero", ".products", ".join", ".footer", ".auth-art"):
-        assert dark in selectors
+def test_accent_focus_defaults() -> None:
+    # Öntanımlı odak koyu mor (beyazda 7,6:1); açık mor yalnızca koyu yüzey kurallarında.
+    assert ":focus-visible { outline: 2px solid var(--accent-ink)" in CSS
+    rule = re.search(r"([^{}]+)\{ outline-color: var\(--accent\); \}", CSS)
+    assert rule, "koyu yüzeyler için açık mor odak kuralı yok"
+    assert ".plan.featured" in rule.group(1)
 
 
 # --- Klavye ve yardımcı teknoloji -------------------------------------------------------------
@@ -86,7 +91,7 @@ def test_cyan_focus_only_on_dark_surfaces() -> None:
 
 def test_upload_page_works_without_surprises(client: TestClient, mailer: ConsoleMailer) -> None:
     login(client, mailer)
-    html = client.get("/").text
+    html = client.get("/yukle").text
     assert "<noscript>" in html  # yükleme JavaScript ister; söylenmeli
     assert 'aria-describedby="drop-help"' in html
     assert 'id="drop-help"' in html
@@ -110,11 +115,10 @@ def _current_step(html: str) -> str:
 
 def test_upload_page_shows_step_one_and_privacy(client: TestClient, mailer: ConsoleMailer) -> None:
     login(client, mailer)
-    html = client.get("/").text
-    assert _current_step(html) == "1"
-    # Mimari §10.1: yükleme ekranında gizlilik notu
-    for promise in ("Metniniz değiştirilmez.", "Yapay zekâ tarafından okunmaz.",
-                    "Dosyanız işlem bitince silinir."):
+    html = client.get("/yukle").text
+    assert re.search(r'<a href="#dosya" aria-current="step">', html)  # adım çizgisi: Dosya etkin
+    # Mimari §10.1: yükleme ekranında gizlilik notu (güven şeridi)
+    for promise in ("diske yazılmaz", "Yapay zekâ metni görmez", "kendiliğinden silinir"):
         assert promise in html
     assert "Yüklemeden önce" in html
     assert "Farklı Kaydet" in html
@@ -284,7 +288,8 @@ def _all_pages(client: TestClient, mailer: ConsoleMailer) -> dict[str, str]:
     pages["auth_confirm"] = client.get(f"/auth?token={token}").text
     pages["auth_invalid"] = client.get("/auth?token=gecersiz").text
     csrf = login(client, mailer)
-    pages["upload"] = client.get("/").text
+    pages["panel"] = client.get("/").text
+    pages["upload"] = client.get("/yukle").text
     for name, data in (("done", bad_thesis()), ("failed", b"word degil")):
         job_id = upload(client, csrf, data)
         wait_done(client, job_id)
@@ -337,16 +342,15 @@ def test_landing_stats_strip(client: TestClient) -> None:
     rulesets = discover_rulesets(Path(__file__).resolve().parents[2] / "rulesets")
     unis = {r.rules.institution for r in rulesets.values() if r.rules.institution}
     html = client.get("/").text
-    assert f'<span class="zero">{len(rulesets)}</span>' in html
-    assert f'<span class="zero">{len(unis)}</span>' in html
+    assert f'<span class="n">{len(rulesets)}</span>' in html
+    assert f'<span class="n">{len(unis)}</span>' in html
     assert "%97,1" in html
-    assert '<span class="zero">0</span><span>kayıtlı kullanıcı' in html  # test db boş
 
 
-def test_logged_in_nav_anchor_exists(client: TestClient, mailer: ConsoleMailer) -> None:
+def test_logged_in_nav_links_exist(client: TestClient, mailer: ConsoleMailer) -> None:
     login(client, mailer)
     html = client.get("/").text
-    assert 'href="/#yeni"' in html and 'id="yeni"' in html
+    assert 'href="/yukle"' in html  # panelden yüklemeye tek tık
 
 
 def test_every_element_id_used_by_js_exists_in_templates() -> None:
@@ -385,13 +389,13 @@ def test_full_student_journey(client: TestClient, mailer: ConsoleMailer) -> None
     assert output(client, csrf, job_id, "fixed", data).status_code == 200
     assert output(client, csrf, job_id, "annotated", data).status_code == 200
     home = client.get("/").text
-    assert f'href="/jobs/{job_id}"' in home and "tamamlandı" in home
+    assert f'href="/jobs/{job_id}"' in home  # panel tablosunda rapor bağlantısı
     assert client.post(f"/jobs/{job_id}/delete", data={"csrf": csrf},
                        follow_redirects=False).status_code == 303
     assert f'href="/jobs/{job_id}"' not in client.get("/").text
     client.post("/logout", data={"csrf": csrf})
     home = client.get("/").text  # oturum kapandı: tanıtım sayfası, giriş sayfasına bağlantı
-    assert "Tezinizi yükleyin" not in home and 'href="/giris"' in home
+    assert "Son denetimler" not in home and 'href="/giris"' in home
 
 
 def test_report_prints_as_checklist() -> None:

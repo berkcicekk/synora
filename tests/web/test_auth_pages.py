@@ -50,8 +50,8 @@ def test_login_page_split_layout(client: TestClient) -> None:
     res = client.get("/giris")
     assert res.status_code == 200
     html = res.text
-    assert '<div class="auth-shell">' in html
-    assert 'class="auth-art"' in html and "auth-mark" in html  # solda büyük amblem
+    assert 'class="auth-card"' in html
+    assert 'class="auth-intro"' in html  # solda tanıtım sütunu (başlık + güven listesi)
     form = html[html.index('<form method="post" action="/login"'):]
     form = form[:form.index("</form>")]
     assert 'name="csrf"' in form and 'type="email"' in form and 'autocomplete="email"' in form
@@ -59,12 +59,12 @@ def test_login_page_split_layout(client: TestClient) -> None:
     assert re.search(r'<a href="/giris"[^>]*aria-current="page">Giriş yap</a>', html)
     assert 'href="/kayit"' in html
     assert "<title>Giriş yap · Payper</title>" in html
-    assert 'class="site-nav"' not in html  # odaklı sayfa: üst menü ve altbilgi yok
+    assert 'class="site-nav"' in html  # yeni düzen: üst menü görünür
 
 
 def test_register_page_requires_consent_checkbox(client: TestClient) -> None:
     html = client.get("/kayit").text
-    assert '<div class="auth-shell">' in html
+    assert 'class="auth-card"' in html
     form = html[html.index('<form method="post" action="/kayit"'):]
     form = form[:form.index("</form>")]
     assert re.search(r'<input id="kvkk" name="kvkk" type="checkbox" value="1" required', form)
@@ -91,7 +91,7 @@ def test_landing_links_to_auth_pages_instead_of_form(client: TestClient) -> None
     html = client.get("/").text
     assert 'action="/login"' not in html
     assert 'href="/giris"' in html and 'href="/kayit"' in html
-    assert 'id="giris"' in html  # kahramandaki "Başlayın" çapası hâlâ bir yere iner
+    assert 'id="basla"' in html  # kapanıştaki "Başlayın" bölümü
 
 
 def test_privacy_notice_page_is_marked_draft(client: TestClient, settings: Settings) -> None:
@@ -106,10 +106,10 @@ def test_link_sent_and_confirm_pages_use_auth_layout(client: TestClient,
     assert register(client) == 200
     token = mailer.sent[-1][1].split("token=")[1]
     for html in (client.get(f"/auth?token={token}").text, client.get("/auth?token=yok").text):
-        assert '<div class="auth-shell">' in html
+        assert 'class="auth-card"' in html
     page = client.get("/kayit")
     sent = client.post("/kayit", data={"email": EMAIL, "csrf": csrf_from(page.text), "kvkk": "1"})
-    assert '<div class="auth-shell">' in sent.text and "E-postanızı kontrol edin" in sent.text
+    assert 'class="auth-card"' in sent.text and "E-postanızı kontrol edin" in sent.text
 
 
 # --- Kayıt akışı ------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ def test_register_records_consent_only_after_email_is_verified(
     confirm(client, mailer)
     found = consent(client)
     assert found is not None and found[0] == TERMS_VERSION
-    assert "Tezinizi yükleyin" in client.get("/").text
+    assert "Son denetimler" in client.get("/").text
 
 
 def test_plain_login_does_not_record_consent(client: TestClient, mailer: ConsoleMailer) -> None:
@@ -161,7 +161,7 @@ def test_login_errors_render_login_page(client: TestClient) -> None:
     page = client.get("/giris")
     res = client.post("/login", data={"email": "adres-degil", "csrf": csrf_from(page.text)})
     assert res.status_code == 400
-    assert '<div class="auth-shell">' in res.text and 'action="/login"' in res.text
+    assert 'class="auth-card"' in res.text and 'action="/login"' in res.text
     assert 'role="alert"' in res.text
 
 

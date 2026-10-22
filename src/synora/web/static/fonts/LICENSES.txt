@@ -1,3 +1,3 @@
 latin-modern-roman-*.woff2: Latin Modern fonts, GUST Font License (http://www.gust.org.pl/projects/e-foundry/latin-modern), taken from the latex.css npm package v1.13.0 (MIT License, Vincent Dörig).
-ibm-plex-mono-*.woff2: IBM Plex Mono, SIL Open Font License 1.1.
-hanken-grotesk-*.woff2: Hanken Grotesk, SIL Open Font License 1.1.
+inter-*.woff2: Inter (Rasmus Andersson), SIL Open Font License 1.1. Variable weight 400-700, latin + latin-ext subsets from Google Fonts.
+jbmono-*.woff2: JetBrains Mono (JetBrains), SIL Open Font License 1.1. Latin + latin-ext subsets from Google Fonts.

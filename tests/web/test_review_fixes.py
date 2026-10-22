@@ -50,7 +50,7 @@ def test_register_link_asks_owner_to_confirm_consent(client: TestClient,
                       follow_redirects=False)
     assert res.status_code == 400 and "aydınlatma metnini onaylayın" in res.text
     assert consent(client) is None
-    assert "Tezinizi yükleyin" not in client.get("/").text  # oturum açılmadı
+    assert "Son denetimler" not in client.get("/").text  # oturum açılmadı
     res = client.post("/auth", data={"token": token, "csrf": csrf_from(res.text), "kvkk": "1"},
                       follow_redirects=False)
     assert res.status_code == 303

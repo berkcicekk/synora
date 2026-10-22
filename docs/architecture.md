@@ -230,6 +230,11 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
 
 ### 10.1 Kullanıcı akışı
 
+Rotalar (2026-10-22 tasarım devri): `/` girişsiz tanıtım, girişli **panel** (son rapor özeti, son
+denetimler tablosu); `/yukle` yükleme; `/jobs/<id>` rapor. Büyük adım başlığı (Yükle · Denetle ·
+Teslim et) aynı zamanda gezinmedir. Görsel kimlik: beyaz site zemini, gri uygulama çerçevesi,
+mor vurgu (`--accent` yalnız dekor, metinde `--accent-ink`), Inter + JetBrains Mono (yerelde sunulur).
+
 1. **Yükle:** Tek ekran. Sürükle-bırak alanı, enstitü/kural seti seçimi (pilotta yalnızca ZBEÜ), gizlilik notu:
    "Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız işlem bitince silinir."
 2. **İşleniyor:** İlerleme göstergesi (güvenlik kontrolü → okuma → denetim).

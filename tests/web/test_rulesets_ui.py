@@ -59,8 +59,9 @@ def test_groups_by_institution_in_turkish_order() -> None:
 
 def test_upload_page_grouped_select_with_default(client: TestClient, mailer: ConsoleMailer) -> None:
     login(client, mailer)
-    page = client.get("/").text
-    select = page[page.index('<select id="ruleset"'):page.index("</select>")]
+    page = client.get("/yukle").text
+    start = page.index('<select id="ruleset"')
+    select = page[start:page.index("</select>", start)]  # önünde üniversite listesi de var
     assert '<optgroup label="Zonguldak Bülent Ecevit Üniversitesi">' in select
     assert re.findall(r'<option value="([^"]+)" selected>', select) == ["zbeu-tip"]
     assert select.count("<option") == len(ALL)
@@ -71,7 +72,7 @@ def test_upload_page_grouped_select_with_default(client: TestClient, mailer: Con
 def test_default_ruleset_setting(settings: Settings, mailer: ConsoleMailer) -> None:
     with TestClient(create_app(replace(settings, default_ruleset="odtu-fbe"), mailer)) as c:
         login(c, mailer)
-        page = c.get("/").text
+        page = c.get("/yukle").text
     assert re.findall(r'<option value="([^"]+)" selected>', page) == ["odtu-fbe"]
     assert 'href="/sablon/odtu-fbe/latex.zip"' in page
 
@@ -89,16 +90,15 @@ def test_every_ruleset_has_source_and_institution() -> None:
         assert r.rules.institution and r.rules.source and r.rules.source_url, r.id
 
 
-def test_ruleset_picker_component_shipped() -> None:
-    """Kılavuz seçici: erişilebilir combobox (listbox + arama + klavye) ve dokunma hedefleri."""
+def test_ruleset_cascade_component_shipped() -> None:
+    """Kılavuz seçimi: üniversite → kılavuz kademeli listeler (JS süzer, JS'siz tam liste)."""
     static = ROOT / "src" / "synora" / "web" / "static"
     js = (static / "app.js").read_text(encoding="utf-8")
     css = (static / "app.css").read_text(encoding="utf-8")
-    assert '"listbox"' in js and '"option"' in js  # ARIA rolleri
-    assert "aria-activedescendant" in js and "aria-expanded" in js
-    assert "Escape" in js and "ArrowDown" in js  # klavyeyle kapanır ve gezilir
-    assert re.search(r"\.picker-opt \{[^}]*min-height: 44px", css)  # dokunma hedefi
-    assert re.search(r"\.picker-btn \{[^}]*border: 1px solid var\(--border\)", css)
+    assert 'getElementById("u-uni")' in js and "uni-fld" in js  # üniversite listesi JS ile açılır
+    assert "uniSel.addEventListener" in js  # seçim kılavuz listesini süzer
+    assert re.search(r"\.fld select \{[^}]*border: 1px solid var\(--border\)", css)
+    assert re.search(r"\.fld select \{[^}]*height: 44px", css)  # dokunma hedefi
 
 
 def test_word_template_download(client: TestClient) -> None:
@@ -108,3 +108,19 @@ def test_word_template_download(client: TestClient) -> None:
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     assert res.content[:2] == b"PK"
     assert client.get("/sablon/yok-boyle-set/sablon.docx").status_code == 404
+
+
+def test_panel_shows_real_ruleset_and_upload_link(client: TestClient,
+                                                  mailer: ConsoleMailer) -> None:
+    """Panel: kılavuz kartı kural setinden gerçek ölçüleri gösterir; yükleme sayfası ayrı rotada."""
+    login(client, mailer)
+    page = client.get("/").text
+    chips = re.findall(r'<span class="chip-tag">([^<]+)</span>', page)
+    assert chips, "kılavuz kartında ölçü yok"
+    assert "Henüz denetim yok" in page and 'href="/yukle"' in page
+    assert client.get("/yukle").status_code == 200
+
+
+def test_upload_route_requires_login(client: TestClient) -> None:
+    res = client.get("/yukle", follow_redirects=False)
+    assert res.status_code == 303 and res.headers["location"] == "/giris"

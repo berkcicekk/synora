@@ -1,39 +1,24 @@
 {% extends "base.html" %}
-{% from "_marks.html" import blocks, mark %}
-{# Giriş/kayıt düzeni: solda kobalt zeminde büyük amblem, sağda form. Odaklı sayfa: menü ve altbilgi yok. #}
-{% block body_class %}auth{% endblock %}
-{% block topbar %}{% endblock %}
+{# Giriş/kayıt: beyaz sayfa, üstte site menüsü; solda tanıtım sütunu, sağda kart. #}
+{% block body_class %}landing auth{% endblock %}
 {% block footer %}{% endblock %}
 {% block content %}
-<div class="auth-shell">
-  <aside class="auth-art" aria-label="Payper">
-    <div class="auth-blocks" aria-hidden="true">{{ blocks() }}</div>
-    {# Amblem: imleci izler; üzerine gelince kanatlanır ve arkasından bloklar dökülür (tanıtımdaki gibi). #}
-    <a class="auth-logo" id="auth-logo" href="/" aria-label="Payper ana sayfa">
-      <span class="hero-logo-inner">
-        <i></i><i></i><i></i><i></i><i></i>
-        {{ mark("hero-mark auth-mark") }}
-      </span>
-      <span class="auth-word" aria-hidden="true">Payper</span>
-    </a>
-    <div class="auth-art-text">
-      <p class="auth-tagline">Biçim kusursuz,<br>tez teslime hazır.</p>
-      <ul class="auth-promises">
-        <li>Metniniz değiştirilmez</li>
-        <li>Yapay zekâ okumaz</li>
-        <li>Dosyanız bellekte işlenir</li>
-      </ul>
-    </div>
-  </aside>
-  <section class="auth-panel">
-    <div class="auth-top">
-      <a class="auth-back" href="/"><span aria-hidden="true">←</span> Ana sayfa</a>
-      {% block auth_switch %}{% endblock %}
-    </div>
+<div class="wrap auth-main">
+  <div class="auth-intro">
+    <p class="eyebrow-dot">Pilot · ZBEÜ Tıp Fakültesi</p>
+    <p class="auth-headline">Tezinizi teslime<br>hazırlayalım.</p>
+    <ul class="introlist">
+      <li><span class="tno">01</span>Dosya yalnızca bellekte işlenir, diske yazılmaz.</li>
+      <li><span class="tno">02</span>Metin ölçülür, okunmaz. Yapay zekâ metni görmez.</li>
+      <li><span class="tno">03</span>Rapor 24 saat sonra kendiliğinden silinir.</li>
+    </ul>
+  </div>
+  <section class="auth-card" aria-label="Hesap">
+    {% block auth_switch %}{% endblock %}
     <div class="auth-body">
       {% block auth_body %}{% endblock %}
     </div>
-    <p class="auth-foot">ZBEÜ pilotu · <a href="/aydinlatma">Aydınlatma metni</a></p>
+    <p class="auth-foot">Payper kendi denetiminiz içindir; son biçim onayı fakültenize aittir.</p>
   </section>
 </div>
 {% endblock %}

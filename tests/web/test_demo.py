@@ -51,4 +51,4 @@ def test_top_findings_section_needs_data(client: TestClient) -> None:
     db.add_finding_counts("example", {"body.line_spacing": 20, "page.margin.left": 10})
     html = client.get("/").text
     assert 'id="sik-hatalar"' in html
-    assert "satır aralığı" in html and "×20" in html
+    assert "satır aralığı" in html and '<span class="tf-count">20</span>' in html

@@ -32,7 +32,7 @@ def request_link(client: TestClient, mailer: ConsoleMailer, email: str = EMAIL) 
 
 
 def logged_in(client: TestClient) -> bool:
-    return "Tezinizi yükleyin" in client.get("/").text
+    return "Son denetimler" in client.get("/").text  # giriş sonrası "/" paneldir
 
 
 # --- Giriş bağlantısı -------------------------------------------------------------------------

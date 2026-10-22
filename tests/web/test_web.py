@@ -56,8 +56,10 @@ def login(client: TestClient, mailer: ConsoleMailer, email: str = "ogrenci@beun.
                       follow_redirects=False)
     assert res.status_code == 303
     home = client.get("/")
-    assert "Tezinizi yükleyin" in home.text
-    return csrf_from(home.text.split('id="upload"')[1])
+    assert "Son denetimler" in home.text  # giriş sonrası "/" panel sayfasıdır
+    up = client.get("/yukle")
+    assert 'id="upload"' in up.text
+    return csrf_from(up.text.split('id="upload"')[1])
 
 
 def upload(client: TestClient, csrf: str, data: bytes, ruleset: str = "example") -> str:
@@ -218,7 +220,7 @@ def test_logout(client: TestClient, mailer: ConsoleMailer) -> None:
     csrf = login(client, mailer)
     client.post("/logout", data={"csrf": csrf})
     home = client.get("/").text  # oturum kapandı: tanıtım sayfası, giriş sayfasına bağlantı
-    assert "Tezinizi yükleyin" not in home and 'href="/giris"' in home
+    assert "Son denetimler" not in home and 'href="/giris"' in home
 
 
 # --- Güvenlik ve saklama ------------------------------------------------------------------
@@ -249,7 +251,8 @@ def test_no_inline_scripts_or_styles(client: TestClient, mailer: ConsoleMailer) 
 def test_no_external_resources(client: TestClient) -> None:
     html = client.get("/").text
     assert "googleapis" not in html
-    assert not re.search(r'(src|href)="https?://', html)
+    # Kaynak yükleyen etiketler (link/script/img/iframe) dış adres kullanamaz; <a> gezinmedir.
+    assert not re.search(r'<(?:link|script|img|iframe)\b[^>]*(?:src|href)="https?://', html)
 
 
 def test_retention_purge(client: TestClient, mailer: ConsoleMailer) -> None:

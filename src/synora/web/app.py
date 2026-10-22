@@ -441,6 +441,50 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     # --- Sayfalar ----------------------------------------------------------------------------
 
+    def _ruleset_name(ruleset_id: str) -> str:
+        info = rulesets.get(ruleset_id)
+        return info.name if info else ruleset_id
+
+    def _hours_left(job: Job) -> int:
+        left = settings.retention_hours - (time.time() - job.created_at) / 3600
+        return max(0, round(left))
+
+    def panel_context(user: User) -> dict[str, Any]:
+        """Panel kartları ve son denetimler tablosu; rapor metni içermez (yalnızca sayılar)."""
+        jobs = [j for j in db.recent_jobs(user.email) if not expired(j)]
+        rows: list[dict[str, Any]] = []
+        latest: dict[str, Any] | None = None
+        frequent: list[tuple[str, int]] = []
+        for j in jobs:
+            findings_n = None
+            if j.status == "done" and j.report:
+                report = json.loads(j.report)
+                findings_n = len(report.get("findings") or [])
+                if latest is None:
+                    s = report.get("summary") or {}
+                    latest = {"id": j.id, "when": format_when(j.created_at),
+                              "errors": s.get("errors", 0), "warnings": s.get("warnings", 0),
+                              "fixable": s.get("fixable", 0), "findings": findings_n,
+                              "ruleset_name": _ruleset_name(j.ruleset),
+                              "ruleset": j.ruleset, "hours_left": _hours_left(j)}
+                    counts: dict[str, int] = {}
+                    for f in report.get("findings") or []:
+                        counts[f["rule_id"]] = counts.get(f["rule_id"], 0) + 1
+                    frequent = [(rule_label(rid), n) for rid, n in
+                                sorted(counts.items(), key=lambda kv: -kv[1])[:3]]
+            rows.append({"id": j.id, "when": format_when(j.created_at), "status": j.status,
+                         "ruleset_name": _ruleset_name(j.ruleset), "findings": findings_n,
+                         "hours_left": _hours_left(j)})
+        shown = (rulesets.get((latest or {}).get("ruleset", ""))
+                 or rulesets.get(settings.default_ruleset)
+                 or (ordered_rulesets[0] if ordered_rulesets else None))
+        # Kâğıt ve yazı tipi kendini anlatır; ölçüler etiketsiz anlamsız ("3 cm" neyin?).
+        chips = [t.value if t.label in ("Kağıt", "Yazı tipi") else f"{t.label} {t.value}"
+                 for t in rule_tiles(shown.rules)[:7]] if shown else []
+        return {"rows": rows, "latest": latest, "frequent": frequent, "chips": chips,
+                "ruleset_name": shown.name if shown else "—",
+                "template_href": f"/sablon/{shown.id}/sablon.docx" if shown else "/"}
+
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
         user = current_user(request)
@@ -451,10 +495,20 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                           # Anonim sayaç; az veriyle yanıltıcı olmasın diye eşik var.
                           top_findings=([(rule_label(rid), n) for rid, n in top]
                                         if sum(n for _, n in top) >= 25 else []))
-        jobs = [j for j in db.recent_jobs(user.email) if not expired(j)]
-        return render(request, "upload.html", user=user, active="docs", rulesets=ordered_rulesets,
-                      ruleset_groups=ruleset_groups,
-                      jobs=jobs, max_mb=settings.max_upload_bytes // (1024 * 1024),
+        return render(request, "panel.html", user=user, active="panel",
+                      panel=panel_context(user), retention=int(settings.retention_hours))
+
+    @app.get("/yukle", response_class=HTMLResponse)
+    def upload_page(request: Request) -> Response:
+        user = current_user(request)
+        if user is None:
+            return RedirectResponse("/giris", status_code=303)
+        latest_done = next((j.id for j in db.recent_jobs(user.email)
+                            if j.status == "done" and not expired(j)), None)
+        return render(request, "upload.html", user=user, active="yukle",
+                      rulesets=ordered_rulesets, ruleset_groups=ruleset_groups,
+                      latest_done=latest_done,
+                      max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
 
     word_templates: dict[str, bytes] = {}

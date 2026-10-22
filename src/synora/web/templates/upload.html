@@ -1,103 +1,118 @@
-{% extends "base.html" %}
-{% from "_marks.html" import arrow %}
-{% from "_steps.html" import steps %}
-{% block title %}Belgelerim · Payper{% endblock %}
+{% extends "app_base.html" %}
+{% block title %}Tez yükle · Payper{% endblock %}
 {% block content %}
-<section class="app-head">
-  <div class="wrap">
-    <span class="meta">Belgelerim</span>
-    <h1>Tezinizi yükleyin.</h1>
-    <p>Word belgesi (.docx). Raporunuz birkaç saniye içinde, belgenizin üzerinde hazır olur.</p>
-    {{ steps(1) }}
+<div class="apphead">
+  <h1 class="steptitle">
+    <span aria-current="page">Yükle</span>
+    <a href="/">Denetle</a>
+    {% if latest_done %}<a href="/jobs/{{ latest_done }}">Teslim et</a>{% else %}<span class="is-off" aria-hidden="true">Teslim et</span>{% endif %}
+  </h1>
+  <nav aria-label="Yükleme adımları" class="subnav">
+    <a href="#dosya" aria-current="step">Dosya</a>
+    <a href="#kilavuz-sec">Kılavuz</a>
+    <a href="#ciktilar">Çıktılar</a>
+  </nav>
+</div>
+
+<form id="upload" data-csrf="{{ user.csrf }}" data-max="{{ max_mb * 1024 * 1024 }}">
+  <noscript><p class="alert">Yükleme için tarayıcınızda JavaScript açık olmalı.</p></noscript>
+  <div class="uprow">
+    <section id="dosya" aria-label="Dosya" class="uprow-main">
+      <label class="updrop" id="drop" for="file">
+        <input id="file" name="file" type="file" aria-describedby="drop-help"
+               accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        <span class="updrop-ico" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5L8 3l3.5 3.5M3 13.5h10"/></svg></span>
+        <span class="updrop-title" id="drop-title"><span class="t-pointer">Tezinizi buraya bırakın</span><span class="t-touch">Tezinizi seçmek için dokunun</span></span>
+        <span class="updrop-sub" id="drop-help"><span class="t-pointer">ya da bilgisayarınızdan seçin. </span>Yalnızca .docx · en fazla {{ max_mb }}&nbsp;MB</span>
+        <span class="fakebtn">Dosya seç</span>
+      </label>
+    </section>
+    <div class="uprow-side">
+      <section id="kilavuz-sec" aria-label="Kılavuz" class="pcard">
+        <div><h2 class="pcard-title">Kılavuz</h2><p class="pcard-sub">Tezinizin denetleneceği kural seti</p></div>
+        {% if rulesets|length > 1 %}
+        <div class="fld" id="uni-fld" hidden>
+          <label for="u-uni">Üniversite</label>
+          <select id="u-uni"></select>
+        </div>
+        <div class="fld" id="ruleset-field">
+          <label for="ruleset">Enstitü / kılavuz</label>
+          {# JS, u-uni seçimine göre bu listeyi süzer; JS yoksa gruplu tam liste kalır. #}
+          <select id="ruleset" name="ruleset">
+            {% for g in ruleset_groups %}<optgroup label="{{ g.institution }}">{% for r in g.items %}<option value="{{ r.id }}"{% if r.id == rulesets[0].id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</optgroup>
+            {% endfor %}
+          </select>
+        </div>
+        {% elif rulesets %}
+        <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
+        <div class="fld"><label>Kılavuz</label><span>{{ rulesets[0].name }}</span></div>
+        {% else %}
+        <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
+        {% endif %}
+        <p class="fld-note">{{ ruleset_groups|length }} üniversite, {{ rulesets|length }} kılavuz.
+           Kural setleri resmî kılavuzlardan çıkarılır; enstitülerce doğrulanmamıştır.</p>
+      </section>
+      <section id="ciktilar" aria-label="Çıktılar" class="pcard">
+        <h2 class="pcard-title">Çıktılar</h2>
+        <p class="outrow"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>
+          <span>Denetim raporu <span class="sub">· anında, ekranda</span></span></p>
+        <p class="outrow"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>
+          <span>Düzeltilmiş kopya <span class="sub">· izlenen değişiklik, rapordan indirilir</span></span></p>
+        <p class="outrow"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>
+          <span>Yorumlu kopya <span class="sub">· elle düzeltilecekler not olarak</span></span></p>
+      </section>
+    </div>
   </div>
-</section>
 
-<section class="wrap app-grid" id="yeni">
-  <form id="upload" class="dropcard" data-csrf="{{ user.csrf }}" data-max="{{ max_mb * 1024 * 1024 }}">
-    <label class="drop" for="file" id="drop">
-      <span class="drop-corner" aria-hidden="true"><i></i><i></i><i></i></span>
-      <svg class="drop-ico" viewBox="0 0 48 56" aria-hidden="true">
-        <path d="M6 2h24l12 12v40H6z M30 2v12h12 M24 44V24 M16 32l8-8 8 8"/>
-      </svg>
-      <span class="drop-title"><span class="t-pointer">Dosyanızı buraya bırakın</span><span class="t-touch">Tezinizi seçmek için dokunun</span></span>
-      <span class="drop-sub" id="drop-help"><span class="t-pointer">ya da seçmek için tıklayın · </span>.docx · en fazla {{ max_mb }}&nbsp;MB</span>
-      <input id="file" name="file" type="file" aria-describedby="drop-help"
-             accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-    </label>
-    <noscript><p class="alert">Yükleme için tarayıcınızda JavaScript açık olmalı.</p></noscript>
-    {% if rulesets|length > 1 %}
-    <div class="field picker-field" id="ruleset-field">
-      <label for="ruleset" id="ruleset-label">Kılavuz
-        <span class="label-note">· {{ ruleset_groups|length }} üniversite, {{ rulesets|length }} kılavuz</span></label>
-      {# app.js bu listeyi aranabilir bir seçiciye dönüştürür; JS yoksa yalın liste kalır. #}
-      <select id="ruleset" name="ruleset">
-        {% for g in ruleset_groups %}<optgroup label="{{ g.institution }}">{% for r in g.items %}<option value="{{ r.id }}"{% if r.id == rulesets[0].id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</optgroup>
-        {% endfor %}
-      </select>
-    </div>
-    {% elif rulesets %}
-    <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
-    <div class="field"><span class="label-like">Kılavuz</span><span>{{ rulesets[0].name }}</span></div>
-    {% else %}
-    <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
-    {% endif %}
-    <button id="submit" class="btn primary xl" type="submit" disabled aria-describedby="upload-status"><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
-    <p id="upload-status" class="status" role="status" aria-live="polite"></p>
-    <p class="alert warn">Dosyanız {{ max_mb }} MB'tan büyük mü? Word'de <em>Resim Biçimi ›
-       Resimleri Sıkıştır</em> ile resimleri küçültüp yeniden kaydedin — denetim sonucu değişmez.</p>
-    <ul class="assure" aria-label="Gizlilik">
-      <li><strong>Metniniz değiştirilmez.</strong> Yalnızca biçim düzeltilir; her kopyada metnin harfi harfine aynı kaldığı doğrulanır.</li>
-      <li><strong>Yapay zekâ tarafından okunmaz.</strong> Paragraf türü yalnızca punto, hizalama gibi ölçülerden belirlenir.</li>
-      <li><strong>Dosyanız işlem bitince silinir.</strong> Diske yazılmaz; rapor {{ retention }} saat sonra silinir.</li>
-    </ul>
-    <details class="prep">
-      <summary>Yüklemeden önce</summary>
-      <ul>
-        <li>Dosya <strong>.docx</strong> olmalı. Eski .doc dosyasını Word'de <em>Dosya › Farklı Kaydet › Word Belgesi (.docx)</em> ile kaydedin.</li>
-        <li>Parola koruması varsa kaldırın: <em>Dosya › Bilgi › Belgeyi Koru</em>.</li>
-        <li>Makro içeren belgeler (.docm) kabul edilmez.</li>
-        <li>İzlenen değişiklikler varsa önce kabul edin ya da reddedin; rapor bunları ayrıca uyarır.</li>
-      </ul>
-    </details>
-    {% if rulesets %}
-    <details class="prep">
-      <summary>Boş şablonla mı başlayacaksınız?</summary>
-      <p>Seçili kılavuzun biçim kuralları (kenar boşlukları, yazı tipi, satır aralığı, başlık
-         stilleri, sayfa numaraları) hazır ayarlanmış bir Word şablonu indirin; stilleri
-         kullanarak yazın, bitince burada denetleyin.</p>
-      <p><a id="word-link" class="textlink" href="/sablon/{{ rulesets[0].id }}/sablon.docx" download>Seçili kılavuzun Word şablonunu indirin (.docx)</a></p>
-      <p class="latex-note">Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.</p>
-    </details>
-    <details class="prep latex">
-      <summary>LaTeX ile mi yazıyorsunuz?</summary>
-      <p>Payper Word belgelerini denetler. LaTeX kullanıyorsanız kılavuzun biçim kuralları (kâğıt, kenar boşlukları, yazı tipi, satır aralığı, başlıklar, sayfa numaraları) hazır ayarlanmış şablonu indirin. Overleaf'te <em>New Project › Upload Project</em> ile açabilirsiniz.</p>
-      <p><a id="latex-link" class="textlink" href="/sablon/{{ rulesets[0].id }}/latex.zip" download>Seçili kılavuzun LaTeX şablonunu indirin (.zip)</a><br>
-        <span id="latex-name" class="latex-name">{{ rulesets[0].name }}</span></p>
-      <p class="latex-note">Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.</p>
-    </details>
-    {% endif %}
-  </form>
+  <div class="preview-end mt14">
+    <button id="submit" class="btn primary cta-lg" type="submit" disabled aria-describedby="upload-status">
+      <span class="lbl">Denetimi başlat</span>
+      <span class="arr" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+    </button>
+  </div>
+  <p id="upload-status" class="status" role="status" aria-live="polite"></p>
+  <p class="alert warn">Dosyanız {{ max_mb }} MB'tan büyük mü? Word'de <em>Resim Biçimi ›
+     Resimleri Sıkıştır</em> ile resimleri küçültüp yeniden kaydedin — denetim sonucu değişmez.</p>
+</form>
 
-  <aside class="history" aria-labelledby="gecmis">
-    <div class="history-head">
-      <h2 id="gecmis">Son denetimler</h2>
-      <span class="meta">{{ retention }} saatte silinir</span>
-    </div>
-    {% if jobs %}
-    <ul class="history-list">
-      {% for j in jobs %}
-      <li>
-        <a href="/jobs/{{ j.id }}">
-          <span class="h-date">{{ j.created_at | when }}</span>
-          <span class="state state-{{ j.status }}">{{ {"queued": "sırada", "running": "denetleniyor", "done": "tamamlandı", "failed": "başarısız"}[j.status] }}</span>
-          <span class="h-arrow" aria-hidden="true">↗</span>
-        </a>
-      </li>
-      {% endfor %}
+<div class="trust" aria-label="Gizlilik">
+  <div><span class="tno">01</span>Dosya yalnızca bellekte açılır, diske yazılmaz.</div>
+  <div><span class="tno">02</span>Metin ölçülür, okunmaz. Yapay zekâ metni görmez.</div>
+  <div><span class="tno">03</span>Rapor {{ retention }} saat sonra kendiliğinden silinir.</div>
+</div>
+
+<div>
+  <details class="prep">
+    <summary>Yüklemeden önce</summary>
+    <ul>
+      <li>Dosya <strong>.docx</strong> olmalı. Eski .doc dosyasını Word'de <em>Dosya › Farklı Kaydet › Word Belgesi (.docx)</em> ile kaydedin.</li>
+      <li>Parola koruması varsa kaldırın: <em>Dosya › Bilgi › Belgeyi Koru</em>.</li>
+      <li>Makro içeren belgeler (.docm) kabul edilmez.</li>
+      <li>İzlenen değişiklikler varsa önce kabul edin ya da reddedin; rapor bunları ayrıca uyarır.</li>
     </ul>
-    {% else %}
-    <p class="empty">Henüz bir denetiminiz yok. İlk tezinizi soldaki alana bırakın.</p>
-    {% endif %}
-  </aside>
-</section>
+  </details>
+  {% if rulesets %}
+  <details class="prep">
+    <summary>Boş şablonla mı başlayacaksınız?</summary>
+    <p>Seçili kılavuzun biçim kuralları (kenar boşlukları, yazı tipi, satır aralığı, başlık
+       stilleri, sayfa numaraları) hazır ayarlanmış bir Word şablonu indirin; stilleri
+       kullanarak yazın, bitince burada denetleyin.</p>
+    <p><a id="word-link" class="textlink" href="/sablon/{{ rulesets[0].id }}/sablon.docx" download>Seçili kılavuzun Word şablonunu indirin (.docx)</a></p>
+    <p class="latex-note">Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.</p>
+  </details>
+  <details class="prep latex">
+    <summary>LaTeX ile mi yazıyorsunuz?</summary>
+    <p>Payper Word belgelerini denetler. LaTeX kullanıyorsanız kılavuzun biçim kuralları hazır
+       ayarlanmış şablonu indirin. Overleaf'te <em>New Project › Upload Project</em> ile açabilirsiniz.</p>
+    <p><a id="latex-link" class="textlink" href="/sablon/{{ rulesets[0].id }}/latex.zip" download>Seçili kılavuzun LaTeX şablonunu indirin (.zip)</a><br>
+      <span id="latex-name" class="latex-name">{{ rulesets[0].name }}</span></p>
+    <p class="latex-note">Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.</p>
+  </details>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block framefoot %}
+<a class="nav-link" href="/">Vazgeç</a>
+<span class="fineprint">Metniniz değiştirilmez · dosyanız diske yazılmaz · rapor {{ retention }} saatte silinir</span>
 {% endblock %}

@@ -2,21 +2,26 @@
 "use strict";
 
 (function () {
-  // --- Kılavuz seçimi: aranabilir seçici (combobox) ve seçime göre şablon bağlantıları ------
+  // --- CSP: satır içi stil yok; ölçüler data-* özniteliklerinden uygulanır -----------------
+  document.querySelectorAll("[data-w]").forEach((el) => { el.style.width = el.dataset.w + "%"; });
+  document.querySelectorAll("[data-wpct]").forEach((el) => { el.style.width = el.dataset.wpct + "%"; });
+  const inset = document.querySelector("[data-inset]");
+  if (inset) {
+    const [l, r, t, b] = inset.dataset.inset.split(",");
+    inset.style.left = l + "%"; inset.style.right = r + "%";
+    inset.style.top = t + "%"; inset.style.bottom = b + "%";
+  }
+
+  // --- Kılavuz seçimi: üniversite → kılavuz kademeli listeler + şablon bağlantıları ----
   const rulesetSelect = document.getElementById("ruleset");
   if (rulesetSelect && rulesetSelect.tagName === "SELECT") {
     const latexLink = document.getElementById("latex-link");
     const latexName = document.getElementById("latex-name");
     const wordLink = document.getElementById("word-link");
-    // Türkçe büyük/küçük harf: "Iğdır" → "ığdır", "İzmir" → "izmir".
-    const fold = (s) => s.replace(/I/g, "ı").replace(/İ/g, "i").toLocaleLowerCase("tr");
     const groups = Array.from(rulesetSelect.querySelectorAll("optgroup")).map((g) => ({
       label: g.label,
-      options: Array.from(g.children).map((o) => ({
-        value: o.value, text: o.textContent, inst: g.label, key: fold(o.textContent + " " + g.label),
-      })),
+      options: Array.from(g.children).map((o) => ({ value: o.value, text: o.textContent })),
     }));
-    const total = groups.reduce((n, g) => n + g.options.length, 0);
     const byValue = new Map();
     groups.forEach((g) => g.options.forEach((o) => byValue.set(o.value, o)));
 
@@ -31,160 +36,27 @@
     };
     rulesetSelect.addEventListener("change", syncLatex);
 
-    // Seçici: select değer taşıyıcı olarak gizli kalır; az seçenekte yalın select yeter.
-    const field = document.getElementById("ruleset-field");
-    if (field && total > 8) {
-      const SVG = "http://www.w3.org/2000/svg";
-      const icon = (cls, parts) => {
-        const s = document.createElementNS(SVG, "svg");
-        s.setAttribute("viewBox", "0 0 24 24");
-        s.setAttribute("class", cls);
-        s.setAttribute("aria-hidden", "true");
-        parts.forEach(([tag, attrs]) => {
-          const el = document.createElementNS(SVG, tag);
-          Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-          s.appendChild(el);
-        });
-        return s;
-      };
-      const el = (tag, cls, text) => {
-        const node = document.createElement(tag);
-        if (cls) node.className = cls;
-        if (text) node.textContent = text;
-        return node;
-      };
-
-      const btn = el("button", "picker-btn");
-      btn.type = "button";
-      btn.id = "ruleset-btn";
-      btn.setAttribute("aria-haspopup", "listbox");
-      btn.setAttribute("aria-expanded", "false");
-      const sel = el("span");
-      const instEl = el("span", "picker-inst");
-      const nameEl = el("span", "picker-name");
-      sel.append(instEl, nameEl);
-      btn.append(sel, icon("picker-chev", [["path", { d: "M6 9l6 6 6-6" }]]));
-
-      const pop = el("div", "picker-pop");
-      pop.hidden = true;
-      const searchWrap = el("div", "picker-search-wrap");
-      const search = el("input", "picker-search");
-      search.type = "text";
-      search.autocomplete = "off";
-      search.placeholder = "Üniversite ya da kılavuz ara";
-      search.setAttribute("role", "combobox");
-      search.setAttribute("aria-expanded", "true");
-      search.setAttribute("aria-controls", "picker-list");
-      search.setAttribute("aria-autocomplete", "list");
-      search.setAttribute("aria-label", "Kılavuz listesinde ara");
-      searchWrap.append(
-        icon("", [["circle", { cx: "11", cy: "11", r: "7" }], ["path", { d: "M21 21l-4.3-4.3" }]]),
-        search);
-      const list = el("ul", "picker-list");
-      list.id = "picker-list";
-      list.setAttribute("role", "listbox");
-      list.setAttribute("aria-labelledby", "ruleset-label");
-      const countBar = el("p", "picker-count");
-      countBar.setAttribute("role", "status");
-      pop.append(searchWrap, list, countBar);
-
-      rulesetSelect.hidden = true;
-      const label = document.getElementById("ruleset-label");
-      if (label) label.htmlFor = "ruleset-btn";
-      field.append(btn, pop);
-
-      let items = [];      // görünür seçenek li'leri (klavye gezinmesi için)
-      let vals = [];       // items ile aynı sırada kural seti kimlikleri
-      let active = -1;
-      const setActive = (i) => {
-        if (active >= 0 && items[active]) items[active].classList.remove("active");
-        active = i;
-        if (i < 0 || !items[i]) { search.removeAttribute("aria-activedescendant"); return; }
-        items[i].classList.add("active");
-        search.setAttribute("aria-activedescendant", items[i].id);
-        items[i].scrollIntoView({ block: "nearest" });
-      };
-      const render = (query) => {
-        const words = fold(query).split(/\s+/).filter(Boolean);
-        list.textContent = "";
-        items = [];
-        vals = [];
-        active = -1;
-        search.removeAttribute("aria-activedescendant");
-        groups.forEach((g) => {
-          const opts = g.options.filter((o) => words.every((w) => o.key.includes(w)));
-          if (!opts.length) return;
-          list.appendChild(el("li", "picker-group", g.label)).setAttribute("role", "presentation");
-          opts.forEach((o) => {
-            const li = el("li", "picker-opt", o.text);
-            li.id = "po-" + items.length;
-            li.setAttribute("role", "option");
-            li.setAttribute("aria-selected", String(o.value === rulesetSelect.value));
-            li.addEventListener("mouseenter", () => setActive(items.indexOf(li)));
-            list.appendChild(li);
-            items.push(li);
-            vals.push(o.value);
-          });
-        });
-        if (!items.length) list.appendChild(el("li", "picker-empty", "Eşleşen kılavuz yok."));
-        countBar.textContent = (words.length ? items.length + " / " : "") + total + " kılavuz";
-        return items.length;
-      };
-      const updateBtn = () => {
-        const o = byValue.get(rulesetSelect.value);
-        if (!o) return;
-        instEl.textContent = o.inst;
-        nameEl.textContent = o.text;
-      };
-      const open = () => {
-        search.value = "";
-        render("");
-        pop.hidden = false;
-        btn.setAttribute("aria-expanded", "true");
-        setActive(vals.indexOf(rulesetSelect.value));
-        search.focus();
-      };
-      const close = (toBtn) => {
-        if (pop.hidden) return;
-        pop.hidden = true;
-        btn.setAttribute("aria-expanded", "false");
-        if (toBtn) btn.focus();
-      };
-      const choose = (value) => {
-        rulesetSelect.value = value;
-        rulesetSelect.dispatchEvent(new Event("change"));
-        updateBtn();
-        close(true);
-      };
-
-      btn.addEventListener("click", () => (pop.hidden ? open() : close(true)));
-      search.addEventListener("input", () => { render(search.value); if (items.length) setActive(0); });
-      search.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-          e.preventDefault();
-          if (!items.length) return;
-          const dir = e.key === "ArrowDown" ? 1 : -1;
-          setActive(active < 0 ? (dir > 0 ? 0 : items.length - 1)
-                               : (active + dir + items.length) % items.length);
-        } else if (e.key === "Enter") {
-          e.preventDefault();
-          if (active >= 0 && vals[active] !== undefined) choose(vals[active]);
-        } else if (e.key === "Escape") {
-          e.preventDefault();
-          close(true);
-        } else if (e.key === "Tab") {
-          close(false);
+    // Üniversite listesi: seçilince kılavuz listesi yalnızca o üniversiteye süzülür.
+    const uniFld = document.getElementById("uni-fld");
+    const uniSel = document.getElementById("u-uni");
+    if (uniFld && uniSel && groups.length > 1) {
+      uniFld.hidden = false;
+      groups.forEach((g, i) => uniSel.add(new Option(
+        g.label, String(i), false, g.options.some((o) => o.value === rulesetSelect.value))));
+      const applyUni = () => {
+        const g = groups[Number(uniSel.value)];
+        if (!g) return;
+        const current = rulesetSelect.value;
+        rulesetSelect.textContent = "";
+        g.options.forEach((o) =>
+          rulesetSelect.add(new Option(o.text, o.value, false, o.value === current)));
+        if (!g.options.some((o) => o.value === rulesetSelect.value)) {
+          rulesetSelect.value = g.options[0].value;
         }
-      });
-      list.addEventListener("click", (e) => {
-        const li = e.target.closest(".picker-opt");
-        const i = li ? items.indexOf(li) : -1;
-        if (i >= 0) choose(vals[i]);
-      });
-      document.addEventListener("pointerdown", (e) => {
-        if (!pop.hidden && !field.contains(e.target)) close(false);
-      });
-      updateBtn();
+        syncLatex();
+      };
+      uniSel.addEventListener("change", applyUni);
+      applyUni();
     }
   }
 
@@ -206,10 +78,19 @@
       ? Math.max(1, Math.round(n / 1024)) + " KB"
       : (n / 1048576).toFixed(1).replace(/[.,]0$/, "").replace(".", ",") + " MB";
 
+    // Dosya seçimi bırakma alanının başlığını değiştirir; ilk hâli geri koymak için saklanır.
+    const dropTitle = document.getElementById("drop-title");
+    const dropHelp = document.getElementById("drop-help");
+    const dropInitial = [dropTitle && dropTitle.innerHTML, dropHelp && dropHelp.innerHTML];
+    const resetDrop = () => {
+      if (dropTitle) dropTitle.innerHTML = dropInitial[0];
+      if (dropHelp) dropHelp.innerHTML = dropInitial[1];
+    };
     const choose = (f) => {
       file = null;
       submit.disabled = true;
       drop.classList.remove("has-file");
+      resetDrop();
       if (!f) return;
       if (!/\.docx$/i.test(f.name)) {
         say("Yalnızca Word belgesi (.docx) yükleyebilirsiniz. .doc dosyalarını Word'de .docx olarak kaydedin.", true);
@@ -224,6 +105,8 @@
       file = f;
       submit.disabled = false;
       drop.classList.add("has-file");
+      if (dropTitle) dropTitle.textContent = f.name;
+      if (dropHelp) dropHelp.textContent = "Hazır (" + fmtSize(f.size) + ") · denetim yalnızca bellekte çalışır";
       say("Seçilen dosya: " + f.name + " (" + fmtSize(f.size) + ")");
     };
 
@@ -436,79 +319,126 @@
     }));
   }
 
-  // --- Tanıtım: parallax ve kaydırınca beliren adımlar -------------------------------------
+  // --- Tanıtım ---------------------------------------------------------------------------
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const layers = [...document.querySelectorAll(".parallax-layer[data-speed]")];
-  if (layers.length && !reduced) {
-    // Her katman, kendi (dönüşümsüz) konumunun ekran ortasına uzaklığıyla orantılı kayar;
-    // böylece sayfanın derinindeki öğeler de yalnızca birkaç on piksel hareket eder.
-    const docTop = (el) => { let y = 0; for (let n = el; n; n = n.offsetParent) y += n.offsetTop; return y; };
-    let tops = layers.map((el) => docTop(el) + el.offsetHeight / 2);
-    window.addEventListener("resize", () => { tops = layers.map((el) => docTop(el) + el.offsetHeight / 2); });
-    let ticking = false;
+
+  // Barkod bandı: tezin satırları (süsleme; deterministik sözde rastgele)
+  const barcode = document.getElementById("barcode");
+  if (barcode) {
+    let seed = 7;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const bar = (opts) => {
+      const o = opts || {};
+      const w = o.w || [1, 2, 2, 3, 4, 5][Math.floor(rnd() * 6)];
+      const ghost = !o.keep && !o.accent && rnd() < 0.12;
+      const el = document.createElement("i");
+      el.style.flex = "0 0 " + w + "px";
+      el.style.background = o.accent ? "var(--accent)" : (ghost ? "transparent" : "var(--ink)");
+      if (o.slant) { el.style.transform = "skewX(-18deg)"; el.style.transformOrigin = "bottom"; }
+      return el;
+    };
+    const rows = barcode.querySelectorAll(".barcode-row");
+    const note = rows[0].querySelector(".barcode-note");
+    for (let i = 0; i < 30; i++) {
+      rows[0].insertBefore(
+        i === 4 ? bar({ w: 2, slant: true, keep: true }) : i === 17 ? bar({ w: 4, accent: true }) : bar(),
+        note);
+    }
+    for (let i = 0; i < 20; i++) rows[0].appendChild(bar());
+    for (let i = 0; i < 60; i++) {
+      rows[1].appendChild(i === 8 ? bar({ w: 5, accent: true })
+        : i === 51 ? bar({ w: 3, slant: true, keep: true }) : bar());
+    }
+    barcode.hidden = false;
+  }
+
+  // Gizlilik: köşelerde piksel yığınları
+  const pxLeft = document.getElementById("pixels-left");
+  const pxRight = document.getElementById("pixels-right");
+  if (pxLeft && pxRight) {
+    let seed = 11;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const shades = ["var(--accent)", "var(--accent)", "#B9AEFB", "#D8D2FD", "#EFECFE"];
+    const COLS = 16, ROWS = 12;
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const hL = ROWS - Math.floor(c * 0.75) - Math.floor(rnd() * 2);
+        const onL = (ROWS - r) <= hL - 1 || (rnd() < 0.04 && r > 2);
+        const a = document.createElement("i");
+        if (onL) a.style.background = shades[Math.floor(rnd() * shades.length)];
+        pxLeft.appendChild(a);
+        const hR = Math.floor(c * 0.8) + 1 - Math.floor(rnd() * 2);
+        const onR = (ROWS - r) <= hR || (rnd() < 0.03 && r > 3);
+        const b = document.createElement("i");
+        if (onR) b.style.background = shades[Math.floor(rnd() * shades.length)];
+        pxRight.appendChild(b);
+      }
+    }
+  }
+
+  // Panel önizlemesi: Yükle ↔ Denetle sekmeleri, sahte dosya seçimi (dosya gönderilmez)
+  const pvYukle = document.getElementById("pv-yukle");
+  const pvDenetle = document.getElementById("pv-denetle");
+  if (pvYukle && pvDenetle) {
+    const tabY = document.getElementById("pv-tab-yukle");
+    const tabD = document.getElementById("pv-tab-denetle");
+    const drop = document.getElementById("pv-drop");
+    const file = document.getElementById("pv-file");
+    const title = document.getElementById("pv-title");
+    const sub = document.getElementById("pv-sub");
+    const startBtn = document.getElementById("pv-start");
+    const repName = document.getElementById("pv-repname");
+    const show = (which) => {
+      const yukle = which === "yukle";
+      pvYukle.hidden = !yukle;
+      pvDenetle.hidden = yukle;
+      tabY.setAttribute("aria-selected", String(yukle));
+      tabD.setAttribute("aria-selected", String(!yukle));
+    };
+    tabY.addEventListener("click", () => show("yukle"));
+    tabD.addEventListener("click", () => show("denetle"));
+    const pick = (f) => {
+      if (!f) return;
+      title.textContent = f.name;
+      sub.textContent = "Hazır · yalnızca önizleme, dosyanız gönderilmedi";
+      drop.classList.add("has-file");
+      startBtn.disabled = false;
+      if (repName) repName.textContent = f.name + " · örnek görünüm";
+    };
+    file.addEventListener("change", () => pick(file.files[0]));
+    ["dragenter", "dragover"].forEach((t) =>
+      drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+    ["dragleave", "drop"].forEach((t) =>
+      drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+    drop.addEventListener("drop", (e) => pick(e.dataTransfer.files[0]));
+    startBtn.addEventListener("click", () => show("denetle"));
+  }
+
+  // Kılavuz bölümü: kaydırmaya bağlı parallax (A4 yukarı kayıp döner, metin ters yönde)
+  const guide = document.querySelector("[data-guide]");
+  if (guide && !reduced) {
+    const page = document.getElementById("guide-page");
+    const text = document.getElementById("guide-text");
+    const chips = [...guide.querySelectorAll(".guide-chip")];
+    let raf = 0;
     const update = () => {
-      const mid = window.scrollY + window.innerHeight / 2;
-      layers.forEach((el, i) => {
-        // İlk ekrandaki katmanlar açılışta yerinde durur (referans: ekran ortası).
-        const anchor = Math.max(tops[i], window.innerHeight / 2);
-        const shift = Math.max(-80, Math.min(80, (mid - anchor) * Number(el.dataset.speed)));
-        el.style.transform = "translate3d(0," + shift.toFixed(1) + "px,0)";
+      raf = 0;
+      const r = guide.getBoundingClientRect();
+      const vh = window.innerHeight || 800;
+      let p = (vh - r.top) / (vh + r.height);
+      p = Math.max(0, Math.min(1, p));
+      const d = p - 0.5;
+      if (page) page.style.transform =
+        "translate3d(0," + (d * -140).toFixed(1) + "px,0) rotate(" + (d * -6).toFixed(2) + "deg)";
+      if (text) text.style.transform = "translate3d(0," + (d * 60).toFixed(1) + "px,0)";
+      chips.forEach((c) => {
+        c.style.transform = "translate3d(0," + (d * Number(c.dataset.v || 0)).toFixed(1) + "px,0)";
       });
-      ticking = false;
     };
-    window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     update();
-  }
-  // Kahraman metni kaydırdıkça yavaşça yükselir ve solar.
-  const heroContent = document.getElementById("hero-content");
-  if (heroContent && !reduced) {
-    let pending = false;
-    const fade = () => {
-      const p = Math.min(1, window.scrollY / (window.innerHeight * 0.75));
-      heroContent.style.opacity = String(1 - p * 0.9);
-      heroContent.style.transform = "translate3d(0," + (p * -60).toFixed(1) + "px,0)";
-      pending = false;
-    };
-    window.addEventListener("scroll", () => { if (!pending) { pending = true; requestAnimationFrame(fade); } }, { passive: true });
-    fade();
-  }
-
-  // Amblem, kahraman alanında (ve giriş/kayıt panelinde) imlecin yönüne hafifçe döner ve kayar.
-  const logo = document.querySelector("#hero-logo .hero-logo-inner, #auth-logo .hero-logo-inner");
-  const hero = document.querySelector(".hero, .auth-art");
-  if (logo && hero && !reduced && matchMedia("(hover: hover)").matches) {
-    hero.addEventListener("mousemove", (e) => {
-      const r = logo.getBoundingClientRect();
-      const dx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / 600));
-      const dy = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / 400));
-      logo.style.transform = "translate(" + (dx * 10).toFixed(1) + "px," + (dy * 8).toFixed(1) + "px) rotate(" + (dx * 6).toFixed(1) + "deg)";
-    });
-    hero.addEventListener("mouseleave", () => { logo.style.transform = ""; });
-  }
-
-  // Gizlilik anlatısı: ekranın ortasına gelen adım, yapışkan sahnedeki kareyi seçer.
-  const visual = document.getElementById("story-visual");
-  const steps = [...document.querySelectorAll(".story-step")];
-  if (visual && steps.length && "IntersectionObserver" in window) {
-    const show = (step) => {
-      steps.forEach((s) => s.classList.toggle("active", s === step));
-      visual.className = "story-visual is-" + step.dataset.step;
-    };
-    const so = new IntersectionObserver((entries) => entries.forEach((en) => {
-      if (en.isIntersecting) show(en.target);
-    }), { rootMargin: "-45% 0px -45% 0px" });
-    steps.forEach((s) => so.observe(s));
-  }
-
-  const reveals = document.querySelectorAll(".reveal");
-  if (reveals.length && "IntersectionObserver" in window && !reduced) {
-    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
-      if (en.isIntersecting) { en.target.classList.remove("pending"); io.unobserve(en.target); }
-    }), { threshold: 0.2 });
-    reveals.forEach((el) => {
-      // Ekranın altında kalanlar sonradan belirir; görünenler hemen görünür kalır.
-      if (el.getBoundingClientRect().top > window.innerHeight) { el.classList.add("pending"); io.observe(el); }
-    });
   }
 
   // --- Düzeltilmiş / yorumlu kopya --------------------------------------------------------
