@@ -181,3 +181,11 @@ def test_existing_database_gains_consent_columns(tmp_path: Path) -> None:
     assert db.consume_login_token("h2", consent_confirmed=True) == "a@beun.edu.tr"
     found = db.user_consent("a@beun.edu.tr")
     assert found is not None and found[0] == "v1"
+
+
+def test_auth_pages_link_privacy_notice(client: TestClient) -> None:
+    """KVKK: giriş sayfasında da aydınlatma metnine bağlantı bulunur (yalnızca kayıtta değil)."""
+    for path in ("/giris", "/kayit"):
+        html = client.get(path).text
+        card = html[html.index('class="auth-card"'):]
+        assert 'href="/aydinlatma"' in card, path

@@ -251,8 +251,7 @@ def test_no_inline_scripts_or_styles(client: TestClient, mailer: ConsoleMailer) 
 def test_no_external_resources(client: TestClient) -> None:
     html = client.get("/").text
     assert "googleapis" not in html
-    # Kaynak yükleyen etiketler (link/script/img/iframe) dış adres kullanamaz; <a> gezinmedir.
-    assert not re.search(r'<(?:link|script|img|iframe)\b[^>]*(?:src|href)="https?://', html)
+    assert not re.search(r'(src|href)="https?://', html)
 
 
 def test_retention_purge(client: TestClient, mailer: ConsoleMailer) -> None:

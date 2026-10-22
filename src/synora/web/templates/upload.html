@@ -33,7 +33,11 @@
         {% if rulesets|length > 1 %}
         <div class="fld" id="uni-fld" hidden>
           <label for="u-uni">Üniversite</label>
+          <input id="uni-search" class="fld-search" type="search" autocomplete="off"
+                 placeholder="Ara: üniversite ya da kılavuz (ör. Bülent, Tıp)"
+                 aria-label="Üniversite listesinde ara" aria-controls="u-uni" aria-describedby="uni-count">
           <select id="u-uni"></select>
+          <span id="uni-count" class="fld-count" role="status" aria-live="polite"></span>
         </div>
         <div class="fld" id="ruleset-field">
           <label for="ruleset">Enstitü / kılavuz</label>
@@ -46,7 +50,7 @@
         </div>
         {% elif rulesets %}
         <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
-        <div class="fld"><label>Kılavuz</label><span>{{ rulesets[0].name }}</span></div>
+        <div class="fld"><span class="fld-label">Kılavuz</span><span>{{ rulesets[0].name }}</span></div>
         {% else %}
         <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
         {% endif %}

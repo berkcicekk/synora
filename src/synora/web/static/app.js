@@ -12,6 +12,20 @@
     inset.style.top = t + "%"; inset.style.bottom = b + "%";
   }
 
+  // --- Alt menü (aynı sayfadaki bölümler): etkin işaret tıklanan bağlantıya taşınır -------
+  document.querySelectorAll(".subnav").forEach((nav) => {
+    const links = [...nav.querySelectorAll('a[href^="#"]')];
+    const first = links.find((a) => a.hasAttribute("aria-current"));
+    const token = first ? first.getAttribute("aria-current") : "location";
+    const mark = (target) => links.forEach((a) => {
+      if (a === target) a.setAttribute("aria-current", token);
+      else a.removeAttribute("aria-current");
+    });
+    links.forEach((a) => a.addEventListener("click", () => mark(a)));
+    const fromHash = links.find((a) => a.getAttribute("href") === location.hash);
+    if (fromHash) mark(fromHash);
+  });
+
   // --- Kılavuz seçimi: üniversite → kılavuz kademeli listeler + şablon bağlantıları ----
   const rulesetSelect = document.getElementById("ruleset");
   if (rulesetSelect && rulesetSelect.tagName === "SELECT") {
@@ -57,6 +71,36 @@
       };
       uniSel.addEventListener("change", applyUni);
       applyUni();
+
+      // Arama: üniversite ve kılavuz adlarında, Türkçe büyük/küçük harf duyarlı ("Iğdır", "İzmir").
+      const search = document.getElementById("uni-search");
+      const count = document.getElementById("uni-count");
+      if (search) {
+        const fold = (s) => s.replace(/I/g, "ı").replace(/İ/g, "i").toLocaleLowerCase("tr");
+        const keys = groups.map((g) => fold(g.label + " " + g.options.map((o) => o.text).join(" ")));
+        const fill = (indices) => {
+          const current = uniSel.value;
+          uniSel.textContent = "";
+          indices.forEach((i) => uniSel.add(new Option(groups[i].label, String(i), false, String(i) === current)));
+          // Seçili üniversite süzgeç dışında kaldıysa ilk eşleşme seçilir; kılavuz listesi izler.
+          if (!indices.some((i) => String(i) === current)) uniSel.value = String(indices[0]);
+          applyUni();
+        };
+        const all = groups.map((_, i) => i);
+        search.addEventListener("input", () => {
+          const words = fold(search.value).split(/\s+/).filter(Boolean);
+          const hits = all.filter((i) => words.every((w) => keys[i].includes(w)));
+          if (words.length && !hits.length) {
+            fill(all);
+            count.textContent = "Eşleşen üniversite yok; tüm liste gösteriliyor.";
+          } else {
+            fill(hits);
+            count.textContent = words.length ? hits.length + " üniversite" : "";
+          }
+        });
+        // Arama kutusunda Enter formu (yüklemeyi) göndermesin.
+        search.addEventListener("keydown", (e) => { if (e.key === "Enter") e.preventDefault(); });
+      }
     }
   }
 
@@ -196,7 +240,7 @@
         return;
       }
       if (Date.now() - started > 180000) {
-        stop("Denetim beklenenden uzun sürüyor. Birkaç dakika sonra sayfayı yenileyin ya da Belgelerim listesine bakın.");
+        stop("Denetim beklenenden uzun sürüyor. Birkaç dakika sonra sayfayı yenileyin ya da paneldeki son denetimler listesine bakın.");
         return;
       }
       setTimeout(tick, 1200);

@@ -12,9 +12,9 @@
 {# demo'da id "outputs" olmaz: app.js'teki kopya üretim kodu hiç devreye girmez #}
 <header class="toolbar" {% if demo %}id="demo-toolbar"{% else %}id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}"{% endif %}>
   <div class="toolbar-left">
-    <a class="brand compact" href="/" aria-label="{{ 'Ana sayfaya dön' if demo else 'Belgelerime dön' }}">{{ mark() }}</a>
+    <a class="brand compact" href="/" aria-label="{{ 'Ana sayfaya dön' if demo else 'Panele dön' }}">{{ mark() }}</a>
     <div class="doc-heading">
-      <a class="back" href="/">← {{ "Ana sayfa" if demo else "Belgelerim" }}</a>
+      <a class="back" href="/">← {{ "Ana sayfa" if demo else "Panel" }}</a>
       <span class="doc-name">{% if demo %}Örnek rapor · sentetik tez{% else %}Denetim raporu · {{ job.created_at | when }}{% endif %}</span>
     </div>
   </div>
@@ -67,7 +67,7 @@
     <p class="muted" role="status" aria-live="polite">Güvenlik kontrolü, biçim okuma ve kılavuz denetimi
       yapılıyor. Genellikle birkaç saniye sürer.</p>
     <p class="muted small">Denetim bitince sayfa kendiliğinden yenilenir. Bu sayfadan ayrılırsanız
-      raporunuz <a class="textlink" href="/">Belgelerim</a> listesinde görünür.</p>
+      raporunuz <a class="textlink" href="/">Panel</a>deki son denetimler listesinde görünür.</p>
   </div>
 </section>
 
@@ -108,7 +108,7 @@
       </ol>
     </div>
     <p class="mono muted">Kod: {{ job.error_code }}</p>
-    <div><a class="btn primary" href="/"><span class="lbl">Yeni denetim başlat</span>{{ arrow() }}</a></div>
+    <div><a class="btn primary" href="/yukle"><span class="lbl">Yeni denetim başlat</span>{{ arrow() }}</a></div>
   </div>
 </section>
 

@@ -153,11 +153,14 @@
     </div>
     {% if page %}
     <figure class="guide-fig" aria-label="A4 sayfa kenar boşlukları">
-      <span class="guide-chip chip-1" data-v="-320">{{ tiles[6].value if tiles|length > 6 else "12 pt" }}</span>
-      <span class="guide-chip hi chip-2" data-v="260">{{ tiles[7].value if tiles|length > 7 else "1,5 satır" }}</span>
-      <span class="guide-chip chip-3" data-v="420">girinti</span>
+      {# Değerler etikete göre: rule_tiles() isteğe bağlı ölçüleri yalnızca tanımlıysa ekler,
+         sıra kayar. Kural setinde karşılığı olmayan çip gösterilmez. #}
+      {% set tv = {} %}{% for t in tiles %}{% set _ = tv.update({t.label: t.value}) %}{% endfor %}
+      {% if "Gövde" in tv %}<span class="guide-chip chip-1" data-v="-320">{{ tv["Gövde"] }}</span>{% endif %}
+      {% if "Satır aralığı" in tv %}<span class="guide-chip hi chip-2" data-v="260">{{ tv["Satır aralığı"] }} satır</span>{% endif %}
+      {% if "Girinti" in tv %}<span class="guide-chip chip-3" data-v="420">girinti {{ tv["Girinti"] }}</span>{% endif %}
       <span class="guide-chip chip-4" data-v="-380">sol {{ page.labels["left"] }}</span>
-      <span class="guide-chip hi chip-5" data-v="200">{{ tiles[5].value if tiles|length > 5 else "Times New Roman" }}</span>
+      {% if "Yazı tipi" in tv %}<span class="guide-chip hi chip-5" data-v="200">{{ tv["Yazı tipi"] }}</span>{% endif %}
       <div class="guide-page" id="guide-page">
         <div class="guide-page-in" data-inset="{{ (page.left_mm / page.width_mm * 100) | round(1) }},{{ (page.right_mm / page.width_mm * 100) | round(1) }},{{ (page.top_mm / page.height_mm * 100) | round(1) }},{{ (page.bottom_mm / page.height_mm * 100) | round(1) }}">
           <i class="h"></i><i></i><i></i><i class="w8"></i><i></i><i class="a"></i><i></i><i class="w6"></i><i class="gap"></i><i></i><i class="w7"></i>

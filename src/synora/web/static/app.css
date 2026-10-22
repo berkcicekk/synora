@@ -12,7 +12,8 @@
   --ink-2: #3F3F46;
   --muted: #52525B;         /* ikincil metin */
   --muted-2: #6B6B73;       /* kart alt başlıkları */
-  --step-off: #9A9AA3;      /* pasif adım başlığı (yalnızca büyük/dekoratif metin) */
+  --step-off: #71717A;      /* diğer adımlar (bağlantı): panelde 4,5:1 */
+  --step-disabled: #C4C4CC; /* henüz açılmamış adım (etkin değil; WCAG kontrast muafiyeti) */
   --line: #E4E4E7;          /* dekoratif çizgi */
   --soft: #F4F4F5;          /* yumuşak yüzey */
   --accent: #8C7CF7;        /* dekor, nokta, çubuk — metin rengi olarak kullanılmaz */
@@ -164,7 +165,7 @@ body.app { background: var(--app-panel); }
   font-size: clamp(2.6rem, 5.4vw, 4.25rem); font-weight: 600; letter-spacing: -.04em; line-height: 1.02; }
 .steptitle a { color: var(--step-off); text-decoration: none; transition: color .15s; }
 .steptitle a:hover { color: var(--ink-2); }
-.steptitle .is-off { color: var(--step-off); }
+.steptitle .is-off { color: var(--step-disabled); cursor: default; }
 .subnav { display: flex; flex-wrap: wrap; gap: 6px 26px; font-size: .88rem; font-weight: 600; }
 .subnav a { color: var(--muted); text-decoration: none; padding: 10px 0 6px; min-height: 44px;
   box-sizing: border-box; display: inline-flex; align-items: center; border-bottom: 2px solid transparent; }
@@ -243,12 +244,22 @@ body.app { background: var(--app-panel); }
   border-radius: var(--radius-pill); background: var(--ink); color: #fff; font-size: .88rem; font-weight: 600; }
 .updrop.has-file .fakebtn { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--border); height: 44px; padding: 0 18px; }
 .fld { display: flex; flex-direction: column; gap: 6px; }
-.fld > label { font-family: var(--sans); font-size: .78rem; font-weight: 600; color: var(--ink-2);
-  letter-spacing: 0; text-transform: none; }
+.fld > label, .fld > .fld-label { font-family: var(--sans); font-size: .78rem; font-weight: 600;
+  color: var(--ink-2); letter-spacing: 0; text-transform: none; }
 .fld select { height: 44px; border-radius: var(--radius-field); border: 1px solid var(--border);
   background: #FAFAFB; padding: 0 12px; font: inherit; font-size: .88rem; color: var(--ink); width: 100%; min-width: 0; }
 .fld select:focus { outline: 2px solid var(--accent-ink); outline-offset: 1px; border-bottom: 1px solid var(--border); }
 .fld-note { margin: 0; font-size: .75rem; line-height: 1.5; color: var(--muted-2); }
+.fld-search { height: 44px; border-radius: var(--radius-field); border: 1px solid var(--border);
+  background: var(--surface); padding: 0 12px; font: inherit; font-size: .88rem; color: var(--ink);
+  width: 100%; min-width: 0; box-sizing: border-box; }
+.fld-search:focus { outline: 2px solid var(--accent-ink); outline-offset: 1px; }
+.fld-count { font-size: .75rem; color: var(--muted-2); min-height: 1em; }
+.fld-count:empty { display: none; }
+/* iOS Safari 16px altındaki alanlara dokununca sayfayı yakınlaştırır. */
+@media (max-width: 760px) {
+  .fld select, .fld-search, .auth-form input[type=email] { font-size: 16px; }
+}
 .outrow { display: flex; align-items: center; gap: 12px; min-height: 44px; font-size: .88rem; }
 .outrow svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--ink); stroke-width: 1.6;
   stroke-linecap: round; stroke-linejoin: round; }

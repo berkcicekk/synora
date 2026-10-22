@@ -53,6 +53,9 @@ TEXT_PAIRS = [
     ("muted", "wash"), ("blue", "paper"), ("blue", "card"), ("blue", "wash"), ("blue", "desk"),
     ("error", "card"), ("error", "error-wash"), ("warning", "card"), ("warning", "warning-wash"),
     ("ok", "card"), ("on-blue", "blue"), ("on-blue-soft", "blue"), ("cyan", "night"),
+    # Adım başlığı bağlantıları (Yükle · Denetle · Teslim et) gezinmedir: okunur olmalı.
+    ("step-off", "app-panel"), ("step-off", "bg"),
+    ("muted-2", "surface"), ("accent-ink", "surface"),
 ]
 # Odak çerçevesi (WCAG 1.4.11, metin dışı öğe) için 3:1
 FOCUS_PAIRS = [("blue", "paper"), ("blue", "card"), ("blue", "desk"), ("cyan", "night"),
@@ -131,7 +134,7 @@ def test_processing_page_shows_step_two(client: TestClient, mailer: ConsoleMaile
     html = client.get("/jobs/bekleyen-is-00000001").text
     assert _current_step(html) == "2"
     assert "Teziniz denetleniyor." in html
-    assert 'href="/">Belgelerim</a>' in html
+    assert 'href="/">Panel</a>' in html  # tasarım devrinde "Belgelerim" → "Panel"
 
 
 def _corrupted_docx() -> bytes:
@@ -425,3 +428,13 @@ def test_report_stepper_and_legend(client: TestClient, mailer: ConsoleMailer) ->
     order = [html.index(f'class="{c}"') for c in ("digest", "pane-head", "comments")]
     assert order == sorted(order)
     assert 'ArrowDown' in JS and "step(" in JS
+
+
+def test_landing_guide_chips_follow_labels_not_positions(client: TestClient) -> None:
+    """rule_tiles() isteğe bağlı ölçüleri atlayabilir; çipler sıra numarasıyla seçilmemeli."""
+    tpl = (TEMPLATES / "login.html").read_text(encoding="utf-8")
+    assert not re.search(r"tiles\[\d+\]", tpl)
+    html = client.get("/").text
+    chips = re.findall(r'class="guide-chip[^"]*"[^>]*>([^<]+)<', html)
+    assert "Times New Roman" in chips  # varsayılan (ZBEÜ Tıp) kural setinin yazı tipi
+    assert any(c.endswith(" satır") for c in chips) and any(c.startswith("girinti ") for c in chips)
