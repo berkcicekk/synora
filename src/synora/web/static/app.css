@@ -452,6 +452,7 @@ input[type=email], select {
 input[type=email]:focus, select:focus { outline: none; border-bottom: 2px solid var(--blue); }
 input::placeholder { color: #666A78; } /* fildişi ve beyaz üstünde ≥4,5:1 */
 .alert { border-left: 3px solid var(--error); color: var(--error); padding: .2rem .7rem; font-size: .92rem; }
+.alert.warn { border-left-color: var(--warning); color: var(--warning); }
 
 /* --- Sayfa çizimi (makro) --- */
 .specimen svg { width: 100%; height: auto; display: block; overflow: visible; }

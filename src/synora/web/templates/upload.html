@@ -47,6 +47,9 @@
       <button id="submit" class="btn primary" type="submit" disabled aria-describedby="upload-status"><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
     </div>
     <p id="upload-status" class="status" role="status" aria-live="polite"></p>
+    <p class="alert warn">Dosyanız {{ max_mb }} MB'tan büyükse (çok sayıda fotoğraf/tarama):
+       Word'de bir resme tıklayıp <em>Resim Biçimi › Resimleri Sıkıştır</em> deyin,
+       "Yalnızca bu resme uygula" işaretini kaldırıp kaydedin. Denetim sonucu değişmez.</p>
     <ul class="assure" aria-label="Gizlilik">
       <li><strong>Metniniz değiştirilmez.</strong> Yalnızca biçim düzeltilir; her kopyada metnin harfi harfine aynı kaldığı doğrulanır.</li>
       <li><strong>Yapay zekâ tarafından okunmaz.</strong> Paragraf türü yalnızca punto, hizalama gibi ölçülerden belirlenir.</li>
@@ -58,9 +61,6 @@
         <li>Dosya <strong>.docx</strong> olmalı. Eski .doc dosyasını Word'de <em>Dosya › Farklı Kaydet › Word Belgesi (.docx)</em> ile kaydedin.</li>
         <li>Parola koruması varsa kaldırın: <em>Dosya › Bilgi › Belgeyi Koru</em>.</li>
         <li>Makro içeren belgeler (.docm) kabul edilmez.</li>
-        <li>Dosya {{ max_mb }} MB'tan büyükse (çok sayıda fotoğraf/tarama) Word'de bir resme tıklayıp
-            <em>Resim Biçimi › Resimleri Sıkıştır</em> deyin, "Yalnızca bu resme uygula" işaretini kaldırıp
-            kaydedin; dosya genellikle yeterince küçülür. Denetim sonucu değişmez.</li>
         <li>İzlenen değişiklikler varsa önce kabul edin ya da reddedin; rapor bunları ayrıca uyarır.</li>
       </ul>
     </details>
