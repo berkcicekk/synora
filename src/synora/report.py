@@ -49,7 +49,10 @@ POSITION_NAMES = {
 SEVERITY_NAMES = {Severity.ERROR: "Hata", Severity.WARNING: "Uyarı", Severity.INFO: "Bilgi"}
 
 INGEST_MESSAGES: dict[ErrorCode, str] = {
-    ErrorCode.FILE_TOO_LARGE: "Dosya çok büyük. En fazla 100 MB yükleyebilirsiniz.",
+    ErrorCode.FILE_TOO_LARGE: (
+        "Dosya çok büyük. En fazla 100 MB yükleyebilirsiniz. Word'de bir resme tıklayıp "
+        "Resim Biçimi › Resimleri Sıkıştır ile tüm resimleri küçültüp yeniden kaydedin."
+    ),
     ErrorCode.NOT_A_ZIP: "Bu dosya bir Word belgesi (.docx) değil.",
     ErrorCode.CORRUPT_ZIP: "Dosya bozuk görünüyor. Word'de açıp yeniden kaydedin.",
     ErrorCode.ENCRYPTED: "Dosya parola korumalı. Parolayı kaldırıp yeniden yükleyin.",

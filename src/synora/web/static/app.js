@@ -80,6 +80,9 @@
       status.textContent = msg;
       status.classList.toggle("error", Boolean(isError));
     };
+    const fmtSize = (n) => n < 1048576
+      ? Math.max(1, Math.round(n / 1024)) + " KB"
+      : (n / 1048576).toFixed(1).replace(/[.,]0$/, "").replace(".", ",") + " MB";
 
     const choose = (f) => {
       file = null;
@@ -91,16 +94,15 @@
         return;
       }
       if (f.size > max) {
-        say("Dosya çok büyük. En fazla " + Math.round(max / 1048576) + " MB yükleyebilirsiniz.", true);
+        say("Dosya çok büyük (" + fmtSize(f.size) + "). En fazla " + fmtSize(max) + " yükleyebilirsiniz. "
+          + "Word'de bir resme tıklayıp Resim Biçimi › Resimleri Sıkıştır deyin (tüm resimlere uygulanır), "
+          + "yeniden kaydedip bu küçük dosyayı yükleyin.", true);
         return;
       }
       file = f;
       submit.disabled = false;
       drop.classList.add("has-file");
-      const size = f.size < 1048576
-        ? Math.max(1, Math.round(f.size / 1024)) + " KB"
-        : (f.size / 1048576).toFixed(1).replace(".", ",") + " MB";
-      say("Seçilen dosya: " + f.name + " (" + size + ")");
+      say("Seçilen dosya: " + f.name + " (" + fmtSize(f.size) + ")");
     };
 
     input.addEventListener("change", () => choose(input.files[0]));
@@ -133,16 +135,29 @@
       });
       xhr.addEventListener("load", () => {
         let data = {};
-        try { data = JSON.parse(xhr.responseText); } catch (err) { /* boş yanıt */ }
+        try { data = JSON.parse(xhr.responseText); } catch (err) { /* boş ya da JSON olmayan yanıt (ör. vekilin 413 sayfası) */ }
         if (xhr.status < 200 || xhr.status >= 300) {
-          say(data.error || "Yükleme başarısız oldu. Sayfayı yenileyip yeniden deneyin.", true);
+          // Uygulamaya ulaşamayan istekler (Cloudflare/nginx sınırı) Türkçe JSON dönmez;
+          // duruma göre anlaşılır bir mesaj üret.
+          const fallback = {
+            413: "Dosya çok büyük. En fazla " + fmtSize(max) + " yükleyebilirsiniz. Word'de "
+              + "Resim Biçimi › Resimleri Sıkıştır ile resimleri küçültüp yeniden deneyin.",
+            429: "Çok fazla istek gönderildi. Birkaç dakika sonra yeniden deneyin.",
+            503: "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin.",
+          }[xhr.status];
+          say(data.error || fallback
+            || "Yükleme başarısız oldu (HTTP " + xhr.status + "). Sayfayı yenileyip yeniden deneyin.", true);
           submit.disabled = false;
           return;
         }
         window.location.href = data.url;
       });
       xhr.addEventListener("error", () => {
-        say("Bağlantı hatası. İnternet bağlantınızı kontrol edip yeniden deneyin.", true);
+        // Vekil, sınırı aşan gövdeyi yanıt vermeden kesebilir: büyük dosyada olası neden boyuttur.
+        say(file && file.size > 50 * 1048576
+          ? "Bağlantı kesildi. Dosyanız büyük olduğu için ağ katmanında reddedilmiş olabilir; "
+            + "Word'de Resim Biçimi › Resimleri Sıkıştır ile küçültüp yeniden deneyin."
+          : "Bağlantı hatası. İnternet bağlantınızı kontrol edip yeniden deneyin.", true);
         submit.disabled = false;
       });
       xhr.send(file);
@@ -424,8 +439,25 @@
       zone.addEventListener(t, (e) => { e.preventDefault(); zone.classList.remove("over"); }));
     zone.addEventListener("drop", (e) => send(e.dataTransfer.files[0]));
     picker.addEventListener("change", () => send(picker.files[0]));
+    // Uygulamaya ulaşamayan ya da genel yanıtlar için duruma göre anlaşılır mesaj.
+    const httpFallback = (res, data) => data.error || {
+      413: "Dosya çok büyük. Denetlediğiniz dosyanın kendisini seçtiğinizden emin olun.",
+      429: "Çok fazla istek gönderildi. Birkaç dakika sonra yeniden deneyin.",
+      503: "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin.",
+    }[res.status];
     const send = async (file) => {
       if (!file || !kind) return;
+      // Gönderilmeden önce elenebilecek yanlış seçimler: uzantı ve boyut (denetlenen
+      // dosya sınırı zaten geçmişti; büyüğü ancak yanlış dosyadır).
+      if (!/\.docx$/i.test(file.name)) {
+        say("Yalnızca Word belgesi (.docx) seçilebilir. Denetlediğiniz dosyanın kendisini seçin.", true);
+        return;
+      }
+      const maxBytes = Number(outputs.dataset.max || 0);
+      if (maxBytes && file.size > maxBytes) {
+        say("Dosya çok büyük. Denetlediğiniz dosyanın kendisini seçtiğinizden emin olun.", true);
+        return;
+      }
       const buttons = [...document.querySelectorAll("[data-output]"), choose];
       buttons.forEach((b) => { b.disabled = true; });
       if (kind === "recheck") {
@@ -439,7 +471,7 @@
           });
           const data = await res.json().catch(() => ({}));
           if (res.ok) { window.location.reload(); return; }
-          say(data.error || "Yeniden denetlenemedi. Sayfayı yenileyip yeniden deneyin.", true);
+          say(httpFallback(res, data) || "Yeniden denetlenemedi. Sayfayı yenileyip yeniden deneyin.", true);
         } catch (err) {
           say("Bağlantı hatası. Yeniden deneyin.", true);
         }
@@ -456,7 +488,7 @@
         });
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          say(data.error || "Kopya hazırlanamadı. Sayfayı yenileyip yeniden deneyin.", true);
+          say(httpFallback(res, data) || "Kopya hazırlanamadı. Sayfayı yenileyip yeniden deneyin.", true);
           return;
         }
         const blob = await res.blob();
