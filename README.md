@@ -51,3 +51,9 @@ tarafından doğrulanmamıştır**; çelişki saptananlar `uyari:` alanıyla iş
 
 Mimari ve değişmez kurallar: `docs/architecture.md`. Önce test, sonra kod; güvenlik,
 parser, yazıcı ve web/worker modüllerinde (A1, A2, A5, A9, A10) değişiklik planla başlar.
+
+## Lisans
+
+[GNU AGPL-3.0-or-later](LICENSE). Kodu kullanabilir, değiştirebilir ve kendi sunucunuzda
+barındırabilirsiniz; Payper'ı bir ağ hizmeti olarak sunuyorsanız yaptığınız değişikliklerin
+kaynağını da aynı lisansla açmanız gerekir.
