@@ -1,4 +1,6 @@
-# Synora'yı sunucuya kurmak
+# Payper'ı sunucuya kurmak
+
+> Servis, paket ve ortam değişkeni adları tarihsel nedenle `synora`/`SYNORA_*` kalmıştır.
 
 Hedef: Türkiye'de barındırılan bir **Linux** sunucu (Ubuntu 24.04 / Debian 12). Windows üretim için
 uygun değildir: iş yürütücüsünün bellek ve CPU sınırları (A10) yalnızca Linux'ta çalışır.
@@ -63,6 +65,7 @@ adresi buraya yazılmalı.
 - **Yükseltme.** Günlük iş sayacı (Ö5) yükseltmeden sonra boş başlar; ilk 24 saatte herkesin günlük
   kotası yenilenmiş olur.
 - **Yedek.** Veritabanında kalıcı olan yalnızca kayıt onaylarıdır (`users` tablosu). İşler ve raporlar
-  24 saatte silinir; yedekler bu silmeyi geri getirmemeli. Yedekleme politikası `[KARAR?]`.
+  24 saatte silinir; yedekler bu silmeyi geri getirmemeli. Demo sunucusundaki uygulama: günlük cron,
+  `jobs`/`sessions`/`login_tokens`/`feedback` tabloları **silinerek** yedeklenir, 7 gün saklanır.
 - **SMTP.** Giriş bağlantıları için gerçek bir SMTP hesabı gerekir (sağlayıcı `[KARAR?]`); kurulumdan
   sonra kendi adresinize giriş bağlantısı isteyerek deneyin.

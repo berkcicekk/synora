@@ -49,8 +49,9 @@ tarafından doğrulanmamıştır**; çelişki saptananlar `uyari:` alanıyla iş
 
 ## Katkı
 
-Mimari ve değişmez kurallar: `docs/architecture.md`. Önce test, sonra kod; güvenlik,
-parser, yazıcı ve web/worker modüllerinde (A1, A2, A5, A9, A10) değişiklik planla başlar.
+Rehber: [CONTRIBUTING.md](CONTRIBUTING.md) · Mimari ve değişmez kurallar: `docs/architecture.md`.
+Önce test, sonra kod; güvenlik, parser, yazıcı ve web/worker modüllerinde (A1, A2, A5, A9, A10)
+değişiklik planla başlar. Güvenlik açıkları için: [SECURITY.md](SECURITY.md).
 
 ## Lisans
 

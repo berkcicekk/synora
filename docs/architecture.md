@@ -4,7 +4,8 @@
 > `SYNORA_*` ortam değişkenleri, CLI `synora`, hata sınıfları) bilinçli olarak eskisi gibi kaldı;
 > metinde geçen "Synora" ürünü, yani Payper'ı anlatır.
 
-> Durum: **Taslak v0.2** (2026-10-12). `[KARAR?]` ile işaretli yerler henüz netleşmedi.
+> Durum: **v0.3** (2026-10-22). F0–F5 uygulanmış durumda (bkz. §12); `[KARAR?]` ile işaretli
+> yerler henüz netleşmedi. Kod herkese açık: AGPL-3.0-or-later (kökteki `LICENSE`).
 
 ## 1. Amaç
 
@@ -242,11 +243,7 @@ Uygulandı: FastAPI + Jinja2 + az JavaScript (htmx yok), SQLite (WAL), iş yür�
 parçacıkları + her iş için ayrı alt süreç (Linux'ta bellek/CPU sınırı). Üretim kurulumu: `deploy/`
 (systemd, nginx, ortam değişkenleri; tek süreç) ya da kökteki `Dockerfile` + `compose.yaml` (aynı
 sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya da güvensiz ayarla uygulama başlamaz
-(`Settings.problems`). Aşağıdaki ilk taslak tarihçe için duruyor:
-
-- Backend: FastAPI (A9), iş kuyruğu (ör. RQ + Redis ya da Postgres tabanlı), ayrı worker süreci (A10).
-- Frontend (A11): sunucu tarafı şablon + az JavaScript (htmx) ya da hafif bir SPA. Sade arayüz için htmx yeterli.
-- Her iş ayrı geçici dizinde, worker süreci CPU/bellek/süre sınırıyla çalışır.
+(`Settings.problems`).
 
 ### 10.3 Veri ve KVKK
 
@@ -294,22 +291,23 @@ eşlemesi ve LaTeX'in kendiliğinden uygulayamadığı kurallar).
 
 ## 12. Yol haritası
 
-| Aşama | Çıktı |
-|-------|-------|
-| F0 | Proje iskeleti, `xmlsafe`, A1 (+ güvenlik testleri) |
-| F1 | A2 parser + stil kalıtımı, fingerprint |
-| F2 | A3 kural şeması + `rulesets/zbeu.yaml` + A6 sayfa/yazı tipi/gövde kuralları, `synora check` |
-| F3 | A4 kural tabanlı rol sınıflandırma (`ParaFeatures`), başlık/şekil/tablo kuralları |
-| F4 | A9–A11 web: yükle → rapor akışı (yalnızca denetim) |
-| F5 | A5 düzeltici, web'den düzeltilmiş dosya indirme |
-| **Pilot** | ZBEÜ'de sınırlı kullanıcıyla (ör. 20–30 öğrenci + enstitü personeli) deneme, geri bildirim |
-| F6 | Rol düzeltmelerinden yerel model (seçenek B) |
+| Aşama | Çıktı | Durum |
+|-------|-------|-------|
+| F0 | Proje iskeleti, `xmlsafe`, A1 (+ güvenlik testleri) | ✅ |
+| F1 | A2 parser + stil kalıtımı, fingerprint | ✅ |
+| F2 | A3 kural şeması + `rulesets/zbeu.yaml` + A6 sayfa/yazı tipi/gövde kuralları, `synora check` | ✅ |
+| F3 | A4 kural tabanlı rol sınıflandırma (`ParaFeatures`), başlık/şekil/tablo kuralları | ✅ |
+| F4 | A9–A11 web: yükle → rapor akışı (yalnızca denetim) | ✅ |
+| F5 | A5 düzeltici, web'den düzeltilmiş dosya indirme | ✅ |
+| **Pilot** | ZBEÜ'de sınırlı kullanıcıyla (ör. 20–30 öğrenci + enstitü personeli) deneme, geri bildirim | demo yayında, pilot bekliyor |
+| F6 | Rol düzeltmelerinden yerel model (seçenek B) | veri toplama hazır (açık rıza), model yok |
 
 ## 13. Açık sorular
 
 - ZBEÜ Lisansüstü Eğitim Enstitüsü'nün güncel tez yazım kılavuzu (PDF) ve şablon `.docx`'i. Fen ve sosyal
   bilimler için ayrı kurallar var mı?
 - Pilot için enstitüde muhatap kim? Enstitünün format kontrolünü bugün kim, nasıl yapıyor?
-- Fingerprint'te alan sonuçları ve track changes nasıl ele alınacak?
-- Saklama süresi ve kimlik doğrulama yöntemi (§10.3).
-- Barındırma: üniversite sunucusu mu, Türkiye'de bir bulut sağlayıcı mı?
+- Kimlik doğrulama: pilotta e-posta bağlantısı uygulandı; enstitü SSO'suna geçiş zamanı.
+- Barındırma: demo Türkiye'de bir VPS + Cloudflare tüneli; pilot için üniversite sunucusu mu,
+  bulut mu?
+- Yedekleme politikası (deploy/README.md): raporlar yedekten dönmeyecek şekilde nasıl standartlaşır?
