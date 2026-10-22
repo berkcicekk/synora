@@ -64,7 +64,7 @@ def test_upload_page_grouped_select_with_default(client: TestClient, mailer: Con
     assert '<optgroup label="Zonguldak Bülent Ecevit Üniversitesi">' in select
     assert re.findall(r'<option value="([^"]+)" selected>', select) == ["zbeu-tip"]
     assert select.count("<option") == len(ALL)
-    assert re.search(r'<input id="ruleset-filter"[^>]*\shidden>', page)  # JS açar
+    assert 'id="ruleset-field"' in page  # JS aranabilir seçiciyi buraya kurar; JS'siz select kalır
     assert 'id="latex-link" class="textlink" href="/sablon/zbeu-tip/latex.zip" download' in page
 
 
@@ -87,6 +87,18 @@ def test_every_ruleset_has_source_and_institution() -> None:
         if r.id == "example":
             continue
         assert r.rules.institution and r.rules.source and r.rules.source_url, r.id
+
+
+def test_ruleset_picker_component_shipped() -> None:
+    """Kılavuz seçici: erişilebilir combobox (listbox + arama + klavye) ve dokunma hedefleri."""
+    static = ROOT / "src" / "synora" / "web" / "static"
+    js = (static / "app.js").read_text(encoding="utf-8")
+    css = (static / "app.css").read_text(encoding="utf-8")
+    assert '"listbox"' in js and '"option"' in js  # ARIA rolleri
+    assert "aria-activedescendant" in js and "aria-expanded" in js
+    assert "Escape" in js and "ArrowDown" in js  # klavyeyle kapanır ve gezilir
+    assert re.search(r"\.picker-opt \{[^}]*min-height: 44px", css)  # dokunma hedefi
+    assert re.search(r"\.picker-btn \{[^}]*border: 1px solid var\(--border\)", css)
 
 
 def test_word_template_download(client: TestClient) -> None:

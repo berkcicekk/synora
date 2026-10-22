@@ -154,7 +154,7 @@ def test_inactive_story_steps_keep_body_text_readable() -> None:
 
 
 def test_input_borders_meet_non_text_contrast() -> None:
-    assert re.search(r"\.ruleset-filter \{[^}]*border: 1px solid var\(--border\)", CSS)
+    assert re.search(r"\.picker-btn \{[^}]*border: 1px solid var\(--border\)", CSS)
     assert re.search(r"\.role-pick select \{[^}]*border: 1px solid var\(--border\)", CSS)
     assert contrast(_tokens()["border"], _tokens()["paper"]) >= 3
 

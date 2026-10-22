@@ -2,68 +2,190 @@
 "use strict";
 
 (function () {
-  // --- Kılavuz seçimi: arama kutusu ve seçime göre LaTeX bağlantısı -------------------------
+  // --- Kılavuz seçimi: aranabilir seçici (combobox) ve seçime göre şablon bağlantıları ------
   const rulesetSelect = document.getElementById("ruleset");
   if (rulesetSelect && rulesetSelect.tagName === "SELECT") {
-    const filter = document.getElementById("ruleset-filter");
-    const count = document.getElementById("ruleset-count");
     const latexLink = document.getElementById("latex-link");
     const latexName = document.getElementById("latex-name");
+    const wordLink = document.getElementById("word-link");
     // Türkçe büyük/küçük harf: "Iğdır" → "ığdır", "İzmir" → "izmir".
     const fold = (s) => s.replace(/I/g, "ı").replace(/İ/g, "i").toLocaleLowerCase("tr");
     const groups = Array.from(rulesetSelect.querySelectorAll("optgroup")).map((g) => ({
       label: g.label,
       options: Array.from(g.children).map((o) => ({
-        value: o.value, text: o.textContent, key: fold(o.textContent + " " + g.label),
+        value: o.value, text: o.textContent, inst: g.label, key: fold(o.textContent + " " + g.label),
       })),
     }));
     const total = groups.reduce((n, g) => n + g.options.length, 0);
+    const byValue = new Map();
+    groups.forEach((g) => g.options.forEach((o) => byValue.set(o.value, o)));
 
-    const wordLink = document.getElementById("word-link");
     const syncLatex = () => {
-      const opt = rulesetSelect.selectedOptions[0];
+      const opt = byValue.get(rulesetSelect.value);
       if (!opt) return;
       if (latexLink) {
         latexLink.href = "/sablon/" + encodeURIComponent(opt.value) + "/latex.zip";
-        latexName.textContent = opt.textContent;
+        latexName.textContent = opt.text;
       }
       if (wordLink) wordLink.href = "/sablon/" + encodeURIComponent(opt.value) + "/sablon.docx";
     };
-
-    const show = (words) => {
-      const current = rulesetSelect.value;
-      rulesetSelect.textContent = "";
-      let shown = 0;
-      groups.forEach((g) => {
-        const opts = g.options.filter((o) => words.every((w) => o.key.includes(w)));
-        if (!opts.length) return;
-        const og = document.createElement("optgroup");
-        og.label = g.label;
-        opts.forEach((o) => og.appendChild(new Option(o.text, o.value, false, o.value === current)));
-        rulesetSelect.appendChild(og);
-        shown += opts.length;
-      });
-      return shown;
-    };
-
-    if (filter && total > 8) {
-      filter.hidden = false;
-      filter.addEventListener("input", () => {
-        const words = fold(filter.value).split(/\s+/).filter(Boolean);
-        let shown = show(words);
-        if (words.length && !shown) {
-          // Seçim hiç boş kalmasın: eşleşme yoksa tüm liste geri gelir.
-          shown = show([]);
-          count.textContent = "Eşleşen kılavuz yok; tüm liste gösteriliyor.";
-        } else {
-          count.textContent = words.length ? shown + " kılavuz" : "";
-        }
-        syncLatex();
-      });
-      // Arama kutusunda Enter formu göndermesin.
-      filter.addEventListener("keydown", (e) => { if (e.key === "Enter") e.preventDefault(); });
-    }
     rulesetSelect.addEventListener("change", syncLatex);
+
+    // Seçici: select değer taşıyıcı olarak gizli kalır; az seçenekte yalın select yeter.
+    const field = document.getElementById("ruleset-field");
+    if (field && total > 8) {
+      const SVG = "http://www.w3.org/2000/svg";
+      const icon = (cls, parts) => {
+        const s = document.createElementNS(SVG, "svg");
+        s.setAttribute("viewBox", "0 0 24 24");
+        s.setAttribute("class", cls);
+        s.setAttribute("aria-hidden", "true");
+        parts.forEach(([tag, attrs]) => {
+          const el = document.createElementNS(SVG, tag);
+          Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+          s.appendChild(el);
+        });
+        return s;
+      };
+      const el = (tag, cls, text) => {
+        const node = document.createElement(tag);
+        if (cls) node.className = cls;
+        if (text) node.textContent = text;
+        return node;
+      };
+
+      const btn = el("button", "picker-btn");
+      btn.type = "button";
+      btn.id = "ruleset-btn";
+      btn.setAttribute("aria-haspopup", "listbox");
+      btn.setAttribute("aria-expanded", "false");
+      const sel = el("span");
+      const instEl = el("span", "picker-inst");
+      const nameEl = el("span", "picker-name");
+      sel.append(instEl, nameEl);
+      btn.append(sel, icon("picker-chev", [["path", { d: "M6 9l6 6 6-6" }]]));
+
+      const pop = el("div", "picker-pop");
+      pop.hidden = true;
+      const searchWrap = el("div", "picker-search-wrap");
+      const search = el("input", "picker-search");
+      search.type = "text";
+      search.autocomplete = "off";
+      search.placeholder = "Üniversite ya da kılavuz ara";
+      search.setAttribute("role", "combobox");
+      search.setAttribute("aria-expanded", "true");
+      search.setAttribute("aria-controls", "picker-list");
+      search.setAttribute("aria-autocomplete", "list");
+      search.setAttribute("aria-label", "Kılavuz listesinde ara");
+      searchWrap.append(
+        icon("", [["circle", { cx: "11", cy: "11", r: "7" }], ["path", { d: "M21 21l-4.3-4.3" }]]),
+        search);
+      const list = el("ul", "picker-list");
+      list.id = "picker-list";
+      list.setAttribute("role", "listbox");
+      list.setAttribute("aria-labelledby", "ruleset-label");
+      const countBar = el("p", "picker-count");
+      countBar.setAttribute("role", "status");
+      pop.append(searchWrap, list, countBar);
+
+      rulesetSelect.hidden = true;
+      const label = document.getElementById("ruleset-label");
+      if (label) label.htmlFor = "ruleset-btn";
+      field.append(btn, pop);
+
+      let items = [];      // görünür seçenek li'leri (klavye gezinmesi için)
+      let vals = [];       // items ile aynı sırada kural seti kimlikleri
+      let active = -1;
+      const setActive = (i) => {
+        if (active >= 0 && items[active]) items[active].classList.remove("active");
+        active = i;
+        if (i < 0 || !items[i]) { search.removeAttribute("aria-activedescendant"); return; }
+        items[i].classList.add("active");
+        search.setAttribute("aria-activedescendant", items[i].id);
+        items[i].scrollIntoView({ block: "nearest" });
+      };
+      const render = (query) => {
+        const words = fold(query).split(/\s+/).filter(Boolean);
+        list.textContent = "";
+        items = [];
+        vals = [];
+        active = -1;
+        search.removeAttribute("aria-activedescendant");
+        groups.forEach((g) => {
+          const opts = g.options.filter((o) => words.every((w) => o.key.includes(w)));
+          if (!opts.length) return;
+          list.appendChild(el("li", "picker-group", g.label)).setAttribute("role", "presentation");
+          opts.forEach((o) => {
+            const li = el("li", "picker-opt", o.text);
+            li.id = "po-" + items.length;
+            li.setAttribute("role", "option");
+            li.setAttribute("aria-selected", String(o.value === rulesetSelect.value));
+            li.addEventListener("mouseenter", () => setActive(items.indexOf(li)));
+            list.appendChild(li);
+            items.push(li);
+            vals.push(o.value);
+          });
+        });
+        if (!items.length) list.appendChild(el("li", "picker-empty", "Eşleşen kılavuz yok."));
+        countBar.textContent = (words.length ? items.length + " / " : "") + total + " kılavuz";
+        return items.length;
+      };
+      const updateBtn = () => {
+        const o = byValue.get(rulesetSelect.value);
+        if (!o) return;
+        instEl.textContent = o.inst;
+        nameEl.textContent = o.text;
+      };
+      const open = () => {
+        search.value = "";
+        render("");
+        pop.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+        setActive(vals.indexOf(rulesetSelect.value));
+        search.focus();
+      };
+      const close = (toBtn) => {
+        if (pop.hidden) return;
+        pop.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+        if (toBtn) btn.focus();
+      };
+      const choose = (value) => {
+        rulesetSelect.value = value;
+        rulesetSelect.dispatchEvent(new Event("change"));
+        updateBtn();
+        close(true);
+      };
+
+      btn.addEventListener("click", () => (pop.hidden ? open() : close(true)));
+      search.addEventListener("input", () => { render(search.value); if (items.length) setActive(0); });
+      search.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          e.preventDefault();
+          if (!items.length) return;
+          const dir = e.key === "ArrowDown" ? 1 : -1;
+          setActive(active < 0 ? (dir > 0 ? 0 : items.length - 1)
+                               : (active + dir + items.length) % items.length);
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (active >= 0 && vals[active] !== undefined) choose(vals[active]);
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          close(true);
+        } else if (e.key === "Tab") {
+          close(false);
+        }
+      });
+      list.addEventListener("click", (e) => {
+        const li = e.target.closest(".picker-opt");
+        const i = li ? items.indexOf(li) : -1;
+        if (i >= 0) choose(vals[i]);
+      });
+      document.addEventListener("pointerdown", (e) => {
+        if (!pop.hidden && !field.contains(e.target)) close(false);
+      });
+      updateBtn();
+    }
   }
 
   // --- Yükleme ---------------------------------------------------------------------------

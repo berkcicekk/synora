@@ -25,31 +25,26 @@
              accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
     </label>
     <noscript><p class="alert">Yükleme için tarayıcınızda JavaScript açık olmalı.</p></noscript>
-    <div class="dropcard-row">
-      {% if rulesets|length > 1 %}
-      <div class="field grow">
-        <label for="ruleset">Kılavuz</label>
-        <input id="ruleset-filter" class="ruleset-filter" type="search" autocomplete="off"
-               placeholder="Üniversite ya da enstitü ara" aria-label="Kılavuz listesinde ara"
-               aria-controls="ruleset" aria-describedby="ruleset-count" hidden>
-        <select id="ruleset" name="ruleset">
-          {% for g in ruleset_groups %}<optgroup label="{{ g.institution }}">{% for r in g.items %}<option value="{{ r.id }}"{% if r.id == rulesets[0].id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</optgroup>
-          {% endfor %}
-        </select>
-        <span id="ruleset-count" class="ruleset-count" role="status" aria-live="polite"></span>
-      </div>
-      {% elif rulesets %}
-      <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
-      <div class="field grow"><span class="label-like">Kılavuz</span><span>{{ rulesets[0].name }}</span></div>
-      {% else %}
-      <p class="alert grow">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
-      {% endif %}
-      <button id="submit" class="btn primary" type="submit" disabled aria-describedby="upload-status"><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
+    {% if rulesets|length > 1 %}
+    <div class="field picker-field" id="ruleset-field">
+      <label for="ruleset" id="ruleset-label">Kılavuz
+        <span class="label-note">· {{ ruleset_groups|length }} üniversite, {{ rulesets|length }} kılavuz</span></label>
+      {# app.js bu listeyi aranabilir bir seçiciye dönüştürür; JS yoksa yalın liste kalır. #}
+      <select id="ruleset" name="ruleset">
+        {% for g in ruleset_groups %}<optgroup label="{{ g.institution }}">{% for r in g.items %}<option value="{{ r.id }}"{% if r.id == rulesets[0].id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</optgroup>
+        {% endfor %}
+      </select>
     </div>
+    {% elif rulesets %}
+    <input type="hidden" id="ruleset" value="{{ rulesets[0].id }}">
+    <div class="field"><span class="label-like">Kılavuz</span><span>{{ rulesets[0].name }}</span></div>
+    {% else %}
+    <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
+    {% endif %}
+    <button id="submit" class="btn primary xl" type="submit" disabled aria-describedby="upload-status"><span class="lbl">Tezi denetle</span>{{ arrow() }}</button>
     <p id="upload-status" class="status" role="status" aria-live="polite"></p>
-    <p class="alert warn">Dosyanız {{ max_mb }} MB'tan büyükse (çok sayıda fotoğraf/tarama):
-       Word'de bir resme tıklayıp <em>Resim Biçimi › Resimleri Sıkıştır</em> deyin,
-       "Yalnızca bu resme uygula" işaretini kaldırıp kaydedin. Denetim sonucu değişmez.</p>
+    <p class="alert warn">Dosyanız {{ max_mb }} MB'tan büyük mü? Word'de <em>Resim Biçimi ›
+       Resimleri Sıkıştır</em> ile resimleri küçültüp yeniden kaydedin — denetim sonucu değişmez.</p>
     <ul class="assure" aria-label="Gizlilik">
       <li><strong>Metniniz değiştirilmez.</strong> Yalnızca biçim düzeltilir; her kopyada metnin harfi harfine aynı kaldığı doğrulanır.</li>
       <li><strong>Yapay zekâ tarafından okunmaz.</strong> Paragraf türü yalnızca punto, hizalama gibi ölçülerden belirlenir.</li>
