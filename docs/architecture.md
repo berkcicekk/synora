@@ -14,7 +14,7 @@ isteğe bağlı olarak **biçimsel hataları düzeltir**. Tezin metnine hiçbir 
 (kenar boşluğu, yazı tipi, satır aralığı, başlık stilleri, sayfa numarası vb.) değiştirir.
 
 Öğrenci tezini sade bir **web arayüzüne** yükler, raporu ekranda görür, isterse düzeltilmiş dosyayı indirir.
-Görsel kimlik ve arayüz dili: Synora marka kiti (https://claude.ai/artifact/Bg7bwS9wQZqqiyaEWTHzMK).
+Görsel kimlik ve arayüz dili: Payper tasarım kimliği (2026-10-22 tasarım devri; kurallar §10.1).
 
 **Pilot:** Zonguldak Bülent Ecevit Üniversitesi (ZBEÜ). İlk kural seti `rulesets/zbeu-tip.yaml`:
 Tıp Fakültesi *Tıpta Uzmanlık Öğrencileri için Tez Yazım Kılavuzu* (2019). Kılavuzla madde madde eşleme,
@@ -60,7 +60,7 @@ Kapsam dışı: yazım/dil denetimi, intihal, içerik önerisi, kaynakça içeri
 | A8 | CLI | `synora.cli` | `synora check`, `synora fix` komutları (geliştirme ve enstitü içi toplu kullanım) | |
 | A9 | Web API | `synora.web` | Dosya yükleme, iş oluşturma, rapor/çıktı indirme, oturum (FastAPI) | ✅ |
 | A10 | İş yürütücü | `synora.worker` | Kuyruktaki işi izole süreçte çalıştırır (zaman/bellek sınırı), saklama süresi dolanları siler | ✅ |
-| A11 | Arayüz | `web/` | Yükle → ilerleme → rapor → indir akışı; marka kitine uygun, mobil uyumlu, erişilebilir | |
+| A11 | Arayüz | `web/` | Yükle → ilerleme → rapor → indir akışı; Payper tasarım kimliğine uygun, mobil uyumlu, erişilebilir | |
 | A12 | LaTeX şablonu | `synora.latex` | Kural setinden Overleaf'e yüklenebilir tez şablonu (.cls + örnek tez); derleme yok | |
 
 \* Hassas modüllerde (A1, A2, A5, A9, A10) kod yazmadan önce plan sunulur ve onay beklenir (bkz. `CLAUDE.md`).
@@ -232,8 +232,21 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
 
 Rotalar (2026-10-22 tasarım devri): `/` girişsiz tanıtım, girişli **panel** (son rapor özeti, son
 denetimler tablosu); `/yukle` yükleme; `/jobs/<id>` rapor. Büyük adım başlığı (Yükle · Denetle ·
-Teslim et) aynı zamanda gezinmedir. Görsel kimlik: beyaz site zemini, gri uygulama çerçevesi,
-mor vurgu (`--accent` yalnız dekor, metinde `--accent-ink`), Inter + JetBrains Mono (yerelde sunulur).
+Teslim et) aynı zamanda gezinmedir.
+
+**Tasarım kimliği (bağlayıcı).** Tokenların tek kaynağı `src/synora/web/static/app.css` `:root`;
+yeni renk/yarıçap/gölge değeri oraya token olarak eklenir, bileşene ham değer yazılmaz.
+- Zemin: site `--bg` beyaz; uygulama sayfaları tam ekran `--app-panel`, üst ortada mor-mavi degrade.
+- Renk: metin `--ink`, ikincil `--muted`/`--muted-2`; vurgu `--accent` (#8C7CF7) **yalnız dekor**
+  (nokta, çubuk, odak halkası koyu zeminde); mor metin `--accent-ink`. Eski adlar (`--blue`,
+  `--paper`…) yeni paletin takma adlarıdır, yeni kodda kullanılmaz.
+- Yazı: Inter (başlık 600, harf aralığı -0.04em), etiket/ölçü JetBrains Mono; ikisi de yerelde.
+- Biçim: düğmeler hap (birincil siyah, ikincil beyaz çip), kart 26px, alan 12px köşe; dokunma
+  hedefi ≥44px; telefonda form alanları ≥16px (iOS yakınlaştırması).
+- Erişilebilirlik: metin kontrastı ≥4,5:1 (`tests/web/test_ui.py` TEXT_PAIRS ile zorlanır);
+  gerçek `<button>`/`<a href>`/`<label>`; ikon düğmelerinde `aria-label`.
+- CSP: şablonlarda satır içi stil ve betik yok; dinamik ölçüler `data-*` ile `app.js`'ten.
+- Tasarım kaynakları (`payper-tasarim/`, repoda değil) yalnızca referanstır; çelişkide bu bölüm geçerli.
 
 1. **Yükle:** Tek ekran. Sürükle-bırak alanı, enstitü/kural seti seçimi (pilotta yalnızca ZBEÜ), gizlilik notu:
    "Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız işlem bitince silinir."
