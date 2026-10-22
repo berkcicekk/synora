@@ -21,10 +21,10 @@
       <label class="updrop" id="drop" for="file">
         <input id="file" name="file" type="file" aria-describedby="drop-help"
                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-        <span class="updrop-ico" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5L8 3l3.5 3.5M3 13.5h10"/></svg></span>
+        <span class="updrop-ico" aria-hidden="true"><svg class="if-empty" viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5L8 3l3.5 3.5M3 13.5h10"/></svg><svg class="if-file" viewBox="0 0 22 22"><path d="M5 2h8l4 4v14H5z"/><path d="M13 2v4h4M8 11h6M8 14h6M8 17h4"/></svg></span>
         <span class="updrop-title" id="drop-title"><span class="t-pointer">Tezinizi buraya bırakın</span><span class="t-touch">Tezinizi seçmek için dokunun</span></span>
         <span class="updrop-sub" id="drop-help"><span class="t-pointer">ya da bilgisayarınızdan seçin. </span>Yalnızca .docx · en fazla {{ max_mb }}&nbsp;MB</span>
-        <span class="fakebtn">Dosya seç</span>
+        <span class="fakebtn"><span class="if-empty">Dosya seç</span><span class="if-file">Başka dosya seç</span></span>
       </label>
     </section>
     <div class="uprow-side">
@@ -39,7 +39,8 @@
           <label for="ruleset">Enstitü / kılavuz</label>
           {# JS, u-uni seçimine göre bu listeyi süzer; JS yoksa gruplu tam liste kalır. #}
           <select id="ruleset" name="ruleset">
-            {% for g in ruleset_groups %}<optgroup label="{{ g.institution }}">{% for r in g.items %}<option value="{{ r.id }}"{% if r.id == rulesets[0].id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</optgroup>
+            {# Varsayılan kılavuz kendi grubunda başta: üniversiteye geri dönülünce o seçilir. #}
+            {% for g in ruleset_groups %}<optgroup label="{{ g.institution }}">{% for r in g.items | selectattr("id", "equalto", rulesets[0].id) %}<option value="{{ r.id }}" selected>{{ r.name }}</option>{% endfor %}{% for r in g.items | rejectattr("id", "equalto", rulesets[0].id) %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}</optgroup>
             {% endfor %}
           </select>
         </div>

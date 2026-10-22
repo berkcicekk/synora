@@ -124,3 +124,12 @@ def test_panel_shows_real_ruleset_and_upload_link(client: TestClient,
 def test_upload_route_requires_login(client: TestClient) -> None:
     res = client.get("/yukle", follow_redirects=False)
     assert res.status_code == 303 and res.headers["location"] == "/giris"
+
+
+def test_default_ruleset_leads_its_group(client: TestClient, mailer: ConsoleMailer) -> None:
+    """Üniversiteye geri dönülünce (JS grubun ilk seçeneğini alır) pilot kılavuzu seçilsin."""
+    login(client, mailer)
+    page = client.get("/yukle").text
+    group = page[page.index('<optgroup label="Zonguldak Bülent Ecevit Üniversitesi">'):]
+    group = group[:group.index("</optgroup>")]
+    assert re.findall(r'<option value="([^"]+)"', group)[0] == "zbeu-tip"

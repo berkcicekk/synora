@@ -138,11 +138,12 @@ h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -.04em; line-height: 1
 }
 
 /* ============================ UYGULAMA ÇERÇEVESİ ============================
-   Dış zemin --app-bg, içinde yuvarlak --app-panel panel, üst ortada mor-mavi degrade. */
-/* Alt boşluk: sabit "İstek / Öneri" düğmesi çerçevedeki eylem düğmelerinin üstüne binmesin. */
-body.app { padding: 24px 16px 84px; box-sizing: border-box; }
-.frame { position: relative; overflow: hidden; width: 100%; max-width: var(--wide); margin: 0 auto;
-  background: var(--app-panel); border-radius: var(--radius-frame); padding-bottom: 24px;
+   Tam ekran: --app-panel zemini tüm pencereyi kaplar, üst ortada mor-mavi degrade.
+   İçerik ortalı bir sütunda kalır (geniş ekranda satırlar okunur uzunlukta). */
+body.app { background: var(--app-panel); }
+/* Alt boşluk: sabit "İstek / Öneri" düğmesi alttaki eylem düğmelerinin üstüne binmesin. */
+.frame { position: relative; overflow: hidden; width: 100%; min-height: 100vh; min-height: 100dvh;
+  background: var(--app-panel); padding-bottom: 84px;
   display: flex; flex-direction: column; flex: 1; box-sizing: border-box; }
 .grad { position: absolute; top: -300px; left: 50%; width: 1000px; max-width: 160%; height: 600px;
   transform: translateX(-50%); pointer-events: none;
@@ -151,11 +152,12 @@ body.app { padding: 24px 16px 84px; box-sizing: border-box; }
 .frame > * { position: relative; }
 .frame > .grad { position: absolute; }
 .frame > main { flex: 1; display: flex; flex-direction: column; }
-.frame .nav-inner { padding-inline: 24px; }
-.appmain { width: 100%; max-width: 1040px; margin: 0 auto; padding: 40px 24px 24px; box-sizing: border-box;
-  display: flex; flex-direction: column; gap: 32px; flex: 1; }
+.frame .nav-inner { padding-inline: clamp(16px, 3vw, 40px); }
+.appmain { width: 100%; max-width: 1200px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 40px) 24px;
+  box-sizing: border-box; display: flex; flex-direction: column; gap: 32px; flex: 1; }
 .frame-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px;
-  padding: 8px 24px 0; flex-wrap: wrap; }
+  width: 100%; max-width: 1200px; margin: 0 auto; padding: 8px clamp(16px, 3vw, 40px) 0;
+  box-sizing: border-box; flex-wrap: wrap; }
 
 /* Büyük adım başlığı: Yükle · Denetle · Teslim et (etkin siyah, diğerleri gezinme) */
 .steptitle { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 0;
@@ -231,6 +233,10 @@ body.app { padding: 24px 16px 84px; box-sizing: border-box; }
   stroke-linecap: round; stroke-linejoin: round; }
 .updrop.has-file .updrop-ico { border-radius: 18px; background: var(--accent-soft); }
 .updrop.has-file .updrop-ico svg { stroke: var(--accent-ink); }
+.updrop.has-file .updrop-ico svg.if-file { width: 26px; height: 26px; stroke-width: 1.5; }
+/* Seçim öncesi/sonrası içerik: JS yalnızca .has-file sınıfını değiştirir. */
+.updrop .if-file, .updrop.has-file .if-empty { display: none; }
+.updrop.has-file .if-file { display: inline; }
 .updrop-title { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 600; letter-spacing: -.04em; line-height: 1.1; overflow-wrap: anywhere; }
 .updrop-sub { font-size: .88rem; color: var(--muted); max-width: 360px; line-height: 1.5; }
 .fakebtn { margin-top: 6px; display: inline-flex; align-items: center; height: 48px; padding: 0 22px;
