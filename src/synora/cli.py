@@ -176,6 +176,18 @@ def latex_command(
     typer.echo(f"LaTeX şablonu yazıldı: {output}")
 
 
+@app.command("admin-key")
+def admin_key_command() -> None:
+    """Yönetim paneli (/yonetim) için yeni anahtar üretir; sunucuya yalnızca özeti yazılır."""
+    import hashlib
+    import secrets
+
+    key = secrets.token_urlsafe(24)
+    typer.echo(f"Anahtar (bir yere kaydedin, yeniden gösterilmez): {key}")
+    typer.echo("Sunucudaki /etc/synora/synora.env dosyasına ekleyin:")
+    typer.echo(f"SYNORA_ADMIN_KEY_SHA256={hashlib.sha256(key.encode()).hexdigest()}")
+
+
 @app.command("serve")
 def serve_command(
     host: Annotated[str, typer.Option(help="Dinlenecek adres")] = "127.0.0.1",

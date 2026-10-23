@@ -1,0 +1,116 @@
+{% extends "app_base.html" %}
+{% block title %}Yönetim · Payper{% endblock %}
+{% set c = admin.counts %}
+{% block content %}
+<div class="apphead">
+  <h1 class="steptitle"><span aria-current="page">Yönetim</span></h1>
+  <nav aria-label="Yönetim bölümleri" class="subnav">
+    <a href="#genel" aria-current="location">Genel bakış</a>
+    <a href="#hesaplar">Hesaplar</a>
+    <a href="#oneriler">Öneriler</a>
+    <a href="#kurallar">Sık bulgular</a>
+  </nav>
+</div>
+
+<div id="genel" class="cardgrid">
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Kayıtlı hesap</h2>
+      <p class="pcard-sub">Aydınlatma metnini onaylayıp kayıt olanlar</p></div></div>
+    <div class="pcard-body"><div class="bignum-row"><span class="bignum" id="n-users">{{ c.users }}</span>
+      <span class="bignum-note">son 7 gün +{{ c.users_7d }}<br>son 30 gün +{{ c.users_30d }}</span></div></div>
+  </article>
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Açık oturum</h2>
+      <p class="pcard-sub">Oturumu süren hesaplar (oturum {{ admin.session_hours }} saat sürer)</p></div></div>
+    <div class="pcard-body"><div class="bignum-row"><span class="bignum" id="n-online">{{ c.online }}</span>
+      <span class="bignum-note">farklı<br>e&#8209;posta</span></div></div>
+  </article>
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Son 24 saat</h2>
+      <p class="pcard-sub">Başlatılan denetimler</p></div></div>
+    <div class="pcard-body"><div class="bignum-row"><span class="bignum" id="n-jobs">{{ c.jobs }}</span>
+      <span class="bignum-note">{{ c.done }} tamamlandı · {{ c.failed }} başarısız<br>{{ c.queued + c.running }} sürüyor</span></div></div>
+  </article>
+  <article class="pcard admin-days">
+    <div class="pcard-head"><div><h2 class="pcard-title">Son 14 gün</h2>
+      <p class="pcard-sub">Gün başına yeni kayıt ve denetim</p></div></div>
+    <div class="pcard-body meterline">
+      {% for d in admin.activity %}
+      <div><div class="mrow"><span>{{ d.label }}</span><span class="admin-day">{{ d.users }} kayıt · <strong>{{ d.jobs }}</strong> denetim</span></div>
+      <div class="meter"><i data-w="{{ d.w }}"></i></div></div>
+      {% endfor %}
+    </div>
+  </article>
+</div>
+
+<section id="hesaplar" aria-labelledby="hesaplar-h" class="pcard table-card mt14">
+  <div class="table-head">
+    <h2 id="hesaplar-h" class="pcard-title">Kayıtlı hesaplar</h2>
+    <span class="pcard-sub">{% if admin.accounts | length >= 500 %}En yeni 500 hesap{% else %}{{ admin.accounts | length }} hesap{% endif %}</span>
+  </div>
+  {% if admin.accounts %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">E-posta</th><th scope="col">Kayıt</th><th scope="col">Onaylanan metin</th><th scope="col">Oturum</th><th scope="col">Son 24 sa denetim</th></tr></thead>
+    <tbody>
+      {% for a in admin.accounts %}
+      <tr>
+        <td class="admin-email">{{ a.email }}</td>
+        <td>{{ a.joined }}</td>
+        <td class="num">{{ a.consent }}</td>
+        <td>{% if a.online %}açık{% else %}—{% endif %}</td>
+        <td class="num">{{ a.jobs }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Henüz kayıtlı hesap yok.</p>
+  {% endif %}
+</section>
+
+<section id="oneriler" aria-labelledby="oneriler-h" class="pcard table-card mt14">
+  <div class="table-head">
+    <h2 id="oneriler-h" class="pcard-title">İstek ve öneriler</h2>
+    <span class="pcard-sub">Son 50 mesaj</span>
+  </div>
+  {% if admin.suggestions %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Tarih</th><th scope="col">Sayfa</th><th scope="col">E-posta</th><th scope="col" class="msg">Mesaj</th></tr></thead>
+    <tbody>
+      {% for s in admin.suggestions %}
+      <tr>
+        <td>{{ s.when }}</td>
+        <td class="num">{{ s.page }}</td>
+        <td class="admin-email">{{ s.email }}</td>
+        <td class="msg">{{ s.message }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Henüz mesaj yok.</p>
+  {% endif %}
+</section>
+
+<section id="kurallar" aria-labelledby="kurallar-h" class="pcard table-card mt14">
+  <div class="table-head">
+    <h2 id="kurallar-h" class="pcard-title">En sık bulgular</h2>
+    <span class="pcard-sub">Tüm denetimler, anonim · rızalı eğitim verisi: {{ c.training }} satır</span>
+  </div>
+  {% if admin.rules %}
+  <div class="meterline pad-b">
+    {% for r in admin.rules %}
+    <div><div class="mrow"><span title="{{ r.id }}">{{ r.label }}</span><span class="admin-day"><strong>{{ r.n }}</strong>{% if r.wrong %} · {{ r.wrong }} "yanlış" oyu{% endif %}</span></div>
+    <div class="meter"><i data-w="{{ r.w }}"></i></div></div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="empty pad-b">Henüz denetim yok.</p>
+  {% endif %}
+</section>
+{% endblock %}
+{% block framefoot %}<span class="fineprint">Bu sayfa yalnızca sayıları ve hesapları gösterir; rapor içeriği gösterilmez</span>{% endblock %}

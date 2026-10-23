@@ -1,0 +1,23 @@
+{% extends "app_base.html" %}
+{% block title %}Yönetim · Payper{% endblock %}
+{% block content %}
+<div class="apphead">
+  <h1 class="steptitle"><span aria-current="page">Yönetim</span></h1>
+</div>
+<article class="pcard admin-key">
+  <div class="pcard-head"><div><h2 class="pcard-title">Yönetici anahtarı</h2>
+    <p class="pcard-sub">Bu oturum için bir kez sorulur, 2 saat geçerlidir</p></div></div>
+  <form method="post" action="/yonetim/anahtar" class="admin-key-form">
+    <input type="hidden" name="csrf" value="{{ user.csrf }}">
+    {% if error %}<p class="alert" role="alert" id="key-error">{{ error }}</p>{% endif %}
+    <div class="fld">
+      <label for="admin-key">Anahtar</label>
+      <input class="fld-search" id="admin-key" name="key" type="password" required
+             autocomplete="current-password" spellcheck="false"
+             {% if error %}aria-invalid="true" aria-describedby="key-error"{% endif %}>
+    </div>
+    <button class="btn primary" type="submit"><span class="lbl">Paneli aç</span></button>
+  </form>
+</article>
+{% endblock %}
+{% block framefoot %}<span class="fineprint">Anahtar sunucuda yalnızca özetiyle tutulur</span>{% endblock %}

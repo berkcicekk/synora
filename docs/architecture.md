@@ -232,7 +232,7 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
 
 Rotalar (2026-10-22 tasarım devri): `/` girişsiz tanıtım, girişli **panel** (son rapor özeti, son
 denetimler tablosu); `/yukle` yükleme; `/jobs/<id>` rapor. Büyük adım başlığı (Yükle · Denetle ·
-Teslim et) aynı zamanda gezinmedir.
+Teslim et) aynı zamanda gezinmedir. `/yonetim` yönetim paneli (bkz. §10.3).
 
 **Tasarım kimliği (bağlayıcı).** Tokenların tek kaynağı `src/synora/web/static/app.css` `:root`;
 yeni renk/yarıçap/gölge değeri oraya token olarak eklenir, bileşene ham değer yazılmaz.
@@ -289,6 +289,12 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   silinse de düşmez), sunucu genelinde aynı anda en fazla `workers` kopya, kuyrukta en fazla 20 iş; formlar
   yalnızca URL kodlu ≤ 8 KB. CSRF koruması, yükleme yalnızca
   `.docx` uzantısı + içerik doğrulaması (A1).
+- Yönetim paneli (`/yonetim`, salt okuma): kayıtlı hesaplar, açık oturum, son 24 saat ve son 14 gün
+  kullanım, öneri kutusu, en sık bulgular. Rapor içeriği gösterilmez. Erişim: e-posta
+  `SYNORA_ADMIN_EMAILS` listesinde **ve** oturum başına yönetici anahtarı (`SYNORA_ADMIN_KEY_SHA256`
+  yalnızca özet; `synora admin-key` üretir; istemci başına saatte 5 deneme; 2 saat geçerli). Demo
+  kipinde e-posta doğrulanmadığı için adres tek başına yetmez. Yetkisiz herkes 404 görür; ayar boşsa
+  panel kapalıdır. Geçmiş kullanım `daily_jobs` tablosundan (yalnızca gün + sayı) okunur.
 
 ## 10a. LaTeX şablonu (A12)
 

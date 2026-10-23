@@ -17,7 +17,7 @@ import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from http import HTTPStatus
 from pathlib import Path
 from typing import Any, Literal
@@ -39,7 +39,7 @@ from synora.latex import build_zip
 from synora.log import log_event
 from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message, rule_label
 from synora.ruleset import Ruleset, load_ruleset
-from synora.web.db import Database, Job
+from synora.web.db import TR_TZ, Database, Job, tr_day
 from synora.web.mailer import Mailer, make_mailer
 from synora.web.pipeline import run_pipeline
 from synora.web.presentation import PageSpec, RuleTile, page_spec, rule_tiles
@@ -75,6 +75,8 @@ OUTPUT_ERRORS = {
     "TIMEOUT": "İşlem süre sınırını aştı. Raporu kullanarak Word'de düzeltebilirsiniz.",
 }
 MAX_USER_ROLES = 2000
+# Yönetici anahtarı oturum başına bu kadar geçerli (açık bırakılan bilgisayar için).
+ADMIN_UNLOCK_SECONDS = 2 * 3600
 # Rol seçim listesi (arayüz sırası); yalnızca synora.check.USER_ROLES içindekiler.
 ROLE_CHOICES = [r for r in (
     "heading_1", "heading_2", "heading_3", "body", "front_matter", "block_quote", "list_item",
@@ -163,8 +165,7 @@ def job_error_message(code: str | None) -> str:
         return JOB_ERRORS["INTERNAL"]
 
 
-TR_TZ = timezone(timedelta(hours=3))  # Türkiye 2016'dan beri yaz saati uygulamıyor
-TR_MONTHS = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"]
+TR_MONTHS =["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"]
 
 
 TR_MONTHS_LONG = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos",
@@ -376,7 +377,21 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                             secure=settings.secure_cookies, max_age=3600)
 
     def render(request: Request, name: str, status: int = 200, **ctx: Any) -> HTMLResponse:
+        ctx["is_admin"] = admin_allowed(ctx.get("user"))  # üst çubukta "Yönetim" bağlantısı
         return templates.TemplateResponse(request, name, ctx, status_code=status)
+
+    # Yönetici anahtarı girilmiş oturumlar: oturum özeti → bitiş. Bellekte; yeniden başlatmada
+    # anahtar yeniden sorulur.
+    admin_unlocked: dict[str, float] = {}
+
+    def admin_allowed(user: User | None) -> bool:
+        return user is not None and settings.admin_enabled and user.email in settings.admin_emails
+
+    def admin_open(user: User) -> bool:
+        now = time.time()
+        for stale in [k for k, until in admin_unlocked.items() if until <= now]:
+            del admin_unlocked[stale]
+        return user.session_hash in admin_unlocked
 
     def own_job(user: User, job_id: str) -> Job:
         if not JOB_ID_RE.fullmatch(job_id):
@@ -829,9 +844,80 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         form = await small_form(request)
         check_csrf(user.csrf, str(form.get("csrf", "")))
         db.delete_session(user.session_hash)
+        admin_unlocked.pop(user.session_hash, None)
         resp = RedirectResponse("/", status_code=303)
         resp.delete_cookie(SESSION_COOKIE)
         return resp
+
+    # --- Yönetim paneli -----------------------------------------------------------------------
+
+    def _day_label(day: str) -> str:
+        return f"{int(day[8:])} {TR_MONTHS[int(day[5:7]) - 1]}"
+
+    def admin_context() -> dict[str, Any]:
+        """Sayılar, hesaplar, öneriler, en sık kurallar. Rapor içeriği (başlık yolu dahil) yok."""
+        now = time.time()
+        days = [tr_day(now - k * 86400) for k in range(14)]  # bugün başta
+        jobs_by_day = db.daily_jobs(days[-1])
+        regs: dict[str, int] = {}
+        for ts in db.registrations_since(now - 15 * 86400):
+            regs[tr_day(ts)] = regs.get(tr_day(ts), 0) + 1
+        peak = max([1, *jobs_by_day.values()])
+        activity = [{"label": _day_label(d), "users": regs.get(d, 0), "jobs": jobs_by_day.get(d, 0),
+                     "w": round(jobs_by_day.get(d, 0) / peak * 100)} for d in days]
+        rules = db.rule_totals()
+        rule_peak = max([1, *(n for _, n, _ in rules)])
+        return {
+            "counts": db.admin_counts(now),
+            "activity": activity,
+            "accounts": [{"email": e, "joined": format_when(c), "consent": v or "—",
+                          "online": bool(o), "jobs": int(n)}
+                         for e, c, v, o, n in db.accounts(now)],
+            "suggestions": [{"when": format_when(t), "page": p or "—", "email": e or "—",
+                             "message": m} for t, p, e, m in db.suggestions(50)],
+            "rules": [{"label": rule_label(r), "id": r, "n": n, "wrong": w,
+                       "w": round(n / rule_peak * 100)} for r, n, w in rules],
+            "session_hours": int(settings.session_hours),
+        }
+
+    def admin_key_form(request: Request, user: User, status: int = 200,
+                       error: str | None = None) -> HTMLResponse:
+        return render(request, "admin_key.html", status=status, user=user, error=error,
+                      retention=int(settings.retention_hours))
+
+    # Anahtar denemesi: istemci başına saatte 5, sunucu genelinde dakikada 20.
+    admin_key_rate_ok = make_rate_limiter(5, 20)
+
+    @app.get("/yonetim", response_class=HTMLResponse)
+    def admin_page(request: Request) -> HTMLResponse:
+        """Yalnızca listedeki e-posta + bu oturumda girilmiş anahtar; diğer herkese 404."""
+        user = current_user(request)
+        if user is None or not admin_allowed(user):
+            raise HTTPException(404)
+        if not admin_open(user):
+            return admin_key_form(request, user)
+        log_event("admin.view", hash=_hash(user.email)[:16])
+        return render(request, "admin.html", user=user, admin=admin_context(),
+                      retention=int(settings.retention_hours))
+
+    @app.post("/yonetim/anahtar", response_class=HTMLResponse)
+    async def admin_unlock(request: Request) -> Response:
+        user = current_user(request)
+        if user is None or not admin_allowed(user):
+            raise HTTPException(404)
+        form = await small_form(request)
+        check_csrf(user.csrf, str(form.get("csrf", "")))
+        who = _hash(user.email)[:16]
+        if not admin_key_rate_ok(request):
+            return admin_key_form(request, user, 429, "Çok fazla deneme yapıldı. Bir saat sonra "
+                                                      "yeniden deneyin.")
+        key = str(form.get("key", "")).strip()
+        if not key or not hmac.compare_digest(_hash(key), settings.admin_key_sha256):
+            log_event("admin.unlock_failed", hash=who)
+            return admin_key_form(request, user, 400, "Anahtar yanlış.")
+        admin_unlocked[user.session_hash] = time.time() + ADMIN_UNLOCK_SECONDS
+        log_event("admin.unlock", hash=who)
+        return RedirectResponse("/yonetim", status_code=303)
 
     # --- İşler -------------------------------------------------------------------------------
 

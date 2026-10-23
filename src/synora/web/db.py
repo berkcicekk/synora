@@ -12,8 +12,11 @@ import sqlite3
 import threading
 import time
 from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+
+TR_TZ = timezone(timedelta(hours=3))  # Türkiye 2016'dan beri yaz saati uygulamıyor
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS login_tokens (
@@ -89,6 +92,12 @@ CREATE TABLE IF NOT EXISTS suggestions (
     page TEXT NOT NULL DEFAULT '',
     created_at REAL NOT NULL
 );
+-- Yönetim paneli: gün başına (Türkiye saati) başlatılan denetim sayısı. Yalnızca tarih + sayı;
+-- e-posta, iş kimliği yok. İşler 24 saatte silindiği için geçmiş kullanım buradan okunur.
+CREATE TABLE IF NOT EXISTS daily_jobs (
+    day TEXT PRIMARY KEY,
+    n INTEGER NOT NULL
+);
 CREATE TABLE IF NOT EXISTS users (
     email TEXT PRIMARY KEY,
     created_at REAL NOT NULL,
@@ -100,6 +109,11 @@ CREATE TABLE IF NOT EXISTS users (
 
 def _email_hash(email: str) -> str:
     return hashlib.sha256(email.encode("utf-8")).hexdigest()
+
+
+def tr_day(ts: float) -> str:
+    """Türkiye saatine göre gün: '2026-10-23'."""
+    return datetime.fromtimestamp(ts, TR_TZ).strftime("%Y-%m-%d")
 
 
 class Rows(list[tuple[Any, ...]]):
@@ -268,6 +282,8 @@ class Database:
             self._conn.execute("INSERT INTO jobs (id, email, ruleset, status, created_at) "
                                "VALUES (?, ?, ?, 'queued', ?)", (job_id, email, ruleset, now))
             self._conn.execute("INSERT INTO job_starts VALUES (?, ?)", (_email_hash(email), now))
+            self._conn.execute("INSERT INTO daily_jobs (day, n) VALUES (?, 1) "
+                               "ON CONFLICT(day) DO UPDATE SET n = n + 1", (tr_day(now),))
 
     def set_running(self, job_id: str) -> None:
         self.execute("UPDATE jobs SET status='running' WHERE id=?", (job_id,))
@@ -361,6 +377,53 @@ class Database:
         return self.execute(
             "SELECT created_at, page, email, message FROM suggestions "
             "ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+
+    # --- Yönetim paneli (salt okuma; rapor içeriği okunmaz) ------------------------------------
+
+    def admin_counts(self, now: float) -> dict[str, int]:
+        day, week, month = now - 86400, now - 7 * 86400, now - 30 * 86400
+
+        def one(sql: str, params: tuple[object, ...] = ()) -> int:
+            return int(self.execute(sql, params).fetchone()[0])
+
+        counts = {
+            "users": one("SELECT COUNT(*) FROM users"),
+            "users_7d": one("SELECT COUNT(*) FROM users WHERE created_at>=?", (week,)),
+            "users_30d": one("SELECT COUNT(*) FROM users WHERE created_at>=?", (month,)),
+            "online": one("SELECT COUNT(DISTINCT email) FROM sessions WHERE expires_at>?", (now,)),
+            "training": one("SELECT COUNT(*) FROM training"),
+            "done": 0, "failed": 0, "queued": 0, "running": 0,
+        }
+        for status, n in self.execute("SELECT status, COUNT(*) FROM jobs WHERE created_at>=? "
+                                      "GROUP BY status", (day,)).fetchall():
+            counts[str(status)] = int(n)
+        counts["jobs"] = sum(counts[s] for s in ("done", "failed", "queued", "running"))
+        return counts
+
+    def accounts(self, now: float, limit: int = 500) -> list[tuple[Any, ...]]:
+        """(email, kayıt zamanı, onay sürümü, açık oturum var mı, son 24 saatteki iş sayısı)."""
+        return self.execute(
+            "SELECT u.email, u.created_at, u.consent_version, "
+            "EXISTS(SELECT 1 FROM sessions s WHERE s.email=u.email AND s.expires_at>?), "
+            "(SELECT COUNT(*) FROM jobs j WHERE j.email=u.email AND j.created_at>=?) "
+            "FROM users u ORDER BY u.created_at DESC LIMIT ?",
+            (now, now - 86400, limit)).fetchall()
+
+    def registrations_since(self, since: float) -> list[float]:
+        rows = self.execute("SELECT created_at FROM users WHERE created_at>=?", (since,))
+        return [float(r[0]) for r in rows]
+
+    def daily_jobs(self, since_day: str) -> dict[str, int]:
+        rows = self.execute("SELECT day, n FROM daily_jobs WHERE day>=?", (since_day,))
+        return {str(d): int(n) for d, n in rows}
+
+    def rule_totals(self, limit: int = 10) -> list[tuple[str, int, int]]:
+        """Tüm kural setlerinde en sık bulgular: (rule_id, adet, "yanlış" oyu)."""
+        wrong = {str(r): int(n) for r, n in self.execute(
+            "SELECT rule_id, SUM(n) FROM feedback_counts WHERE verdict='wrong' GROUP BY rule_id")}
+        rows = self.execute("SELECT rule_id, SUM(n) FROM finding_counts GROUP BY rule_id "
+                            "ORDER BY SUM(n) DESC, rule_id LIMIT ?", (limit,))
+        return [(str(r), int(n), wrong.get(str(r), 0)) for r, n in rows]
 
     # --- Saklama süresi ---------------------------------------------------------------------
 

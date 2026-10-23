@@ -1019,3 +1019,18 @@ body.app .footer, body.editor .footer { background: transparent; }
 .suggest-status { min-height: 1.3rem; font-size: .85rem; color: var(--ok); margin-top: .6rem; }
 .suggest-status.error { color: var(--error); }
 .suggest-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: .9rem; }
+
+/* == YÖNETİM == */
+.admin-key { max-width: 440px; }
+.admin-key-form { display: grid; gap: 14px; }
+.admin-key-form .btn { justify-self: start; }
+/* 14 gün tek sütunda boşluk bırakıyordu: tam satır, genişlik yettikçe çok sütun */
+.admin-days { grid-column: 1 / -1; }
+.admin-days .meterline { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px 32px; }
+.admin-day { color: var(--muted); white-space: nowrap; }
+.admin-day strong { color: var(--ink); }
+.ptable td.admin-email { overflow-wrap: anywhere; }
+/* Mesaj sütunu sonda ama sola yaslı, uzun metin satıra sarılır */
+.ptable thead th.msg, .ptable td.msg { text-align: left; min-width: 260px; overflow-wrap: anywhere; }
+/* == /YÖNETİM == */

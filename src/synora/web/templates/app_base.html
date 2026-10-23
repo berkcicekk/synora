@@ -9,6 +9,7 @@
     <div class="nav-inner">
       <a class="brand" href="/" aria-label="Payper panel"><span class="brand-badge">{{ mark() }}</span></a>
       <div class="nav-end">
+        {% if is_admin %}<a class="nav-link" href="/yonetim">Yönetim</a>{% endif %}
         <span class="who-chip"><span class="who-ava" aria-hidden="true">{{ user.email[:2] | upper }}</span><span class="who">{{ user.email }}</span></span>
         <form method="post" action="/logout">
           <input type="hidden" name="csrf" value="{{ user.csrf }}">

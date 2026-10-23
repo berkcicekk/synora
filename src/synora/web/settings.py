@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
+_SHA256_HEX = re.compile(r"[0-9a-f]{64}")
 
 
 def _env(name: str, default: str) -> str:
@@ -50,10 +52,19 @@ class Settings:
     smtp_user: str = ""
     smtp_password: str = field(default="", repr=False)
     smtp_from: str = "Synora <noreply@synora.local>"
+    # Yönetim paneli (/yonetim): listedeki e-posta + oturum başına yönetici anahtarı. Demo
+    # kipinde adres doğrulanmadığı için e-posta tek başına yetmez. Anahtarın kendisi değil,
+    # SHA-256 özeti tutulur (`synora admin-key` üretir). İkisinden biri boşsa panel kapalı.
+    admin_emails: tuple[str, ...] = ()
+    admin_key_sha256: str = field(default="", repr=False)
 
     @property
     def secure_cookies(self) -> bool:
         return not self.dev
+
+    @property
+    def admin_enabled(self) -> bool:
+        return bool(self.admin_emails) and bool(_SHA256_HEX.fullmatch(self.admin_key_sha256))
 
     def problems(self) -> list[str]:
         """Üretimde (dev=False) başlamayı engelleyen eksik ya da güvensiz ayarlar."""
@@ -73,12 +84,16 @@ class Settings:
         if not (self.rulesets_dir / f"{self.default_ruleset}.yaml").is_file():
             found.append(f"SYNORA_DEFAULT_RULESET bulunamadı: {self.default_ruleset} "
                          f"({self.rulesets_dir})")
+        if self.admin_key_sha256 and not _SHA256_HEX.fullmatch(self.admin_key_sha256):
+            found.append("SYNORA_ADMIN_KEY_SHA256 anahtarın kendisi değil, 64 haneli SHA-256 "
+                         "özeti olmalı (`synora admin-key` üretir)")
         return found
 
     @classmethod
     def from_env(cls) -> Settings:
         raw_domains = _env("ALLOWED_DOMAINS", "").split(",")
         domains = tuple(d.strip().lower() for d in raw_domains if d.strip())
+        admins = tuple(e.strip().lower() for e in _env("ADMIN_EMAILS", "").split(",") if e.strip())
         return cls(
             db_path=Path(_env("DB_PATH", str(cls.db_path))),
             rulesets_dir=Path(_env("RULESETS_DIR", str(cls.rulesets_dir))),
@@ -94,4 +109,6 @@ class Settings:
             smtp_user=_env("SMTP_USER", ""),
             smtp_password=_env("SMTP_PASSWORD", ""),
             smtp_from=_env("SMTP_FROM", cls.smtp_from),
+            admin_emails=admins,
+            admin_key_sha256=_env("ADMIN_KEY_SHA256", "").strip().lower(),
         )
