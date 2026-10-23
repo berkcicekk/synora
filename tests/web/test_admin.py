@@ -142,7 +142,7 @@ def test_daily_job_counter_survives_purge(tmp_path) -> None:  # type: ignore[no-
     db = Database(tmp_path / "d.db")
     db.add_job("job-aaaaaaaaaaaaaaaa", "a@beun.edu.tr", "example")
     db.add_job("job-bbbbbbbbbbbbbbbb", "b@beun.edu.tr", "example")
-    db.purge(0)
+    db.purge(-60)  # hepsi süresi dolmuş sayılsın (Windows saati ~15 ms adımlı: 0 yetmez)
     assert db.get_job("job-aaaaaaaaaaaaaaaa") is None
     today = tr_day(time.time())
     assert db.daily_jobs(today) == {today: 2}

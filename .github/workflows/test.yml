@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+# Testler yalnızca kodu okur; iş akışı jetonu depoya yazamasın.
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
