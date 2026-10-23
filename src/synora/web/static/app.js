@@ -444,6 +444,9 @@
     const zone = document.getElementById("output-drop");
     let kind = null;
     let opener = null;
+    // Tez metin görünümünde açıldıysa (docview.js, aynı dosya doğrulandı) kopya için yeniden sorulmaz.
+    let openFile = null;
+    document.addEventListener("payper:docfile", (e) => { openFile = e.detail || null; });
     const say = (msg, isError) => {
       status.textContent = msg;
       status.classList.toggle("error", Boolean(isError));
@@ -473,6 +476,7 @@
       say("");
       panel.hidden = false;
       choose.focus();
+      if (openFile) send(openFile);
     }));
     document.getElementById("output-close").addEventListener("click", close);
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) close(); });
@@ -482,8 +486,13 @@
       zone.addEventListener(t, (e) => { e.preventDefault(); zone.classList.add("over"); }));
     ["dragleave", "drop"].forEach((t) =>
       zone.addEventListener(t, (e) => { e.preventDefault(); zone.classList.remove("over"); }));
-    zone.addEventListener("drop", (e) => send(e.dataTransfer.files[0]));
-    picker.addEventListener("change", () => send(picker.files[0]));
+    // Kopya için seçilen dosya metin görünümünü de açar (docview.js aynı dosya özetini doğrular).
+    const picked = (file) => {
+      if (file) document.dispatchEvent(new CustomEvent("payper:pickfile", { detail: file }));
+      send(file);
+    };
+    zone.addEventListener("drop", (e) => picked(e.dataTransfer.files[0]));
+    picker.addEventListener("change", () => picked(picker.files[0]));
     // Uygulamaya ulaşamayan ya da genel yanıtlar için duruma göre anlaşılır mesaj.
     const httpFallback = (res, data) => data.error || {
       413: "Dosya çok büyük. Denetlediğiniz dosyanın kendisini seçtiğinizden emin olun.",
@@ -540,7 +549,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = kind === "fixed" ? "synora-duzeltilmis.docx" : "synora-yorumlu.docx";
+        a.download = kind === "fixed" ? "payper-duzeltilmis.docx" : "payper-yorumlu.docx";
         document.body.appendChild(a);
         a.click();
         a.remove();

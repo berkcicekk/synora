@@ -64,7 +64,8 @@ def test_card_tap_on_phone_does_not_jump_to_the_page_view() -> None:
 def test_report_editor_is_single_column_on_landscape_phones() -> None:
     body = _media("(max-width: 760px), (max-height: 500px)")
     assert "body.editor { height: auto; overflow: visible; }" in body
-    assert ".workspace { grid-template-columns: 1fr; height: auto; }" in body
+    # minmax(0, …): sabit genişlikli sayfa (metin görünümü) sütunu genişletmesin.
+    assert ".workspace { grid-template-columns: minmax(0, 1fr); height: auto; }" in body
     assert "100dvh" in CSS
 
 

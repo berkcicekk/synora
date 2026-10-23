@@ -98,7 +98,7 @@ def test_landing_script_only_on_landing(client: TestClient, mailer: ConsoleMaile
 
 def test_asset_version_covers_landing_script(client: TestClient) -> None:
     h = hashlib.sha256()
-    for name in ("app.css", "app.js", "fonts.css", "landing.js"):
+    for name in ("app.css", "app.js", "fonts.css", "landing.js", "docview.js"):
         h.update((STATIC / name).read_bytes())
     assert f"landing.js?v={h.hexdigest()[:10]}" in client.get("/").text
 

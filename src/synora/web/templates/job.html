@@ -138,17 +138,37 @@
   {# --- Orta: sayfa tuvali --- #}
   <section class="pane pane-canvas" aria-label="Belge">
     {% if view.ruleset.uyari %}<p class="alert ruleset-warn">{{ view.ruleset.uyari }}</p>{% endif %}
+    {% set viewable = view.blocks | selectattr("i", "defined") | list %}
+    {% if viewable %}
+    <div class="docview" id="docview"{% if demo %} data-sample="/static/ornek-tez.docx"{% elif job.source_sha256 %} data-sha="{{ job.source_sha256 }}"{% endif %}>
+      <div class="docview-text">
+        {% if demo %}
+        <strong>Sentetik örnek tez açılıyor…</strong>
+        <span class="muted small">Bulgular metnin üzerinde, Word'deki gibi gösterilir.</span>
+        {% else %}
+        <strong>Tezinizi metniyle, Word'deki gibi görün.</strong>
+        <span class="muted small">Denetlediğiniz dosyayı seçin. Dosya yalnızca bu tarayıcıda açılır; sunucuya gönderilmez ve sayfayı kapatınca ekrandan gider.</span>
+        {% endif %}
+      </div>
+      {% if not demo %}
+      <button type="button" class="btn small primary" id="docview-open"><span class="lbl">Tezimi aç</span>{{ arrow() }}</button>
+      <input type="file" id="docview-file" class="visually-hidden" tabindex="-1" aria-hidden="true"
+             accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+      {% endif %}
+      <p class="status small" id="docview-status" role="status" aria-live="polite"></p>
+    </div>
+    {% endif %}
     <div class="canvas-legend">
       <span class="lg lg-error">Hata</span>
       <span class="lg lg-warning">Uyarı</span>
       {% if view.editable %}<span class="lg lg-unsure">Türü belirsiz</span>{% endif %}
-      <span class="lg-note">Metniniz saklanmadığı için paragraflar çizgiyle gösterilir; başlıklar ve bulgular gerçektir.</span>
+      <span class="lg-note" id="legend-note">Metniniz sunucuda saklanmadığı için paragraflar çizgiyle gösterilir; başlıklar ve bulgular gerçektir.</span>
     </div>
-    <div class="paper">
+    <div class="paper" lang="tr">
       {% for b in view.blocks %}
       {% set i = loop.index0 %}
       <div class="blk blk-{{ b.kind }}{% if b.sev %} has-{{ b.sev }}{% endif %}{% if b.center %} is-center{% endif %}{% if b.pid %} is-unsure{% endif %}"
-           id="b{{ i }}" data-block="{{ i }}" data-cards="{{ b.cards|join(' ') }}"{% if b.cards %} tabindex="0" role="button" aria-label="{% if b.text %}{{ b.text }}: {% endif %}{{ b.cards|length }} bulgu"{% endif %}>
+           id="b{{ i }}" data-block="{{ i }}" data-cards="{{ b.cards|join(' ') }}"{% if b.i is defined %} data-i="{{ b.i }}"{% endif %}{% if b.cards %} tabindex="0" role="button" aria-label="{% if b.text %}{{ b.text }}: {% endif %}{{ b.cards|length }} bulgu"{% endif %}>
         {% if b.pid %}
         <label class="role-pick">
           <span>{{ "Paragraf türü" if b.pid in view.pending else "Türü belirsiz" }}</span>
@@ -353,3 +373,5 @@
 {% endblock %}
 
 {% block footer %}{% if job.status != "done" %}{{ super() }}{% endif %}{% endblock %}
+
+{% block scripts %}{% if job.status == "done" %}<script src="/static/docview.js?v={{ asset_v }}" defer></script>{% endif %}{% endblock %}

@@ -3,6 +3,10 @@
 Gövde metni rapora GİRMEZ: paragraflar yalnızca rol, satır sayısı tahmini ve hizayla temsil edilir;
 yalnızca başlık metinleri (kısaltılmış) tutulur. Bölüm sınırları, tablolar, şekiller ve sayfa
 sonları ayrı bloklar olarak yer alır. Her bulgu bir bloğa bağlanır.
+
+Paragraf taşıyan bloklarda "i", bloğun ilk paragrafının gövdedeki sırasıdır (`Paragraph.index`).
+Rapor sayfası öğrencinin kendi dosyasını tarayıcıda açıp metni bu sırayla bloklara yerleştirir
+(`static/docview.js`); metin sunucuya hiç gelmez.
 """
 
 from __future__ import annotations
@@ -71,11 +75,11 @@ def build_outline(doc: DocModel, result: CheckResult) -> tuple[Blocks, dict[int,
             if blocks and blocks[-1]["kind"] == "table":
                 para_block[p.para_id] = len(blocks) - 1
             else:
-                para_block[p.para_id] = add({"kind": "table"})
+                para_block[p.para_id] = add({"kind": "table", "i": p.index})
             continue
         if role is Role.EMPTY:
             if p.has_drawing:
-                para_block[p.para_id] = add({"kind": "figure"})
+                para_block[p.para_id] = add({"kind": "figure", "i": p.index})
             if p.has_page_break:
                 add({"kind": "pagebreak"})
             continue
@@ -96,6 +100,7 @@ def build_outline(doc: DocModel, result: CheckResult) -> tuple[Blocks, dict[int,
                 "center": p.props.alignment is Alignment.CENTER,
                 "role": role.value if role in _PARA_ROLES else "body",
             })
+        blocks[para_block[p.para_id]]["i"] = p.index
         if role is Role.UNKNOWN or p.para_id in result.user_roles:
             # Öğrenci bu paragrafın rolünü seçebilir (ya da seçimini değiştirebilir).
             blocks[para_block[p.para_id]]["pid"] = p.para_id

@@ -253,6 +253,13 @@ yeni renk/yarıçap/gölge değeri oraya token olarak eklenir, bileşene ham de�
 2. **İşleniyor:** İlerleme göstergesi (güvenlik kontrolü → okuma → denetim).
 3. **Rapor:** Özet ("12 hata, 4 uyarı. 10'u otomatik düzeltilebilir."), bulgu listesi sayfa/bölüme göre
    gruplu, filtre (Hata / Uyarı / Düzeltilebilir). Rolü belirsiz paragraflar için "Bu bir … mi?" düzeltmesi.
+   **Metin görünümü (uygulandı):** öğrenci "Tezimi aç" ile denetlediği dosyayı seçer; `static/docview.js`
+   dosyayı **yalnızca tarayıcıda** açar (zip + XML, kütüphanesiz), Word'deki gibi (sayfa ölçüsü, kenar
+   boşluğu, yazı tipi, girinti, aralık, numaralandırma, tablo, resim) çizer ve paragrafları rapor
+   bloklarına gövde sırasıyla (`outline` bloğundaki `i`) yerleştirir. Dosyanın SHA-256 özeti sayfadaki
+   özetle eşleşmezse gösterilmez; başlık metinleri de karşılaştırılır. Metin sunucuya gitmez, tarayıcıda
+   saklanmaz (betikte ağ/depo API'si yok, testle zorlanır). Açılan dosya kopya üretiminde yeniden sorulmaz.
+   Örnek raporda (`/demo`) sentetik tez kendiliğinden açılır.
 4. **İndir:** Düzeltilmiş `.docx` ve PDF/HTML rapor. Düzeltilemeyen hatalar için Word'de nasıl düzeltileceği.
 
 ### 10.2 Teknik iskelet
@@ -267,7 +274,8 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
 
 - Tez dosyası **diske hiç yazılmaz**: bellekte, ayrı süreçte işlenir. Düzeltilmiş/yorumlu kopya için öğrenci
   aynı dosyayı yeniden seçer; sunucu yalnızca ilk yüklemenin SHA-256 özetini tutar. Rapor (metin içermez,
-  başlık yolları hariç) 24 saat sonra silinir; öğrenci hemen silebilir.
+  başlık yolları hariç) 24 saat sonra silinir; öğrenci hemen silebilir. Rapor sayfasındaki metin görünümü
+  dosyayı öğrencinin kendi tarayıcısında okur; sunucuya ek veri gitmez (§10.1).
 - Sunucu Türkiye'de barındırılır (KVKK yurt dışı aktarım). Model katmanı metin görmediği için tez metni hiçbir
   koşulda üçüncü tarafa gitmez.
 - KVKK aydınlatma metni ve açık rıza (rol düzeltmelerinin eğitim verisi olarak kullanımı için ayrı onay).

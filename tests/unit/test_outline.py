@@ -42,6 +42,30 @@ def test_findings_point_to_blocks() -> None:
     assert block["lines"] >= 1
 
 
+def test_blocks_carry_body_paragraph_index_for_the_local_viewer() -> None:
+    """Tarayıcıdaki metin görünümü paragrafları gövde sırasıyla eşler; blokta yalnızca sayı var."""
+    from synora.ingest import open_docx
+    from synora.parse import parse_package
+
+    data = thesis(front_matter() + main_matter())
+    rep = report(data)
+    body = {p.index: p for p in parse_package(open_docx(data)).body()}
+    with_index = [b for b in rep["document"] if "i" in b]
+    assert {b["kind"] for b in with_index} >= {"h1", "para", "table", "caption"}
+    assert all(isinstance(b["i"], int) for b in with_index)
+    order = [b["i"] for b in with_index]
+    assert order == sorted(order) and len(set(order)) == len(order)
+    for b in with_index:
+        para = body[b["i"]]
+        if b["kind"] in ("h1", "h2", "h3"):
+            assert para.text.strip().startswith(b["text"].rstrip("…"))
+        if b["kind"] == "table":
+            assert para.in_table
+    for b in rep["document"]:
+        if b["kind"] in ("section", "pagebreak", "notes", "margins"):
+            assert "i" not in b
+
+
 def test_no_consecutive_page_breaks() -> None:
     brk = p('<w:r><w:br w:type="page"/></w:r>')
     rep = report(thesis(front_matter() + main_matter(extra=brk + brk)))
