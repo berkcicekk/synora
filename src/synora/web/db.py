@@ -295,12 +295,6 @@ class Database:
                 "ON CONFLICT(ruleset, rule_id) DO UPDATE SET n = n + excluded.n",
                 [(ruleset, rid, n) for rid, n in counts.items()])
 
-    def top_findings(self, limit: int = 10) -> list[tuple[str, int]]:
-        rows = self.execute(
-            "SELECT rule_id, SUM(n) AS total FROM finding_counts "
-            "GROUP BY rule_id ORDER BY total DESC LIMIT ?", (limit,)).fetchall()
-        return [(str(r[0]), int(r[1])) for r in rows]
-
     def set_user_roles(self, job_id: str, roles: str | None) -> None:
         self.execute("UPDATE jobs SET user_roles=? WHERE id=?", (roles, job_id))
 

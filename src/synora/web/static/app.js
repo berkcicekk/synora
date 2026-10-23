@@ -104,23 +104,84 @@
     }
   }
 
-  // --- Yükleme ---------------------------------------------------------------------------
+  // --- Yükleme: ortak yardımcılar (yükleme sayfası ve paneldeki "hazır" kart) ------------
+  const fmtSize = (n) => n < 1048576
+    ? Math.max(1, Math.round(n / 1024)) + " KB"
+    : (n / 1048576).toFixed(1).replace(/[.,]0$/, "").replace(".", ",") + " MB";
+  const SHRINK = "Word'de bir resme tıklayıp Resim Biçimi › Resimleri Sıkıştır deyin (tüm resimlere uygulanır), "
+    + "yeniden kaydedip bu küçük dosyayı yükleyin.";
+  // Gönderilmeden elenebilecek dosyalar; sorun yoksa null.
+  const fileProblem = (f, max) => {
+    if (!/\.docx$/i.test(f.name)) {
+      return "Yalnızca Word belgesi (.docx) yükleyebilirsiniz. .doc dosyalarını Word'de .docx olarak kaydedin.";
+    }
+    if (f.size > max) {
+      return "Dosya çok büyük (" + fmtSize(f.size) + "). En fazla " + fmtSize(max) + " yükleyebilirsiniz. " + SHRINK;
+    }
+    return null;
+  };
+  // fetch yükleme ilerlemesi vermez; büyük dosyalarda öğrenci yüzdeyi görsün diye XHR.
+  // Başarıda rapor sayfasına gider; hatada say(mesaj, true) ve onFail() çağrılır.
+  const uploadFile = (file, ruleset, csrf, max, say, onFail) => {
+    say("Yükleniyor…");
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/jobs");
+    xhr.setRequestHeader("Content-Type", "application/octet-stream");
+    xhr.setRequestHeader("X-CSRF-Token", csrf);
+    xhr.setRequestHeader("X-Ruleset", ruleset);
+    let shown = -1;
+    xhr.upload.addEventListener("progress", (ev) => {
+      if (!ev.lengthComputable) return;
+      const pct = Math.floor((ev.loaded / ev.total) * 100);
+      // Ekran okuyucuyu boğmamak için yalnızca 10'luk adımlarda güncelle.
+      if (pct >= shown + 10 || pct === 100) {
+        shown = pct;
+        say(pct < 100 ? "Yükleniyor… %" + pct : "Yüklendi. Denetim başlıyor…");
+      }
+    });
+    xhr.addEventListener("load", () => {
+      let data = {};
+      try { data = JSON.parse(xhr.responseText); } catch (err) { /* boş ya da JSON olmayan yanıt (ör. vekilin 413 sayfası) */ }
+      if (xhr.status < 200 || xhr.status >= 300) {
+        // Uygulamaya ulaşamayan istekler (Cloudflare/nginx sınırı) Türkçe JSON dönmez;
+        // duruma göre anlaşılır bir mesaj üret.
+        const fallback = {
+          413: "Dosya çok büyük. En fazla " + fmtSize(max) + " yükleyebilirsiniz. Word'de "
+            + "Resim Biçimi › Resimleri Sıkıştır ile resimleri küçültüp yeniden deneyin.",
+          429: "Çok fazla istek gönderildi. Birkaç dakika sonra yeniden deneyin.",
+          503: "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin.",
+        }[xhr.status];
+        say(data.error || fallback
+          || "Yükleme başarısız oldu (HTTP " + xhr.status + "). Sayfayı yenileyip yeniden deneyin.", true);
+        onFail();
+        return;
+      }
+      window.location.href = data.url;
+    });
+    xhr.addEventListener("error", () => {
+      // Vekil, sınırı aşan gövdeyi yanıt vermeden kesebilir: büyük dosyada olası neden boyuttur.
+      say(file.size > 50 * 1048576
+        ? "Bağlantı kesildi. Dosyanız büyük olduğu için ağ katmanında reddedilmiş olabilir; "
+          + "Word'de Resim Biçimi › Resimleri Sıkıştır ile küçültüp yeniden deneyin."
+        : "Bağlantı hatası. İnternet bağlantınızı kontrol edip yeniden deneyin.", true);
+      onFail();
+    });
+    xhr.send(file);
+  };
+  const sayer = (el) => (msg, isError) => {
+    el.textContent = msg;
+    el.classList.toggle("error", Boolean(isError));
+  };
+
+  // --- Yükleme sayfası ----------------------------------------------------------------------
   const form = document.getElementById("upload");
   if (form) {
     const input = document.getElementById("file");
     const drop = document.getElementById("drop");
     const submit = document.getElementById("submit");
-    const status = document.getElementById("upload-status");
+    const say = sayer(document.getElementById("upload-status"));
     const max = Number(form.dataset.max);
     let file = null;
-
-    const say = (msg, isError) => {
-      status.textContent = msg;
-      status.classList.toggle("error", Boolean(isError));
-    };
-    const fmtSize = (n) => n < 1048576
-      ? Math.max(1, Math.round(n / 1024)) + " KB"
-      : (n / 1048576).toFixed(1).replace(/[.,]0$/, "").replace(".", ",") + " MB";
 
     // Dosya seçimi bırakma alanının başlığını değiştirir; ilk hâli geri koymak için saklanır.
     const dropTitle = document.getElementById("drop-title");
@@ -136,16 +197,8 @@
       drop.classList.remove("has-file");
       resetDrop();
       if (!f) return;
-      if (!/\.docx$/i.test(f.name)) {
-        say("Yalnızca Word belgesi (.docx) yükleyebilirsiniz. .doc dosyalarını Word'de .docx olarak kaydedin.", true);
-        return;
-      }
-      if (f.size > max) {
-        say("Dosya çok büyük (" + fmtSize(f.size) + "). En fazla " + fmtSize(max) + " yükleyebilirsiniz. "
-          + "Word'de bir resme tıklayıp Resim Biçimi › Resimleri Sıkıştır deyin (tüm resimlere uygulanır), "
-          + "yeniden kaydedip bu küçük dosyayı yükleyin.", true);
-        return;
-      }
+      const problem = fileProblem(f, max);
+      if (problem) { say(problem, true); return; }
       file = f;
       submit.disabled = false;
       drop.classList.add("has-file");
@@ -161,55 +214,73 @@
       drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
     drop.addEventListener("drop", (e) => choose(e.dataTransfer.files[0]));
 
-    // fetch yükleme ilerlemesi vermez; büyük dosyalarda öğrenci yüzdeyi görsün diye XHR.
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (!file) return;
       submit.disabled = true;
-      say("Yükleniyor…");
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", "/jobs");
-      xhr.setRequestHeader("Content-Type", "application/octet-stream");
-      xhr.setRequestHeader("X-CSRF-Token", form.dataset.csrf);
-      xhr.setRequestHeader("X-Ruleset", document.getElementById("ruleset").value);
-      let shown = -1;
-      xhr.upload.addEventListener("progress", (ev) => {
-        if (!ev.lengthComputable) return;
-        const pct = Math.floor((ev.loaded / ev.total) * 100);
-        // Ekran okuyucuyu boğmamak için yalnızca 10'luk adımlarda güncelle.
-        if (pct >= shown + 10 || pct === 100) {
-          shown = pct;
-          say(pct < 100 ? "Yükleniyor… %" + pct : "Yüklendi. Denetim başlıyor…");
-        }
-      });
-      xhr.addEventListener("load", () => {
-        let data = {};
-        try { data = JSON.parse(xhr.responseText); } catch (err) { /* boş ya da JSON olmayan yanıt (ör. vekilin 413 sayfası) */ }
-        if (xhr.status < 200 || xhr.status >= 300) {
-          // Uygulamaya ulaşamayan istekler (Cloudflare/nginx sınırı) Türkçe JSON dönmez;
-          // duruma göre anlaşılır bir mesaj üret.
-          const fallback = {
-            413: "Dosya çok büyük. En fazla " + fmtSize(max) + " yükleyebilirsiniz. Word'de "
-              + "Resim Biçimi › Resimleri Sıkıştır ile resimleri küçültüp yeniden deneyin.",
-            429: "Çok fazla istek gönderildi. Birkaç dakika sonra yeniden deneyin.",
-            503: "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin.",
-          }[xhr.status];
-          say(data.error || fallback
-            || "Yükleme başarısız oldu (HTTP " + xhr.status + "). Sayfayı yenileyip yeniden deneyin.", true);
-          submit.disabled = false;
-          return;
-        }
-        window.location.href = data.url;
-      });
-      xhr.addEventListener("error", () => {
-        // Vekil, sınırı aşan gövdeyi yanıt vermeden kesebilir: büyük dosyada olası neden boyuttur.
-        say(file && file.size > 50 * 1048576
-          ? "Bağlantı kesildi. Dosyanız büyük olduğu için ağ katmanında reddedilmiş olabilir; "
-            + "Word'de Resim Biçimi › Resimleri Sıkıştır ile küçültüp yeniden deneyin."
-          : "Bağlantı hatası. İnternet bağlantınızı kontrol edip yeniden deneyin.", true);
-        submit.disabled = false;
-      });
-      xhr.send(file);
+      uploadFile(file, document.getElementById("ruleset").value, form.dataset.csrf, max, say,
+        () => { submit.disabled = false; });
+    });
+  }
+
+  // --- Panel: "hazır" kart (hiç denetim yokken). Bırakılan dosya onaydan sonra yüklenir. -----
+  const ready = document.getElementById("ready-card");
+  if (ready) {
+    const say = sayer(document.getElementById("ready-status"));
+    const box = document.getElementById("ready-confirm");
+    const hint = document.getElementById("ready-hint");
+    const nameEl = document.getElementById("ready-file");
+    const start = document.getElementById("ready-start");
+    const max = Number(ready.dataset.max);
+    let pending = null;
+    let depth = 0;  // iç öğeler arasında gezinirken dragleave yanlışlıkla efekti kapatmasın
+    const hasFiles = (e) => e.dataTransfer && [...e.dataTransfer.types].includes("Files");
+    const setDrag = (on) => ready.classList.toggle("is-drag", on);
+    // Kartın dışına bırakılan dosyayı tarayıcı açmasın (sayfadan çıkılırdı).
+    ["dragover", "drop"].forEach((t) => window.addEventListener(t, (e) => {
+      if (hasFiles(e)) e.preventDefault();
+    }));
+    ready.addEventListener("dragenter", (e) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      depth += 1;
+      setDrag(true);
+    });
+    ready.addEventListener("dragover", (e) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
+    });
+    ready.addEventListener("dragleave", () => {
+      depth = Math.max(0, depth - 1);
+      if (!depth) setDrag(false);
+    });
+    ready.addEventListener("drop", (e) => {
+      e.preventDefault();
+      depth = 0;
+      setDrag(false);
+      const f = e.dataTransfer.files[0];
+      if (!f) return;
+      const problem = fileProblem(f, max);
+      if (problem) { say(problem, true); return; }
+      pending = f;
+      nameEl.textContent = f.name + " · " + fmtSize(f.size);
+      hint.hidden = true;
+      box.hidden = false;
+      say("");
+      start.focus();
+    });
+    document.getElementById("ready-cancel").addEventListener("click", () => {
+      pending = null;
+      box.hidden = true;
+      hint.hidden = false;
+      say("");
+    });
+    start.addEventListener("click", () => {
+      if (!pending) return;
+      start.disabled = true;
+      uploadFile(pending, ready.dataset.ruleset, ready.dataset.csrf, max, say,
+        () => { start.disabled = false; });
     });
   }
 
@@ -361,128 +432,6 @@
       a.classList.add("current");
       scrollInto(canvas, target);
     }));
-  }
-
-  // --- Tanıtım ---------------------------------------------------------------------------
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  // Barkod bandı: tezin satırları (süsleme; deterministik sözde rastgele)
-  const barcode = document.getElementById("barcode");
-  if (barcode) {
-    let seed = 7;
-    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-    const bar = (opts) => {
-      const o = opts || {};
-      const w = o.w || [1, 2, 2, 3, 4, 5][Math.floor(rnd() * 6)];
-      const ghost = !o.keep && !o.accent && rnd() < 0.12;
-      const el = document.createElement("i");
-      el.style.flex = "0 0 " + w + "px";
-      el.style.background = o.accent ? "var(--accent)" : (ghost ? "transparent" : "var(--ink)");
-      if (o.slant) { el.style.transform = "skewX(-18deg)"; el.style.transformOrigin = "bottom"; }
-      return el;
-    };
-    const rows = barcode.querySelectorAll(".barcode-row");
-    const note = rows[0].querySelector(".barcode-note");
-    for (let i = 0; i < 30; i++) {
-      rows[0].insertBefore(
-        i === 4 ? bar({ w: 2, slant: true, keep: true }) : i === 17 ? bar({ w: 4, accent: true }) : bar(),
-        note);
-    }
-    for (let i = 0; i < 20; i++) rows[0].appendChild(bar());
-    for (let i = 0; i < 60; i++) {
-      rows[1].appendChild(i === 8 ? bar({ w: 5, accent: true })
-        : i === 51 ? bar({ w: 3, slant: true, keep: true }) : bar());
-    }
-    barcode.hidden = false;
-  }
-
-  // Gizlilik: köşelerde piksel yığınları
-  const pxLeft = document.getElementById("pixels-left");
-  const pxRight = document.getElementById("pixels-right");
-  if (pxLeft && pxRight) {
-    let seed = 11;
-    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-    const shades = ["var(--accent)", "var(--accent)", "#B9AEFB", "#D8D2FD", "#EFECFE"];
-    const COLS = 16, ROWS = 12;
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const hL = ROWS - Math.floor(c * 0.75) - Math.floor(rnd() * 2);
-        const onL = (ROWS - r) <= hL - 1 || (rnd() < 0.04 && r > 2);
-        const a = document.createElement("i");
-        if (onL) a.style.background = shades[Math.floor(rnd() * shades.length)];
-        pxLeft.appendChild(a);
-        const hR = Math.floor(c * 0.8) + 1 - Math.floor(rnd() * 2);
-        const onR = (ROWS - r) <= hR || (rnd() < 0.03 && r > 3);
-        const b = document.createElement("i");
-        if (onR) b.style.background = shades[Math.floor(rnd() * shades.length)];
-        pxRight.appendChild(b);
-      }
-    }
-  }
-
-  // Panel önizlemesi: Yükle ↔ Denetle sekmeleri, sahte dosya seçimi (dosya gönderilmez)
-  const pvYukle = document.getElementById("pv-yukle");
-  const pvDenetle = document.getElementById("pv-denetle");
-  if (pvYukle && pvDenetle) {
-    const tabY = document.getElementById("pv-tab-yukle");
-    const tabD = document.getElementById("pv-tab-denetle");
-    const drop = document.getElementById("pv-drop");
-    const file = document.getElementById("pv-file");
-    const title = document.getElementById("pv-title");
-    const sub = document.getElementById("pv-sub");
-    const startBtn = document.getElementById("pv-start");
-    const repName = document.getElementById("pv-repname");
-    const show = (which) => {
-      const yukle = which === "yukle";
-      pvYukle.hidden = !yukle;
-      pvDenetle.hidden = yukle;
-      tabY.setAttribute("aria-selected", String(yukle));
-      tabD.setAttribute("aria-selected", String(!yukle));
-    };
-    tabY.addEventListener("click", () => show("yukle"));
-    tabD.addEventListener("click", () => show("denetle"));
-    const pick = (f) => {
-      if (!f) return;
-      title.textContent = f.name;
-      sub.textContent = "Hazır · yalnızca önizleme, dosyanız gönderilmedi";
-      drop.classList.add("has-file");
-      startBtn.disabled = false;
-      if (repName) repName.textContent = f.name + " · örnek görünüm";
-    };
-    file.addEventListener("change", () => pick(file.files[0]));
-    ["dragenter", "dragover"].forEach((t) =>
-      drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
-    ["dragleave", "drop"].forEach((t) =>
-      drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
-    drop.addEventListener("drop", (e) => pick(e.dataTransfer.files[0]));
-    startBtn.addEventListener("click", () => show("denetle"));
-  }
-
-  // Kılavuz bölümü: kaydırmaya bağlı parallax (A4 yukarı kayıp döner, metin ters yönde)
-  const guide = document.querySelector("[data-guide]");
-  if (guide && !reduced) {
-    const page = document.getElementById("guide-page");
-    const text = document.getElementById("guide-text");
-    const chips = [...guide.querySelectorAll(".guide-chip")];
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const r = guide.getBoundingClientRect();
-      const vh = window.innerHeight || 800;
-      let p = (vh - r.top) / (vh + r.height);
-      p = Math.max(0, Math.min(1, p));
-      const d = p - 0.5;
-      if (page) page.style.transform =
-        "translate3d(0," + (d * -140).toFixed(1) + "px,0) rotate(" + (d * -6).toFixed(2) + "deg)";
-      if (text) text.style.transform = "translate3d(0," + (d * 60).toFixed(1) + "px,0)";
-      chips.forEach((c) => {
-        c.style.transform = "translate3d(0," + (d * Number(c.dataset.v || 0)).toFixed(1) + "px,0)";
-      });
-    };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    update();
   }
 
   // --- Düzeltilmiş / yorumlu kopya --------------------------------------------------------

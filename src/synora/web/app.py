@@ -42,7 +42,7 @@ from synora.ruleset import Ruleset, load_ruleset
 from synora.web.db import Database, Job
 from synora.web.mailer import Mailer, make_mailer
 from synora.web.pipeline import run_pipeline
-from synora.web.presentation import PageSpec, RuleTile, page_spec, pixel_blocks, rule_tiles
+from synora.web.presentation import PageSpec, RuleTile, page_spec, rule_tiles
 from synora.web.settings import Settings
 from synora.web.worker import JobRunner
 from synora.word import build_docx
@@ -298,10 +298,11 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     templates.env.filters["when"] = format_when
     templates.env.filters["date_tr"] = format_date
     templates.env.globals["now"] = time.time
-    templates.env.globals["hero_blocks"] = pixel_blocks()
+    # Saklama sözü her sayfada ayardan gelir (sabit "24 saat" ayar değişince yanlış söz olurdu).
+    templates.env.globals["retention_hours"] = int(settings.retention_hours)
     # Statik dosyalar için sürüm damgası: içerik değişince tarayıcı önbelleği geçersizleşir.
     asset_hash = hashlib.sha256()
-    for name in ("app.css", "app.js", "fonts.css"):
+    for name in ("app.css", "app.js", "fonts.css", "landing.js"):
         asset_hash.update((HERE / "static" / name).read_bytes())
     templates.env.globals["asset_v"] = asset_hash.hexdigest()[:10]
 
@@ -481,20 +482,21 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         # Kâğıt ve yazı tipi kendini anlatır; ölçüler etiketsiz anlamsız ("3 cm" neyin?).
         chips = [t.value if t.label in ("Kağıt", "Yazı tipi") else f"{t.label} {t.value}"
                  for t in rule_tiles(shown.rules)[:7]] if shown else []
+        # Panelden sürükle-bırak yükleme varsayılan kılavuzla yapılır; kart adını gösterir.
+        default = ordered_rulesets[0] if ordered_rulesets else None
         return {"rows": rows, "latest": latest, "frequent": frequent, "chips": chips,
                 "ruleset_name": shown.name if shown else "—",
-                "template_href": f"/sablon/{shown.id}/sablon.docx" if shown else "/"}
+                "template_href": f"/sablon/{shown.id}/sablon.docx" if shown else "/",
+                "upload_ruleset": default.id if default else "",
+                "upload_ruleset_name": default.name if default else "",
+                "max_bytes": settings.max_upload_bytes}
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
         user = current_user(request)
         if user is None:
-            top = db.top_findings(10)
             return render(request, "login.html", page=login_page, tiles=login_tiles,
-                          stats={**landing_stats, "users": db.user_count()},
-                          # Anonim sayaç; az veriyle yanıltıcı olmasın diye eşik var.
-                          top_findings=([(rule_label(rid), n) for rid, n in top]
-                                        if sum(n for _, n in top) >= 25 else []))
+                          stats={**landing_stats, "users": db.user_count()})
         return render(request, "panel.html", user=user, active="panel",
                       panel=panel_context(user), retention=int(settings.retention_hours))
 

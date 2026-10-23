@@ -1,0 +1,145 @@
+{# "Arka planda nasıl çalışır?" — beş adım, satır içi SVG.
+   Varsayılan hâl bitmiş, durağan çizimdir (JS yok / hareket azaltılmış / yazdırma).
+   landing.js hareket açıksa bölüme .is-armed ekler; her adım görünür olunca .is-in alır ve
+   canlanır. Renkler sınıflarla tasarım değişkenlerinden gelir (sabit renk yok). #}
+<section id="nasil" class="wrap hiw" data-hiw aria-labelledby="nasil-h">
+  <div class="hiw-head reveal">
+    <p class="eyebrow-dot">Arka planda</p>
+    <h2 id="nasil-h">Arka planda nasıl çalışır?</h2>
+    <p>Beş adım. Hiçbirinde metniniz okunmaz.</p>
+  </div>
+  <ol class="hiw-steps">
+    <li class="hiw-step lift tilt">
+      <span class="tno">01</span>
+      <svg viewBox="0 0 240 150" role="img" aria-label="Word dosyası tarayıcıdan gelir, sunucuda yalnızca bellekte açılır; diske yazılmaz.">
+        <g class="a-slide">
+          <path class="s-surface k-line" d="M22 32h40l14 14v58H22z"/>
+          <path class="k-line" d="M62 32v14h14"/>
+          <rect class="s-line" x="30" y="56" width="36" height="4" rx="2"/>
+          <rect class="s-line" x="30" y="66" width="30" height="4" rx="2"/>
+          <rect class="s-line" x="30" y="76" width="34" height="4" rx="2"/>
+          <text class="t-mono" x="49" y="96" text-anchor="middle">.docx</text>
+        </g>
+        <path class="k-acc flow" d="M84 68h40"/>
+        <path class="k-acc" d="M118 62l7 6-7 6"/>
+        <g class="a-pop">
+          <rect class="s-accsoft k-accink" x="134" y="40" width="70" height="56" rx="8"/>
+          <path class="k-accink" d="M146 40v-7M158 40v-7M170 40v-7M182 40v-7M194 40v-7M146 103v-7M158 103v-7M170 103v-7M182 103v-7M194 103v-7"/>
+          <rect class="s-accink" x="160" y="64" width="18" height="15" rx="3"/>
+          <path class="k-accink lockarc" d="M163 64v-5a6 6 0 0 1 12 0v5"/>
+        </g>
+        <text class="t-sans" x="169" y="122" text-anchor="middle">yalnızca bellek</text>
+        <g class="a-draw-wrap">
+          <ellipse class="s-soft k-muted" cx="40" cy="128" rx="13" ry="4"/>
+          <path class="k-muted" d="M27 128v8a13 4 0 0 0 26 0v-8"/>
+          <path class="k-err a-draw" d="M24 142l32-20"/>
+        </g>
+        <text class="t-sans" x="62" y="137">disk yok</text>
+      </svg>
+      <h3>Yükle</h3>
+      <p>Dosya tarayıcıdan gelir, yalnızca bellekte açılır. Diske yazılmaz.</p>
+    </li>
+
+    <li class="hiw-step lift tilt">
+      <span class="tno">02</span>
+      <svg viewBox="0 0 240 150" role="img" aria-label="Paragraf satırları okunmaz, bulanık çubuklara dönüşür; yanından yalnızca 14 punto, kalın, ortalı gibi ölçüler çıkar.">
+        <g class="lines-sharp">
+          <rect class="s-ink" x="18" y="34" width="86" height="6" rx="3"/>
+          <rect class="s-ink" x="18" y="48" width="78" height="6" rx="3"/>
+          <rect class="s-ink" x="18" y="62" width="84" height="6" rx="3"/>
+          <rect class="s-ink" x="18" y="76" width="70" height="6" rx="3"/>
+          <rect class="s-ink" x="18" y="90" width="80" height="6" rx="3"/>
+        </g>
+        <g class="lines-blur">
+          <rect class="s-line" x="16" y="32" width="90" height="10" rx="5"/>
+          <rect class="s-line" x="16" y="46" width="82" height="10" rx="5"/>
+          <rect class="s-line" x="16" y="60" width="88" height="10" rx="5"/>
+          <rect class="s-line" x="16" y="74" width="74" height="10" rx="5"/>
+          <rect class="s-line" x="16" y="88" width="84" height="10" rx="5"/>
+        </g>
+        <path class="k-muted" d="M114 66h14M124 61l5 5-5 5"/>
+        <g class="tag t1"><rect class="s-accsoft" x="138" y="34" width="66" height="20" rx="10"/><text class="t-mono t-accink" x="171" y="48" text-anchor="middle">14 pt</text></g>
+        <g class="tag t2"><rect class="s-accsoft" x="138" y="60" width="66" height="20" rx="10"/><text class="t-mono t-accink" x="171" y="74" text-anchor="middle">kalın</text></g>
+        <g class="tag t3"><rect class="s-accsoft" x="138" y="86" width="66" height="20" rx="10"/><text class="t-mono t-accink" x="171" y="100" text-anchor="middle">ortalı</text></g>
+        <text class="t-sans" x="120" y="132" text-anchor="middle">metin değil, yalnızca ölçü</text>
+      </svg>
+      <h3>Ölç</h3>
+      <p>Her paragraftan yalnızca ölçüler çıkar: punto, kalınlık, hizalama, boşluk. Yapay zekâ ve
+         sistem metninizi okumaz, sadece ölçüleri kullanır.</p>
+    </li>
+
+    <li class="hiw-step lift tilt">
+      <span class="tno">03</span>
+      <svg viewBox="0 0 240 150" role="img" aria-label="Ölçüler kılavuzun kurallarıyla karşılaştırılır: punto ve satır aralığı uygun diye işaretlenir, kenar boşluğu aykırı diye vurgulanır.">
+        <text class="t-sans t-muted" x="26" y="30">ölçü</text>
+        <text class="t-sans t-muted" x="130" y="30">kural</text>
+        <g class="row r1">
+          <text class="t-mono" x="26" y="54">12 pt</text><text class="t-mono" x="130" y="54">12 pt</text>
+          <path class="k-ok" d="M206 48l4 4 8-9"/>
+        </g>
+        <g class="row r2">
+          <text class="t-mono" x="26" y="80">1,5 satır</text><text class="t-mono" x="130" y="80">1,5 satır</text>
+          <path class="k-ok" d="M206 74l4 4 8-9"/>
+        </g>
+        <g class="row r3">
+          <rect class="s-errw" x="16" y="92" width="210" height="24" rx="6"/>
+          <text class="t-mono t-err" x="26" y="108">sol 3 cm</text><text class="t-mono t-err" x="130" y="108">sol 4 cm</text>
+          <path class="k-err" d="M207 99l10 10M217 99l-10 10"/>
+        </g>
+        <path class="k-line" d="M118 40v80"/>
+        <text class="t-sans" x="120" y="138" text-anchor="middle">uygun ✓ · aykırı vurgulu</text>
+      </svg>
+      <h3>Karşılaştır</h3>
+      <p>Ölçüler enstitünüzün kural setiyle eşleştirilir. Uygun olan işaretlenir, aykırı olan öne çıkar.</p>
+    </li>
+
+    <li class="hiw-step lift tilt">
+      <span class="tno">04</span>
+      <svg viewBox="0 0 240 150" role="img" aria-label="Düzeltmeden önce ve sonra metnin parmak izi alınır ve karşılaştırılır; iki parmak izi eşit değilse çıktı üretilmez.">
+        <g class="fp f1">
+          <rect class="s-surface k-line" x="14" y="30" width="86" height="80" rx="10"/>
+          <path class="k-accink" d="M57 52a14 14 0 0 1 14 14v10M43 66a14 14 0 0 1 4-10M50 80V66a7 7 0 0 1 14 0v14M57 66v18"/>
+          <text class="t-sans t-muted" x="57" y="46" text-anchor="middle">önce</text>
+          <text class="t-mono" x="57" y="102" text-anchor="middle">a3f9…1c</text>
+        </g>
+        <g class="eq"><path class="k-ink thick" d="M110 62h20M110 74h20"/></g>
+        <g class="fp f2">
+          <rect class="s-surface k-line" x="140" y="30" width="86" height="80" rx="10"/>
+          <path class="k-accink" d="M183 52a14 14 0 0 1 14 14v10M169 66a14 14 0 0 1 4-10M176 80V66a7 7 0 0 1 14 0v14M183 66v18"/>
+          <text class="t-sans t-muted" x="183" y="46" text-anchor="middle">sonra</text>
+          <text class="t-mono" x="183" y="102" text-anchor="middle">a3f9…1c</text>
+        </g>
+        <text class="t-sans" x="120" y="134" text-anchor="middle">eşit değilse çıktı yok</text>
+      </svg>
+      <h3>Doğrula</h3>
+      <p>Düzeltmeden önce ve sonra metnin parmak izi alınır. İkisi eşit değilse çıktı üretilmez.</p>
+    </li>
+
+    <li class="hiw-step lift tilt">
+      <span class="tno">05</span>
+      <svg viewBox="0 0 240 150" role="img" aria-label="Düzeltmeler Word belgesinde izlenen değişiklik olarak gelir: eski biçim üstü çizili, yeni biçim altı çizili; kabul etmek size kalır.">
+        <rect class="s-surface k-line" x="18" y="22" width="204" height="100" rx="8"/>
+        <path class="s-soft" d="M18 30a8 8 0 0 1 8-8h188a8 8 0 0 1 8 8v8H18z"/>
+        <circle class="s-line" cx="30" cy="30" r="3"/><circle class="s-line" cx="40" cy="30" r="3"/>
+        <text class="t-sans t-muted" x="34" y="60">Yazı tipi:</text>
+        <g class="chg">
+          <text class="t-mono t-muted" x="96" y="60">Calibri 11</text>
+          <path class="k-muted strike" d="M95 56h66"/>
+          <text class="t-mono t-accink" x="96" y="80">Times 12</text>
+          <path class="k-accink under" d="M95 84h52"/>
+        </g>
+        <rect class="s-line" x="34" y="96" width="150" height="5" rx="2.5"/>
+        <rect class="s-line" x="34" y="106" width="110" height="5" rx="2.5"/>
+        <g class="badge">
+          <circle class="s-ink" cx="200" cy="112" r="14"/>
+          <path class="k-white" d="M193 112l5 5 9-10"/>
+        </g>
+        <text class="t-sans" x="120" y="142" text-anchor="middle">izlenen değişiklik · kabul sizde</text>
+      </svg>
+      <h3>Teslim et</h3>
+      <p>Düzeltmeler Word'de izlenen değişiklik olarak gelir. Kabul etmek sizin elinizde.</p>
+    </li>
+  </ol>
+  <p class="hiw-note reveal"><strong>Yapay zekâ nerede?</strong> Yapay zekâ yalnızca hazırlık
+     aşamasında, kılavuzları kurallara çevirirken kullanıldı; denetim sırasında kullanılmaz.</p>
+</section>

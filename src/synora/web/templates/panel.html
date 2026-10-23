@@ -46,15 +46,39 @@
     </div>
   </article>
   {% endif %}
-  {% else %}
-  <article class="pcard">
+  {% elif not panel.rows %}
+  {# Hiç denetim yok: kart yüklemeye hazır olduğunu gösterir (dönen ışık) ve bırakılan dosyayı
+     varsayılan kılavuzla, onaydan sonra yükler. Klavye için yükleme sayfası bağlantısı kalır. #}
+  <article class="pcard is-ready" id="ready-card" data-csrf="{{ user.csrf }}" data-ruleset="{{ panel.upload_ruleset }}" data-ruleset-name="{{ panel.upload_ruleset_name }}" data-max="{{ panel.max_bytes }}">
     <div class="pcard-head"><div><h2 class="pcard-title">Henüz denetim yok</h2>
       <p class="pcard-sub">İlk raporunuz birkaç saniyede hazır olur</p></div></div>
-    <div class="pcard-body"><p class="pcard-text">
-      Tezinizi yükleyin; kılavuza aykırı biçimler belge üzerinde işaretlenir, düzeltilmiş
-      kopyayı indirebilirsiniz.</p></div>
+    <div class="pcard-body">
+      <p class="pcard-text" id="ready-hint"><span class="t-pointer">Tezinizi (.docx) bu karta
+        sürükleyip bırakın ya da yükleme sayfasını açın.</span><span class="t-touch">Aşağıdaki
+        düğmeyle tezinizi (.docx) seçin; raporunuz birkaç saniyede hazır olur.</span></p>
+      <div class="ready-confirm" id="ready-confirm" hidden>
+        <p class="ready-file" id="ready-file"></p>
+        <p class="pcard-sub">{{ panel.upload_ruleset_name }} kılavuzuyla denetlenecek ·
+          <a class="textlink" href="/yukle">Değiştir</a></p>
+        <div class="ready-actions">
+          <button type="button" class="btn primary small" id="ready-start"><span class="lbl">Denetimi başlat</span></button>
+          <button type="button" class="nav-link" id="ready-cancel">Vazgeç</button>
+        </div>
+      </div>
+      <p class="status" id="ready-status" role="status" aria-live="polite"></p>
+    </div>
     <div class="pcard-foot"><span class="hint">Tez yükle</span>
       <a class="actionbtn" href="/yukle" aria-label="Tez yükle"><svg viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5L8 3l3.5 3.5M3 13.5h10"/></svg></a></div>
+    <div class="ready-drop" aria-hidden="true"><span>Bırakın</span></div>
+  </article>
+  {% else %}
+  <article class="pcard">
+    <div class="pcard-head"><div><h2 class="pcard-title">Henüz tamamlanmış rapor yok</h2>
+      <p class="pcard-sub">Denetimleriniz aşağıdaki listede</p></div></div>
+    <div class="pcard-body"><p class="pcard-text">Süren denetim bitince rapor burada görünür.
+      Başarısız olduysa nedenini rapor sayfasında bulabilirsiniz.</p></div>
+    <div class="pcard-foot"><span class="hint">Yeni tez yükle</span>
+      <a class="actionbtn" href="/yukle" aria-label="Yeni tez yükle"><svg viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5L8 3l3.5 3.5M3 13.5h10"/></svg></a></div>
   </article>
   {% endif %}
   <article class="pcard">

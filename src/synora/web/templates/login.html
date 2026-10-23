@@ -1,136 +1,55 @@
 {% extends "base.html" %}
 {% block title %}Payper — Tez biçim denetimi{% endblock %}
 {% block body_class %}landing{% endblock %}
+{% block scripts %}<script src="/static/landing.js?v={{ asset_v }}" defer></script>{% endblock %}
 {% block content %}
 
 {# ------------------------------ KAHRAMAN ------------------------------ #}
 <section id="top" class="hero">
+  {# Süs katmanları: kaydırınca farklı hızlarda kayar (landing.js, yalnızca farede). #}
+  <div class="hero-layers" aria-hidden="true">
+    <div class="grad hero-grad" data-depth="0.35"></div>
+    <div class="hero-dots" data-depth="0.15"></div>
+    <i class="hero-px p1" data-depth="0.6"></i><i class="hero-px p2" data-depth="0.45"></i>
+    <i class="hero-px p3" data-depth="0.7"></i><i class="hero-px p4" data-depth="0.5"></i>
+  </div>
   <div class="wrap">
     <p class="eyebrow-dot">Pilot · ZBEÜ Tıp Fakültesi</p>
     <h1>Biçim kusursuz,<br>tez teslime hazır.</h1>
+    <p class="hero-steps" aria-label="Üç adım: Yükle, Denetle, Teslim et">
+      <span aria-hidden="true">Yükle</span><i aria-hidden="true">·</i><span aria-hidden="true">Denetle</span><i aria-hidden="true">·</i><span aria-hidden="true">Teslim et</span>
+    </p>
     <p>Payper, Word tezinizi enstitünüzün yazım kılavuzuna göre denetler, hataları belge üzerinde
        işaretler ve metninize dokunmadan Word'de kabul edebileceğiniz düzeltmeleri hazırlar.</p>
     <div class="hero-ctas hero-aside">
-      <a class="btn primary" href="/kayit"><span class="lbl">Tezinizi yükleyin</span></a>
-      <a class="btn" href="/demo"><span class="lbl">Örnek raporu görün</span></a>
+      <a class="btn primary" href="/kayit"><span class="lbl">Hemen başla</span><span class="arr" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>
+      <a class="btn" href="/giris"><span class="lbl">Giriş yap</span></a>
     </div>
+    <p class="hero-note">Denetim için giriş gerekir · <a class="ulink" href="/demo">Önce örnek raporu görün</a></p>
   </div>
 </section>
 
-{# Barkod bandı: tezin satırları (JS çizer; süslemedir) #}
+{# Barkod bandı: tezin satırları (landing.js çizer; süslemedir) #}
 <section aria-hidden="true" class="wrap barcode" id="barcode" hidden>
   <div class="barcode-row"><span class="barcode-note">Sol kenar boşluğu<br>3,0 cm → 4,0 cm</span></div>
   <div class="barcode-row"></div>
 </section>
 
-{# ------------------------- PANEL ÖNİZLEMESİ ------------------------- #}
-<section id="panel" class="wrap">
-  <div class="preview-frame">
-    <div class="grad" aria-hidden="true"></div>
-    <div class="preview-inner">
-      <div class="apphead">
-        <div role="tablist" aria-label="Adımlar" class="steptitle">
-          <button class="steptab" role="tab" id="pv-tab-yukle" aria-selected="true" aria-controls="pv-yukle">Yükle</button>
-          <button class="steptab" role="tab" id="pv-tab-denetle" aria-selected="false" aria-controls="pv-denetle">Denetle</button>
-          <span class="steptab is-static" aria-hidden="true">Teslim et</span>
-        </div>
-      </div>
-
-      <div id="pv-yukle" role="tabpanel" aria-labelledby="pv-tab-yukle">
-        <div class="uprow">
-          <div class="uprow-main">
-            <label class="updrop" id="pv-drop">
-              <input type="file" id="pv-file" accept=".docx" aria-label="Önizleme için dosya seç (gönderilmez)">
-              <span class="updrop-ico" aria-hidden="true"><svg class="if-empty" viewBox="0 0 16 16"><path d="M8 11V3M4.5 6.5L8 3l3.5 3.5M3 13.5h10"/></svg><svg class="if-file" viewBox="0 0 22 22"><path d="M5 2h8l4 4v14H5z"/><path d="M13 2v4h4M8 11h6M8 14h6M8 17h4"/></svg></span>
-              <span class="updrop-title" id="pv-title">Tezinizi buraya bırakın</span>
-              <span class="updrop-sub" id="pv-sub">ya da bilgisayarınızdan seçin. Yalnızca .docx · yalnızca önizleme — dosyanız gönderilmez</span>
-              <span class="fakebtn"><span class="if-empty">Dosya seç</span><span class="if-file">Başka dosya seç</span></span>
-            </label>
-          </div>
-          <div class="uprow-side">
-            <div class="pcard">
-              <div><h3 class="pcard-title">Kılavuz</h3><p class="pcard-sub">Tezinizin denetleneceği kural seti</p></div>
-              <div class="fld"><label for="pv-uni">Üniversite</label>
-                <select id="pv-uni" disabled><option>{{ page.name if page else "Zonguldak Bülent Ecevit Üniversitesi" }}</option></select></div>
-              <p class="fld-note">{{ stats.universities }} üniversiteden {{ stats.formats }} kural seti hazır.
-                 Kural setleri resmî kılavuzlardan çıkarılır; enstitülerce doğrulanmamıştır.</p>
-            </div>
-            <div class="pcard">
-              <h3 class="pcard-title">Çıktılar</h3>
-              <p class="outrow"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>Denetim raporu</p>
-              <p class="outrow"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>Düzeltilmiş kopya (izlenen değişiklik)</p>
-              <p class="outrow"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>Yorumlu kopya</p>
-            </div>
-          </div>
-        </div>
-        <div class="preview-end mt14">
-          <button class="btn primary" id="pv-start" disabled><span class="lbl">Denetimi başlat</span>
-            <span class="arr" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></button>
-        </div>
-      </div>
-
-      <div id="pv-denetle" role="tabpanel" aria-labelledby="pv-tab-denetle" hidden>
-        <div class="cardgrid">
-          <article class="pcard">
-            <div class="pcard-head"><div><h3 class="pcard-title">Denetim raporu</h3><p class="pcard-sub" id="pv-repname">örnek görünüm</p></div></div>
-            <div class="pcard-body"><div class="bignum-row"><span class="bignum">12</span>
-              <span class="bignum-note">bulgu · 8 otomatik<br>düzeltilebilir, 4 yorumlu</span></div></div>
-            <div class="pcard-foot"><span class="hint">Gerçek örnek raporu açın</span>
-              <a class="actionbtn" href="/demo" aria-label="Örnek raporu aç"><svg viewBox="0 0 16 16"><path d="M4 12L12 4M6 4h6v6"/></svg></a></div>
-          </article>
-          <article class="pcard">
-            <div class="pcard-head"><div><h3 class="pcard-title">Düzeltilmiş kopya</h3><p class="pcard-sub">İzlenen değişiklik · yazar "Payper"</p></div></div>
-            <div class="pcard-body pcard-serif">
-              <div>Yazı tipi: <s class="was">Calibri 11</s> <u class="now">Times New Roman 12</u></div>
-              <div>Satır aralığı: <s class="was">1,15</s> <u class="now">1,5</u></div>
-            </div>
-            <div class="pcard-foot"><span class="hint">Word'de tek tıkla kabul edin</span></div>
-          </article>
-          <article class="pcard">
-            <div class="pcard-head"><div><h3 class="pcard-title">Yorumlu kopya</h3><p class="pcard-sub">Otomatik düzeltilemeyen bulgular</p></div></div>
-            <div class="pcard-body">
-              <div class="notebox"><strong>Payper</strong><br>Şekil numarası metinle eşleşmiyor; elle kontrol edin.</div>
-            </div>
-            <div class="pcard-foot"><span class="hint">Notlar paragrafın yanında</span></div>
-          </article>
-          {% if top_findings %}
-          <article class="pcard">
-            <div class="pcard-head"><div><h3 class="pcard-title">Sık bulgular</h3><p class="pcard-sub">Anonim denetimlerden</p></div></div>
-            <div class="pcard-body meterline">
-              {% for label, n in top_findings[:3] %}
-              <div><div class="mrow"><span>{{ label }}</span><strong>{{ n }}</strong></div>
-              <div class="meter"><i data-w="{{ (n / top_findings[0][1] * 100) | round | int }}"></i></div></div>
-              {% endfor %}
-            </div>
-          </article>
-          {% endif %}
-        </div>
-        <div class="preview-end mt14">
-          <a class="btn primary" href="/kayit"><span class="lbl">Kendi tezinizle deneyin</span>
-            <span class="arr" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+{# ------------------------- ARKA PLANDA NASIL ÇALIŞIR ------------------------- #}
+{% include "_nasil_calisir.html" %}
 
 {# ------------------------------ GİZLİLİK ------------------------------ #}
-<section id="gizlilik" class="wrap">
+<section id="gizlilik" class="wrap reveal">
   <div class="privacy-stage">
     <div class="privacy-dots">
       <div class="privacy-copy">
         <p class="eyebrow-dot">Gizlilik</p>
         <h2>Tezinizi <em>yapay zekâyla</em> paylaşmıyorsunuz.</h2>
-        <p>Metin ölçülür, okunmaz. Karar yalnızca biçim kurallarından verilir.</p>
+        <p>Metin ölçülür, okunmaz. Karar yalnızca biçim kurallarından verilir. Dosyanız diske
+           yazılmaz; rapor {{ retention_hours }} saat sonra silinir.</p>
       </div>
       <div class="pixelpile left" id="pixels-left" aria-hidden="true"></div>
       <div class="pixelpile right" id="pixels-right" aria-hidden="true"></div>
-    </div>
-    <div class="privacy-cells">
-      <div><span class="tno">01</span><h3>Yalnızca bellekte</h3><p>Dosya Payper sunucusunda yalnızca bellekte açılır; diske ya da veritabanına yazılmaz.</p></div>
-      <div><span class="tno">02</span><h3>Metin ölçülür, okunmaz</h3><p>Punto, kalınlık, hizalama, numaralandırma ve aralık ölçülür. Kelimeler sınıflandırıcıya gitmez.</p></div>
-      <div><span class="tno">03</span><h3>Karar kurallardan</h3><p>Paragraf türü ölçümlerden belirlenir ve kılavuzla karşılaştırılır. Hiçbir model metninizin anlamını yorumlamaz.</p></div>
-      <div><span class="tno">04</span><h3>Doğrula, sil</h3><p>Kopya verilmeden metnin birebir aynı olduğu doğrulanır. Dosya bellekten silinir, rapor 24 saat sonra kalkar.</p></div>
     </div>
   </div>
 </section>
@@ -138,7 +57,7 @@
 {# ------------------------------ KILAVUZ ------------------------------ #}
 <section id="kilavuz" class="wrap guide" data-guide>
   <div class="guide-grid">
-    <div class="guide-text" id="guide-text">
+    <div class="guide-text reveal" id="guide-text">
       <p class="eyebrow-dot">{{ page.name if page else "Kılavuz" }}</p>
       <h2>Kılavuzunuz,<br>ölçü ölçü.</h2>
       <p>Payper fakültenizin kılavuzunu satır satır kurala çevirir. Pilotta ZBEÜ Tıp Fakültesi
@@ -173,44 +92,23 @@
     </figure>
     {% endif %}
   </div>
-  <div class="guide-stats">
-    <div><span class="n">{{ stats.formats }}</span><span class="t">kılavuzlardan çıkarılmış kural seti</span></div>
-    <div><span class="n">{{ stats.universities }}</span><span class="t">üniversitenin resmî biçim şablonu</span></div>
-    <div><span class="n">{{ stats.accuracy }}</span><span class="t">yakalama doğruluğu · 1.840 denemelik bozma testi</span></div>
+  <div class="guide-stats reveal" data-stagger>
+    <div class="lift tilt"><span class="n">{{ stats.formats }}</span><span class="t">kılavuzlardan çıkarılmış kural seti</span></div>
+    <div class="lift tilt"><span class="n">{{ stats.universities }}</span><span class="t">üniversitenin resmî biçim şablonu</span></div>
+    <div class="lift tilt"><span class="n">{{ stats.accuracy }}</span><span class="t">yakalama doğruluğu · 1.840 denemelik bozma testi</span></div>
   </div>
 </section>
-
-{# ------------------------------ SIK HATALAR ------------------------------ #}
-{% if top_findings %}
-<section id="sik-hatalar" class="wrap top-findings">
-  <div class="tf-grid">
-    <div class="tf-head">
-      <h2>En sık yapılan<br>biçim hataları.</h2>
-      <p>Anonim denetimlerden en sık görülen bulgular. Çoğu, gözle fark edilmesi zor aralık ve
-         hizalama farkları.</p>
-    </div>
-    <ol class="tf-list">
-      {% for label, n in top_findings %}
-      <li><span class="tf-no">{{ "%02d" | format(loop.index) }}</span>
-        <span class="tf-label">{{ label }}</span>
-        <span class="tf-bar"><i data-w="{{ [3, (n / top_findings[0][1] * 100) | round | int] | max }}"></i></span>
-        <span class="tf-count">{{ n }}</span></li>
-      {% endfor %}
-    </ol>
-  </div>
-</section>
-{% endif %}
 
 {# ------------------------------ KAPANIŞ ------------------------------ #}
-<section id="basla" class="wrap">
+<section id="basla" class="wrap reveal">
   <div class="closing">
     <div class="closing-row">
       <h2>Başlayın.</h2>
       <div class="closing-side">
         <p>Tezinizi yükleyin, raporu ekranda görün. Pilot süresince üniversite e-postasıyla ücretsiz.</p>
         <div class="closing-ctas">
-          <a class="btn primary" href="/kayit"><span class="lbl">Kayıt olun</span></a>
-          <a class="btn" href="/giris"><span class="lbl">Giriş yapın</span></a>
+          <a class="btn primary" href="/kayit"><span class="lbl">Hemen başla</span><span class="arr" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>
+          <a class="btn" href="/giris"><span class="lbl">Giriş yap</span></a>
         </div>
       </div>
     </div>
