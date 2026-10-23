@@ -178,6 +178,46 @@ def test_title_block_above_front_heading_is_not_a_heading() -> None:
     assert "heading_1.page_break_before" not in body_findings_on(data, ("ÖZET",))
 
 
+BELOW = ("TÜRKİYE'NİN ENERJİ İTHALATINDA", "YENİLENEBİLİR KAYNAKLAR", "SOYAD, Ad",
+         "Yüksek Lisans Tezi, İktisat Anabilim Dalı", "Danışman: Prof. Dr. Ad SOYAD")
+
+
+def below_heading(lines: tuple[str, ...], heading: str = "ÖZET") -> bytes:
+    # Gerçek desen (çankaya, dicle, mu): ÖZET başlığı, altında kalın tez adı ve künye satırları,
+    # sonra özet metni.
+    block = "".join(p(r(t, rpr="<w:b/>" if t.isupper() else ""), ppr=CENTER) for t in lines)
+    front = (h1("ÖNSÖZ") + p(BODY_TEXT) + h1(heading) + block
+             + p(BODY_TEXT, ppr=sect("lowerRoman")))
+    return thesis(front + main_matter())
+
+
+@pytest.mark.parametrize("heading", ["ÖZET", "ABSTRACT", "ÖZ"])
+def test_title_block_below_abstract_heading_is_not_a_heading(heading: str) -> None:
+    data = below_heading(BELOW, heading)
+    roles = role_of(data)
+    assert all(roles[t] is Role.COVER for t in BELOW), roles
+    assert body_findings_on(data, BELOW) == []
+    assert roles[BODY_TEXT] is not Role.COVER  # özet metninin kendisi denetlenir
+
+
+def test_abstract_without_title_block_is_untouched() -> None:
+    roles = role_of(below_heading(()))
+    assert roles["ÖZET"] is Role.HEADING_1
+    assert Role.COVER not in roles.values()
+
+
+def test_lines_below_other_front_headings_are_not_title_blocks() -> None:
+    # Önsöz/içindekiler altındaki kısa satırlar künye değildir.
+    roles = role_of(below_heading(BELOW[:2], heading="TEŞEKKÜR"))
+    assert all(roles[t] is not Role.COVER for t in BELOW[:2]), roles
+
+
+def test_too_long_block_below_abstract_is_not_marked() -> None:
+    many = tuple(f"SATIR {i} BAŞLIK" for i in range(12))
+    roles = role_of(below_heading(many))
+    assert all(roles[t] is not Role.COVER for t in many), roles
+
+
 # --- İki satırlı bölüm başlığı ----------------------------------------------------------------
 
 def test_second_line_of_chapter_heading_shares_the_page_start() -> None:

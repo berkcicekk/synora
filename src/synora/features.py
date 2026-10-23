@@ -476,27 +476,44 @@ def _form_sections(body: tuple[Paragraph, ...], tops: dict[str, bool]) -> set[st
 
 
 MAX_TITLE_BLOCK = 8
+MAX_TITLE_BLOCK_BELOW = 10  # tez adı (2–3 satır), yazar, program, danışman(lar), tarih, sayfa
+_ABSTRACT_TITLES = frozenset({"ÖZET", "ÖZ", "ABSTRACT", "SUMMARY", "GENİŞLETİLMİŞ ÖZET",
+                              "EXTENDED ABSTRACT"})
 
 
 def title_blocks(body: tuple[Paragraph, ...], starts: dict[str, bool]) -> set[str]:
-    """Sayfa tepesinde, bir ön sayfa/bölüm başlığından (ÖZET, ABSTRACT…) hemen önce gelen kısa
-    satırlar: tez adı, yazar, "YÜKSEK LİSANS TEZİ". Başlık değil, kapak bilgisidir."""
+    """Özet sayfasındaki künye: tez adı, yazar, "YÜKSEK LİSANS TEZİ", danışman. Başlık değil,
+    kapak bilgisidir. İki yerleşim: sayfa tepesinde bir ön sayfa/bölüm başlığından (ÖZET,
+    ABSTRACT…) hemen önce, ya da ÖZET/ABSTRACT başlığının hemen altında, özet metninden önce."""
     out: set[str] = set()
     block: list[str] | None = None
+    below: list[str] | None = None  # özet başlığının altındaki kısa satırlar
     for p in body:
         if p.in_table or p.in_textbox:
             continue
         if starts.get(p.para_id, False):
-            block = []
+            block, below = [], None
         text = p.text.strip()
-        if block is None or not text:
+        if not text:
             continue
         kw = keyword(text)
+        short = len(text.split()) <= 12 and not text.endswith((".", "!", "?"))
+        if below is not None:
+            if kw is Keyword.NONE and short:
+                below.append(p.para_id)
+            elif kw is Keyword.NONE and 0 < len(below) <= MAX_TITLE_BLOCK_BELOW:
+                out.update(below)  # özet metni başladı: üstündeki satırlar künyeydi
+            if kw is not Keyword.NONE or not short:
+                below = None
         if kw in (Keyword.FRONT_TITLE, Keyword.SECTION_TITLE, Keyword.REFERENCES_TITLE):
-            if 0 < len(block) <= MAX_TITLE_BLOCK:
+            if block is not None and 0 < len(block) <= MAX_TITLE_BLOCK:
                 out.update(block)
             block = None
-        elif kw is Keyword.NONE and len(text.split()) <= 12 and not text.endswith((".", "!", "?")):
+            if _normalized_title(text) in _ABSTRACT_TITLES:
+                below = []
+        elif block is None:
+            continue
+        elif kw is Keyword.NONE and short:
             block.append(p.para_id)
         else:
             block = None
