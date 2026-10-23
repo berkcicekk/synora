@@ -17,6 +17,10 @@ from pathlib import Path
 from typing import Any
 
 TR_TZ = timezone(timedelta(hours=3))  # Türkiye 2016'dan beri yaz saati uygulamıyor
+# Öneri kutusu girişsiz de yazılabildiği için tavansız büyümesin: bu kadar günden eski ve en yeni
+# bu kadar satırın dışındakiler temizlikte silinir (isteğe bağlı e-posta da bununla gider).
+SUGGESTION_KEEP_DAYS = 180
+SUGGESTION_KEEP_ROWS = 1000
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS login_tokens (
@@ -147,6 +151,7 @@ class Job:
     source_sha256: str | None = None  # yeniden yüklemede "aynı dosya mı" denetimi için
     user_roles: str | None = None  # JSON {para_id: rol}: öğrencinin kaydettiği rol seçimleri
     collect: int = 0  # 1: rol seçimleri rızayla, metinsiz eğitim verisi olarak kullanılabilir
+    session_hash: str | None = None  # işi başlatan oturumun özeti (demo kipinde rapor ona bağlı)
 
 
 class Database:
@@ -171,6 +176,8 @@ class Database:
             if "collect" not in columns:
                 self._conn.execute(
                     "ALTER TABLE jobs ADD COLUMN collect INTEGER NOT NULL DEFAULT 0")
+            if "session_hash" not in columns:
+                self._conn.execute("ALTER TABLE jobs ADD COLUMN session_hash TEXT")
             # Yeniden başlatmada yarıda kalan işler: dosya bellekteydi, artık yok.
             self._conn.execute(
                 "UPDATE jobs SET status='failed', error_code='INTERRUPTED', finished_at=? "
@@ -276,11 +283,13 @@ class Database:
 
     # --- İşler ----------------------------------------------------------------------------
 
-    def add_job(self, job_id: str, email: str, ruleset: str) -> None:
+    def add_job(self, job_id: str, email: str, ruleset: str,
+                session_hash: str | None = None) -> None:
         now = time.time()
         with self._lock:
-            self._conn.execute("INSERT INTO jobs (id, email, ruleset, status, created_at) "
-                               "VALUES (?, ?, ?, 'queued', ?)", (job_id, email, ruleset, now))
+            self._conn.execute("INSERT INTO jobs (id, email, ruleset, status, created_at, "
+                               "session_hash) VALUES (?, ?, ?, 'queued', ?, ?)",
+                               (job_id, email, ruleset, now, session_hash))
             self._conn.execute("INSERT INTO job_starts VALUES (?, ?)", (_email_hash(email), now))
             self._conn.execute("INSERT INTO daily_jobs (day, n) VALUES (?, 1) "
                                "ON CONFLICT(day) DO UPDATE SET n = n + 1", (tr_day(now),))
@@ -325,9 +334,16 @@ class Database:
         row = self.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
         return Job(*row) if row else None
 
-    def recent_jobs(self, email: str, limit: int = 10) -> list[Job]:
-        rows = self.execute("SELECT * FROM jobs WHERE email=? ORDER BY created_at DESC LIMIT ?",
-                            (email, limit)).fetchall()
+    def recent_jobs(self, email: str, limit: int = 10,
+                    session_hash: str | None = None) -> list[Job]:
+        """session_hash verilirse yalnızca o oturumda başlatılan işler."""
+        if session_hash is None:
+            rows = self.execute("SELECT * FROM jobs WHERE email=? ORDER BY created_at DESC "
+                                "LIMIT ?", (email, limit)).fetchall()
+        else:
+            rows = self.execute("SELECT * FROM jobs WHERE email=? AND session_hash=? "
+                                "ORDER BY created_at DESC LIMIT ?",
+                                (email, session_hash, limit)).fetchall()
         return [Job(*r) for r in rows]
 
     def active_jobs(self, email: str) -> int:
@@ -436,6 +452,11 @@ class Database:
             self._conn.execute("DELETE FROM sessions WHERE expires_at < ?", (now,))
             self._conn.execute("DELETE FROM login_tokens WHERE expires_at < ?", (now - 3600,))
             self._conn.execute("DELETE FROM job_starts WHERE created_at < ?", (now - 86400,))
+            self._conn.execute("DELETE FROM suggestions WHERE created_at < ?",
+                               (now - SUGGESTION_KEEP_DAYS * 86400,))
+            self._conn.execute("DELETE FROM suggestions WHERE id NOT IN "
+                               "(SELECT id FROM suggestions ORDER BY id DESC LIMIT ?)",
+                               (SUGGESTION_KEEP_ROWS,))
             # Silinen raporlar WAL dosyasında kalmasın: ana dosyaya işle (secure_delete sıfırlar)
             # ve WAL'ı boşalt.
             self._conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")

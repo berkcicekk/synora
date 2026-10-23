@@ -288,7 +288,15 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
 - Web'e özel ek sınırlar: kullanıcı başına eşzamanlı iş ≤ 2 (kopya üretimi dahil), günlük iş ≤ 20 (rapor
   silinse de düşmez), sunucu genelinde aynı anda en fazla `workers` kopya, kuyrukta en fazla 20 iş; formlar
   yalnızca URL kodlu ≤ 8 KB. CSRF koruması, yükleme yalnızca
-  `.docx` uzantısı + içerik doğrulaması (A1).
+  `.docx` uzantısı + içerik doğrulaması (A1). Aynı anda gövdesi okunan yükleme (yeni denetim +
+  yeniden denetim) sunucu genelinde ≤ `max_uploads_in_flight` (4), kullanıcı başına ≤ 2; fazlası
+  gövde okunmadan reddedilir. Bildirilen boyut sınırı aşan gövde de okunmaz. Hız sınırlarında
+  istemci IP'si `SYNORA_CLIENT_IP_HEADER` başlığından (öntanımlı `cf-connecting-ip`; nginx'te
+  `x-real-ip`) okunur.
+- Demo kipinde (`SYNORA_EMAIL_VERIFICATION=0`) adres doğrulanmadığı için aynı e-postayla
+  başkası da girebilir: rapor yalnızca onu başlatan oturumda listelenir ve açılır (işte oturum
+  özeti tutulur). Doğrulamalı kipte geçmiş adrese bağlıdır, her cihazda görünür.
+- Öneri kutusu: 180 günden eski ve en yeni 1000 dışındaki mesajlar temizlikte silinir.
 - Yönetim paneli (`/yonetim`, salt okuma): kayıtlı hesaplar, açık oturum, son 24 saat ve son 14 gün
   kullanım, öneri kutusu, en sık bulgular. Rapor içeriği gösterilmez. Erişim: e-posta
   `SYNORA_ADMIN_EMAILS` listesinde **ve** oturum başına yönetici anahtarı (`SYNORA_ADMIN_KEY_SHA256`

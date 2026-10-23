@@ -62,13 +62,20 @@ JSON_ERRORS = {
 }
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+\-]{1,64}@[A-Za-z0-9.\-]{1,190}\.[A-Za-z]{2,24}")
 JOB_ID_RE = re.compile(r"[A-Za-z0-9_\-]{16,64}")
+# synora.parse'ın verdiği paragraf kimlikleri: w14:paraId (1–8 onaltılık) ya da "p<sıra>".
+PARA_ID_RE = re.compile(r"p[0-9]{1,9}|[0-9A-Fa-f]{1,8}")
+# Türkçe klavyeyle yazılmış adres (/yonetım, /GİRİŞ) bilinen bir sayfaya karşılık geliyorsa oraya
+# yönlendirilir. Yalnızca bu listeye: başka hedef üretilemez (açık yönlendirme yok).
+TR_KEYBOARD = str.maketrans("ıİşŞğĞüÜöÖçÇ", "iissgguuoocc")
+KNOWN_PAGES = frozenset({"/yonetim", "/giris", "/kayit", "/aydinlatma", "/fiyatlandirma",
+                         "/yukle", "/demo"})
 
 CSP = (
     "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
     "font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; "
     "frame-ancestors 'none'; form-action 'self'"
 )
-OUTPUT_FILES = {"fixed": "synora-duzeltilmis.docx", "annotated": "synora-yorumlu.docx"}
+OUTPUT_FILES = {"fixed": "payper-duzeltilmis.docx", "annotated": "payper-yorumlu.docx"}
 DOCX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 OUTPUT_ERRORS = {
     "NOTHING_TO_FIX": "Bu belgede otomatik düzeltilebilecek bir bulgu yok.",
@@ -97,6 +104,40 @@ class User:
     email: str
     csrf: str
     session_hash: str
+
+
+class RateLimiter:
+    """Ö7: anahtar (istemci özeti) başına saatlik ve site geneli dakikalık istek sınırı.
+
+    Bellek içi. Reddedilen yeni anahtar saklanmaz, penceresi geçen anahtarlar düşer; sözlük
+    site geneli sınırın izin verdiği kadar (saatte per_minute × 60 anahtar) büyüyebilir.
+    """
+
+    def __init__(self, per_key_hour: int, per_minute: int) -> None:
+        self.per_key_hour = per_key_hour
+        self.per_minute = per_minute
+        self._hits: dict[str, list[float]] = {}
+        self._recent: list[float] = []
+
+    def __len__(self) -> int:
+        return len(self._hits)
+
+    def allow(self, key: str, now: float | None = None) -> bool:
+        now = time.time() if now is None else now
+        hits = [t for t in self._hits.get(key, []) if t > now - 3600]
+        self._recent = [t for t in self._recent if t > now - 60]
+        allowed = len(hits) < self.per_key_hour and len(self._recent) < self.per_minute
+        if allowed:
+            hits.append(now)
+            self._recent.append(now)
+        if hits:
+            self._hits[key] = hits
+        else:
+            self._hits.pop(key, None)
+        if len(self._hits) > 1000:
+            for stale in [k for k, v in self._hits.items() if v[-1] <= now - 3600]:
+                del self._hits[stale]
+        return allowed
 
 
 @dataclass(frozen=True)
@@ -393,11 +434,17 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             del admin_unlocked[stale]
         return user.session_hash in admin_unlocked
 
+    # Demo kipinde adres doğrulanmadığı için aynı e-postayla başkası da girebilir: rapor yalnızca
+    # onu başlatan oturumda listelenir ve açılır. Doğrulamalı kipte adres sahipliği kanıtlıdır.
+    session_bound = not settings.email_verification
+
     def own_job(user: User, job_id: str) -> Job:
         if not JOB_ID_RE.fullmatch(job_id):
             raise HTTPException(404)
         job = db.get_job(job_id)
         if job is None or not hmac.compare_digest(job.email, user.email) or expired(job):
+            raise HTTPException(404)
+        if session_bound and not hmac.compare_digest(job.session_hash or "", user.session_hash):
             raise HTTPException(404)
         return job
 
@@ -418,6 +465,32 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         check_active(email)
         if db.jobs_since(email, time.time() - 86400) >= settings.max_daily_jobs:
             raise HTTPException(429, "Günlük denetim sınırına ulaştınız. Yarın yeniden deneyin.")
+
+    # Gövdesi okunmakta olan yüklemeler (yeni denetim, yeniden denetim; her biri bellekte 100 MB'a
+    # kadar). Kuyruk ve iş sayısı ancak gövde okunduktan sonra artar; bu sayaç olmadan paralel
+    # isteklerin hepsi okunurdu. outputs_running gibi yalnızca olay döngüsünde değişir.
+    uploads_running: dict[str, int] = {}
+
+    @asynccontextmanager
+    async def upload_slot(email: str) -> AsyncIterator[None]:
+        if sum(uploads_running.values()) >= settings.max_uploads_in_flight:
+            raise HTTPException(503, SERVER_BUSY)
+        if uploads_running.get(email, 0) >= settings.max_active_jobs:
+            raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+        uploads_running[email] = uploads_running.get(email, 0) + 1
+        try:
+            yield
+        finally:
+            left = uploads_running[email] - 1
+            if left:
+                uploads_running[email] = left
+            else:
+                del uploads_running[email]
+
+    def check_declared_size(request: Request) -> None:
+        declared = request.headers.get("content-length")
+        if declared and declared.isdigit() and int(declared) > settings.max_upload_bytes:
+            raise HTTPException(413, "Dosya çok büyük.")
 
     async def small_body(request: Request, content_type: str, limit: int) -> bytes:
         """Küçük, beklenen türde gövde; büyüğü okumadan reddedilir."""
@@ -467,7 +540,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     def panel_context(user: User) -> dict[str, Any]:
         """Panel kartları ve son denetimler tablosu; rapor metni içermez (yalnızca sayılar)."""
-        jobs = [j for j in db.recent_jobs(user.email) if not expired(j)]
+        jobs = [j for j in db.recent_jobs(
+            user.email, session_hash=user.session_hash if session_bound else None)
+            if not expired(j)]
         rows: list[dict[str, Any]] = []
         latest: dict[str, Any] | None = None
         frequent: list[tuple[str, int]] = []
@@ -504,7 +579,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                 "template_href": f"/sablon/{shown.id}/sablon.docx" if shown else "/",
                 "upload_ruleset": default.id if default else "",
                 "upload_ruleset_name": default.name if default else "",
-                "max_bytes": settings.max_upload_bytes}
+                "max_bytes": settings.max_upload_bytes, "session_only": session_bound}
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
@@ -554,7 +629,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         data = latex_zips.get(ruleset_id)
         if data is None:
             data = latex_zips[ruleset_id] = build_zip(info.rules)
-        name = f"synora-{ruleset_id}-latex.zip"
+        name = f"payper-{ruleset_id}-latex.zip"
         return Response(data, media_type="application/zip",
                         headers={"Content-Disposition": f'attachment; filename="{name}"'})
 
@@ -573,34 +648,16 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     # Ö7: istemci başına istek sınırı. Bellek içi ve hash'li: ham IP hiçbir yerde
     # tutulmaz, pencere dolunca kayıt düşer. Uygulamaya yalnızca 127.0.0.1 (tünel/vekil)
-    # üzerinden ulaşılabildiği için CF-Connecting-IP başlığı güvenilirdir; yoksa soket adresi.
+    # üzerinden ulaşılır; IP, öndeki vekilin koyduğu başlıktan (client_ip_header) okunur.
     def _client_key(request: Request) -> str:
-        ip = (request.headers.get("cf-connecting-ip")
+        header = settings.client_ip_header
+        ip = ((request.headers.get(header) if header else None)
               or (request.client.host if request.client else "?"))
         return hashlib.sha256(ip.encode()).hexdigest()[:16]
 
     def make_rate_limiter(per_ip_hour: int, per_minute: int) -> Callable[[Request], bool]:
-        all_hits: dict[str, list[float]] = {}
-        all_recent: list[float] = []
-
-        def rate_ok(request: Request) -> bool:
-            now = time.time()
-            key = _client_key(request)
-            hits = [t for t in all_hits.get(key, []) if t > now - 3600]
-            recent = [t for t in all_recent if t > now - 60]
-            all_recent[:] = recent
-            if len(hits) >= per_ip_hour or len(recent) >= per_minute:
-                all_hits[key] = hits
-                return False
-            hits.append(now)
-            all_hits[key] = hits
-            all_recent.append(now)
-            if len(all_hits) > 1000:  # sözlük sınırsız büyümesin
-                for stale in [k for k, v in all_hits.items() if not v or v[-1] <= now - 3600]:
-                    del all_hits[stale]
-            return True
-
-        return rate_ok
+        limiter = RateLimiter(per_ip_hour, per_minute)
+        return lambda request: limiter.allow(_client_key(request))
 
     login_rate_ok = make_rate_limiter(settings.login_requests_per_ip_hour,
                                       settings.login_requests_per_minute)
@@ -684,9 +741,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     @app.get("/.well-known/security.txt", response_class=Response)
     def security_txt() -> Response:
         """RFC 9116: güvenlik bildirimleri için iletişim. Kişisel e-posta yayımlanmaz;
-        iletişim herkese açık GitHub deposu üzerinden."""
+        iletişim GitHub'ın özel güvenlik bildirimi (advisory) formu üzerinden."""
         body = (
-            "Contact: https://github.com/berkcicekk/synora/issues\n"
+            "Contact: https://github.com/berkcicekk/synora/security/advisories/new\n"
             f"Canonical: {settings.base_url}/.well-known/security.txt\n"
             "Preferred-Languages: tr, en\n"
             "Expires: 2027-10-01T00:00:00.000Z\n"
@@ -928,18 +985,17 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         ruleset = rulesets.get(request.headers.get("x-ruleset", ""))
         if ruleset is None:
             raise HTTPException(400, "Kural seti bulunamadı.")
-        declared = request.headers.get("content-length")
-        if declared and declared.isdigit() and int(declared) > settings.max_upload_bytes:
-            raise HTTPException(413, "Dosya çok büyük.")
+        check_declared_size(request)
         check_job_limits(user.email)
 
         chunks: list[bytes] = []
         size = 0
-        async for chunk in request.stream():  # bellekte, sınırla; diske yazılmaz
-            size += len(chunk)
-            if size > settings.max_upload_bytes:
-                raise HTTPException(413, "Dosya çok büyük.")
-            chunks.append(chunk)
+        async with upload_slot(user.email):
+            async for chunk in request.stream():  # bellekte, sınırla; diske yazılmaz
+                size += len(chunk)
+                if size > settings.max_upload_bytes:
+                    raise HTTPException(413, "Dosya çok büyük.")
+                chunks.append(chunk)
         if size == 0:
             raise HTTPException(400, "Dosya boş.")
         # Gövde okunurken paralel istekler aynı kontrolü geçmiş olabilir; buradan sonra await
@@ -947,7 +1003,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         check_job_limits(user.email)
         check_queue()
         job_id = secrets.token_urlsafe(18)
-        db.add_job(job_id, user.email, ruleset.id)
+        db.add_job(job_id, user.email, ruleset.id, user.session_hash)
         runner.submit(job_id, b"".join(chunks), str(ruleset.path))
         return JSONResponse({"id": job_id, "url": f"/jobs/{job_id}"}, status_code=202)
 
@@ -964,7 +1020,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             view["roles_changed"] = view["pending"] != applied_roles(report)
         return render(request, "job.html", user=user, job=job, view=view,
                       error=job_error_message(job.error_code) if job.status == "failed" else None,
-                      ruleset=rulesets.get(job.ruleset), retention=int(settings.retention_hours))
+                      ruleset=rulesets.get(job.ruleset), retention=int(settings.retention_hours),
+                      max_bytes=settings.max_upload_bytes)
 
     @app.get("/jobs/{job_id}/status")
     def job_status(request: Request, job_id: str) -> JSONResponse:
@@ -977,7 +1034,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if not job.report:
             raise HTTPException(404)
         return Response(job.report, media_type="application/json",
-                        headers={"Content-Disposition": 'attachment; filename="synora-rapor.json"'})
+                        headers={"Content-Disposition": 'attachment; filename="payper-rapor.json"'})
 
     @app.post("/jobs/{job_id}/delete")
     async def job_delete(request: Request, job_id: str) -> Response:
@@ -991,6 +1048,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     async def same_file(request: Request, expected_sha256: str) -> bytes:
         """Sunucu tezi saklamadığından öğrenci aynı dosyayı yeniden gönderir; bellekte okunur,
         yalnızca SHA-256 özeti karşılaştırılır."""
+        check_declared_size(request)
         chunks: list[bytes] = []
         size = 0
         async for chunk in request.stream():
@@ -1048,8 +1106,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         form = await small_form(request)
         rule_id = str(form.get("rule_id", ""))
         verdict = str(form.get("verdict", ""))
-        para_id = str(form.get("para_id", ""))[:64]
-        if verdict not in ("wrong", "ok") or not re.fullmatch(r"[a-z0-9_.]{1,64}", rule_id):
+        para_id = str(form.get("para_id", ""))
+        if verdict not in ("wrong", "ok") or not re.fullmatch(r"[a-z0-9_.]{1,64}", rule_id) or (
+                para_id and not PARA_ID_RE.fullmatch(para_id)):
             raise HTTPException(400, "Geçersiz geri bildirim.")
         if db.feedback_count(job_id) >= 200:  # sınırsız birikme olmasın
             raise HTTPException(429, "Bu iş için geri bildirim sınırına ulaşıldı.")
@@ -1069,7 +1128,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim yeniden çalıştırılamıyor.")
         check_active(user.email)
-        data = await same_file(request, job.source_sha256)
+        async with upload_slot(user.email):
+            data = await same_file(request, job.source_sha256)
         job = own_job(user, job_id)  # beklerken başka bir istek yeniden kuyruğa almış olabilir
         if job.status != "done" or not job.report:
             raise HTTPException(409, "Bu denetim zaten yeniden denetleniyor.")
@@ -1148,6 +1208,11 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return JSONResponse({"error": message}, status_code=code, headers=exc.headers)
         if code == 401:
             return RedirectResponse("/", status_code=303)
+        if code == 404 and request.method in ("GET", "HEAD"):
+            path = request.scope["path"]
+            typed = path.translate(TR_KEYBOARD).lower()
+            if typed != path and typed in KNOWN_PAGES:
+                return RedirectResponse(typed, status_code=308)
         messages = {403: "Oturum doğrulaması başarısız. Sayfayı yenileyip yeniden deneyin.",
                     404: "Aradığınız sayfa bulunamadı ya da süresi doldu.",
                     405: "Bu adres bu şekilde açılamaz."}

@@ -10,7 +10,7 @@
 {% if job.status == "done" %}
 {% set s = view.summary %}
 {# demo'da id "outputs" olmaz: app.js'teki kopya üretim kodu hiç devreye girmez #}
-<header class="toolbar" {% if demo %}id="demo-toolbar"{% else %}id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}"{% endif %}>
+<header class="toolbar" {% if demo %}id="demo-toolbar"{% else %}id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}" data-max="{{ max_bytes }}"{% endif %}>
   <div class="toolbar-left">
     <a class="brand compact" href="/" aria-label="{{ 'Ana sayfaya dön' if demo else 'Panele dön' }}">{{ mark() }}</a>
     <div class="doc-heading">

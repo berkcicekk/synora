@@ -20,7 +20,7 @@ def test_template_zip_download(client: TestClient) -> None:
     res = client.get("/sablon/zbeu-tip/latex.zip")
     assert res.status_code == 200
     assert res.headers["content-type"] == "application/zip"
-    assert res.headers["content-disposition"] == 'attachment; filename="synora-zbeu-tip-latex.zip"'
+    assert res.headers["content-disposition"] == 'attachment; filename="payper-zbeu-tip-latex.zip"'
     assert res.headers["x-content-type-options"] == "nosniff"
     assert res.content == build_zip(load_ruleset(ROOT / "rulesets" / "zbeu-tip.yaml"))
     with zipfile.ZipFile(io.BytesIO(res.content)) as zf:

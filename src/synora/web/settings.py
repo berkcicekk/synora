@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 _SHA256_HEX = re.compile(r"[0-9a-f]{64}")
+_HEADER_NAME = re.compile(r"[a-z0-9-]{1,64}")
 
 
 def _env(name: str, default: str) -> str:
@@ -40,9 +41,16 @@ class Settings:
     # İstek/öneri kutusu (popup): girişsiz de gönderilebildiği için ayrı, sıkı sınır.
     suggestions_per_ip_hour: int = 5
     suggestions_per_minute: int = 20
+    # Hız sınırları için istemci IP'sinin okunduğu başlık. Cloudflare tüneli: cf-connecting-ip;
+    # nginx: x-real-ip (nginx `proxy_set_header X-Real-IP $remote_addr` koyar). Boş: soket
+    # adresi. Başlığı yalnızca öndeki vekil koyabilmeli; yoksa istemci sınırı başlıkla atlatır.
+    client_ip_header: str = "cf-connecting-ip"
     max_active_jobs: int = 2
     max_daily_jobs: int = 20
     max_queued_jobs: int = 20  # kuyrukta bekleyen her iş belleği 100 MB'a kadar tutar
+    # Aynı anda gövdesi okunan yükleme (yeni denetim + yeniden denetim): her biri belleğe 100 MB'a
+    # kadar alınır; paralel isteklerle bellek tüketilmesin. Kopya üretimi `workers` ile sınırlı.
+    max_uploads_in_flight: int = 4
     max_upload_bytes: int = 100 * 1024 * 1024
     job_timeout_seconds: float = 120.0
     workers: int = 2
@@ -87,6 +95,9 @@ class Settings:
         if self.admin_key_sha256 and not _SHA256_HEX.fullmatch(self.admin_key_sha256):
             found.append("SYNORA_ADMIN_KEY_SHA256 anahtarın kendisi değil, 64 haneli SHA-256 "
                          "özeti olmalı (`synora admin-key` üretir)")
+        if self.client_ip_header and not _HEADER_NAME.fullmatch(self.client_ip_header):
+            found.append("SYNORA_CLIENT_IP_HEADER geçerli bir başlık adı olmalı "
+                         "(ör. cf-connecting-ip, x-real-ip)")
         return found
 
     @classmethod
@@ -111,4 +122,5 @@ class Settings:
             smtp_from=_env("SMTP_FROM", cls.smtp_from),
             admin_emails=admins,
             admin_key_sha256=_env("ADMIN_KEY_SHA256", "").strip().lower(),
+            client_ip_header=_env("CLIENT_IP_HEADER", cls.client_ip_header).strip().lower(),
         )

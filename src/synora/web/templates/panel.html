@@ -103,7 +103,7 @@
 <section id="son" aria-labelledby="son-h" class="pcard table-card">
   <div class="table-head">
     <h2 id="son-h" class="pcard-title">Son denetimler</h2>
-    <span class="pcard-sub">Raporlar {{ retention }} saat saklanır</span>
+    <span class="pcard-sub">{% if panel.session_only %}Demo sürümünde yalnızca bu oturumda başlatılan denetimler görünür · {% endif %}Raporlar {{ retention }} saat saklanır</span>
   </div>
   {% if panel.rows %}
   <div class="ptable-wrap">
