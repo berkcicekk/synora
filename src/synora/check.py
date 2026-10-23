@@ -10,7 +10,7 @@ from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from synora.features import Keyword, keyword, page_tops
+from synora.features import Keyword, keyword, page_starts, page_tops, title_blocks
 from synora.model import Alignment, DocModel, LineRule, Paragraph, Role, Section, Story
 from synora.roles import RoleDecision, assign_roles
 from synora.ruleset import PAGE_SIZES_CM, LineSpacingRule, RoleRules, Ruleset
@@ -91,7 +91,7 @@ def check(
     checked = unknown = cover = 0
     body = doc.body()
     body_index = {p.para_id: i for i, p in enumerate(body)}
-    starts_page = page_tops(body)
+    starts_page = _heading_continuations(body, roles, page_tops(body))
     caption_places = _caption_places(body, roles)
     for para in doc.paragraphs:
         decision = roles[para.para_id]
@@ -121,6 +121,25 @@ def check(
                 _locate(f, para, decision.role, body_index.get(para.para_id))
             )
     return CheckResult(tuple(findings), roles, checked, unknown, cover, applied)
+
+
+def _heading_continuations(body: tuple[Paragraph, ...], roles: dict[str, RoleDecision],
+                           tops: dict[str, bool]) -> dict[str, bool]:
+    """Sayfayı başlığın kendisi değil, üstündeki satır açmışsa başlık yine sayfa başındadır:
+    iki satırlı bölüm başlığı ("ÜÇÜNCÜ BÖLÜM" / "KURAMSAL ÇERÇEVE") ya da ÖZET/ABSTRACT
+    sayfasının tepesindeki tez adı bloğu. Böyle bir başlık "yeni sayfada değil" uyarısı almaz."""
+    out = dict(tops)
+    blocks = title_blocks(body, page_starts(body))
+    prev: Paragraph | None = None
+    for p in body:
+        if p.in_table or p.in_textbox or not p.text.strip():
+            continue
+        if prev is not None and out.get(prev.para_id, False):
+            carries = roles[prev.para_id].role is Role.HEADING_1 or prev.para_id in blocks
+            if carries and (roles[p.para_id].role is Role.HEADING_1 or p.para_id in blocks):
+                out[p.para_id] = True
+        prev = p
+    return out
 
 
 def _locate(f: Finding, para: Paragraph, role: Role, index: int | None) -> Finding:

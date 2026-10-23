@@ -58,6 +58,10 @@ def classify(f: ParaFeatures) -> RoleDecision:
     # Açık stil sinyalleri
     if f.style_kind is StyleKind.TOC or f.has_toc_field:
         return _d(Role.TOC_ENTRY, 0.9)
+    # Onay/beyan sayfası ve özgeçmiş: alan, imza ve jüri satırları. Başlığı Başlık 1 stilinde
+    # olsa bile bölüm başlığı değildir; kapak gibi denetlenmez (raporda sayısı gösterilir).
+    if f.keyword is Keyword.APPROVAL_TITLE or f.in_form_section:
+        return _d(Role.COVER, 0.75)
     if f.style_kind in _STYLE_ROLES:
         return _d(_STYLE_ROLES[f.style_kind], 0.9)
     # 4. ve daha alt düzey başlıklar için kural yok: 1. düzey sanılmasın, denetlenmesin.
@@ -70,6 +74,9 @@ def classify(f: ParaFeatures) -> RoleDecision:
     if f.style_kind is StyleKind.CAPTION or f.has_seq_field:
         return _d(_caption_role(f), 0.85)
 
+    # ÖZET/ABSTRACT sayfasının tepesindeki tez adı ve yazar satırları: başlık değil.
+    if f.in_title_block:
+        return _d(Role.COVER, 0.7)
     # Kapak: ilk sayfadaki kısa satırlar (üniversite adı, "T.C.", danışman, tarih).
     # Kapak kuralları kural setine eklenene kadar denetlenmez.
     if (

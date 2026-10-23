@@ -61,6 +61,7 @@ class Keyword(StrEnum):
     SECTION_TITLE = "section_title"  # ÖZET, GİRİŞ, KAYNAKÇA...
     REFERENCES_TITLE = "references_title"  # KAYNAKLAR / KAYNAKÇA / REFERENCES
     FRONT_TITLE = "front_title"  # ÖNSÖZ, ÖZET, ABSTRACT, İÇİNDEKİLER, dizinler...
+    APPROVAL_TITLE = "approval_title"  # TEZ ONAYI, KABUL VE ONAY TUTANAĞI, ÖZGÜNLÜK BEYANI...
 
 
 class ParaFeatures(BaseModel):
@@ -80,6 +81,8 @@ class ParaFeatures(BaseModel):
     in_front_matter: bool  # ön sayfa başlığından (ÖNSÖZ, ÖZET...) sonra, ilk bölüme kadar
     on_first_page: bool  # ilk sayfa sonundan/bölüm sonundan önce (kapak olabilir)
     on_cover_pages: bool  # ilk ön sayfa başlığından önceki birkaç sayfa (iç kapak, onay, beyan)
+    in_form_section: bool  # onay/beyan sayfası ya da özgeçmiş satırı (gövde değil)
+    in_title_block: bool  # sayfa tepesinde ÖZET/ABSTRACT başlığı önündeki tez adı/yazar satırı
 
     # Biçim
     style_kind: StyleKind
@@ -167,6 +170,7 @@ SECTION_TITLES = frozenset({
     "SONUÇ", "SONUÇLAR", "SONUÇ VE ÖNERİLER", "TARTIŞMA", "BULGULAR", "YÖNTEM",
     "GEREÇ VE YÖNTEM", "MATERYAL VE YÖNTEM", "ETİK BEYAN", "BİLİMSEL ETİK BİLDİRİMİ",
     "INTRODUCTION", "CONCLUSION", "CONCLUSIONS", "ACKNOWLEDGEMENTS", "CONTENTS",
+    "TOPLUMSAL KATKI",  # bazı enstitülerde özgeçmişten sonra, aynı sayfada gelen zorunlu bölüm
 }) | REFERENCE_TITLES | _REFERENCE_END_TITLES
 _TOC_LIKE_RE = re.compile(r"(?:\t|\.{4,}|…{2,})\s*[\divxlcIVXLC]{1,5}\s*$")
 _REFERENCE_RE = re.compile(
@@ -181,11 +185,32 @@ _CITATION_RE = re.compile(
 )
 
 
+# Şablonlarda başlık adları çok çeşitli ("SİMGE VE KISALTMA LİSTESİ", "SEMBOLLER/SYMBOLS"):
+# birebir liste yerine kalıp. Tam eşleşme (fullmatch) aranır; cümleler eşleşmez.
+_LIST_TITLE_RE = re.compile(
+    r"(?:SİMGE|SEMBOL|KISALTMA)(?:LER|LAR)?(?:\s+VE\s+(?:SİMGE|SEMBOL|KISALTMA)(?:LER|LAR)?)?"
+    r"(?:\s+(?:LİSTESİ|DİZİNİ|CETVELİ))?"
+    r"|(?:LIST\s+OF\s+)?(?:ABBREVIATIONS|SYMBOLS|NOMENCLATURE)(?:\s+AND\s+(?:ABBREVIATIONS|SYMBOLS))?"
+)
+_APPROVAL_TITLE_RE = re.compile(
+    r"\b(?:ONAY\w*|TUTANA\w*|BEYAN\w*|TAAHHÜT\w*|APPROVAL|DECLARATION|İNTİHAL|ÖZGÜNLÜK"
+    r"|ETİK\s+KURUL)\b"
+)
+
+
+def _mostly_upper(text: str) -> bool:
+    letters = [c for c in text if c.isalpha()]
+    return bool(letters) and sum(c.isupper() for c in letters) / len(letters) >= 0.8
+
+
 def _normalized_title(text: str) -> str:
-    """'1. GİRİŞ' / 'Giriş' / 'BÖLÜM 1: GİRİŞ' → 'GİRİŞ'."""
+    """'1. GİRİŞ' / 'Giriş' / 'BÖLÜM 1: GİRİŞ' → 'GİRİŞ'. Parantez içi açıklama ("(Varsa)") ve
+    iki dilli yazımın ikinci yarısı ("KAYNAKLAR/REFERENCES") atılır."""
     t = tr_upper(text.strip())
     t = re.sub(r"^(?:\d+(?:\.\d+)*\.?|[IVX]+\.)\s*", "", t)
     t = re.sub(r"^BÖLÜM\s+[\dIVX]+\s*[:.\-–]?\s*", "", t)
+    t = re.sub(r"\([^)]*\)", " ", t)
+    t = t.split("/", 1)[0]
     return re.sub(r"\s+", " ", t).strip(" :.")
 
 
@@ -210,17 +235,26 @@ def keyword(text: str) -> Keyword:
     if m := _CAPTION_RE.match(t):
         kw = m.group("kw").replace("İ", "i").casefold()
         return Keyword.TABLE_CAPTION if kw in _TABLE_KW else Keyword.FIGURE_CAPTION
-    if len(t) <= 80:
+    # İçindekiler satırı ("KAYNAKÇA ....... 108") başlık değildir; sayılırsa bölüm (ör. kaynakça)
+    # içindekiler sayfasında başlamış olurdu.
+    if len(t) <= 80 and not _TOC_LIKE_RE.search(t):
         upper = tr_upper(t)
         if _CHAPTER_RE.match(upper):
             return Keyword.CHAPTER
         title = _normalized_title(t)
-        if title in REFERENCE_TITLES:
+        # "KAYNAKÇA 1": sondaki rakam yalnızca kaynakça başlığında yok sayılır ("Ek 1" değil).
+        if title in REFERENCE_TITLES or re.sub(r"\s\d$", "", title) in REFERENCE_TITLES:
             return Keyword.REFERENCES_TITLE
-        if title in FRONT_TITLES:
+        if title in FRONT_TITLES or _LIST_TITLE_RE.fullmatch(title):
             return Keyword.FRONT_TITLE
         if title in SECTION_TITLES:
             return Keyword.SECTION_TITLE
+        # Onay/beyan başlıkları büyük harfle yazılır. Küçük harfli kısa satır ("Nihai intihal
+        # raporu") asıl metnin maddesidir; başlık sayılırsa altındaki bölümü yutar.
+        if (not t.endswith((".", "!", "?")) and len(title.split()) <= 8
+                and _mostly_upper(re.sub(r"\([^)]*\)", "", t))
+                and _APPROVAL_TITLE_RE.search(title)):
+            return Keyword.APPROVAL_TITLE
     return Keyword.NONE
 
 
@@ -369,9 +403,13 @@ MAX_COVER_PAGES = 5  # dış kapak, iç kapak, onay, beyan ve bir yedek
 
 def _opens_front_matter(p: Paragraph) -> bool:
     """Kapak sayfalarının bittiğini gösteren ilk paragraf: ön sayfa/bölüm başlığı, içindekiler
-    alanı ya da 1. düzey başlık stili."""
-    if keyword(p.text) in (Keyword.FRONT_TITLE, Keyword.SECTION_TITLE, Keyword.CHAPTER,
-                           Keyword.REFERENCES_TITLE) or "TOC" in p.field_kinds:
+    alanı ya da 1. düzey başlık stili. Onay/beyan başlığı (Başlık 1 stilinde olsa bile) kapak
+    sayfalarındandır, bitirmez."""
+    kw = keyword(p.text)
+    if kw is Keyword.APPROVAL_TITLE:
+        return False
+    if kw in (Keyword.FRONT_TITLE, Keyword.SECTION_TITLE, Keyword.CHAPTER,
+              Keyword.REFERENCES_TITLE) or "TOC" in p.field_kinds:
         return True
     name = (p.style_name or "").casefold()
     return bool(re.match(r"(?:heading|başlık|baslik)\s*1(?!\d)", name)) or (
@@ -392,6 +430,77 @@ def _cover_pages(body: tuple[Paragraph, ...], starts: dict[str, bool]) -> set[st
                 return set()
         out.add(p.para_id)
     return set()
+
+
+_CV_TITLES = frozenset({"ÖZGEÇMİŞ", "ÖZ GEÇMİŞ", "CURRICULUM VITAE", "CV"})
+_ENDS_SECTION = (Keyword.FRONT_TITLE, Keyword.SECTION_TITLE, Keyword.CHAPTER,
+                 Keyword.REFERENCES_TITLE)
+
+
+MAX_APPROVAL_PARAS = 40  # bir onay/beyan sayfasında beklenenden çok satır: bölüm kaçmış demektir
+
+
+def _form_sections(body: tuple[Paragraph, ...], tops: dict[str, bool]) -> set[str]:
+    """Onay/beyan sayfaları ve özgeçmiş: alan adı + değer satırları ("Doğum Yılı: …"), imza
+    ve jüri satırları. Gövde değildir; kılavuzların gövde kuralı bunlara uygulanmaz.
+    Onay sayfası en çok sayfa sonuna kadar sürer (yeni sayfa başka bir onay/beyan başlığıyla
+    açılmadıkça); özgeçmiş bir sonraki bölüm başlığına kadar. Sayfa başı `tops` ile bulunur:
+    sayfa sonu + boş satır + başlık deseni de yeni bölüm sayılır."""
+    out: set[str] = set()
+    mode: str | None = None
+    taken: list[str] = []
+    for p in body:
+        if p.in_table or p.in_textbox:
+            continue
+        kw = keyword(p.text)
+        if kw is Keyword.APPROVAL_TITLE:
+            mode, taken = "approval", []
+            continue
+        if kw is Keyword.SECTION_TITLE and _normalized_title(p.text) in _CV_TITLES:
+            mode, taken = "cv", []
+            continue
+        if mode is None:
+            continue
+        top = tops.get(p.para_id, False)
+        if kw in _ENDS_SECTION or _looks_like_chapter(p, top) or (mode == "approval" and top):
+            mode = None
+            continue
+        if p.text.strip():
+            taken.append(p.para_id)
+            if mode == "approval" and len(taken) > MAX_APPROVAL_PARAS:
+                out.difference_update(taken)  # güvenlik: kaçmış bölümü hiç işaretleme
+                mode = None
+                continue
+            out.add(p.para_id)
+    return out
+
+
+MAX_TITLE_BLOCK = 8
+
+
+def title_blocks(body: tuple[Paragraph, ...], starts: dict[str, bool]) -> set[str]:
+    """Sayfa tepesinde, bir ön sayfa/bölüm başlığından (ÖZET, ABSTRACT…) hemen önce gelen kısa
+    satırlar: tez adı, yazar, "YÜKSEK LİSANS TEZİ". Başlık değil, kapak bilgisidir."""
+    out: set[str] = set()
+    block: list[str] | None = None
+    for p in body:
+        if p.in_table or p.in_textbox:
+            continue
+        if starts.get(p.para_id, False):
+            block = []
+        text = p.text.strip()
+        if block is None or not text:
+            continue
+        kw = keyword(text)
+        if kw in (Keyword.FRONT_TITLE, Keyword.SECTION_TITLE, Keyword.REFERENCES_TITLE):
+            if 0 < len(block) <= MAX_TITLE_BLOCK:
+                out.update(block)
+            block = None
+        elif kw is Keyword.NONE and len(text.split()) <= 12 and not text.endswith((".", "!", "?")):
+            block.append(p.para_id)
+        else:
+            block = None
+    return out
 
 
 def _first_page(body: tuple[Paragraph, ...], starts: dict[str, bool]) -> set[str]:
@@ -419,6 +528,8 @@ def extract_features(doc: DocModel) -> dict[str, ParaFeatures]:
     front = _front_matter(body, tops)
     first_page = _first_page(body, starts)
     cover_pages = _cover_pages(body, starts)
+    forms = _form_sections(body, tops)
+    blocks = title_blocks(body, starts)
     flow = [p for p in body if not p.in_table and not p.in_textbox]
     flow_pos = {p.para_id: i for i, p in enumerate(flow)}
 
@@ -461,6 +572,8 @@ def extract_features(doc: DocModel) -> dict[str, ParaFeatures]:
             in_front_matter=p.para_id in front,
             on_first_page=p.para_id in first_page,
             on_cover_pages=p.para_id in cover_pages,
+            in_form_section=p.para_id in forms,
+            in_title_block=p.para_id in blocks,
             style_kind=_style_kind(p.style_name, is_default=p.style_id is None),
             outline_level=p.props.outline_level,
             size_pt=d.size_pt,
