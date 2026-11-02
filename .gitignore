@@ -19,5 +19,12 @@ demo/
 # Yerel veritabanı
 var/
 
+# Yerel ayarlar (gizli bilgi taşıyabilir)
+.env
+.env.*
+
+# Tasarım kaynakları (lisanslı, yalnızca referans)
+payper-tasarim/
+
 # İç çalışma notları (gece raporları, rakip analizi) — repoya girmez
 .gece/
