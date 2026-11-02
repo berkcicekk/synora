@@ -99,7 +99,7 @@ PROP_LABELS = {
     "case": "büyük/küçük harf düzeni",
 }
 _PAGE_LABELS = {
-    "page.size": "Kağıt boyutu", "page.orientation": "Sayfa yönü",
+    "page.size": "Kâğıt boyutu", "page.orientation": "Sayfa yönü",
     "page_numbering.formats": "Sayfa numarası biçim sırası",
     "page_numbering.position": "Sayfa numarası konumu",
     "page_numbering.decoration": "Sayfa numarası (süssüz)",
@@ -162,7 +162,7 @@ def message(f: Finding) -> str:
         return (f"Belgede gömülü nesne var ({act} adet; ör. OLE/Excel nesnesi); içeriği "
                 "denetlenmedi ve dokunulmadı.")
     if rid == "page.size":
-        return f"Kağıt boyutu {_length(act)}. Kılavuz {exp} istiyor."
+        return f"Kâğıt boyutu {_length(act)}. Kılavuz {exp} istiyor."
     if rid == "page.orientation":
         names = {"portrait": "dikey", "landscape": "yatay"}
         return f"Sayfa yönü {names.get(act, act)}. Kılavuz {names.get(exp, exp)} istiyor."

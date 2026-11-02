@@ -10,7 +10,7 @@
 {% elif rule_id.startswith("page.margin.") %}
   {% set steps = ["Düzen › Kenar Boşlukları › Özel Kenar Boşlukları açın.", "Değerleri santimetre olarak girin.", "Belgede birden çok bölüm varsa Uygulama yeri: Tüm belge seçin."] %}
 {% elif rule_id == "page_numbering.formats" %}
-  {% set steps = ["Ön sayfalarla ana metin arasında bölüm sonu olmalı: Düzen › Kesmeler › Sonraki Sayfa.", "Altbilgide numaraya sağ tıklayıp Sayfa Numaralarını Biçimlendir ile her bölümün sayı biçimini seçin.", "Ana metin bölümünde Önceki ile Bağlantılı seçeneğini kapatıp numarayı 1'den başlatın."] %}
+  {% set steps = ["Ön sayfalarla ana metin arasında bölüm sonu olmalı: Düzen › Kesmeler › Sonraki Sayfa.", "Altbilgide numaraya sağ tıklayıp Sayfa Numaralarını Biçimlendir ile her bölümün sayı biçimini seçin.", "Ana metin bölümünde Öncekine Bağla seçeneğini kapatıp numarayı 1'den başlatın."] %}
 {% elif rule_id == "page_numbering.position" %}
   {% set steps = ["Ekle › Sayfa Numarası menüsünden kılavuzun istediği konumu (ör. Sayfanın Altı › Ortada) seçin.", "Her bölümde numaranın göründüğünü kontrol edin."] %}
 {% elif rule_id == "page_numbering.decoration" %}

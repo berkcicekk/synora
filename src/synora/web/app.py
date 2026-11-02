@@ -629,7 +629,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                  or rulesets.get(settings.default_ruleset)
                  or (ordered_rulesets[0] if ordered_rulesets else None))
         # Kâğıt ve yazı tipi kendini anlatır; ölçüler etiketsiz anlamsız ("3 cm" neyin?).
-        chips = [t.value if t.label in ("Kağıt", "Yazı tipi") else f"{t.label} {t.value}"
+        chips = [t.value if t.label in ("Kâğıt", "Yazı tipi") else f"{t.label} {t.value}"
                  for t in rule_tiles(shown.rules)[:7]] if shown else []
         # Panelden sürükle-bırak yükleme varsayılan kılavuzla yapılır; kart adını gösterir.
         default = ordered_rulesets[0] if ordered_rulesets else None
@@ -817,7 +817,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         yalnızca herkese açık sayfalar ve gizlilik ilkeleri anlatılır."""
         body = (
             "# Sontez\n\n"
-            "> Sontez, .docx tezleri üniversitenin resmi yazım kılavuzuna göre denetleyen "
+            "> Sontez, .docx tezleri üniversitenin resmî yazım kılavuzuna göre denetleyen "
             "ve biçim hatalarını düzelten ücretsiz bir web aracıdır. "
             f"{len(rulesets)} üniversite kural seti hazır yüklüdür.\n\n"
             "Önemli: Sontez tezin metnini ASLA değiştirmez ve hiçbir yapay zekâ modeli tez "
@@ -1354,7 +1354,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         check_csrf(user.csrf, request.headers.get("x-csrf-token"))
         job = own_job(user, job_id)
         if job.status != "done" or not job.report:
-            raise HTTPException(409, "Bu denetim için rol seçilemiyor.")
+            raise HTTPException(409, "Bu denetim için paragraf türü seçilemiyor.")
         try:
             body = json.loads(await small_body(request, "application/json", MAX_JSON_BYTES))
         except ValueError:
@@ -1369,7 +1369,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             if pid not in editable or not isinstance(role, str) or (
                 role and role not in ROLE_CHOICES
             ):
-                raise HTTPException(400, "Geçersiz paragraf ya da rol.")
+                raise HTTPException(400, "Geçersiz paragraf ya da paragraf türü.")
             if role:
                 pending[pid] = role
             else:
@@ -1395,7 +1395,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                 para_id and not PARA_ID_RE.fullmatch(para_id)):
             raise HTTPException(400, "Geçersiz geri bildirim.")
         if db.feedback_count(job_id) >= 200:  # sınırsız birikme olmasın
-            raise HTTPException(429, "Bu iş için geri bildirim sınırına ulaşıldı.")
+            raise HTTPException(429, "Bu denetim için geri bildirim sınırına ulaşıldı.")
         info = rulesets.get(job.ruleset)
         version = info.rules.version if info else 0
         db.add_feedback(job_id, job.ruleset, version, rule_id, para_id, verdict)

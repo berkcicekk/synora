@@ -193,7 +193,7 @@ def test_rules_latex_cannot_enforce_are_listed_for_student() -> None:
     assert "table_caption.position" in manual
     readme = t.files["BENIOKU.md"]
     assert "Sizin uymanız gerekenler" in readme
-    assert "Resmi bir şablon değildir" in readme
+    assert "Resmî bir şablon değildir" in readme
     assert "`page.margin.left` | geometry: left=4cm" in readme
 
 

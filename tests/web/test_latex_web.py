@@ -39,4 +39,4 @@ def test_upload_page_offers_template(client: TestClient, mailer: ConsoleMailer) 
     assert "LaTeX ile mi yazıyorsunuz?" in page
     # Tek bağlantı: seçili kılavuzu izler (app.js), başlangıçta varsayılan kılavuz.
     assert 'id="latex-link" class="textlink" href="/sablon/zbeu-tip/latex.zip" download' in page
-    assert "Resmi bir şablon değildir" in page
+    assert "Resmî bir şablon değildir" in page

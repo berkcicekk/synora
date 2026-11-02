@@ -154,7 +154,7 @@ def rule_tiles(rules: Ruleset) -> list[RuleTile]:
     body = rules.roles.get(Role.BODY)
     heading = rules.roles.get(Role.HEADING_1)
     footnote = rules.roles.get(Role.FOOTNOTE)
-    items: list[tuple[str, str]] = [("Kağıt", rules.page.size or "A4")]
+    items: list[tuple[str, str]] = [("Kâğıt", rules.page.size or "A4")]
     items += [("Sol kenar", spec.labels["left"]), ("Üst kenar", spec.labels["top"]),
               ("Sağ kenar", spec.labels["right"]), ("Alt kenar", spec.labels["bottom"])]
     font = rules.fonts.allowed[0] if rules.fonts.allowed else None

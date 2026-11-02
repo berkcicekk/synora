@@ -127,7 +127,7 @@ class _Builder:
             f"% Kılavuz: {_comment(r.name)}",
             *([f"% Kaynak: {_comment(r.source)}"] if r.source else []),
             "% Bu dosyayı değiştirmeyin: kılavuz değişince Sontez'den yenisini indirin.",
-            "% Resmi bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.",
+            "% Resmî bir şablon değildir; son onay fakültenizde ya da enstitünüzdedir.",
             "\\NeedsTeXFormat{LaTeX2e}[2022-06-01]",
             f"\\ProvidesClass{{{self.t.class_name}}}[{GENERATOR_DATE} "
             f"v{GENERATOR_VERSION}.{r.version} Sontez tez sablonu]",
@@ -497,7 +497,7 @@ class _Builder:
             f"Sontez, \"{r.ruleset}\" kural setinin {r.version}. sürümünden üretti."
             + (f" Kaynak: {r.source}." if r.source else ""),
             "",
-            "**Resmi bir şablon değildir.** Biçim kuralları Sontez'in .docx denetiminde",
+            "**Resmî bir şablon değildir.** Biçim kuralları Sontez'in .docx denetiminde",
             "kullandığı kural setinden alınmıştır. Son onay fakültenizde ya da enstitünüzdedir.",
             "",
             "## Overleaf'te kullanım",
