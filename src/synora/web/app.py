@@ -41,11 +41,12 @@ from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message, rule_label
 from synora.ruleset import Ruleset, load_ruleset
 from synora.web.access import AccessVerifier
 from synora.web.db import TR_TZ, Database, Job, tr_day
+from synora.web.limits import UPLOAD_TOO_LARGE, SlotCounter, read_body
 from synora.web.mailer import Mailer, make_mailer
 from synora.web.pipeline import REPORT_TOO_LARGE, run_pipeline
 from synora.web.presentation import PageSpec, RuleTile, page_spec, rule_tiles
 from synora.web.settings import Settings
-from synora.web.worker import JobRunner
+from synora.web.worker import JobRunner, NoProcessSlot
 from synora.word import build_docx
 
 HERE = Path(__file__).resolve().parent
@@ -517,13 +518,17 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         # Temizlik görevi 10 dakikada bir çalışır; "24 saat sonra silinir" sözü okurken de tutulur.
         return job.created_at < time.time() - settings.retention_hours * 3600
 
-    # Kopya üretimi istek içinde çalışır (ayrı süreç, 2 GB'a kadar); sayaç yalnızca olay döngüsünde
-    # değişir, kontrol ile artırma arasında await olmadığından yarış yoktur (ONERILER Ö6).
-    outputs_running: dict[str, int] = {}
+    # Kopya üretimi istek içinde çalışır (ayrı süreç, 2 GB'a kadar; ONERILER Ö6).
+    outputs_running = SlotCounter()
 
     def check_active(email: str) -> None:
-        if db.active_jobs(email) + outputs_running.get(email, 0) >= settings.max_active_jobs:
+        if db.active_jobs(email) + outputs_running.of(email) >= settings.max_active_jobs:
             raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+
+    def check_output_capacity(email: str) -> None:
+        check_active(email)
+        if outputs_running.total() >= settings.workers:
+            raise HTTPException(503, SERVER_BUSY)
 
     def check_job_limits(email: str) -> None:
         """Yeni yükleme: eşzamanlı ve günlük sınır (kopya ve yeniden denetim günlük sayılmaz)."""
@@ -531,31 +536,24 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if db.jobs_since(email, time.time() - 86400) >= settings.max_daily_jobs:
             raise HTTPException(429, "Günlük denetim sınırına ulaştınız. Yarın yeniden deneyin.")
 
-    # Gövdesi okunmakta olan yüklemeler (yeni denetim, yeniden denetim; her biri bellekte 100 MB'a
-    # kadar). Kuyruk ve iş sayısı ancak gövde okunduktan sonra artar; bu sayaç olmadan paralel
-    # isteklerin hepsi okunurdu. outputs_running gibi yalnızca olay döngüsünde değişir.
-    uploads_running: dict[str, int] = {}
+    # Gövdesi okunmakta olan yüklemeler (her biri bellekte 100 MB'a kadar). Kuyruk ve iş sayısı
+    # ancak gövde okunduktan sonra artar; bu sayaç olmadan paralel isteklerin hepsi okunurdu.
+    uploads_running = SlotCounter()
 
-    @asynccontextmanager
-    async def upload_slot(email: str) -> AsyncIterator[None]:
-        if sum(uploads_running.values()) >= settings.max_uploads_in_flight:
-            raise HTTPException(503, SERVER_BUSY)
-        if uploads_running.get(email, 0) >= settings.max_active_jobs:
-            raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
-        uploads_running[email] = uploads_running.get(email, 0) + 1
-        try:
-            yield
-        finally:
-            left = uploads_running[email] - 1
-            if left:
-                uploads_running[email] = left
-            else:
-                del uploads_running[email]
-
-    def check_declared_size(request: Request) -> None:
+    async def read_upload(request: Request, email: str) -> bytes:
+        """Yükleme gövdesini tek geçitten okur: bellekte, yuvayla, boyut ve süre sınırıyla."""
         declared = request.headers.get("content-length")
         if declared and declared.isdigit() and int(declared) > settings.max_upload_bytes:
-            raise HTTPException(413, "Dosya çok büyük.")
+            raise HTTPException(413, UPLOAD_TOO_LARGE)
+        if uploads_running.total() >= settings.max_uploads_in_flight:
+            raise HTTPException(503, SERVER_BUSY)
+        if uploads_running.of(email) >= settings.max_active_jobs:
+            raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+        with uploads_running.hold(email):
+            return await read_body(request.stream(), max_bytes=settings.max_upload_bytes,
+                                   grace_seconds=settings.upload_grace_seconds,
+                                   min_bytes_per_second=settings.upload_min_bytes_per_second,
+                                   max_seconds=settings.upload_max_seconds)
 
     async def small_body(request: Request, content_type: str, limit: int) -> bytes:
         """Küçük, beklenen türde gövde; büyüğü okumadan reddedilir."""
@@ -581,8 +579,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             (k, v) for k, v in parse_qsl(body.decode("latin-1"), keep_blank_values=True)]
         return FormData(pairs)
 
-    def check_queue() -> None:
-        if runner.queued() >= settings.max_queued_jobs:
+    def check_queue(size: int) -> None:
+        if (runner.queued() >= settings.max_queued_jobs
+                or runner.held_bytes() + size > settings.max_queued_bytes):
             raise HTTPException(503, SERVER_BUSY)
 
     def domain_allowed(email: str) -> bool:
@@ -1053,7 +1052,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             "build": settings.build or "—",
             "workers_ok": runner.alive(),
             "queue": f"{runner.queued()} / {settings.max_queued_jobs}",
-            "uploads": f"{sum(uploads_running.values())} / {settings.max_uploads_in_flight}",
+            "uploads": f"{uploads_running.total()} / {settings.max_uploads_in_flight}",
             "db": f"{size / (1024 * 1024):.1f} MB".replace(".", ","),
             "uptime": format_uptime(now - started_at),
             "errors": [{"code": c, "n": n, "message": job_error_message(c)}
@@ -1270,26 +1269,17 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         ruleset = rulesets.get(request.headers.get("x-ruleset", ""))
         if ruleset is None:
             raise HTTPException(400, "Kural seti bulunamadı.")
-        check_declared_size(request)
         check_job_limits(user.email)
-
-        chunks: list[bytes] = []
-        size = 0
-        async with upload_slot(user.email):
-            async for chunk in request.stream():  # bellekte, sınırla; diske yazılmaz
-                size += len(chunk)
-                if size > settings.max_upload_bytes:
-                    raise HTTPException(413, "Dosya çok büyük.")
-                chunks.append(chunk)
-        if size == 0:
+        data = await read_upload(request, user.email)
+        if not data:
             raise HTTPException(400, "Dosya boş.")
         # Gövde okunurken paralel istekler aynı kontrolü geçmiş olabilir; buradan sonra await
         # yok, yeniden kontrol ile kayıt arasına başka istek giremez.
         check_job_limits(user.email)
-        check_queue()
+        check_queue(len(data))
         job_id = secrets.token_urlsafe(18)
         db.add_job(job_id, user.email, ruleset.id, user.session_hash)
-        runner.submit(job_id, b"".join(chunks), str(ruleset.path))
+        runner.submit(job_id, data, str(ruleset.path))
         return JSONResponse({"id": job_id, "url": f"/jobs/{job_id}"}, status_code=202)
 
     @app.get("/jobs/{job_id}", response_class=HTMLResponse)
@@ -1330,18 +1320,10 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         db.delete_job(job_id)
         return RedirectResponse("/", status_code=303)
 
-    async def same_file(request: Request, expected_sha256: str) -> bytes:
+    async def same_file(request: Request, email: str, expected_sha256: str) -> bytes:
         """Sunucu tezi saklamadığından öğrenci aynı dosyayı yeniden gönderir; bellekte okunur,
         yalnızca SHA-256 özeti karşılaştırılır."""
-        check_declared_size(request)
-        chunks: list[bytes] = []
-        size = 0
-        async for chunk in request.stream():
-            size += len(chunk)
-            if size > settings.max_upload_bytes:
-                raise HTTPException(413, "Dosya çok büyük.")
-            chunks.append(chunk)
-        data = b"".join(chunks)
+        data = await read_upload(request, email)
         if not hmac.compare_digest(hashlib.sha256(data).hexdigest(), expected_sha256):
             raise HTTPException(409, "Bu, denetlenen dosya değil. Aynı dosyayı seçin ya da "
                                      "yeni dosya için yeni bir denetim başlatın.")
@@ -1413,13 +1395,12 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim yeniden çalıştırılamıyor.")
         check_active(user.email)
-        async with upload_slot(user.email):
-            data = await same_file(request, job.source_sha256)
+        data = await same_file(request, user.email, job.source_sha256)
         job = own_job(user, job_id)  # beklerken başka bir istek yeniden kuyruğa almış olabilir
         if job.status != "done" or not job.report:
             raise HTTPException(409, "Bu denetim zaten yeniden denetleniyor.")
         check_active(user.email)
-        check_queue()
+        check_queue(len(data))
         roles = pending_roles(job, json.loads(job.report))
         db.requeue(job_id)
         runner.submit(job_id, data, str(ruleset.path), roles)
@@ -1438,24 +1419,21 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         ruleset = rulesets.get(job.ruleset)
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim için kopya üretilemiyor.")
-        check_active(user.email)
-        if sum(outputs_running.values()) >= settings.workers:
-            raise HTTPException(503, SERVER_BUSY)
-        outputs_running[user.email] = outputs_running.get(user.email, 0) + 1
-        try:
-            data = await same_file(request, job.source_sha256)
-            # Kopya, ekrandaki raporla aynı rollerle üretilir (kaydedilmiş ama henüz yeniden
-            # denetlenmemiş seçimlerle değil).
-            roles = applied_roles(json.loads(job.report))
-            result = await run_in_threadpool(runner.make_output, kind,  # type: ignore[arg-type]
-                                             job_id, data, str(ruleset.path), roles)
-            del data
-        finally:
-            left = outputs_running[user.email] - 1
-            if left:
-                outputs_running[user.email] = left
-            else:
-                del outputs_running[user.email]
+        check_output_capacity(user.email)
+        data = await same_file(request, user.email, job.source_sha256)
+        # Yuva gövde okunduktan sonra alınır: yavaş yükleme kopya üretimini kilitleyemesin.
+        check_output_capacity(user.email)
+        # Kopya, ekrandaki raporla aynı rollerle üretilir (kaydedilmiş ama henüz yeniden
+        # denetlenmemiş seçimlerle değil).
+        roles = applied_roles(json.loads(job.report))
+        with outputs_running.hold(user.email):
+            try:
+                result = await run_in_threadpool(
+                    runner.make_output, kind,  # type: ignore[arg-type]
+                    job_id, data, str(ruleset.path), roles)
+            except NoProcessSlot:
+                raise HTTPException(503, SERVER_BUSY) from None
+        del data
         if result["docx"] is None:
             code = result["error_code"] or "INTERNAL"
             message = OUTPUT_ERRORS.get(code, "Belge otomatik olarak işlenemedi; metninizin "

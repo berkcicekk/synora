@@ -48,11 +48,18 @@ class Settings:
     client_ip_header: str = "cf-connecting-ip"
     max_active_jobs: int = 2
     max_daily_jobs: int = 20
-    max_queued_jobs: int = 20  # kuyrukta bekleyen her iş belleği 100 MB'a kadar tutar
+    max_queued_jobs: int = 20
+    # Bellek bütçesi (toplamı konteyner tavanının altında kalır, testle zorlanır): kuyruk ve çalışan
+    # işlerin dosyaları + gövdesi okunan yüklemeler + kopya dosyaları + workers kadar alt süreç.
+    max_queued_bytes: int = 600 * 1024 * 1024
     # Aynı anda gövdesi okunan yükleme (yeni denetim + yeniden denetim): her biri belleğe 100 MB'a
     # kadar alınır; paralel isteklerle bellek tüketilmesin. Kopya üretimi `workers` ile sınırlı.
     max_uploads_in_flight: int = 4
     max_upload_bytes: int = 100 * 1024 * 1024
+    # Yükleme süresi: başlangıç payı + gelen bayt başına kazanılan süre, mutlak tavana kadar.
+    upload_grace_seconds: float = 30.0
+    upload_min_bytes_per_second: int = 16 * 1024
+    upload_max_seconds: float = 600.0
     job_timeout_seconds: float = 120.0
     workers: int = 2
     isolate_jobs: bool = True  # her iş ayrı süreçte (testlerde kapatılabilir)

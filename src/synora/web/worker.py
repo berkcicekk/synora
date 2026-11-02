@@ -34,6 +34,10 @@ MEMORY_LIMIT_BYTES = 2 * 1024 * 1024 * 1024
 UserRoles = dict[str, str] | None
 
 
+class NoProcessSlot(Exception):
+    """Tüm alt süreç yuvaları dolu; kopya üretimi şimdi başlatılamaz."""
+
+
 def _child(
     conn: Connection, task: str, ruleset_path: str, job_id: str, cpu_seconds: int,
     user_roles: UserRoles = None,
@@ -106,6 +110,10 @@ class JobRunner:
         self._queue: queue.Queue[tuple[str, bytes, str, UserRoles] | None] = queue.Queue()
         self._threads: list[threading.Thread] = []
         self._stop = threading.Event()
+        # Denetim ve kopya alt süreçleri toplamı; her biri MEMORY_LIMIT_BYTES'a kadar bellek alır.
+        self.process_slots = threading.BoundedSemaphore(settings.workers)
+        self._held_bytes = 0
+        self._held_lock = threading.Lock()
 
     def start(self) -> None:
         for i in range(self.settings.workers):
@@ -127,19 +135,30 @@ class JobRunner:
     def queued(self) -> int:
         return self._queue.qsize()
 
+    def held_bytes(self) -> int:
+        """Kuyruktaki ve çalışan işlerin bellekte tuttuğu dosya baytları."""
+        with self._held_lock:
+            return self._held_bytes
+
+    def _add_held_bytes(self, delta: int) -> None:
+        with self._held_lock:
+            self._held_bytes += delta
+
     def submit(self, job_id: str, data: bytes, ruleset_path: str,
                user_roles: UserRoles = None) -> None:
+        self._add_held_bytes(len(data))
         self._queue.put((job_id, data, ruleset_path, user_roles))
 
     def run_now(self, job_id: str, data: bytes, ruleset_path: str,
                 user_roles: UserRoles = None) -> None:
         self.db.set_running(job_id)
         started = time.monotonic()
-        if self.settings.isolate_jobs:
-            result = run_isolated(data, ruleset_path, job_id, self.settings.job_timeout_seconds,
-                                  user_roles)
-        else:
-            result = run_pipeline(data, ruleset_path, job_id, user_roles)
+        with self.process_slots:
+            if self.settings.isolate_jobs:
+                result = run_isolated(data, ruleset_path, job_id,
+                                      self.settings.job_timeout_seconds, user_roles)
+            else:
+                result = run_pipeline(data, ruleset_path, job_id, user_roles)
         # Kullanıcı bu arada silmişse UPDATE hiçbir satıra dokunmaz.
         self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"],
                            source_sha256=result["source_sha256"], stats=result["stats"],
@@ -160,11 +179,17 @@ class JobRunner:
         self, kind: OutputKind, job_id: str, data: bytes, ruleset_path: str,
         user_roles: UserRoles = None,
     ) -> OutputResult:
-        """Düzeltilmiş/yorumlu kopyayı istek içinde üretir; sonuç saklanmaz."""
-        if self.settings.isolate_jobs:
-            return output_isolated(kind, data, ruleset_path, job_id,
-                                   self.settings.job_timeout_seconds, user_roles)
-        return run_output(kind, data, ruleset_path, job_id, user_roles)
+        """Düzeltilmiş/yorumlu kopyayı istek içinde üretir; sonuç saklanmaz. Yuva yoksa beklemez,
+        NoProcessSlot fırlatır: öğrenci kuyruk arkasında yanıtsız kalmasın."""
+        if not self.process_slots.acquire(blocking=False):
+            raise NoProcessSlot
+        try:
+            if self.settings.isolate_jobs:
+                return output_isolated(kind, data, ruleset_path, job_id,
+                                       self.settings.job_timeout_seconds, user_roles)
+            return run_output(kind, data, ruleset_path, job_id, user_roles)
+        finally:
+            self.process_slots.release()
 
     def _loop(self) -> None:
         while not self._stop.is_set():
@@ -172,6 +197,7 @@ class JobRunner:
             if item is None:
                 return
             job_id, data, ruleset_path, user_roles = item
+            size = len(data)
             try:
                 self.run_now(job_id, data, ruleset_path, user_roles)
             except Exception:
@@ -182,6 +208,7 @@ class JobRunner:
                     self.db.finish_job(job_id, report=None, error_code="INTERNAL")
             finally:
                 del data, item  # tez baytlarına referans kalmasın
+                self._add_held_bytes(-size)
 
     def _janitor(self) -> None:
         while not self._stop.wait(600):
