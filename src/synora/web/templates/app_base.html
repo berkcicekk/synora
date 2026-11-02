@@ -11,10 +11,14 @@
       <div class="nav-end">
         {% if is_admin %}<a class="nav-link" href="/yonetim">Yönetim</a>{% endif %}
         <span class="who-chip"><span class="who-ava" aria-hidden="true">{{ user.email[:2] | upper }}</span><span class="who">{{ user.email }}</span></span>
+        {% if access_login %}
+        <a class="nav-link" href="/cdn-cgi/access/logout">Çıkış</a>
+        {% else %}
         <form method="post" action="/logout">
           <input type="hidden" name="csrf" value="{{ user.csrf }}">
           <button class="nav-link" type="submit">Çıkış</button>
         </form>
+        {% endif %}
       </div>
     </div>
   </header>

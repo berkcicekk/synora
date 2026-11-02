@@ -21,6 +21,7 @@ TR_TZ = timezone(timedelta(hours=3))  # Türkiye 2016'dan beri yaz saati uygulam
 # bu kadar satırın dışındakiler temizlikte silinir (isteğe bağlı e-posta da bununla gider).
 SUGGESTION_KEEP_DAYS = 180
 SUGGESTION_KEEP_ROWS = 1000
+USAGE_KEEP_DAYS = 90
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS login_tokens (
@@ -101,6 +102,16 @@ CREATE TABLE IF NOT EXISTS suggestions (
 CREATE TABLE IF NOT EXISTS daily_jobs (
     day TEXT PRIMARY KEY,
     n INTEGER NOT NULL
+);
+-- Yönetim paneli: gün + kural seti başına biten denetim sayısı ve süre. E-posta, iş kimliği, metin
+-- yok; yeniden denetimler de sayılır. USAGE_KEEP_DAYS gün sonra silinir.
+CREATE TABLE IF NOT EXISTS usage_daily (
+    day TEXT NOT NULL,
+    ruleset TEXT NOT NULL,
+    done INTEGER NOT NULL DEFAULT 0,
+    failed INTEGER NOT NULL DEFAULT 0,
+    seconds REAL NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, ruleset)
 );
 CREATE TABLE IF NOT EXISTS users (
     email TEXT PRIMARY KEY,
@@ -324,11 +335,24 @@ class Database:
         self.execute("UPDATE jobs SET user_roles=? WHERE id=?", (roles, job_id))
 
     def finish_job(self, job_id: str, *, report: str | None, error_code: str | None,
-                   source_sha256: str | None = None) -> None:
+                   source_sha256: str | None = None, seconds: float = 0.0) -> None:
         status = "done" if report is not None else "failed"
-        self.execute("UPDATE jobs SET status=?, report=?, error_code=?, finished_at=?, "
-                     "source_sha256=? WHERE id=?",
-                     (status, report, error_code, time.time(), source_sha256, job_id))
+        now = time.time()
+        with self._lock:
+            row = self._conn.execute("SELECT status, ruleset FROM jobs WHERE id=?",
+                                     (job_id,)).fetchone()
+            self._conn.execute("UPDATE jobs SET status=?, report=?, error_code=?, finished_at=?, "
+                               "source_sha256=? WHERE id=?",
+                               (status, report, error_code, now, source_sha256, job_id))
+            # Yürütücünün hata yolu biten işi yeniden bitirebilir; o ikinci kez sayılmaz.
+            if row is not None and row[0] in ("queued", "running"):
+                ok = status == "done"
+                self._conn.execute(
+                    "INSERT INTO usage_daily (day, ruleset, done, failed, seconds) "
+                    "VALUES (?, ?, ?, ?, ?) ON CONFLICT(day, ruleset) DO UPDATE SET "
+                    "done = done + excluded.done, failed = failed + excluded.failed, "
+                    "seconds = seconds + excluded.seconds",
+                    (tr_day(now), row[1], int(ok), int(not ok), seconds if ok else 0.0))
 
     def get_job(self, job_id: str) -> Job | None:
         row = self.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
@@ -441,6 +465,31 @@ class Database:
                             "ORDER BY SUM(n) DESC, rule_id LIMIT ?", (limit,))
         return [(str(r), int(n), wrong.get(str(r), 0)) for r, n in rows]
 
+    def job_errors(self, since: float) -> list[tuple[str, int]]:
+        """Başarısız işlerin hata kodları (rapor saklama süresi içindekiler): (kod, adet)."""
+        rows = self.execute(
+            "SELECT COALESCE(error_code, 'INTERNAL'), COUNT(*) FROM jobs "
+            "WHERE status='failed' AND created_at>=? GROUP BY 1 ORDER BY 2 DESC, 1", (since,))
+        return [(str(c), int(n)) for c, n in rows]
+
+    def false_alarms(self, limit: int = 20) -> list[tuple[str, int, str, int, int]]:
+        """"Yanlış" oyu alan kurallar: (kural seti, sürüm, rule_id, yanlış oyu, doğru oyu)."""
+        rows = self.execute(
+            "SELECT ruleset, ruleset_version, rule_id, "
+            "SUM(CASE WHEN verdict='wrong' THEN n ELSE 0 END) AS wrong, "
+            "SUM(CASE WHEN verdict='ok' THEN n ELSE 0 END) AS ok FROM feedback_counts "
+            "GROUP BY ruleset, ruleset_version, rule_id HAVING wrong > 0 "
+            "ORDER BY wrong DESC, ok, ruleset, ruleset_version DESC, rule_id LIMIT ?", (limit,))
+        return [(str(r), int(v), str(i), int(w), int(o)) for r, v, i, w, o in rows]
+
+    def usage_since(self, since_day: str, limit: int = 15) -> list[tuple[str, int, int, float]]:
+        """Kural seti başına biten denetimler: (kural seti, başarılı, başarısız, toplam süre)."""
+        rows = self.execute(
+            "SELECT ruleset, SUM(done), SUM(failed), SUM(seconds) FROM usage_daily WHERE day>=? "
+            "GROUP BY ruleset ORDER BY SUM(done) + SUM(failed) DESC, ruleset LIMIT ?",
+            (since_day, limit))
+        return [(str(r), int(d), int(f), float(s)) for r, d, f, s in rows]
+
     # --- Saklama süresi ---------------------------------------------------------------------
 
     def purge(self, retention_seconds: float) -> int:
@@ -457,6 +506,8 @@ class Database:
             self._conn.execute("DELETE FROM suggestions WHERE id NOT IN "
                                "(SELECT id FROM suggestions ORDER BY id DESC LIMIT ?)",
                                (SUGGESTION_KEEP_ROWS,))
+            self._conn.execute("DELETE FROM usage_daily WHERE day < ?",
+                               (tr_day(now - USAGE_KEEP_DAYS * 86400),))
             # Silinen raporlar WAL dosyasında kalmasın: ana dosyaya işle (secure_delete sıfırlar)
             # ve WAL'ı boşalt.
             self._conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")

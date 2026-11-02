@@ -16,7 +16,10 @@ RUN useradd --system --uid 10001 --home-dir /app --shell /usr/sbin/nologin synor
     && mkdir /data && chown synora:synora /data && chmod 700 /data
 COPY --from=build /app/.venv /app/.venv
 COPY rulesets /app/rulesets
-ENV PATH=/app/.venv/bin:$PATH \
+# Yönetim panelinde görünen sürüm: SYNORA_BUILD=$(git rev-parse --short HEAD) docker compose build
+ARG SYNORA_BUILD=""
+ENV SYNORA_BUILD=$SYNORA_BUILD \
+    PATH=/app/.venv/bin:$PATH \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     SYNORA_DB_PATH=/data/synora.db \

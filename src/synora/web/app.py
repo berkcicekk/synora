@@ -15,7 +15,7 @@ import smtplib
 import sqlite3
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from dataclasses import dataclass
 from datetime import datetime
 from http import HTTPStatus
@@ -39,6 +39,7 @@ from synora.latex import build_zip
 from synora.log import log_event
 from synora.report import ROLE_NAMES, SEVERITY_NAMES, ingest_message, rule_label
 from synora.ruleset import Ruleset, load_ruleset
+from synora.web.access import AccessVerifier
 from synora.web.db import TR_TZ, Database, Job, tr_day
 from synora.web.mailer import Mailer, make_mailer
 from synora.web.pipeline import run_pipeline
@@ -222,6 +223,14 @@ def format_date(ts: float) -> str:
 def format_when(ts: float) -> str:
     d = datetime.fromtimestamp(ts, TR_TZ)
     return f"{d.day} {TR_MONTHS[d.month - 1]} {d:%H:%M}"
+
+
+def format_uptime(seconds: float) -> str:
+    minutes = int(seconds // 60)
+    if minutes < 60:
+        return f"{minutes} dk"
+    hours = minutes // 60
+    return f"{hours} sa" if hours < 24 else f"{hours // 24} gün {hours % 24} sa"
 
 
 def applied_roles(report: dict[str, Any]) -> dict[str, str]:
@@ -427,6 +436,23 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     def admin_allowed(user: User | None) -> bool:
         return user is not None and settings.admin_enabled and user.email in settings.admin_emails
+
+    # Access ayarlıysa panel kimliği yalnızca JWT'den gelir; oturum ve anahtar yok sayılır.
+    access = (AccessVerifier(settings.access_team_domain, settings.access_aud)
+              if settings.access_enabled else None)
+    started_at = time.time()
+
+    def access_admin(request: Request, verifier: AccessVerifier) -> User | None:
+        token = request.headers.get("cf-access-jwt-assertion")
+        email = verifier.email(token)
+        if email is None:
+            if token:  # Access'ten geçen istekte olmamalı: atlatma denemesi ya da yanlış ayar
+                log_event("admin.access_invalid")
+            return None
+        if email not in settings.admin_emails:
+            log_event("admin.access_denied", hash=_hash(email)[:16])
+            return None
+        return User(email=email, csrf="", session_hash="")
 
     def admin_open(user: User) -> bool:
         now = time.time()
@@ -935,6 +961,36 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             "rules": [{"label": rule_label(r), "id": r, "n": n, "wrong": w,
                        "w": round(n / rule_peak * 100)} for r, n, w in rules],
             "session_hours": int(settings.session_hours),
+            "system": admin_system(now),
+            "usage": [{"name": ruleset_name(r), "id": r, "total": d + f, "failed": f,
+                       "rate": round(d / (d + f) * 100),
+                       "avg": f"{s / d:.1f} sn".replace(".", ",") if d else "—"}
+                      for r, d, f, s in db.usage_since(tr_day(now - 29 * 86400))],
+            "false_alarms": [{"name": ruleset_name(r), "version": v, "label": rule_label(i),
+                              "id": i, "wrong": w, "votes": w + o,
+                              "rate": round(w / (w + o) * 100)}
+                             for r, v, i, w, o in db.false_alarms()],
+        }
+
+    def ruleset_name(ruleset_id: str) -> str:
+        found = rulesets.get(ruleset_id)
+        return found.name if found else ruleset_id
+
+    def admin_system(now: float) -> dict[str, Any]:
+        """Çalışma durumu. Yalnızca sayılar ve hata kodları; iş kimliği, e-posta ya da rapor yok."""
+        size = 0
+        for path in (settings.db_path, Path(f"{settings.db_path}-wal")):
+            with suppress(OSError):
+                size += path.stat().st_size
+        return {
+            "build": settings.build or "—",
+            "workers_ok": runner.alive(),
+            "queue": f"{runner.queued()} / {settings.max_queued_jobs}",
+            "uploads": f"{sum(uploads_running.values())} / {settings.max_uploads_in_flight}",
+            "db": f"{size / (1024 * 1024):.1f} MB".replace(".", ","),
+            "uptime": format_uptime(now - started_at),
+            "errors": [{"code": c, "n": n, "message": job_error_message(c)}
+                       for c, n in db.job_errors(now - 86400)],
         }
 
     def admin_key_form(request: Request, user: User, status: int = 200,
@@ -947,7 +1003,14 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     @app.get("/yonetim", response_class=HTMLResponse)
     def admin_page(request: Request) -> HTMLResponse:
-        """Yalnızca listedeki e-posta + bu oturumda girilmiş anahtar; diğer herkese 404."""
+        """Access ya da listedeki e-posta + bu oturumda girilmiş anahtar; diğer herkese 404."""
+        if access is not None:
+            admin = access_admin(request, access)
+            if admin is None:
+                raise HTTPException(404)
+            log_event("admin.view", hash=_hash(admin.email)[:16])
+            return render(request, "admin.html", user=admin, admin=admin_context(),
+                          access_login=True, retention=int(settings.retention_hours))
         user = current_user(request)
         if user is None or not admin_allowed(user):
             raise HTTPException(404)
@@ -959,6 +1022,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     @app.post("/yonetim/anahtar", response_class=HTMLResponse)
     async def admin_unlock(request: Request) -> Response:
+        if access is not None:  # Access varken anahtar yöntemi yok
+            raise HTTPException(404)
         user = current_user(request)
         if user is None or not admin_allowed(user):
             raise HTTPException(404)

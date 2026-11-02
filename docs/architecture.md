@@ -303,6 +303,12 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   yalnızca özet; `synora admin-key` üretir; istemci başına saatte 5 deneme; 2 saat geçerli). Demo
   kipinde e-posta doğrulanmadığı için adres tek başına yetmez. Yetkisiz herkes 404 görür; ayar boşsa
   panel kapalıdır. Geçmiş kullanım `daily_jobs` tablosundan (yalnızca gün + sayı) okunur.
+  **Cloudflare Access** (`SYNORA_ACCESS_TEAM_DOMAIN` + `SYNORA_ACCESS_AUD`): ayarlıysa kimlik yalnızca
+  Access JWT'sinden gelir, oturum ve anahtar yöntemi kapanır (`synora.web.access`). Uygulama jetonu
+  kendisi de doğrular (yalnızca RS256, imza, `aud`, `iss`, süre) ve e-postayı listeyle karşılaştırır;
+  anahtarlar alınamazsa panel açılmaz; yarım ayarla uygulama başlamaz. Panel ayrıca sistem durumu,
+  son 30 gün kural seti kullanımı (`usage_daily`: gün + kural seti + sayı + süre, kimlik yok, 90 gün
+  saklanır) ve kural seti sürümü başına yanlış alarm oranını (`feedback_counts`) gösterir.
 
 ## 10a. LaTeX şablonu (A12)
 

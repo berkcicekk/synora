@@ -2,7 +2,10 @@
 # Tek örnek çalışmalı: iki örnek aynı veritabanında birbirinin işlerini "yarıda kaldı" sayar.
 services:
   synora:
-    build: .
+    build:
+      context: .
+      args:
+        SYNORA_BUILD: ${SYNORA_BUILD:-}
     image: synora:latest
     restart: unless-stopped
     # Tüm ayarlar (SMTP parolası dahil) sunucuda; izin 600, repoya girmez.

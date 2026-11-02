@@ -6,9 +6,12 @@
   <h1 class="steptitle"><span aria-current="page">Yönetim</span></h1>
   <nav aria-label="Yönetim bölümleri" class="subnav">
     <a href="#genel" aria-current="location">Genel bakış</a>
+    <a href="#sistem">Sistem</a>
+    <a href="#kullanim">Kullanım</a>
     <a href="#hesaplar">Hesaplar</a>
     <a href="#oneriler">Öneriler</a>
     <a href="#kurallar">Sık bulgular</a>
+    <a href="#yanlis-alarm">Yanlış alarm</a>
   </nav>
 </div>
 
@@ -42,6 +45,56 @@
     </div>
   </article>
 </div>
+
+{% set s = admin.system %}
+<section id="sistem" aria-labelledby="sistem-h" class="pcard table-card mt14">
+  <div class="table-head">
+    <h2 id="sistem-h" class="pcard-title">Sistem durumu</h2>
+    <span class="pcard-sub">Sürüm <span id="s-build">{{ s.build }}</span></span>
+  </div>
+  <div class="meterline pad-b">
+    <div class="mrow"><span>İş yürütücü</span><span class="admin-day"><strong id="s-workers">{% if s.workers_ok %}Çalışıyor{% else %}Sorun var{% endif %}</strong></span></div>
+    <div class="mrow"><span>Kuyruk</span><span class="admin-day"><strong id="s-queue">{{ s.queue }}</strong></span></div>
+    <div class="mrow"><span>Süren yükleme</span><span class="admin-day"><strong id="s-uploads">{{ s.uploads }}</strong></span></div>
+    <div class="mrow"><span>Veritabanı</span><span class="admin-day"><strong id="s-db">{{ s.db }}</strong></span></div>
+    <div class="mrow"><span>Çalışma süresi</span><span class="admin-day"><strong id="s-uptime">{{ s.uptime }}</strong></span></div>
+  </div>
+  {% if s.errors %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Hata kodu</th><th scope="col" class="msg">Anlamı</th><th scope="col">Son 24 sa</th></tr></thead>
+    <tbody>
+      {% for e in s.errors %}
+      <tr><td class="num">{{ e.code }}</td><td class="msg">{{ e.message }}</td><td class="num">{{ e.n }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Son 24 saatte başarısız denetim yok.</p>
+  {% endif %}
+</section>
+
+<section id="kullanim" aria-labelledby="kullanim-h" class="pcard table-card mt14">
+  <div class="table-head">
+    <h2 id="kullanim-h" class="pcard-title">Kullanım</h2>
+    <span class="pcard-sub">Son 30 gün, kural seti başına · yeniden denetimler dahil, anonim</span>
+  </div>
+  {% if admin.usage %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Kural seti</th><th scope="col">Denetim</th><th scope="col">Başarılı</th><th scope="col">Ort. süre</th></tr></thead>
+    <tbody>
+      {% for u in admin.usage %}
+      <tr><td title="{{ u.id }}">{{ u.name }}</td><td class="num">{{ u.total }}</td><td class="num">%{{ u.rate }}</td><td class="num">{{ u.avg }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Son 30 günde denetim yok.</p>
+  {% endif %}
+</section>
 
 <section id="hesaplar" aria-labelledby="hesaplar-h" class="pcard table-card mt14">
   <div class="table-head">
@@ -110,6 +163,27 @@
   </div>
   {% else %}
   <p class="empty pad-b">Henüz denetim yok.</p>
+  {% endif %}
+</section>
+
+<section id="yanlis-alarm" aria-labelledby="yanlis-alarm-h" class="pcard table-card mt14">
+  <div class="table-head">
+    <h2 id="yanlis-alarm-h" class="pcard-title">Yanlış alarm</h2>
+    <span class="pcard-sub">Öğrenci oylarına göre, kural seti sürümü başına · az oyda oran yanıltıcı olabilir</span>
+  </div>
+  {% if admin.false_alarms %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Kural</th><th scope="col">Kural seti</th><th scope="col">Sürüm</th><th scope="col">Yanlış / oy</th><th scope="col">Oran</th></tr></thead>
+    <tbody>
+      {% for f in admin.false_alarms %}
+      <tr><td title="{{ f.id }}">{{ f.label }}</td><td>{{ f.name }}</td><td class="num">{{ f.version }}</td><td class="num">{{ f.wrong }} / {{ f.votes }}</td><td class="num">%{{ f.rate }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Henüz "yanlış" oyu yok.</p>
   {% endif %}
 </section>
 {% endblock %}

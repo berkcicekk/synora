@@ -14,6 +14,7 @@ import multiprocessing as mp
 import queue
 import sys
 import threading
+import time
 from collections import Counter
 from multiprocessing.connection import Connection
 
@@ -133,6 +134,7 @@ class JobRunner:
     def run_now(self, job_id: str, data: bytes, ruleset_path: str,
                 user_roles: UserRoles = None) -> None:
         self.db.set_running(job_id)
+        started = time.monotonic()
         if self.settings.isolate_jobs:
             result = run_isolated(data, ruleset_path, job_id, self.settings.job_timeout_seconds,
                                   user_roles)
@@ -140,7 +142,8 @@ class JobRunner:
             result = run_pipeline(data, ruleset_path, job_id, user_roles)
         # Kullanıcı bu arada silmişse UPDATE hiçbir satıra dokunmaz.
         self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"],
-                           source_sha256=result["source_sha256"])
+                           source_sha256=result["source_sha256"],
+                           seconds=time.monotonic() - started)
         if result.get("training"):
             # F6: yalnızca açık rıza işaretli işlerde; satırlar metinsiz ve iş kimliksizdir.
             job = self.db.get_job(job_id)

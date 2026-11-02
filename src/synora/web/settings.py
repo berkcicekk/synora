@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 _SHA256_HEX = re.compile(r"[0-9a-f]{64}")
 _HEADER_NAME = re.compile(r"[a-z0-9-]{1,64}")
+_ACCESS_TEAM = re.compile(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.cloudflareaccess\.com")
 
 
 def _env(name: str, default: str) -> str:
@@ -65,14 +66,25 @@ class Settings:
     # SHA-256 özeti tutulur (`synora admin-key` üretir). İkisinden biri boşsa panel kapalı.
     admin_emails: tuple[str, ...] = ()
     admin_key_sha256: str = field(default="", repr=False)
+    # Cloudflare Access: ikisi de doluysa panele yalnızca Access ile girilir (JWT uygulamada da
+    # doğrulanır), oturum ve anahtar yöntemi kapanır. Listedeki e-posta yine şarttır.
+    access_team_domain: str = ""  # ör. payper.cloudflareaccess.com
+    access_aud: str = ""  # Access uygulamasının AUD etiketi (64 onaltılık)
+    build: str = ""  # panelde gösterilen sürüm (imaj derlenirken verilir)
 
     @property
     def secure_cookies(self) -> bool:
         return not self.dev
 
     @property
+    def access_enabled(self) -> bool:
+        return (bool(_ACCESS_TEAM.fullmatch(self.access_team_domain))
+                and bool(_SHA256_HEX.fullmatch(self.access_aud)))
+
+    @property
     def admin_enabled(self) -> bool:
-        return bool(self.admin_emails) and bool(_SHA256_HEX.fullmatch(self.admin_key_sha256))
+        return bool(self.admin_emails) and (
+            self.access_enabled or bool(_SHA256_HEX.fullmatch(self.admin_key_sha256)))
 
     def problems(self) -> list[str]:
         """Üretimde (dev=False) başlamayı engelleyen eksik ya da güvensiz ayarlar."""
@@ -95,6 +107,13 @@ class Settings:
         if self.admin_key_sha256 and not _SHA256_HEX.fullmatch(self.admin_key_sha256):
             found.append("SYNORA_ADMIN_KEY_SHA256 anahtarın kendisi değil, 64 haneli SHA-256 "
                          "özeti olmalı (`synora admin-key` üretir)")
+        # Yarım ayar panele anahtar yöntemiyle sessizce dönmesin: başlatma durur.
+        if self.access_team_domain or self.access_aud:
+            if not _ACCESS_TEAM.fullmatch(self.access_team_domain):
+                found.append("SYNORA_ACCESS_TEAM_DOMAIN <ekip>.cloudflareaccess.com biçiminde "
+                             "olmalı")
+            if not _SHA256_HEX.fullmatch(self.access_aud):
+                found.append("SYNORA_ACCESS_AUD Access uygulamasının 64 haneli AUD etiketi olmalı")
         if self.client_ip_header and not _HEADER_NAME.fullmatch(self.client_ip_header):
             found.append("SYNORA_CLIENT_IP_HEADER geçerli bir başlık adı olmalı "
                          "(ör. cf-connecting-ip, x-real-ip)")
@@ -122,5 +141,8 @@ class Settings:
             smtp_from=_env("SMTP_FROM", cls.smtp_from),
             admin_emails=admins,
             admin_key_sha256=_env("ADMIN_KEY_SHA256", "").strip().lower(),
+            access_team_domain=_env("ACCESS_TEAM_DOMAIN", "").strip().lower(),
+            access_aud=_env("ACCESS_AUD", "").strip().lower(),
+            build=_env("BUILD", "").strip(),
             client_ip_header=_env("CLIENT_IP_HEADER", cls.client_ip_header).strip().lower(),
         )

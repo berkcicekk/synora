@@ -49,7 +49,23 @@ nginx ayarı (`nginx-synora.conf`) iki kurulumda aynıdır. Yükseltme: `git pul
 up -d --build`. Kayıtlar: `sudo docker compose logs -f`. `synora.service` bu kurulumda kullanılmaz;
 ikisini birden çalıştırmayın (tek süreç kuralı). Uygulama istemci IP'sini kullanmadığından
 `FORWARDED_ALLOW_IPS` kapsayıcıda etkisizdir; IP'ye dayalı bir sınır eklenirse Docker ağ geçidi
-adresi buraya yazılmalı.
+adresi buraya yazılmalı. Yönetim panelinde sürüm görünsün diye derlemede
+`SYNORA_BUILD=$(git rev-parse --short HEAD) docker compose build` kullanılabilir (zorunlu değil).
+
+## Yönetim paneli: Cloudflare Access
+
+Site Cloudflare'in arkasındaysa `/yonetim` kimliği Access'e bırakılabilir. Uygulama gelen JWT'yi
+kendisi de doğrular (imza, `aud`, `iss`, süre) ve e-postayı `SYNORA_ADMIN_EMAILS` ile karşılaştırır;
+Access ayarı bozulursa panel 404 döner, açılmaz.
+
+1. Cloudflare hesabında MFA'yı açın: Access kuralları bu hesaptan yönetilir.
+2. Zero Trust → Access → Applications → **Self-hosted**: alan adı sitenin adresi, yol `yonetim`.
+   Oturum süresi kısa olsun (ör. 2 saat). Tek kural: **Allow**, *Emails* = yönetici adresleri.
+3. Uygulamanın **AUD** etiketini ve ekip alan adını (`<ekip>.cloudflareaccess.com`) env dosyasına
+   yazın, ardından `docker compose up -d`.
+4. Doğrulayın: gizli pencerede `/yonetim` ve `/yonetim/anahtar` Access girişine yönlenmeli; listede
+   olmayan adres giremez. Kapsayıcının `<ekip>.cloudflareaccess.com` adresine çıkışı olmalı (anahtarlar
+   oradan alınır; alınamazsa panel kapalı kalır, kayıtta `admin.access_keys_unavailable` görünür).
 
 ## Kurallar
 
