@@ -8,7 +8,8 @@ from __future__ import annotations
 import hashlib
 import json
 import time
-from typing import Literal, TypedDict
+from collections import Counter
+from typing import Any, Literal, TypedDict
 
 from synora.annotate import annotate_document
 from synora.check import USER_ROLES, CheckResult, check
@@ -21,12 +22,21 @@ from synora.log import log_event
 from synora.model import DocModel, Role
 from synora.outline import build_outline
 from synora.parse import parse_package
-from synora.report import to_json
+from synora.report import summary, to_json
 from synora.ruleset import Ruleset, load_ruleset
+
+# Küçük bir dosya on binlerce bulgu üretebilir; rapor belleğe ve veritabanına sınırlı girer.
+# Sınırlar gerçek tezlerin çok üstündedir (doğruluk testinde medyan 63 bulgu).
+MAX_FINDINGS_PER_GROUP = 500
+MAX_REPORT_FINDINGS = 5_000
+MAX_REPORT_BYTES = 8 * 1024 * 1024
+REPORT_TOO_LARGE = "REPORT_TOO_LARGE"
 
 
 class PipelineResult(TypedDict):
     report: str | None
+    # Panel için özet (JSON): toplam sayılar, kural başına adet. Tam rapor açılmadan okunur.
+    stats: str | None
     error_code: str | None
     source_sha256: str | None
     # Öğrencinin uygulanmış rol seçimleri için (features_json, rol, kural seti) satırları.
@@ -86,6 +96,43 @@ def training_rows(doc: DocModel, result: CheckResult, rules: Ruleset) -> list[tu
     return out
 
 
+def limit_findings(findings: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
+    """Raporda tutulacak bulgular ve listeye hiç giremeyen bulgu sayısı.
+
+    Aynı türden (kural + beklenen + bulunan) fazlası, türün son tutulan bulgusunun `omitted`
+    alanında sayılır; böylece ekrandaki adet gerçeği gösterir. Bulgular yerinde değiştirilir.
+    """
+    kept: list[dict[str, Any]] = []
+    last_of_group: dict[tuple[str, str, str], dict[str, Any]] = {}
+    group_sizes: Counter[tuple[str, str, str]] = Counter()
+    for finding in findings:
+        group = (finding["rule_id"], finding["expected"], finding["actual"])
+        group_sizes[group] += 1
+        if group_sizes[group] <= MAX_FINDINGS_PER_GROUP:
+            kept.append(finding)
+            last_of_group[group] = finding
+        else:
+            last = last_of_group[group]
+            last["omitted"] = last.get("omitted", 0) + 1
+    dropped = sum(1 + f.get("omitted", 0) for f in kept[MAX_REPORT_FINDINGS:])
+    return kept[:MAX_REPORT_FINDINGS], dropped
+
+
+def report_stats(result: CheckResult) -> str:
+    """Kırpılmamış toplamlar; yalnızca sayı ve kural kimliği, metin içermez."""
+    counts = summary(result)
+    return json.dumps({
+        "errors": counts["errors"], "warnings": counts["warnings"], "fixable": counts["fixable"],
+        "findings": len(result.findings),
+        "rule_counts": dict(Counter(f.rule_id for f in result.findings)),
+    })
+
+
+def _failed(error_code: str, source_sha256: str) -> PipelineResult:
+    return {"report": None, "stats": None, "error_code": error_code,
+            "source_sha256": source_sha256, "training": []}
+
+
 def run_pipeline(
     data: bytes, ruleset_path: str, job_id: str = "job",
     user_roles: dict[str, str] | None = None,
@@ -105,15 +152,20 @@ def run_pipeline(
         for i, f in enumerate(report["findings"]):
             f["location"] = where.get(f["para_id"]) if f["para_id"] else None
             f["block"] = finding_block.get(i)
+        report["findings"], report["dropped_findings"] = limit_findings(report["findings"])
     except SynoraError as exc:
         log_event("job.rejected", job_id=job_id, code=exc.code.value)
-        return {"report": None, "error_code": exc.code.value, "source_sha256": sha, "training": []}
+        return _failed(exc.code.value, sha)
     except Exception:
         # Ayrıntı (ve olası belge parçaları) log'a yazılmaz; yalnızca tür.
         log_event("job.crashed", job_id=job_id, code="INTERNAL")
-        return {"report": None, "error_code": "INTERNAL", "source_sha256": sha, "training": []}
+        return _failed("INTERNAL", sha)
+    report_json = json.dumps(report, ensure_ascii=False)
+    if len(report_json.encode()) > MAX_REPORT_BYTES:
+        log_event("job.rejected", job_id=job_id, code=REPORT_TOO_LARGE)
+        return _failed(REPORT_TOO_LARGE, sha)
     log_event("job.done", job_id=job_id,
               duration_ms=int((time.monotonic() - started) * 1000),
-              count=len(report["findings"]))
-    return {"report": json.dumps(report, ensure_ascii=False), "error_code": None,
+              count=len(result.findings))
+    return {"report": report_json, "stats": report_stats(result), "error_code": None,
             "source_sha256": sha, "training": training_rows(doc, result, rules)}

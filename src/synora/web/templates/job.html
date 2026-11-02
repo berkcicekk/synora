@@ -100,6 +100,9 @@
         <li>Kaydedip yeniden yükleyin.</li>
         {% elif code == "INTERRUPTED" %}
         <li>Aynı dosyayı yeniden yükleyin; dosyanızda bir sorun yok.</li>
+        {% elif code == "REPORT_TOO_LARGE" %}
+        <li>Paragraflardaki elle verilmiş biçimleri temizleyin; aynı türdeki metne tek bir stil uygulayın.</li>
+        <li>Kaydedip yeniden yükleyin.</li>
         {% else %}
         <li>Dosyayı Word'de açın. Word onarmayı önerirse kabul edin.</li>
         <li><em>Dosya › Farklı Kaydet</em> ile yeni bir <strong>.docx</strong> olarak kaydedin.</li>
@@ -302,6 +305,9 @@
       {% if view.finding_count > view.cards|length %}
       <p class="muted small">{{ view.finding_count }} bulgu; aynı türdekiler tek yorumda toplandı.</p>
       {% endif %}
+      {% if view.dropped_findings %}
+      <p class="muted small">Çok fazla bulgu olduğu için {{ view.dropped_findings }} bulgu listede gösterilmiyor; üstteki hata ve uyarı sayılarına dahildir.</p>
+      {% endif %}
       <div class="filters" role="group" aria-label="Bulguları süz">
         <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü <span class="fc">{{ n_all }}</span></button>
         {% if n_err %}<button type="button" class="filter" data-filter="error" aria-pressed="false">Hatalar <span class="fc">{{ n_err }}</span></button>{% endif %}
@@ -332,6 +338,7 @@
               <ul>{% for loc in c.locations %}<li>{{ loc }}</li>{% endfor %}</ul>
             </details>{% endif %}
           {% elif c.sections %}Yer: bölüm {{ c.sections|join(", ") }} (sayfa ayarları){% endif %}
+          {% if c.omitted %}<p class="muted small">ve {{ c.omitted }} yer daha</p>{% endif %}
         </div>
         {{ howto(c.rule_id) }}
         {% if not demo %}

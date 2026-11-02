@@ -134,6 +134,17 @@ CREATE TABLE IF NOT EXISTS users (
 """
 
 
+# İşin raporsuz görünümü (sütun sırası `Job` ile aynı). Rapor megabaytlarca olabilir; panel,
+# listeler ve durum sorgusu onu belleğe almaz.
+JOB_META_VIEW = """
+DROP VIEW IF EXISTS job_meta;
+CREATE VIEW job_meta AS
+SELECT id, email, ruleset, status, created_at, finished_at, error_code, NULL AS report,
+       source_sha256, user_roles, collect, session_hash, stats
+FROM jobs;
+"""
+
+
 def _email_hash(email: str) -> str:
     return hashlib.sha256(email.encode("utf-8")).hexdigest()
 
@@ -175,6 +186,7 @@ class Job:
     user_roles: str | None = None  # JSON {para_id: rol}: öğrencinin kaydettiği rol seçimleri
     collect: int = 0  # 1: rol seçimleri rızayla, metinsiz eğitim verisi olarak kullanılabilir
     session_hash: str | None = None  # işi başlatan oturumun özeti (demo kipinde rapor ona bağlı)
+    stats: str | None = None  # JSON: kırpılmamış toplamlar; panel tam raporu açmadan okur
 
 
 class Database:
@@ -201,6 +213,9 @@ class Database:
                     "ALTER TABLE jobs ADD COLUMN collect INTEGER NOT NULL DEFAULT 0")
             if "session_hash" not in columns:
                 self._conn.execute("ALTER TABLE jobs ADD COLUMN session_hash TEXT")
+            if "stats" not in columns:
+                self._conn.execute("ALTER TABLE jobs ADD COLUMN stats TEXT")
+            self._conn.executescript(JOB_META_VIEW)
             suggestion_columns = {row[1] for row in
                                   self._conn.execute("PRAGMA table_info(suggestions)")}
             if "read_at" not in suggestion_columns:
@@ -380,15 +395,16 @@ class Database:
         self.execute("UPDATE jobs SET user_roles=? WHERE id=?", (roles, job_id))
 
     def finish_job(self, job_id: str, *, report: str | None, error_code: str | None,
-                   source_sha256: str | None = None, seconds: float = 0.0) -> None:
+                   source_sha256: str | None = None, stats: str | None = None,
+                   seconds: float = 0.0) -> None:
         status = "done" if report is not None else "failed"
         now = time.time()
         with self._lock:
             row = self._conn.execute("SELECT status, ruleset FROM jobs WHERE id=?",
                                      (job_id,)).fetchone()
             self._conn.execute("UPDATE jobs SET status=?, report=?, error_code=?, finished_at=?, "
-                               "source_sha256=? WHERE id=?",
-                               (status, report, error_code, now, source_sha256, job_id))
+                               "source_sha256=?, stats=? WHERE id=?",
+                               (status, report, error_code, now, source_sha256, stats, job_id))
             # Yürütücünün hata yolu biten işi yeniden bitirebilir; o ikinci kez sayılmaz.
             if row is not None and row[0] in ("queued", "running"):
                 ok = status == "done"
@@ -403,14 +419,19 @@ class Database:
         row = self.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
         return Job(*row) if row else None
 
+    def get_job_meta(self, job_id: str) -> Job | None:
+        """Raporu okumadan iş bilgisi; `report` her zaman None."""
+        row = self.execute("SELECT * FROM job_meta WHERE id=?", (job_id,)).fetchone()
+        return Job(*row) if row else None
+
     def recent_jobs(self, email: str, limit: int = 10,
                     session_hash: str | None = None) -> list[Job]:
-        """session_hash verilirse yalnızca o oturumda başlatılan işler."""
+        """Raporsuz son işler; session_hash verilirse yalnızca o oturumda başlatılanlar."""
         if session_hash is None:
-            rows = self.execute("SELECT * FROM jobs WHERE email=? ORDER BY created_at DESC "
+            rows = self.execute("SELECT * FROM job_meta WHERE email=? ORDER BY created_at DESC "
                                 "LIMIT ?", (email, limit)).fetchall()
         else:
-            rows = self.execute("SELECT * FROM jobs WHERE email=? AND session_hash=? "
+            rows = self.execute("SELECT * FROM job_meta WHERE email=? AND session_hash=? "
                                 "ORDER BY created_at DESC LIMIT ?",
                                 (email, session_hash, limit)).fetchall()
         return [Job(*r) for r in rows]

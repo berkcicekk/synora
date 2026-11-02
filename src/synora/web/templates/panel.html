@@ -114,7 +114,7 @@
       <tr>
         <td>{{ r.when }}</td>
         <td>{{ r.ruleset_name }}</td>
-        <td class="num">{% if r.findings is not none %}{{ r.findings }}{% else %}<span class="state state-{{ r.status }}">{{ {"queued": "sırada", "running": "denetleniyor", "failed": "başarısız"}.get(r.status, r.status) }}</span>{% endif %}</td>
+        <td class="num">{% if r.findings is not none %}{{ r.findings }}{% else %}<span class="state state-{{ r.status }}">{{ {"queued": "sırada", "running": "denetleniyor", "failed": "başarısız", "done": "hazır"}.get(r.status, r.status) }}</span>{% endif %}</td>
         <td>{{ r.hours_left }} sa</td>
         <td><a href="/jobs/{{ r.id }}">Raporu aç</a></td>
       </tr>

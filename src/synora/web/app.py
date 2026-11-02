@@ -42,7 +42,7 @@ from synora.ruleset import Ruleset, load_ruleset
 from synora.web.access import AccessVerifier
 from synora.web.db import TR_TZ, Database, Job, tr_day
 from synora.web.mailer import Mailer, make_mailer
-from synora.web.pipeline import run_pipeline
+from synora.web.pipeline import REPORT_TOO_LARGE, run_pipeline
 from synora.web.presentation import PageSpec, RuleTile, page_spec, rule_tiles
 from synora.web.settings import Settings
 from synora.web.worker import JobRunner
@@ -123,6 +123,7 @@ JOB_ERRORS = {
     "TIMEOUT": "Denetim süre sınırını aştı. Belge çok büyük ya da karmaşık olabilir.",
     "INTERNAL": "Beklenmeyen bir hata oluştu. Dosyanızı Word'de açıp yeniden kaydedip deneyin.",
     "INTERRUPTED": "Sunucu yeniden başlatıldığı için denetim tamamlanamadı. Yeniden yükleyin.",
+    REPORT_TOO_LARGE: "Belgede rapora sığmayacak kadar çok biçim farkı var.",
 }
 
 
@@ -290,8 +291,11 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
                 "locations": [],
                 "sections": set(),
                 "count": 0,
+                "omitted": 0,
             }
-        g["count"] += 1
+        omitted = f.get("omitted", 0)  # raporda tutulmayan aynı türden bulgular
+        g["count"] += 1 + omitted
+        g["omitted"] += omitted
         if f.get("location"):
             g["locations"].append(f["location"])
         elif f.get("section_index") is not None:
@@ -318,7 +322,9 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
                 if blocks[i]["sev"] != "error":
                     blocks[i]["sev"] = c["severity"]
     return {"summary": report["summary"], "ruleset": report["ruleset"], "cards": cards,
-            "finding_count": len(report["findings"]), "blocks": blocks, "outline": _outline(blocks),
+            "finding_count": sum(c["count"] for c in cards),
+            "dropped_findings": report.get("dropped_findings", 0),
+            "blocks": blocks, "outline": _outline(blocks),
             "role_choices": [(r, _role_name(r)) for r in ROLE_CHOICES],
             "checked": report.get("checked_rules") or [],  # eski raporlarda alan yok
             "editable": sum(1 for b in blocks if "pid" in b)}
@@ -497,10 +503,10 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     # onu başlatan oturumda listelenir ve açılır. Doğrulamalı kipte adres sahipliği kanıtlıdır.
     session_bound = not settings.email_verification
 
-    def own_job(user: User, job_id: str) -> Job:
+    def own_job(user: User, job_id: str, *, with_report: bool = True) -> Job:
         if not JOB_ID_RE.fullmatch(job_id):
             raise HTTPException(404)
-        job = db.get_job(job_id)
+        job = db.get_job(job_id) if with_report else db.get_job_meta(job_id)
         if job is None or not hmac.compare_digest(job.email, user.email) or expired(job):
             raise HTTPException(404)
         if session_bound and not hmac.compare_digest(job.session_hash or "", user.session_hash):
@@ -598,7 +604,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         return max(0, round(left))
 
     def panel_context(user: User) -> dict[str, Any]:
-        """Panel kartları ve son denetimler tablosu; rapor metni içermez (yalnızca sayılar)."""
+        """Panel kartları ve son denetimler tablosu. Tam rapor değil, yalnızca özet okunur."""
         jobs = [j for j in db.recent_jobs(
             user.email, session_hash=user.session_hash if session_bound else None)
             if not expired(j)]
@@ -606,22 +612,16 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         latest: dict[str, Any] | None = None
         frequent: list[tuple[str, int]] = []
         for j in jobs:
-            findings_n = None
-            if j.status == "done" and j.report:
-                report = json.loads(j.report)
-                findings_n = len(report.get("findings") or [])
-                if latest is None:
-                    s = report.get("summary") or {}
-                    latest = {"id": j.id, "when": format_when(j.created_at),
-                              "errors": s.get("errors", 0), "warnings": s.get("warnings", 0),
-                              "fixable": s.get("fixable", 0), "findings": findings_n,
-                              "ruleset_name": _ruleset_name(j.ruleset),
-                              "ruleset": j.ruleset, "hours_left": _hours_left(j)}
-                    counts: dict[str, int] = {}
-                    for f in report.get("findings") or []:
-                        counts[f["rule_id"]] = counts.get(f["rule_id"], 0) + 1
-                    frequent = [(rule_label(rid), n) for rid, n in
-                                sorted(counts.items(), key=lambda kv: -kv[1])[:3]]
+            stats = json.loads(j.stats) if j.status == "done" and j.stats else None
+            findings_n = stats["findings"] if stats else None
+            if stats and latest is None:
+                latest = {"id": j.id, "when": format_when(j.created_at),
+                          "errors": stats["errors"], "warnings": stats["warnings"],
+                          "fixable": stats["fixable"], "findings": findings_n,
+                          "ruleset_name": _ruleset_name(j.ruleset),
+                          "ruleset": j.ruleset, "hours_left": _hours_left(j)}
+                frequent = [(rule_label(rid), n) for rid, n in
+                            sorted(stats["rule_counts"].items(), key=lambda kv: -kv[1])[:3]]
             rows.append({"id": j.id, "when": format_when(j.created_at), "status": j.status,
                          "ruleset_name": _ruleset_name(j.ruleset), "findings": findings_n,
                          "hours_left": _hours_left(j)})
@@ -1309,7 +1309,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     @app.get("/jobs/{job_id}/status")
     def job_status(request: Request, job_id: str) -> JSONResponse:
-        job = own_job(require_user(request), job_id)
+        job = own_job(require_user(request), job_id, with_report=False)
         return JSONResponse({"status": job.status})
 
     @app.get("/jobs/{job_id}/report.json")
@@ -1325,7 +1325,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         user = require_user(request)
         form = await small_form(request)
         check_csrf(user.csrf, str(form.get("csrf", "")))
-        own_job(user, job_id)
+        own_job(user, job_id, with_report=False)
         db.delete_job(job_id)
         return RedirectResponse("/", status_code=303)
 

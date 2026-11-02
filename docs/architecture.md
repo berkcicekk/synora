@@ -296,6 +296,9 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
 - Demo kipinde (`SYNORA_EMAIL_VERIFICATION=0`) adres doğrulanmadığı için aynı e-postayla
   başkası da girebilir: rapor yalnızca onu başlatan oturumda listelenir ve açılır (işte oturum
   özeti tutulur). Doğrulamalı kipte geçmiş adrese bağlıdır, her cihazda görünür.
+- Rapor boyutu sınırlıdır (`synora.web.pipeline`): aynı türden en çok 500, toplam en çok 5000 bulgu
+  saklanır, fazlası sayılardan düşmez; 8 MB'ı aşan rapor reddedilir (`REPORT_TOO_LARGE`). Panel, listeler
+  ve durum sorgusu tam raporu okumaz: `jobs.stats` özetini ve `job_meta` görünümünü kullanır.
 - Öneri kutusu: 180 günden eski ve en yeni 1000 dışındaki mesajlar temizlikte silinir.
 - Yönetim paneli (`/yonetim`): kayıtlı hesaplar, açık oturum, son 24 saat ve son 14 gün
   kullanım, öneri kutusu, en sık bulgular. Rapor içeriği gösterilmez. Erişim: e-posta

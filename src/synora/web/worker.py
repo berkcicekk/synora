@@ -15,7 +15,6 @@ import queue
 import sys
 import threading
 import time
-from collections import Counter
 from multiprocessing.connection import Connection
 
 from synora.log import log_event
@@ -85,7 +84,8 @@ def run_isolated(data: bytes, ruleset_path: str, job_id: str, timeout: float,
                  user_roles: UserRoles = None) -> PipelineResult:
     result = _spawn("check", data, ruleset_path, job_id, timeout, user_roles)
     if isinstance(result, str):
-        return {"report": None, "error_code": result, "source_sha256": None, "training": []}
+        return {"report": None, "stats": None, "error_code": result, "source_sha256": None,
+                "training": []}
     return result  # type: ignore[return-value]
 
 
@@ -142,20 +142,19 @@ class JobRunner:
             result = run_pipeline(data, ruleset_path, job_id, user_roles)
         # Kullanıcı bu arada silmişse UPDATE hiçbir satıra dokunmaz.
         self.db.finish_job(job_id, report=result["report"], error_code=result["error_code"],
-                           source_sha256=result["source_sha256"],
+                           source_sha256=result["source_sha256"], stats=result["stats"],
                            seconds=time.monotonic() - started)
-        if result.get("training"):
+        job = self.db.get_job_meta(job_id)
+        if job is None:  # öğrenci bu arada sildi
+            return
+        if result["training"] and job.collect:
             # F6: yalnızca açık rıza işaretli işlerde; satırlar metinsiz ve iş kimliksizdir.
-            job = self.db.get_job(job_id)
-            if job is not None and job.collect:
-                self.db.add_training(result["training"])
-        if result["report"]:
+            self.db.add_training(result["training"])
+        if result["stats"]:
             # Anonim bulgu sayacı ("en sık yapılan hatalar"); kimlik ya da metin yok.
-            report = json.loads(result["report"])
-            counts = Counter(f["rule_id"] for f in report.get("findings") or [])
-            job = self.db.get_job(job_id)
-            if counts and job is not None:
-                self.db.add_finding_counts(job.ruleset, dict(counts))
+            rule_counts = json.loads(result["stats"])["rule_counts"]
+            if rule_counts:
+                self.db.add_finding_counts(job.ruleset, rule_counts)
 
     def make_output(
         self, kind: OutputKind, job_id: str, data: bytes, ruleset_path: str,
