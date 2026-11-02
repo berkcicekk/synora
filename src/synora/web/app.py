@@ -330,7 +330,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     landing_stats = {
         "formats": len(rulesets),
         "universities": len({r.rules.institution for r in rulesets.values()
-                             if r.rules.institution}),
+                             if r.rules.institution and r.rules.kind == "thesis"}),
         "accuracy": "%97,1",
     }
     # LaTeX şablonu ilk istendiğinde kural setinden üretilip saklanır (kullanıcı girdisi yok;

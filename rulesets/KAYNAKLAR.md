@@ -262,6 +262,15 @@ yorumlarına bakın.
 |  | `zbeu-sbe` | [ZBEÜ Sosyal Bilimler Enstitüsü Tez Yazım ve Basım Yönergesi, 2025](https://cdn3.beun.edu.tr/sbe/0a21dcbf2899d483e05005bc1e3005b8/205545.pdf) |
 |  | `zbeu-tip` | [ZBEÜ Tıp Fakültesi Tez Yazım Kılavuzu, Zonguldak 2019](https://cdn3.beun.edu.tr/tip//zbeu-tipta-uzmanlik-ogrencileri-icin-tez-yazim-kilavuzu.pdf) |
 
+## Dergiler
+
+Dergilerin resmi makale şablonlarından çıkarıldı; değerlerin yanında
+alındıkları stil yazılı. Üniversite sayısına dahil değildir.
+
+| Yayıncı | Kural seti | Şablon |
+|---|---|---|
+| MDPI | `mdpi-electronics` | [MDPI Electronics Microsoft Word şablonu (electronics-template.dot), 2026](https://www.mdpi.com/journal/electronics/instructions) |
+
 ## Kılavuzu bulunamayanlar
 
 Arama kotası ve erişim sorunları nedeniyle yeniden denenebilir.

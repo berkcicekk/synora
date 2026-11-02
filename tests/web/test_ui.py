@@ -343,7 +343,8 @@ def test_landing_stats_strip(client: TestClient) -> None:
     from synora.web.app import discover_rulesets
 
     rulesets = discover_rulesets(Path(__file__).resolve().parents[2] / "rulesets")
-    unis = {r.rules.institution for r in rulesets.values() if r.rules.institution}
+    unis = {r.rules.institution for r in rulesets.values()
+            if r.rules.institution and r.rules.kind == "thesis"}  # dergi yayıncısı sayılmaz
     html = client.get("/").text
     assert f'<span class="n">{len(rulesets)}</span>' in html
     assert f'<span class="n">{len(unis)}</span>' in html

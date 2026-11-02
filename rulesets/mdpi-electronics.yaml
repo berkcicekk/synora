@@ -1,0 +1,84 @@
+# MDPI Electronics — makale şablonu (electronics-template.dot, Word, 2026)
+# Kaynak: derginin resmi Word şablonundaki MDPI_* stilleri. Değerlerin yanındaki yorum, değerin
+# alındığı stildir. Şablon tez kılavuzu değil, dergi makalesi biçimidir; hakem sürecine gönderim
+# için kullanılır, dergi yayın öncesi belgeyi kendisi yeniden dizer.
+ruleset: mdpi-electronics
+version: 1
+name: MDPI Electronics · Makale
+kind: journal
+source: MDPI Electronics Microsoft Word şablonu (electronics-template.dot), 2026
+institution: MDPI
+source_url: https://www.mdpi.com/journal/electronics/instructions
+
+tolerance:
+  length_cm: 0.05
+  size_pt: 0.25
+  spacing_pt: 0.5
+  line_multiple: 0.05
+
+# Zorunlu bölüm yok: şablon makale türleri için tek bir bölüm düzeni dayatmıyor ("Review papers
+# and other article types have a more flexible structure").
+
+page:
+  size: A4                      # pgSz 11906 × 16838
+  orientation: portrait
+  # pgMar: üst 1417, alt 907, sol/sağ 720 twip
+  margins_cm: { top: 2.5, bottom: 1.6, left: 1.27, right: 1.27 }
+
+fonts:
+  allowed: [Palatino Linotype]  # Normal ve tüm MDPI_* stilleri
+
+roles:
+  title:
+    size_pt: 18                 # MDPI_1.2_title
+    bold: true
+    alignment: left
+    space_after_pt: 12
+  body:
+    size_pt: 10                 # MDPI_3.1_text (boyut verilmemiş → Word varsayılanı 10 pt)
+    alignment: justify
+    indent_left_cm: 4.6         # 2608 twip: metin sütunu soldaki kenar sütununun sağından başlar
+    # İlk satır girintisi (425 twip) denetlenmez: şablonda girintisiz MDPI_3.2_text_no_indent,
+    # teorem ve ispat stilleri de gövde metni olarak kullanılıyor.
+    # ÇELİŞKİ: satır aralığı stilde "en az 14 pt", Ek A örnek paragrafında "tam 14 pt".
+  heading_1:
+    size_pt: 12                 # MDPI_2.1_heading1
+    bold: true
+    alignment: left
+    space_before_pt: 12
+    space_after_pt: 3
+    # ÇELİŞKİ: sol girinti stilde 4,6 cm, "References" başlığında 0 cm.
+  heading_2:
+    size_pt: 10                 # MDPI_2.2_heading2
+    italic: true
+    alignment: left
+    indent_left_cm: 4.6
+    space_after_pt: 3
+    # ÇELİŞKİ: önceki boşluk stilde 3 pt, şablondaki tüm 2. düzey başlıklarda 12 pt.
+  heading_3:
+    size_pt: 10                 # MDPI_2.3_heading3
+    alignment: left
+    indent_left_cm: 4.6
+    space_before_pt: 3
+    space_after_pt: 3
+  figure_caption:
+    size_pt: 9                  # MDPI_5.1_figure_caption
+    alignment: justify
+    indent_left_cm: 4.6
+    position: below             # şablonda başlık görselin altında
+  table_caption:
+    size_pt: 9                  # MDPI_4.1_table_caption
+    indent_left_cm: 4.6
+    # ÇELİŞKİ: hizalama stilde iki yana yaslı, Ek A tablo başlığında sola yaslı.
+    position: above             # şablonda başlık tablonun üstünde
+  # Tablo hücresi denetlenmez: şablon künye sütununu, denklem numaralarını ve kısaltmalar
+  # listesini de tabloyla diziyor; bunlar MDPI_4.2_table_body'den farklı punto ve hizada.
+  reference_entry:
+    size_pt: 9                  # MDPI_8.1_references
+    alignment: justify
+    line_spacing: { at_least_pt: 14 }
+  footnote:
+    size_pt: 9                  # MDPI_7.1_footnotes
+
+document:
+  forbid_tracked_changes: true

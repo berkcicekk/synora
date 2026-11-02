@@ -126,6 +126,9 @@ class Ruleset(_Strict):
     version: int = Field(ge=1)
     name: str
     source: str | None = None  # kılavuzun adı/tarihi
+    # thesis: üniversite tez kılavuzu; journal: dergi makale şablonu (institution = yayıncı).
+    # Üniversite sayımları (giriş sayfası, KAYNAKLAR.md) yalnızca tezleri sayar.
+    kind: Literal["thesis", "journal"] = "thesis"
     institution: str | None = None  # üniversite adı; arayüzde seçenekler buna göre gruplanır
     source_url: str | None = Field(None, pattern=r"^https?://[^\s]+$")  # kılavuzun resmi adresi
     # Kullanıcıya gösterilecek uyarı: ör. enstitünün güncel şablonu bu kılavuzla çelişiyor.

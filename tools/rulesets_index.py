@@ -9,7 +9,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from synora.web.app import discover_rulesets, group_rulesets, order_rulesets
+from synora.web.app import RulesetGroup, discover_rulesets, group_rulesets, order_rulesets
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "rulesets" / "KAYNAKLAR.md"
@@ -49,7 +49,11 @@ NOT_FOUND: dict[str, str] = {
 
 def render() -> str:
     rulesets = discover_rulesets(ROOT / "rulesets")
-    groups = [g for g in group_rulesets(order_rulesets(rulesets, "")) if g.items[0].id != "example"]
+    all_groups = [g for g in group_rulesets(order_rulesets(rulesets, ""))
+                  if g.items[0].id != "example"]
+    # Bir kurum (yayıncı) yalnızca dergi kural setleri taşır; tezlerle karışmaz.
+    groups = [g for g in all_groups if g.items[0].rules.kind == "thesis"]
+    journals = [g for g in all_groups if g.items[0].rules.kind == "journal"]
     universities = [u.strip() for u in UNIVERSITIES.read_text(encoding="utf-8").splitlines()
                     if u.strip()]
     covered = {g.institution for g in groups}
@@ -73,12 +77,23 @@ def render() -> str:
         "| Üniversite | Kural seti | Kılavuz |",
         "|---|---|---|",
     ]
-    for g in groups:
-        for i, r in enumerate(g.items):
-            uni = g.institution if i == 0 else ""
-            source = r.rules.source or ""
-            link = f"[{source}]({r.rules.source_url})" if r.rules.source_url else source
-            lines.append(f"| {uni} | `{r.id}` | {link.replace('|', '/')} |")
+    def rows(gs: list[RulesetGroup]) -> list[str]:
+        out: list[str] = []
+        for g in gs:
+            for i, r in enumerate(g.items):
+                inst = g.institution if i == 0 else ""
+                source = r.rules.source or ""
+                link = f"[{source}]({r.rules.source_url})" if r.rules.source_url else source
+                out.append(f"| {inst} | `{r.id}` | {link.replace('|', '/')} |")
+        return out
+
+    lines += rows(groups)
+    if journals:
+        lines += ["", "## Dergiler", "",
+                  "Dergilerin resmi makale şablonlarından çıkarıldı; değerlerin yanında",
+                  "alındıkları stil yazılı. Üniversite sayısına dahil değildir.", "",
+                  "| Yayıncı | Kural seti | Şablon |", "|---|---|---|"]
+        lines += rows(journals)
     lines += ["", "## Kılavuzu bulunamayanlar", "",
               "Arama kotası ve erişim sorunları nedeniyle yeniden denenebilir.", "",
               "| Üniversite | Neden |", "|---|---|"]
