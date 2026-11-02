@@ -85,6 +85,23 @@ OUTPUT_ERRORS = {
 MAX_USER_ROLES = 2000
 # Yönetici anahtarı oturum başına bu kadar geçerli (açık bırakılan bilgisayar için).
 ADMIN_UNLOCK_SECONDS = 2 * 3600
+# Yönetim işlemi sonrası ileti: adreste yalnızca bu kodlar taşınır, e-posta ya da serbest metin yok.
+ADMIN_STATUS = {
+    "oturum": ("Hesabın oturumları kapatıldı.", False),
+    "oturum-yok": ("Hesabın açık oturumu yok.", False),
+    "silindi": ("Hesap ve bağlı veriler silindi.", False),
+    "onay": ("Onay e-postası eşleşmedi; hesap silinmedi.", True),
+    "yok": ("Kayıt bulunamadı ya da işlem zaten yapılmış.", True),
+    "okundu": ("Öneri okundu işaretlendi.", False),
+    "oneri-silindi": ("Öneri silindi.", False),
+}
+ADMIN_ACTIONS = {
+    "session_end": "Oturum kapatma",
+    "account_delete": "Hesap silme",
+    "suggestion_read": "Öneri okundu",
+    "suggestion_delete": "Öneri silme",
+}
+SUGGESTION_ID_RE = re.compile(r"[0-9]{1,18}")
 # Rol seçim listesi (arayüz sırası); yalnızca synora.check.USER_ROLES içindekiler.
 ROLE_CHOICES = [r for r in (
     "heading_1", "heading_2", "heading_3", "body", "front_matter", "block_quote", "list_item",
@@ -441,6 +458,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     access = (AccessVerifier(settings.access_team_domain, settings.access_aud)
               if settings.access_enabled else None)
     started_at = time.time()
+    # Access kipinde uygulama oturumu yok: CSRF değeri süreç başına rastgele sırla e-postadan türer.
+    admin_csrf_secret = secrets.token_bytes(32)
 
     def access_admin(request: Request, verifier: AccessVerifier) -> User | None:
         token = request.headers.get("cf-access-jwt-assertion")
@@ -452,7 +471,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if email not in settings.admin_emails:
             log_event("admin.access_denied", hash=_hash(email)[:16])
             return None
-        return User(email=email, csrf="", session_hash="")
+        csrf = hmac.new(admin_csrf_secret, email.encode(), hashlib.sha256).hexdigest()
+        return User(email=email, csrf=csrf, session_hash="")
 
     def admin_open(user: User) -> bool:
         now = time.time()
@@ -956,8 +976,12 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             "accounts": [{"email": e, "joined": format_when(c), "consent": v or "—",
                           "online": bool(o), "jobs": int(n)}
                          for e, c, v, o, n in db.accounts(now)],
-            "suggestions": [{"when": format_when(t), "page": p or "—", "email": e or "—",
-                             "message": m} for t, p, e, m in db.suggestions(50)],
+            "suggestions": [{"id": i, "when": format_when(t), "page": p or "—", "email": e or "—",
+                             "message": m, "read": r is not None}
+                            for i, t, p, e, m, r in db.admin_suggestions(50)],
+            "unread": db.unread_suggestions(),
+            "log": [{"when": format_when(t), "actor": a, "action": ADMIN_ACTIONS.get(c, c),
+                     "target": x} for t, a, c, x in db.admin_log(50)],
             "rules": [{"label": rule_label(r), "id": r, "n": n, "wrong": w,
                        "w": round(n / rule_peak * 100)} for r, n, w in rules],
             "session_hours": int(settings.session_hours),
@@ -1010,7 +1034,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                 raise HTTPException(404)
             log_event("admin.view", hash=_hash(admin.email)[:16])
             return render(request, "admin.html", user=admin, admin=admin_context(),
-                          access_login=True, retention=int(settings.retention_hours))
+                          notice=admin_notice(request), access_login=True,
+                          retention=int(settings.retention_hours))
         user = current_user(request)
         if user is None or not admin_allowed(user):
             raise HTTPException(404)
@@ -1018,7 +1043,78 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return admin_key_form(request, user)
         log_event("admin.view", hash=_hash(user.email)[:16])
         return render(request, "admin.html", user=user, admin=admin_context(),
-                      retention=int(settings.retention_hours))
+                      notice=admin_notice(request), retention=int(settings.retention_hours))
+
+    def admin_notice(request: Request) -> tuple[str, bool] | None:
+        return ADMIN_STATUS.get(request.query_params.get("durum", ""))
+
+    # --- Yönetim işlemleri: yetki → CSRF → işlem; yetkisize gövde okunmadan 404 -----------------
+
+    def admin_actor(request: Request) -> User | None:
+        if access is not None:
+            return access_admin(request, access)
+        user = current_user(request)
+        return user if user is not None and admin_allowed(user) and admin_open(user) else None
+
+    async def admin_action(request: Request) -> tuple[str, FormData]:
+        """Yöneticinin özeti ve form. JWT anahtarı ağdan alınabilir: olay döngüsü bloklanmasın."""
+        user = await run_in_threadpool(admin_actor, request)
+        if user is None:
+            raise HTTPException(404)
+        form = await small_form(request)
+        check_csrf(user.csrf, str(form.get("csrf", "")))
+        return _hash(user.email)[:16], form
+
+    def admin_done(status: str, anchor: str, actor: str | None = None,
+                   action: str | None = None) -> RedirectResponse:
+        if actor and action:
+            log_event("admin.action", hash=actor, code=action)
+        return RedirectResponse(f"/yonetim?durum={status}#{anchor}", status_code=303)
+
+    def form_email(form: FormData, name: str) -> str:
+        return str(form.get(name, "")).strip().lower()
+
+    def suggestion_id(form: FormData) -> int | None:
+        value = str(form.get("id", ""))
+        return int(value) if SUGGESTION_ID_RE.fullmatch(value) else None
+
+    @app.post("/yonetim/hesap/oturum")
+    async def admin_end_sessions(request: Request) -> Response:
+        actor, form = await admin_action(request)
+        email = form_email(form, "email")
+        if not db.end_sessions(email, actor=actor, target=_hash(email)[:16]):
+            return admin_done("oturum-yok", "hesaplar")
+        return admin_done("oturum", "hesaplar", actor, "session_end")
+
+    @app.post("/yonetim/hesap/sil")
+    async def admin_delete_account(request: Request) -> Response:
+        actor, form = await admin_action(request)
+        email = form_email(form, "email")
+        if not EMAIL_RE.fullmatch(email):
+            return admin_done("yok", "hesaplar")
+        if not hmac.compare_digest(form_email(form, "confirm").encode(), email.encode()):
+            return admin_done("onay", "hesaplar")
+        deleted = await run_in_threadpool(db.delete_account, email, actor=actor,
+                                          target=_hash(email)[:16])
+        if not deleted:
+            return admin_done("yok", "hesaplar")
+        return admin_done("silindi", "hesaplar", actor, "account_delete")
+
+    @app.post("/yonetim/oneri/okundu")
+    async def admin_read_suggestion(request: Request) -> Response:
+        actor, form = await admin_action(request)
+        sid = suggestion_id(form)
+        if sid is None or not db.mark_suggestion_read(sid, actor=actor):
+            return admin_done("yok", "oneriler")
+        return admin_done("okundu", "oneriler", actor, "suggestion_read")
+
+    @app.post("/yonetim/oneri/sil")
+    async def admin_delete_suggestion(request: Request) -> Response:
+        actor, form = await admin_action(request)
+        sid = suggestion_id(form)
+        if sid is None or not db.delete_suggestion(sid, actor=actor):
+            return admin_done("yok", "oneriler")
+        return admin_done("oneri-silindi", "oneriler", actor, "suggestion_delete")
 
     @app.post("/yonetim/anahtar", response_class=HTMLResponse)
     async def admin_unlock(request: Request) -> Response:

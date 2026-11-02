@@ -297,7 +297,7 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   başkası da girebilir: rapor yalnızca onu başlatan oturumda listelenir ve açılır (işte oturum
   özeti tutulur). Doğrulamalı kipte geçmiş adrese bağlıdır, her cihazda görünür.
 - Öneri kutusu: 180 günden eski ve en yeni 1000 dışındaki mesajlar temizlikte silinir.
-- Yönetim paneli (`/yonetim`, salt okuma): kayıtlı hesaplar, açık oturum, son 24 saat ve son 14 gün
+- Yönetim paneli (`/yonetim`): kayıtlı hesaplar, açık oturum, son 24 saat ve son 14 gün
   kullanım, öneri kutusu, en sık bulgular. Rapor içeriği gösterilmez. Erişim: e-posta
   `SYNORA_ADMIN_EMAILS` listesinde **ve** oturum başına yönetici anahtarı (`SYNORA_ADMIN_KEY_SHA256`
   yalnızca özet; `synora admin-key` üretir; istemci başına saatte 5 deneme; 2 saat geçerli). Demo
@@ -309,6 +309,11 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   anahtarlar alınamazsa panel açılmaz; yarım ayarla uygulama başlamaz. Panel ayrıca sistem durumu,
   son 30 gün kural seti kullanımı (`usage_daily`: gün + kural seti + sayı + süre, kimlik yok, 90 gün
   saklanır) ve kural seti sürümü başına yanlış alarm oranını (`feedback_counts`) gösterir.
+  **Yönetim işlemleri** (`/yonetim/hesap/*`, `/yonetim/oneri/*`, yalnızca POST + CSRF, tam yetki):
+  oturum kapatma; hesap silme (e-postayı yeniden yazarak onay; hesap, oturum, giriş bağlantısı, iş,
+  rapor, oy, günlük sınır sayacı ve o adresli öneriler tek işlemde silinir, anonim sayaçlar kalır;
+  yedeklerde saklama süresi dolana kadar durur); öneri okundu/silme. Her işlem aynı veritabanı
+  işleminde `admin_log`'a yazılır (yönetici ve hedef e-postası özet olarak; mesaj metni yok; 180 gün).
 
 ## 10a. LaTeX şablonu (A12)
 

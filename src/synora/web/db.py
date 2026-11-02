@@ -11,6 +11,8 @@ import hashlib
 import sqlite3
 import threading
 import time
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -22,6 +24,7 @@ TR_TZ = timezone(timedelta(hours=3))  # Türkiye 2016'dan beri yaz saati uygulam
 SUGGESTION_KEEP_DAYS = 180
 SUGGESTION_KEEP_ROWS = 1000
 USAGE_KEEP_DAYS = 90
+ADMIN_LOG_KEEP_DAYS = 180
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS login_tokens (
@@ -113,6 +116,15 @@ CREATE TABLE IF NOT EXISTS usage_daily (
     seconds REAL NOT NULL DEFAULT 0,
     PRIMARY KEY (day, ruleset)
 );
+-- Yönetim paneli işlem kaydı: kim (e-posta özeti), ne, neye (e-posta özeti ya da öneri no).
+-- E-posta ve mesaj metni yok; ADMIN_LOG_KEEP_DAYS gün sonra silinir.
+CREATE TABLE IF NOT EXISTS admin_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at REAL NOT NULL,
+    actor TEXT NOT NULL,
+    action TEXT NOT NULL,
+    target TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS users (
     email TEXT PRIMARY KEY,
     created_at REAL NOT NULL,
@@ -189,6 +201,10 @@ class Database:
                     "ALTER TABLE jobs ADD COLUMN collect INTEGER NOT NULL DEFAULT 0")
             if "session_hash" not in columns:
                 self._conn.execute("ALTER TABLE jobs ADD COLUMN session_hash TEXT")
+            suggestion_columns = {row[1] for row in
+                                  self._conn.execute("PRAGMA table_info(suggestions)")}
+            if "read_at" not in suggestion_columns:
+                self._conn.execute("ALTER TABLE suggestions ADD COLUMN read_at REAL")
             # Yeniden başlatmada yarıda kalan işler: dosya bellekteydi, artık yok.
             self._conn.execute(
                 "UPDATE jobs SET status='failed', error_code='INTERRUPTED', finished_at=? "
@@ -198,6 +214,23 @@ class Database:
     def execute(self, sql: str, params: tuple[object, ...] = ()) -> Rows:
         with self._lock:
             return Rows(self._conn.execute(sql, params))
+
+    @contextmanager
+    def _transaction(self) -> Iterator[None]:
+        """Birden çok yazma: ya hepsi ya hiçbiri (bağlantı autocommit kipinde)."""
+        with self._lock:
+            self._conn.execute("BEGIN IMMEDIATE")
+            try:
+                yield
+            except BaseException:
+                self._conn.execute("ROLLBACK")
+                raise
+            self._conn.execute("COMMIT")
+
+    def _audit(self, actor: str, action: str, target: str) -> None:
+        """Yalnızca _transaction içinde çağrılır: işlem ve kaydı birlikte yazılır."""
+        self._conn.execute("INSERT INTO admin_log (created_at, actor, action, target) "
+                           "VALUES (?, ?, ?, ?)", (time.time(), actor, action, target))
 
     # --- Giriş bağlantıları -----------------------------------------------------------
 
@@ -490,6 +523,67 @@ class Database:
             (since_day, limit))
         return [(str(r), int(d), int(f), float(s)) for r, d, f, s in rows]
 
+    # --- Yönetim işlemleri (her biri işlem kaydıyla birlikte, tek seferde yazılır) -------------
+
+    def admin_suggestions(self, limit: int = 50) -> list[tuple[Any, ...]]:
+        """(no, zaman, sayfa, e-posta, mesaj, okunma zamanı); en yeni başta."""
+        return self.execute("SELECT id, created_at, page, email, message, read_at "
+                            "FROM suggestions ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+
+    def unread_suggestions(self) -> int:
+        row = self.execute("SELECT COUNT(*) FROM suggestions WHERE read_at IS NULL").fetchone()
+        return int(row[0])
+
+    def mark_suggestion_read(self, suggestion_id: int, *, actor: str) -> bool:
+        with self._transaction():
+            cur = self._conn.execute(
+                "UPDATE suggestions SET read_at=? WHERE id=? AND read_at IS NULL",
+                (time.time(), suggestion_id))
+            if cur.rowcount == 0:
+                return False
+            self._audit(actor, "suggestion_read", str(suggestion_id))
+        return True
+
+    def delete_suggestion(self, suggestion_id: int, *, actor: str) -> bool:
+        with self._transaction():
+            cur = self._conn.execute("DELETE FROM suggestions WHERE id=?", (suggestion_id,))
+            if cur.rowcount == 0:
+                return False
+            self._audit(actor, "suggestion_delete", str(suggestion_id))
+        return True
+
+    def end_sessions(self, email: str, *, actor: str, target: str) -> int:
+        with self._transaction():
+            cur = self._conn.execute("DELETE FROM sessions WHERE email=?", (email,))
+            if cur.rowcount > 0:
+                self._audit(actor, "session_end", target)
+            return int(cur.rowcount)
+
+    def delete_account(self, email: str, *, actor: str, target: str) -> bool:
+        """Hesabın kimlikli tüm izlerini siler. Anonim sayaçlar (gün, kural, sayı) kalır."""
+        with self._transaction():
+            found = self._conn.execute("SELECT 1 FROM users WHERE email=?", (email,)).fetchone()
+            if found is None:
+                return False
+            self._conn.execute(
+                "DELETE FROM feedback WHERE job_id IN (SELECT id FROM jobs WHERE email=?)",
+                (email,))
+            self._conn.execute("DELETE FROM jobs WHERE email=?", (email,))
+            self._conn.execute("DELETE FROM sessions WHERE email=?", (email,))
+            self._conn.execute("DELETE FROM login_tokens WHERE email=?", (email,))
+            self._conn.execute("DELETE FROM job_starts WHERE email_hash=?", (_email_hash(email),))
+            self._conn.execute("DELETE FROM suggestions WHERE LOWER(email)=?", (email,))
+            self._conn.execute("DELETE FROM users WHERE email=?", (email,))
+            self._audit(actor, "account_delete", target)
+        # Silinen raporlar WAL dosyasında kalmasın (purge ile aynı).
+        self.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        return True
+
+    def admin_log(self, limit: int = 50) -> list[tuple[Any, ...]]:
+        """(zaman, yönetici özeti, işlem, hedef); en yeni başta."""
+        return self.execute("SELECT created_at, actor, action, target FROM admin_log "
+                            "ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+
     # --- Saklama süresi ---------------------------------------------------------------------
 
     def purge(self, retention_seconds: float) -> int:
@@ -508,6 +602,8 @@ class Database:
                                (SUGGESTION_KEEP_ROWS,))
             self._conn.execute("DELETE FROM usage_daily WHERE day < ?",
                                (tr_day(now - USAGE_KEEP_DAYS * 86400),))
+            self._conn.execute("DELETE FROM admin_log WHERE created_at < ?",
+                               (now - ADMIN_LOG_KEEP_DAYS * 86400,))
             # Silinen raporlar WAL dosyasında kalmasın: ana dosyaya işle (secure_delete sıfırlar)
             # ve WAL'ı boşalt.
             self._conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")

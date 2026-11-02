@@ -1033,4 +1033,9 @@ body.app .footer, body.editor .footer { background: transparent; }
 .ptable td.admin-email { overflow-wrap: anywhere; }
 /* Mesaj sütunu sonda ama sola yaslı, uzun metin satıra sarılır */
 .ptable thead th.msg, .ptable td.msg { text-align: left; min-width: 260px; overflow-wrap: anywhere; }
+.admin-status { color: var(--ok); font-size: .88rem; margin-bottom: 14px; }
+.admin-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; align-items: flex-start; }
+.admin-delete > summary { list-style: none; cursor: pointer; }
+.admin-delete > summary::-webkit-details-marker { display: none; }
+.admin-delete[open] form { margin-top: 10px; min-width: 240px; text-align: left; }
 /* == /YÖNETİM == */

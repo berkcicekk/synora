@@ -1,7 +1,7 @@
 """Yönetim paneli (/yonetim): yalnızca listedeki e-posta + oturum başına yönetici anahtarı.
 
 Demo kipinde e-posta doğrulanmadığı için adres tek başına kimlik sayılmaz; yetkisiz herkes 404
-görür. Sayfa yalnızca okur ve rapor içeriği (tez başlıkları dahil) göstermez.
+görür. Sayfa rapor içeriği (tez başlıkları dahil) göstermez; işlemler test_admin_actions.py'de.
 """
 
 from __future__ import annotations

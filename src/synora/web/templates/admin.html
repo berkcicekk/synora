@@ -12,8 +12,14 @@
     <a href="#oneriler">Öneriler</a>
     <a href="#kurallar">Sık bulgular</a>
     <a href="#yanlis-alarm">Yanlış alarm</a>
+    <a href="#islem-kaydi">İşlem kaydı</a>
   </nav>
 </div>
+
+{% if notice %}
+{% if notice[1] %}<p class="alert" role="alert">{{ notice[0] }}</p>
+{% else %}<p class="admin-status" role="status">{{ notice[0] }}</p>{% endif %}
+{% endif %}
 
 <div id="genel" class="cardgrid">
   <article class="pcard">
@@ -104,7 +110,7 @@
   {% if admin.accounts %}
   <div class="ptable-wrap">
   <table class="ptable">
-    <thead><tr><th scope="col">E-posta</th><th scope="col">Kayıt</th><th scope="col">Onaylanan metin</th><th scope="col">Oturum</th><th scope="col">Son 24 sa denetim</th></tr></thead>
+    <thead><tr><th scope="col">E-posta</th><th scope="col">Kayıt</th><th scope="col">Onaylanan metin</th><th scope="col">Oturum</th><th scope="col">Son 24 sa denetim</th><th scope="col">İşlem</th></tr></thead>
     <tbody>
       {% for a in admin.accounts %}
       <tr>
@@ -113,6 +119,28 @@
         <td class="num">{{ a.consent }}</td>
         <td>{% if a.online %}açık{% else %}—{% endif %}</td>
         <td class="num">{{ a.jobs }}</td>
+        <td><div class="admin-actions">
+          {% if a.online %}
+          <form method="post" action="/yonetim/hesap/oturum">
+            <input type="hidden" name="csrf" value="{{ user.csrf }}">
+            <input type="hidden" name="email" value="{{ a.email }}">
+            <button class="btn small" type="submit"><span class="lbl">Oturumu kapat</span></button>
+          </form>
+          {% endif %}
+          <details class="admin-delete">
+            <summary class="btn small"><span class="lbl">Sil</span></summary>
+            <form method="post" action="/yonetim/hesap/sil" class="admin-key-form">
+              <input type="hidden" name="csrf" value="{{ user.csrf }}">
+              <input type="hidden" name="email" value="{{ a.email }}">
+              <p class="fineprint">Hesap, raporlar, oturumlar ve öneriler kalıcı olarak silinir; yedeklerde saklama süresi dolana kadar kalır.</p>
+              <div class="fld">
+                <label for="sil-{{ loop.index }}">Onay için e-postayı yazın</label>
+                <input class="fld-search" id="sil-{{ loop.index }}" name="confirm" type="text" required autocomplete="off" spellcheck="false">
+              </div>
+              <button class="btn small danger" type="submit"><span class="lbl">Kalıcı olarak sil</span></button>
+            </form>
+          </details>
+        </div></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -126,12 +154,12 @@
 <section id="oneriler" aria-labelledby="oneriler-h" class="pcard table-card mt14">
   <div class="table-head">
     <h2 id="oneriler-h" class="pcard-title">İstek ve öneriler</h2>
-    <span class="pcard-sub">Son 50 mesaj</span>
+    <span class="pcard-sub">Son 50 mesaj · {{ admin.unread }} okunmamış</span>
   </div>
   {% if admin.suggestions %}
   <div class="ptable-wrap">
   <table class="ptable">
-    <thead><tr><th scope="col">Tarih</th><th scope="col">Sayfa</th><th scope="col">E-posta</th><th scope="col" class="msg">Mesaj</th></tr></thead>
+    <thead><tr><th scope="col">Tarih</th><th scope="col">Sayfa</th><th scope="col">E-posta</th><th scope="col" class="msg">Mesaj</th><th scope="col">Durum</th><th scope="col">İşlem</th></tr></thead>
     <tbody>
       {% for s in admin.suggestions %}
       <tr>
@@ -139,6 +167,21 @@
         <td class="num">{{ s.page }}</td>
         <td class="admin-email">{{ s.email }}</td>
         <td class="msg">{{ s.message }}</td>
+        <td>{% if s.read %}Okundu{% else %}<strong>Yeni</strong>{% endif %}</td>
+        <td><div class="admin-actions">
+          {% if not s.read %}
+          <form method="post" action="/yonetim/oneri/okundu">
+            <input type="hidden" name="csrf" value="{{ user.csrf }}">
+            <input type="hidden" name="id" value="{{ s.id }}">
+            <button class="btn small" type="submit"><span class="lbl">Okundu</span></button>
+          </form>
+          {% endif %}
+          <form method="post" action="/yonetim/oneri/sil">
+            <input type="hidden" name="csrf" value="{{ user.csrf }}">
+            <input type="hidden" name="id" value="{{ s.id }}">
+            <button class="btn small" type="submit"><span class="lbl">Sil</span></button>
+          </form>
+        </div></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -184,6 +227,27 @@
   </div>
   {% else %}
   <p class="empty pad-b">Henüz "yanlış" oyu yok.</p>
+  {% endif %}
+</section>
+
+<section id="islem-kaydi" aria-labelledby="islem-kaydi-h" class="pcard table-card mt14">
+  <div class="table-head">
+    <h2 id="islem-kaydi-h" class="pcard-title">İşlem kaydı</h2>
+    <span class="pcard-sub">Son 50 işlem · e-posta yerine özet tutulur, 180 gün saklanır</span>
+  </div>
+  {% if admin.log %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Tarih</th><th scope="col">İşlem</th><th scope="col">Yönetici</th><th scope="col">Hedef</th></tr></thead>
+    <tbody>
+      {% for e in admin.log %}
+      <tr><td>{{ e.when }}</td><td>{{ e.action }}</td><td class="num">{{ e.actor }}</td><td class="num">{{ e.target }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Henüz işlem yok.</p>
   {% endif %}
 </section>
 {% endblock %}
