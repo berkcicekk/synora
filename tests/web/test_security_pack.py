@@ -8,8 +8,8 @@ Türkçe klavyeyle yazılmış adresler.
 
 from __future__ import annotations
 
-import json
 import asyncio
+import json
 import time
 from collections.abc import Iterator
 from dataclasses import replace
