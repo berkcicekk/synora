@@ -8,6 +8,7 @@ Türkçe klavyeyle yazılmış adresler.
 
 from __future__ import annotations
 
+import json
 import asyncio
 import time
 from collections.abc import Iterator
@@ -333,6 +334,11 @@ def test_suggestions_are_capped_and_expire(tmp_path: Path) -> None:
 def test_feedback_para_id_format(client: TestClient, mailer: ConsoleMailer,
                                  para_id: str, status: int) -> None:
     job_id, csrf = ready_job(client, mailer)
+    # Geçerli biçimli kimlik raporda da bulunsun: burada yalnızca biçim denetimi sınanıyor.
+    db = client.app.state.db  # type: ignore[attr-defined]
+    report = json.loads(db.get_job(job_id).report)
+    report["findings"].append({"rule_id": "body.line_spacing", "para_id": para_id})
+    db.execute("UPDATE jobs SET report=? WHERE id=?", (json.dumps(report), job_id))
     res = client.post(f"/jobs/{job_id}/feedback", headers={"X-CSRF-Token": csrf}, data={
         "rule_id": "body.line_spacing", "verdict": "wrong", "para_id": para_id})
     assert res.status_code == status
