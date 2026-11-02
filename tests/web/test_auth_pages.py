@@ -9,6 +9,7 @@ from __future__ import annotations
 import re
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 from fastapi.testclient import TestClient
 from test_web import csrf_from, login
@@ -135,9 +136,66 @@ def test_register_records_consent_only_after_email_is_verified(
     assert "Son denetimler" in client.get("/").text
 
 
-def test_plain_login_does_not_record_consent(client: TestClient, mailer: ConsoleMailer) -> None:
-    login(client, mailer)
+def request_login(client: TestClient, email: str = EMAIL) -> Any:
+    page = client.get("/giris")
+    return client.post("/login", data={"email": email, "csrf": csrf_from(page.text)})
+
+
+def test_first_login_cannot_skip_consent(client: TestClient, mailer: ConsoleMailer) -> None:
+    assert request_login(client).status_code == 200
+    token = mailer.sent[-1][1].split("token=")[1]
+    page = client.get(f"/auth?token={token}")
+    assert 'name="kvkk"' in page.text
+    res = client.post("/auth", data={"token": token, "csrf": csrf_from(page.text)},
+                      follow_redirects=False)
+    assert res.status_code == 400 and consent(client) is None
+    assert "Son denetimler" not in client.get("/").text  # onaysız oturum açılmaz
+    confirm(client, mailer)
+    found = consent(client)
+    assert found is not None and found[0] == TERMS_VERSION
+
+
+def test_consented_user_logs_in_without_consent_step(client: TestClient,
+                                                     mailer: ConsoleMailer) -> None:
+    db: Database = client.app.state.db  # type: ignore[attr-defined]
+    db.register_user(EMAIL, "eski-surum")
+    request_login(client)
+    token = mailer.sent[-1][1].split("token=")[1]
+    page = client.get(f"/auth?token={token}")
+    assert 'name="kvkk"' not in page.text
+    res = client.post("/auth", data={"token": token, "csrf": csrf_from(page.text)},
+                      follow_redirects=False)
+    assert res.status_code == 303
+    found = consent(client)
+    assert found is not None and found[0] == "eski-surum"  # verdiği onay ezilmez
+
+
+def test_login_response_does_not_reveal_whether_address_is_registered(
+        client: TestClient, mailer: ConsoleMailer) -> None:
+    db: Database = client.app.state.db  # type: ignore[attr-defined]
+    db.register_user("kayitli@beun.edu.tr", "test")
+    known = request_login(TestClient(client.app), "kayitli@beun.edu.tr")
+    unknown = request_login(TestClient(client.app), "kayitsiz@beun.edu.tr")
+    assert known.status_code == unknown.status_code == 200
+    assert "E-postanızı kontrol edin" in known.text and "E-postanızı kontrol edin" in unknown.text
+    assert len(mailer.sent) == 2
+
+
+def test_admin_added_account_gives_own_consent_at_first_login(client: TestClient,
+                                                              mailer: ConsoleMailer) -> None:
+    db: Database = client.app.state.db  # type: ignore[attr-defined]
+    assert db.add_pending_user(EMAIL, actor="yonetici", target="hedef")
+    request_login(client)
     assert consent(client) is None
+    confirm(client, mailer)
+    assert consent(client) is not None
+
+
+def test_every_logged_in_user_can_be_managed(client: TestClient, mailer: ConsoleMailer) -> None:
+    login(client, mailer)
+    db: Database = client.app.state.db  # type: ignore[attr-defined]
+    assert db.set_suspended(EMAIL, True, actor="yonetici", target="hedef")
+    assert "Son denetimler" not in client.get("/").text
 
 
 def test_register_keeps_login_protections(client: TestClient, mailer: ConsoleMailer,

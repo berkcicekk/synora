@@ -57,7 +57,9 @@ def test_register_link_asks_owner_to_confirm_consent(client: TestClient,
     assert consent(client) is not None
 
 
-def test_plain_login_link_has_no_consent_box(client: TestClient, mailer: ConsoleMailer) -> None:
+def test_consented_login_link_has_no_consent_box(client: TestClient,
+                                                 mailer: ConsoleMailer) -> None:
+    client.app.state.db.register_user("ogrenci@beun.edu.tr", "test")  # type: ignore[attr-defined]
     page = client.get("/giris")
     client.post("/login", data={"email": "ogrenci@beun.edu.tr", "csrf": csrf_from(page.text)})
     html = client.get(f"/auth?token={_token(mailer)}").text

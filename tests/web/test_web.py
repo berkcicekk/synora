@@ -52,7 +52,7 @@ def login(client: TestClient, mailer: ConsoleMailer, email: str = "ogrenci@beun.
     link = mailer.sent[-1][1]
     token = link.split("token=")[1]
     confirm = client.get(f"/auth?token={token}")
-    res = client.post("/auth", data={"token": token, "csrf": csrf_from(confirm.text)},
+    res = client.post("/auth", data={"token": token, "csrf": csrf_from(confirm.text), "kvkk": "1"},
                       follow_redirects=False)
     assert res.status_code == 303
     home = client.get("/")
@@ -130,7 +130,8 @@ def test_token_single_use(client: TestClient, mailer: ConsoleMailer) -> None:
     client.post("/login", data={"email": "a@beun.edu.tr", "csrf": csrf_from(page.text)})
     token = mailer.sent[-1][1].split("token=")[1]
     csrf = csrf_from(client.get(f"/auth?token={token}").text)
-    client.post("/auth", data={"token": token, "csrf": csrf}, follow_redirects=False)
+    client.post("/auth", data={"token": token, "csrf": csrf, "kvkk": "1"},
+                follow_redirects=False)
     again = client.get(f"/auth?token={token}")
     assert again.status_code == 400
     assert "süresi dolmuş" in again.text

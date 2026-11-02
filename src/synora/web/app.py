@@ -759,11 +759,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             )
         if db.is_suspended(email):
             return fail("Bu adresle giriş şu anda kapalı.")
-        consent = None
-        if mode == "register":
-            if form.get("kvkk") != "1":
-                return fail("Devam etmek için aydınlatma metnini onaylayın.")
-            consent = TERMS_VERSION
+        if mode == "register" and form.get("kvkk") != "1":
+            return fail("Devam etmek için aydınlatma metnini onaylayın.")
         if db.login_requests_since(email, time.time() - 3600) >= settings.login_requests_per_hour:
             return fail("Çok fazla giriş isteği gönderildi. Bir saat sonra yeniden deneyin.")
         if not settings.email_verification:
@@ -777,7 +774,11 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return open_session(email)
         login_token = secrets.token_urlsafe(32)
         token_hash = _hash(login_token)
-        db.add_login_token(token_hash, email, settings.login_token_minutes * 60, consent=consent)
+        # Onayı olmayan adres giriş formundan gelse de bağlantı onay sayfasına çıkar. Hata vermek
+        # yerine böyle yapılır: adresin kayıtlı olup olmadığı dışarıdan anlaşılmasın.
+        needs_consent = mode == "register" or db.user_consent(email) is None
+        db.add_login_token(token_hash, email, settings.login_token_minutes * 60,
+                           consent=TERMS_VERSION if needs_consent else None)
         try:
             # smtplib eşzamanlı ve 20 sn bekleyebilir: olay döngüsünü kilitlemesin.
             await run_in_threadpool(mailer.send_login_link, email,

@@ -123,7 +123,7 @@ def test_accounts_are_paginated(client_: TestClient, mailer: ConsoleMailer) -> N
     assert len(re.findall(r'class="admin-email"', first)) == ADMIN_PAGE_SIZE
     assert 'href="/yonetim/hesaplar?sayfa=2"' in first
     second = client_.get("/yonetim/hesaplar", params={"sayfa": 2}).text
-    assert len(re.findall(r'class="admin-email"', second)) == 3
+    assert len(re.findall(r'class="admin-email"', second)) == 4  # 3 + girişte onay veren yönetici
     assert 'href="/yonetim/hesaplar?sayfa=1"' in second
 
 
@@ -171,12 +171,13 @@ def test_add_account_is_pending_and_not_counted(client_: TestClient,
                                                 mailer: ConsoleMailer) -> None:
     db = db_of(client_)
     csrf = open_panel(client_, mailer)
+    users_before = db.user_count()
     res = post(client_, "/yonetim/hesap/ekle", csrf=csrf, email=f" {STUDENT.upper()} ")
     assert res.status_code == 303 and "durum=eklendi" in res.headers["location"]
     assert "@" not in res.headers["location"]
     assert db.user_consent(STUDENT) is None
-    assert db.user_count() == 0  # ana sayfa sayısına girmez
-    assert db.admin_counts(0)["users"] == 0 and db.admin_counts(0)["pending"] == 1
+    assert db.user_count() == users_before  # ana sayfa sayısına girmez
+    assert db.admin_counts(0)["users"] == users_before and db.admin_counts(0)["pending"] == 1
     html = client_.get("/yonetim/hesaplar").text
     assert STUDENT in html and "Onay bekliyor" in html
     assert [r[2] for r in db.admin_log()] == ["account_add"]

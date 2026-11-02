@@ -45,7 +45,8 @@ def test_expired_login_link_is_rejected(client: TestClient, mailer: ConsoleMaile
     db = client.app.state.db  # type: ignore[attr-defined]
     db.execute("UPDATE login_tokens SET expires_at = ?", (time.time() - 1,))
     assert client.get(f"/auth?token={token}").status_code == 400
-    res = client.post("/auth", data={"token": token, "csrf": csrf}, follow_redirects=False)
+    res = client.post("/auth", data={"token": token, "csrf": csrf, "kvkk": "1"},
+                follow_redirects=False)
     assert res.status_code == 303 and res.headers["location"] == "/auth"
     assert SESSION_COOKIE not in res.cookies
     assert not logged_in(client)
@@ -56,11 +57,12 @@ def test_login_link_cannot_be_posted_twice(settings: Settings, mailer: ConsoleMa
     with TestClient(app) as victim, TestClient(app) as attacker:
         token = request_link(victim, mailer)
         csrf = csrf_from(victim.get(f"/auth?token={token}").text)
-        victim.post("/auth", data={"token": token, "csrf": csrf}, follow_redirects=False)
+        victim.post("/auth", data={"token": token, "csrf": csrf, "kvkk": "1"},
+                follow_redirects=False)
         assert logged_in(victim)
         # Bağlantıyı sonradan ele geçiren biri (ör. iletilen e-posta) oturum açamaz.
         a_csrf = csrf_from(attacker.get("/giris").text)
-        res = attacker.post("/auth", data={"token": token, "csrf": a_csrf},
+        res = attacker.post("/auth", data={"token": token, "csrf": a_csrf, "kvkk": "1"},
                             follow_redirects=False)
         assert SESSION_COOKIE not in res.cookies
         assert not logged_in(attacker)
@@ -85,7 +87,7 @@ def test_secrets_stored_only_as_hashes(client: TestClient, mailer: ConsoleMailer
                                        settings: Settings) -> None:
     token = request_link(client, mailer)
     csrf = csrf_from(client.get(f"/auth?token={token}").text)
-    client.post("/auth", data={"token": token, "csrf": csrf})
+    client.post("/auth", data={"token": token, "csrf": csrf, "kvkk": "1"})
     sid = client.cookies.get(SESSION_COOKIE)
     assert sid
     raw = settings.db_path.read_bytes()
@@ -251,7 +253,8 @@ def test_production_cookies_and_hsts(prod_client: TestClient, mailer: ConsoleMai
     assert "httponly" in pre and "secure" in pre and "samesite=strict" in pre
     token = request_link(prod_client, mailer)
     csrf = csrf_from(prod_client.get(f"/auth?token={token}").text)
-    res = prod_client.post("/auth", data={"token": token, "csrf": csrf}, follow_redirects=False)
+    res = prod_client.post("/auth", data={"token": token, "csrf": csrf, "kvkk": "1"},
+                follow_redirects=False)
     session = next(c for c in res.headers.get_list("set-cookie") if c.startswith(SESSION_COOKIE))
     low = session.lower()
     assert "httponly" in low and "secure" in low and "samesite=lax" in low

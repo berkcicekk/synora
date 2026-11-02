@@ -286,7 +286,7 @@ class Database:
             if row is None or row[2] or row[1] < now:
                 return None
             self._conn.execute("UPDATE login_tokens SET used=1 WHERE token_hash=?", (token_hash,))
-            # Düz girişte kullanıcı satırı açılmaz (e-posta kalıcı olarak tutulmaz).
+            # Satır yalnızca kişi onay verince açılır (onayı olmayan adres girişte de onay verir).
             if row[3] and consent_confirmed:
                 self._conn.execute(
                     "INSERT INTO users (email, created_at, consent_version, consent_at) "

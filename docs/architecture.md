@@ -282,7 +282,8 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
 - Giriş (`/giris`) ve kayıt (`/kayit`) ayrı sayfalar; ikisi de parolasız bağlantı gönderir. Kayıt,
   aydınlatma metni (`/aydinlatma`, **taslak**) onayı ister. Kayıt formunu başkası doldurmuş olabileceği
   için onay kutusu bağlantının açıldığı onay sayfasında yeniden işaretlenir; onay (metin sürümü + zaman)
-  ancak o zaman `users` tablosuna yazılır. Düz girişte kullanıcı satırı açılmaz.
+  ancak o zaman `users` tablosuna yazılır. Onayı olmayan adres giriş formundan gelse de aynı onay
+  sayfasına çıkar (adresin kayıtlı olup olmadığı dışarıdan anlaşılmaz); onaysız oturum açılmaz.
 - Kimlik doğrulama pilotta: üniversite e-postasına tek kullanımlık giriş bağlantısı `[KARAR?]`
   (ileride enstitünün SSO sistemi).
 - Web'e özel ek sınırlar: kullanıcı başına eşzamanlı iş ≤ 2 (kopya üretimi dahil), günlük iş ≤ 20 (rapor

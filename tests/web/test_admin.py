@@ -132,7 +132,7 @@ def test_overview_counts_accounts_and_hides_report_text(admin_client: TestClient
     users = re.search(r'id="n-users">(\d+)<', html)
     jobs = re.search(r'id="n-jobs">(\d+)<', html)
     online = re.search(r'id="n-online">(\d+)<', html)
-    assert users and users.group(1) == "1"  # yalnızca kayıt olan; düz giriş hesap açmaz
+    assert users and users.group(1) == "3"  # kayıt + ilk girişte onay veren öğrenci ve yönetici
     assert jobs and jobs.group(1) == "1"
     assert online and online.group(1) == "2"  # öğrenci + yönetici oturumu
     assert "Satır aralığı" in html or "body.line_spacing" in html  # en sık kurallar
