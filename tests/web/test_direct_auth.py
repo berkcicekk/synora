@@ -106,12 +106,12 @@ def test_exact_domains_still_exact(tmp_path: Path, mailer: ConsoleMailer) -> Non
 
 def test_production_without_smtp_is_fine_when_verification_off(tmp_path: Path) -> None:
     s = Settings(db_path=tmp_path / "p.db", rulesets_dir=ROOT / "rulesets",
-                 base_url="https://demo.payper.live", allowed_domains=(".edu.tr",),
+                 base_url="https://sontez.com", allowed_domains=(".edu.tr",),
                  dev=False, email_verification=False)
     assert s.problems() == []
 
 
 def test_production_with_verification_still_requires_smtp(tmp_path: Path) -> None:
     s = Settings(db_path=tmp_path / "p.db", rulesets_dir=ROOT / "rulesets",
-                 base_url="https://demo.payper.live", allowed_domains=(".edu.tr",), dev=False)
+                 base_url="https://sontez.com", allowed_domains=(".edu.tr",), dev=False)
     assert any("SMTP" in p for p in s.problems())

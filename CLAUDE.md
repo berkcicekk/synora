@@ -2,7 +2,7 @@
 
 ## Proje
 Payper (eski adı Synora; paket/env/CLI adları `synora`/`SYNORA_*` olarak kalır): .docx tezleri
-enstitü kural setine göre denetleyen/düzelten web aracı. Pilot: ZBEÜ. Demo: https://demo.payper.live
+enstitü kural setine göre denetleyen/düzelten web aracı. Pilot: ZBEÜ. Demo: https://sontez.com
 Mimari: @docs/architecture.md (değişmez kurallar oradaki "Tasarım ilkeleri"nde)
 Arayüz: Payper tasarım kimliği (2026-10-22 tasarım devri) dışına çıkma. Tokenlar tek kaynakta:
 `src/synora/web/static/app.css` `:root`; özet ve kurallar @docs/architecture.md §10.1. Eski Synora

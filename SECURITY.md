@@ -18,5 +18,5 @@ ayrıntıları birlikte gizli tutar, düzeltmede katkınızı (isterseniz) anar�
 tez metninin sızması (log, hata mesajı, rapor), oturum/CSRF/yetki atlamaları ve
 kaynak tüketimi (DoS). Mimari ve güvenlik sınırları: `docs/architecture.md` (§2, §8).
 
-Test ortamı olarak kendi kurulumunuzu kullanın; `demo.payper.live` üzerindeki diğer
+Test ortamı olarak kendi kurulumunuzu kullanın; `sontez.com` üzerindeki diğer
 kullanıcıların işlerine erişmeye çalışmayın.

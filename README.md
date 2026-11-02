@@ -4,7 +4,7 @@ Payper, `.docx` tezleri enstitünün yazım kılavuzuna göre **denetler** ve bi
 **metne dokunmadan** düzeltir. Öğrenci tezini web arayüzüne yükler, raporu ekranda görür,
 isterse düzeltmeleri Word'de izlenen değişiklik olarak taşıyan kopyayı indirir.
 
-Demo: https://demo.payper.live · Pilot: Zonguldak Bülent Ecevit Üniversitesi (Tıp Fakültesi)
+Demo: https://sontez.com · Pilot: Zonguldak Bülent Ecevit Üniversitesi (Tıp Fakültesi)
 
 > Kod adları tarihsel nedenle `synora` (paket, CLI, `SYNORA_*` ortam değişkenleri);
 > ürün adı Payper'dır. Ayrıntı: `docs/architecture.md`.
