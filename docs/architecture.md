@@ -294,7 +294,8 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   gövde okunmadan reddedilir. Bildirilen boyut sınırı aşan gövde de okunmaz. Yükleme süreyle sınırlıdır
   (`synora.web.limits`): 30 sn pay + gelen 16 KB başına 1 sn, en çok 10 dk; damla damla gönderen ya da
   susan istemci yuvayı tutamaz (408). Denetim ve kopya alt süreçlerinin toplamı ≤ `workers`; kuyruktaki
-  ve çalışan işlerin dosyaları ≤ `max_queued_bytes` (600 MB). Toplam bellek bütçesinin konteyner
+  ve çalışan işlerin dosyaları ≤ `max_queued_bytes` (300 MB). Kopya ve yeniden denetim hesap başına saatte
+  30; yarıda kalan yüklemeler istemci ağı başına saatte 10 ile sınırlı. Alt süreç sonucu pickle değil, doğrulanan JSON/bayt. Toplam bellek bütçesinin konteyner
   tavanının altında kaldığı testle zorlanır. Hız sınırlarında
   istemci IP'si `SYNORA_CLIENT_IP_HEADER` başlığından (öntanımlı `cf-connecting-ip`; nginx'te
   `x-real-ip`) okunur.

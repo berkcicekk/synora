@@ -51,7 +51,12 @@ class Settings:
     max_queued_jobs: int = 20
     # Bellek bütçesi (toplamı konteyner tavanının altında kalır, testle zorlanır): kuyruk ve çalışan
     # işlerin dosyaları + gövdesi okunan yüklemeler + kopya dosyaları + workers kadar alt süreç.
-    max_queued_bytes: int = 600 * 1024 * 1024
+    max_queued_bytes: int = 300 * 1024 * 1024
+    # Kopya ve yeniden denetim alt süreç çalıştırır, günlük sınıra girmez: hesap başına kota.
+    copies_per_hour: int = 30
+    copies_per_minute: int = 60  # site geneli
+    # Süresi dolan yüklemeler (istemci ağı başına): kasıtlı yuva kilitlemeye ceza.
+    upload_timeouts_per_hour: int = 10
     # Aynı anda gövdesi okunan yükleme (yeni denetim + yeniden denetim): her biri belleğe 100 MB'a
     # kadar alınır; paralel isteklerle bellek tüketilmesin. Kopya üretimi `workers` ile sınırlı.
     max_uploads_in_flight: int = 4

@@ -171,9 +171,9 @@ def test_slow_upload_endpoint_answers_408(settings: Settings, mailer: ConsoleMai
 
 def test_memory_budget_fits_container_limit() -> None:
     s = Settings()
-    held = s.max_queued_bytes + s.max_uploads_in_flight * s.max_upload_bytes
-    copies = s.workers * s.max_upload_bytes
-    children = s.workers * MEMORY_LIMIT_BYTES
+    held = s.max_queued_bytes + 2 * s.max_uploads_in_flight * s.max_upload_bytes
+    copies = 2 * s.workers * s.max_upload_bytes
+    children = s.workers * MEMORY_LIMIT_BYTES + 300 * 1024**2  # temel süreç
     compose = (ROOT / "compose.yaml").read_text(encoding="utf-8")
     limit = re.search(r"mem_limit:\s*(\d+)g", compose)
     assert limit

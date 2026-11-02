@@ -7,6 +7,7 @@ from collections.abc import AsyncIterable, Iterator
 from contextlib import contextmanager
 
 from fastapi import HTTPException
+from starlette.requests import ClientDisconnect
 
 UPLOAD_TOO_LARGE = "Dosya çok büyük."
 UPLOAD_TOO_SLOW = "Yükleme çok uzun sürdü. Bağlantınızı kontrol edip yeniden deneyin."
@@ -35,6 +36,8 @@ async def read_body(stream: AsyncIterable[bytes], *, max_bytes: int, grace_secon
                 timer.reschedule(min(earned, final_deadline))
     except TimeoutError:
         raise HTTPException(408, UPLOAD_TOO_SLOW) from None
+    except ClientDisconnect:
+        raise HTTPException(400, "Bağlantı kesildi.") from None
     return b"".join(chunks)
 
 

@@ -13,6 +13,7 @@ import json
 import multiprocessing as mp
 import os
 import queue
+import re
 import sys
 import threading
 import time
@@ -31,6 +32,7 @@ from synora.web.settings import Settings
 
 MEMORY_LIMIT_BYTES = 2 * 1024 * 1024 * 1024
 SETTINGS_ENV_PREFIX = "SYNORA_"
+MAX_CHILD_MESSAGE_BYTES = 700 * 1024 * 1024  # açılmış paket tavanı (600 MB) + pay
 
 
 UserRoles = dict[str, str] | None
@@ -38,6 +40,52 @@ UserRoles = dict[str, str] | None
 
 class NoProcessSlot(Exception):
     """Tüm alt süreç yuvaları dolu; kopya üretimi şimdi başlatılamaz."""
+
+
+# Alt süreç güvenilmez dosya işler; ele geçirilirse üst süreçte kod çalıştıramasın diye sonucu
+# pickle değil, burada doğrulanan JSON ya da ham bayt olarak gönderir.
+_OUTPUT_DOCX = b"D"
+_OUTPUT_ERROR = b"E"
+_ERROR_CODE_RE = re.compile(rb"[A-Z0-9_]{1,64}")
+
+
+def _pipeline_failure(error_code: str) -> PipelineResult:
+    return {"report": None, "stats": None, "error_code": error_code, "source_sha256": None,
+            "training": []}
+
+
+def encode_pipeline(result: PipelineResult) -> bytes:
+    return json.dumps(result).encode()
+
+
+def decode_pipeline(message: bytes) -> PipelineResult:
+    try:
+        raw = json.loads(message)
+        report, stats, code, sha = (raw["report"], raw["stats"], raw["error_code"],
+                                    raw["source_sha256"])
+        training = [(str(f), str(label), str(rs)) for f, label, rs in raw["training"]]
+    except (ValueError, KeyError, TypeError):
+        return _pipeline_failure("INTERNAL")
+    if not (all(v is None or isinstance(v, str) for v in (report, stats, code, sha))
+            and (report is not None or code is not None)):
+        return _pipeline_failure("INTERNAL")
+    return {"report": report, "stats": stats, "error_code": code, "source_sha256": sha,
+            "training": training}
+
+
+def encode_output(result: OutputResult) -> bytes:
+    if result["docx"] is not None:
+        return _OUTPUT_DOCX + result["docx"]
+    return _OUTPUT_ERROR + (result["error_code"] or "INTERNAL").encode()
+
+
+def decode_output(message: bytes) -> OutputResult:
+    kind, body = message[:1], message[1:]
+    if kind == _OUTPUT_DOCX:
+        return {"docx": body, "error_code": None}
+    if kind == _OUTPUT_ERROR and _ERROR_CODE_RE.fullmatch(body):
+        return {"docx": None, "error_code": body.decode()}
+    return {"docx": None, "error_code": "INTERNAL"}
 
 
 def scrub_environment() -> None:
@@ -58,17 +106,17 @@ def _child(
         resource.setrlimit(resource.RLIMIT_CPU, (cpu_seconds, cpu_seconds))
     data = conn.recv_bytes()
     if task == "check":
-        conn.send(run_pipeline(data, ruleset_path, job_id, user_roles))
+        conn.send_bytes(encode_pipeline(run_pipeline(data, ruleset_path, job_id, user_roles)))
     elif task in ("fixed", "annotated"):
-        conn.send(run_output(task, data, ruleset_path, job_id,  # type: ignore[arg-type]
-                             user_roles))
+        conn.send_bytes(encode_output(run_output(task, data, ruleset_path,  # type: ignore[arg-type]
+                                                 job_id, user_roles)))
     conn.close()
 
 
 def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: float,
-           user_roles: UserRoles = None) -> object:
-    """Görevi ayrı süreçte çalıştırır; süre aşımında süreci sonlandırır.
-    Başarısızlıkta hata kodu (str) döner."""
+           user_roles: UserRoles = None) -> bytes | str:
+    """Görevi ayrı süreçte çalıştırır; süre aşımında süreci sonlandırır. Sonuç ham ileti (bayt),
+    başarısızlıkta hata kodudur (str)."""
     ctx = mp.get_context("spawn")
     parent, child = ctx.Pipe()
     proc = ctx.Process(target=_child,
@@ -79,7 +127,7 @@ def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: floa
     try:
         parent.send_bytes(data)
         if parent.poll(timeout):
-            return parent.recv()
+            return parent.recv_bytes(MAX_CHILD_MESSAGE_BYTES)
         log_event("job.timeout", job_id=job_id, code="TIMEOUT")
         return "TIMEOUT"
     except (EOFError, OSError):
@@ -96,10 +144,7 @@ def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: floa
 def run_isolated(data: bytes, ruleset_path: str, job_id: str, timeout: float,
                  user_roles: UserRoles = None) -> PipelineResult:
     result = _spawn("check", data, ruleset_path, job_id, timeout, user_roles)
-    if isinstance(result, str):
-        return {"report": None, "stats": None, "error_code": result, "source_sha256": None,
-                "training": []}
-    return result  # type: ignore[return-value]
+    return _pipeline_failure(result) if isinstance(result, str) else decode_pipeline(result)
 
 
 def output_isolated(
@@ -109,7 +154,7 @@ def output_isolated(
     result = _spawn(kind, data, ruleset_path, job_id, timeout, user_roles)
     if isinstance(result, str):
         return {"docx": None, "error_code": result}
-    return result  # type: ignore[return-value]
+    return decode_output(result)
 
 
 class JobRunner:

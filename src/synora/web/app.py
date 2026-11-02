@@ -115,6 +115,8 @@ ADMIN_ACTIONS = {
     "suggestion_delete": "Öneri silme",
 }
 ADMIN_PAGE_SIZE = 50
+UNLIMITED_PER_MINUTE = 1_000_000
+FORM_READ_SECONDS = 10.0
 SUGGESTION_ID_RE = re.compile(r"[0-9]{1,18}")
 PAGE_NUMBER_RE = re.compile(r"[1-9][0-9]{0,8}")
 # Rol seçim listesi (arayüz sırası); yalnızca synora.check.USER_ROLES içindekiler.
@@ -144,7 +146,9 @@ def client_network(ip: str) -> str:
         address = ipaddress.ip_address(ip)
     except ValueError:
         return ip
-    if address.version == 6:
+    if isinstance(address, ipaddress.IPv6Address):
+        if address.ipv4_mapped is not None:
+            return str(address.ipv4_mapped)
         return str(ipaddress.ip_network(f"{address}/64", strict=False))
     return ip
 
@@ -171,6 +175,12 @@ class RateLimiter:
 
     def __len__(self) -> int:
         return len(self._hits)
+
+    def exhausted(self, key: str, now: float | None = None) -> bool:
+        """Saatlik hak bitti mi? Sayaca dokunmaz."""
+        now = time.time() if now is None else now
+        recent = [t for t in self._hits.get(key, []) if t > now - 3600]
+        return len(recent) >= self.per_key_hour
 
     def allow(self, key: str, now: float | None = None) -> bool:
         now = time.time() if now is None else now
@@ -520,6 +530,11 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         csrf = hmac.new(admin_csrf_secret, email.encode(), hashlib.sha256).hexdigest()
         return User(email=email, csrf=csrf, session_hash="")
 
+    def key_form_allowed(user: User) -> bool:
+        """Demo kipinde adres doğrulanmaz: form herkese aynı görünür, aksi hâlde 200/404 farkı
+        yöneticinin adresini ele verirdi. Paneli yine yalnızca liste + anahtar açar."""
+        return admin_allowed(user) or (not settings.email_verification and settings.admin_enabled)
+
     def admin_open(user: User) -> bool:
         now = time.time()
         for stale in [k for k, until in admin_unlocked.items() if until <= now]:
@@ -540,6 +555,13 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             raise HTTPException(404)
         return job
 
+    async def load_job(user: User, job_id: str) -> Job:
+        """Rapor megabaytlarca olabilir: okuma olay döngüsünü tutmasın."""
+        return await run_in_threadpool(own_job, user, job_id)
+
+    async def parse_report(job: Job) -> dict[str, Any]:
+        return dict(await run_in_threadpool(json.loads, job.report or "{}"))
+
     def visible_jobs(user: User) -> list[Job]:
         return db.recent_jobs(user.email,
                               session_hash=user.session_hash if session_bound else None)
@@ -559,6 +581,16 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         check_active(email)
         if outputs_running.total() >= settings.workers:
             raise HTTPException(503, SERVER_BUSY)
+        # Tek hesap tüm alt süreç yuvalarını tutmasın.
+        if outputs_running.of(email) >= max(1, settings.workers - 1):
+            raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+
+    copy_limiter = RateLimiter(settings.copies_per_hour, settings.copies_per_minute)
+
+    def check_copy_quota(email: str) -> None:
+        if not copy_limiter.allow(_hash(email)[:16]):
+            raise HTTPException(429, "Kısa sürede çok fazla kopya istendi. Bir saat sonra "
+                                     "yeniden deneyin.")
 
     def check_job_limits(email: str) -> None:
         """Yeni yükleme: eşzamanlı ve günlük sınır (kopya ve yeniden denetim günlük sayılmaz)."""
@@ -569,6 +601,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     # Gövdesi okunmakta olan yüklemeler (her biri bellekte 100 MB'a kadar). Kuyruk ve iş sayısı
     # ancak gövde okunduktan sonra artar; bu sayaç olmadan paralel isteklerin hepsi okunurdu.
     uploads_running = SlotCounter()
+    upload_timeouts = RateLimiter(settings.upload_timeouts_per_hour, UNLIMITED_PER_MINUTE)
 
     async def read_upload(request: Request, email: str) -> bytes:
         """Yükleme gövdesini tek geçitten okur: bellekte, yuvayla, boyut ve süre sınırıyla."""
@@ -579,11 +612,20 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             raise HTTPException(503, SERVER_BUSY)
         if uploads_running.of(email) >= settings.max_active_jobs:
             raise HTTPException(429, "Aynı anda en fazla iki denetim yapılabilir.")
+        client = _client_key(request)
+        if upload_timeouts.exhausted(client):
+            raise HTTPException(429, "Çok fazla yükleme yarıda kaldı. Bir saat sonra yeniden "
+                                     "deneyin.")
         with uploads_running.hold(email):
-            return await read_body(request.stream(), max_bytes=settings.max_upload_bytes,
-                                   grace_seconds=settings.upload_grace_seconds,
-                                   min_bytes_per_second=settings.upload_min_bytes_per_second,
-                                   max_seconds=settings.upload_max_seconds)
+            try:
+                return await read_body(request.stream(), max_bytes=settings.max_upload_bytes,
+                                       grace_seconds=settings.upload_grace_seconds,
+                                       min_bytes_per_second=settings.upload_min_bytes_per_second,
+                                       max_seconds=settings.upload_max_seconds)
+            except HTTPException as exc:
+                if exc.status_code == 408:
+                    upload_timeouts.allow(client)
+                raise
 
     async def small_body(request: Request, content_type: str, limit: int) -> bytes:
         """Küçük, beklenen türde gövde; büyüğü okumadan reddedilir."""
@@ -592,10 +634,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         length = request.headers.get("content-length", "")
         if not length.isdigit() or int(length) > limit:
             raise HTTPException(413, "İstek çok büyük.")
-        body = await request.body()
-        if len(body) > limit:
-            raise HTTPException(413, "İstek çok büyük.")
-        return body
+        return await read_body(request.stream(), max_bytes=limit,
+                               grace_seconds=FORM_READ_SECONDS, min_bytes_per_second=1,
+                               max_seconds=FORM_READ_SECONDS)
 
     async def small_form(request: Request) -> FormData:
         # Yalnızca URL kodlu küçük formlar: Starlette çok parçalı gövdeyi 1 MB'tan sonra diske
@@ -1118,7 +1159,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                 raise HTTPException(404)
         else:
             found = current_user(request)
-            if found is None or not admin_allowed(found):
+            if found is None or not key_form_allowed(found):
                 raise HTTPException(404)
             if not admin_open(found):
                 return admin_key_form(request, found)
@@ -1279,7 +1320,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if access is not None:  # Access varken anahtar yöntemi yok
             raise HTTPException(404)
         user = current_user(request)
-        if user is None or not admin_allowed(user):
+        if user is None or not key_form_allowed(user):
             raise HTTPException(404)
         form = await small_form(request)
         check_csrf(user.csrf, str(form.get("csrf", "")))
@@ -1288,7 +1329,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return admin_key_form(request, user, 429, "Çok fazla deneme yapıldı. Bir saat sonra "
                                                       "yeniden deneyin.")
         key = str(form.get("key", "")).strip()
-        if not key or not hmac.compare_digest(_hash(key), settings.admin_key_sha256):
+        key_matches = bool(key) and hmac.compare_digest(_hash(key), settings.admin_key_sha256)
+        if not key_matches or not admin_allowed(user):
             log_event("admin.unlock_failed", hash=who)
             return admin_key_form(request, user, 400, "Anahtar yanlış.")
         admin_unlocked[user.session_hash] = time.time() + ADMIN_UNLOCK_SECONDS
@@ -1371,7 +1413,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         bir rol adı alınır; metin alınmaz. Boş rol seçimi kaldırır."""
         user = require_user(request)
         check_csrf(user.csrf, request.headers.get("x-csrf-token"))
-        job = own_job(user, job_id)
+        job = await load_job(user, job_id)
         if job.status != "done" or not job.report:
             raise HTTPException(409, "Bu denetim için paragraf türü seçilemiyor.")
         try:
@@ -1405,7 +1447,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         """Öğrencinin "Bu bulgu yanlış mı?" oyu. Metin alınmaz; yalnızca rule_id ve karar."""
         user = require_user(request)
         check_csrf(user.csrf, request.headers.get("x-csrf-token"))
-        job = own_job(user, job_id)
+        job = await load_job(user, job_id)
         form = await small_form(request)
         rule_id = str(form.get("rule_id", ""))
         verdict = str(form.get("verdict", ""))
@@ -1413,7 +1455,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if verdict not in ("wrong", "ok") or not re.fullmatch(r"[a-z0-9_.]{1,64}", rule_id) or (
                 para_id and not PARA_ID_RE.fullmatch(para_id)):
             raise HTTPException(400, "Geçersiz geri bildirim.")
-        if not job.report or not finding_exists(json.loads(job.report), rule_id, para_id):
+        if not job.report or not finding_exists(await parse_report(job), rule_id, para_id):
             raise HTTPException(400, "Geçersiz geri bildirim.")
         if db.feedback_count(job_id) >= 200:  # sınırsız birikme olmasın
             raise HTTPException(429, "Bu denetim için geri bildirim sınırına ulaşıldı.")
@@ -1433,13 +1475,14 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim yeniden çalıştırılamıyor.")
         check_active(user.email)
+        check_copy_quota(user.email)
         data = await same_file(request, user.email, job.source_sha256)
-        job = own_job(user, job_id)  # beklerken başka bir istek yeniden kuyruğa almış olabilir
+        job = await load_job(user, job_id)  # beklerken başka istek yeniden kuyruğa almış olabilir
         if job.status != "done" or not job.report:
             raise HTTPException(409, "Bu denetim zaten yeniden denetleniyor.")
         check_active(user.email)
         check_queue(len(data))
-        roles = pending_roles(job, json.loads(job.report))
+        roles = pending_roles(job, await parse_report(job))
         db.requeue(job_id)
         runner.submit(job_id, data, str(ruleset.path), roles)
         del data
@@ -1453,17 +1496,18 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         check_csrf(user.csrf, request.headers.get("x-csrf-token"))
         if kind not in OUTPUT_FILES:
             raise HTTPException(404)
-        job = own_job(user, job_id)
+        job = await load_job(user, job_id)
         ruleset = rulesets.get(job.ruleset)
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim için kopya üretilemiyor.")
         check_output_capacity(user.email)
+        check_copy_quota(user.email)
         data = await same_file(request, user.email, job.source_sha256)
         # Yuva gövde okunduktan sonra alınır: yavaş yükleme kopya üretimini kilitleyemesin.
         check_output_capacity(user.email)
         # Kopya, ekrandaki raporla aynı rollerle üretilir (kaydedilmiş ama henüz yeniden
         # denetlenmemiş seçimlerle değil).
-        roles = applied_roles(json.loads(job.report))
+        roles = applied_roles(await parse_report(job))
         with outputs_running.hold(user.email):
             try:
                 result = await run_in_threadpool(

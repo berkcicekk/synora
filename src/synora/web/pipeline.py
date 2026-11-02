@@ -30,6 +30,8 @@ from synora.ruleset import Ruleset, load_ruleset
 MAX_FINDINGS_PER_GROUP = 500
 MAX_REPORT_FINDINGS = 5_000
 MAX_REPORT_BYTES = 8 * 1024 * 1024
+# Çok daha fazla blok, rapor sayfasını megabaytlarca HTML yapardı (yaklaşık 1000 sayfalık tez).
+MAX_REPORT_BLOCKS = 15_000
 REPORT_TOO_LARGE = "REPORT_TOO_LARGE"
 
 
@@ -148,11 +150,15 @@ def run_pipeline(
         report["user_roles"] = {pid: r.value for pid, r in result.user_roles.items()}
         where = locations(doc, result.roles)
         blocks, finding_block = build_outline(doc, result)
+        if len(blocks) > MAX_REPORT_BLOCKS:
+            blocks, finding_block = [], {}
         report["document"] = blocks  # editör görünümü: gövde metni içermez
         for i, f in enumerate(report["findings"]):
             f["location"] = where.get(f["para_id"]) if f["para_id"] else None
             f["block"] = finding_block.get(i)
         report["findings"], report["dropped_findings"] = limit_findings(report["findings"])
+        report_json = json.dumps(report, ensure_ascii=False)
+        report_size = len(report_json.encode())
     except SynoraError as exc:
         log_event("job.rejected", job_id=job_id, code=exc.code.value)
         return _failed(exc.code.value, sha)
@@ -160,8 +166,7 @@ def run_pipeline(
         # Ayrıntı (ve olası belge parçaları) log'a yazılmaz; yalnızca tür.
         log_event("job.crashed", job_id=job_id, code="INTERNAL")
         return _failed("INTERNAL", sha)
-    report_json = json.dumps(report, ensure_ascii=False)
-    if len(report_json.encode()) > MAX_REPORT_BYTES:
+    if report_size > MAX_REPORT_BYTES:
         log_event("job.rejected", job_id=job_id, code=REPORT_TOO_LARGE)
         return _failed(REPORT_TOO_LARGE, sha)
     log_event("job.done", job_id=job_id,
