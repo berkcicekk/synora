@@ -81,7 +81,8 @@ def test_how_it_works_has_five_accessible_steps(client: TestClient) -> None:
 def test_privacy_cells_replaced_by_how_it_works(client: TestClient) -> None:
     html = client.get("/").text
     assert 'class="privacy-cells"' not in html
-    assert "yapay zekâyla" in html  # gizlilik başlığı kalır
+    assert "Tez dosyanız <em>saklanmaz</em>." in html  # gizlilik başlığı kalır
+    assert "<h1>Tezinizi formata<br>uygun hale getirin.</h1>" in html
 
 
 # --- 2. Hareket: yalnızca ana sayfada, azaltılmış hareket ve dokunmatik kuralları -------------

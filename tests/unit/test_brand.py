@@ -40,3 +40,9 @@ def test_tracked_changes_author_is_sontez() -> None:
 
 def test_visible_markup_does_not_use_old_code_name() -> None:
     assert 'aria-label="Synora"' not in (ROOT / "src/synora/web/static/logo.svg").read_text("utf-8")
+
+
+def test_wordmark_is_lowercase() -> None:
+    base = (ROOT / "src/synora/web/templates/base.html").read_text("utf-8")
+    assert base.count('<span class="word">sontez</span>') == 2
+    assert '<span class="word">Sontez</span>' not in base
