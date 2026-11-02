@@ -125,7 +125,7 @@ def rule_label(rule_id: str) -> str:
 
 
 def checked_rules(result: CheckResult, rules: Ruleset) -> list[dict[str, str]]:
-    """Denetlenen ve bulgu çıkmayan kurallar: 'kontrol edildi, uygun' listesi (Ö2)."""
+    """Denetlenen ve bulgu çıkmayan kurallar: 'kontrol edildi, uygun' listesi."""
     found = {f.rule_id for f in result.findings}
     return [{"rule_id": rid, "label": rule_label(rid)}
             for rid in rule_catalog(rules) if rid not in found]

@@ -161,7 +161,7 @@ def test_cli_malformed_yaml_exit_2(tmp_path: Path, content: str) -> None:
     assert res.exception is None or isinstance(res.exception, SystemExit)
 
 
-# --- Denetlenen maddeler (Ö2): bulgu çıkmayan kurallar da raporda görünür ------------------------
+# --- Denetlenen maddeler: bulgu çıkmayan kurallar da raporda görünür ------------------------
 
 
 def test_report_lists_checked_and_compliant_rules() -> None:

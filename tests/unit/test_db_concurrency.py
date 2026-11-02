@@ -1,4 +1,4 @@
-"""A9 veritabanı: paylaşılan sqlite3 bağlantısında eşzamanlı okuma (ONERILER Ö9).
+"""A9 veritabanı: paylaşılan sqlite3 bağlantısında eşzamanlı okuma.
 
 `Database.execute` eskiden kilidi yalnızca `execute` sırasında tutuyordu; `fetchone()` kilit
 dışında, paylaşılan bağlantı üzerinde çalışıyordu. İş yürütücü ile istek iş parçacığı aynı SQL'i

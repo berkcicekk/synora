@@ -35,7 +35,7 @@ class Settings:
     session_hours: float = 12.0
     login_token_minutes: float = 15.0
     login_requests_per_hour: int = 5  # e-posta başına
-    # Ö7: istemci (IP) başına ve sunucu geneli giriş isteği sınırları. IP ham tutulmaz;
+    # istemci (IP) başına ve sunucu geneli giriş isteği sınırları. IP ham tutulmaz;
     # bellek içi, hash'li ve pencere dolunca düşer (KVKK).
     login_requests_per_ip_hour: int = 10
     login_requests_per_minute: int = 60

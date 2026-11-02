@@ -1,4 +1,4 @@
-"""Ö1 — "Bu bulgu yanlış mı?" geri bildirimi: POST /jobs/{id}/feedback.
+"""Öğrencinin "Bu bulgu yanlış mı?" geri bildirimi: POST /jobs/{id}/feedback.
 
 Metin saklanmaz: yalnızca rule_id, verdict ve kural seti sürümü. İş silinince işe bağlı
 kayıt gider; kural seti sürümüne bağlı toplu sayım kalır (pilot yanlış alarm ölçüsü).

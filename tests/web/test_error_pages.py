@@ -1,4 +1,4 @@
-"""Hata yanıtları (ONERILER Ö3): bilinmeyen adres ve yanlış yöntem HTML sayfası, beklenmeyen hata
+"""Hata yanıtları: bilinmeyen adres ve yanlış yöntem HTML sayfası, beklenmeyen hata
 için 500 sayfası, arayüze giden JSON hataları Türkçe, hata sayfası oturumu bilir."""
 
 from __future__ import annotations

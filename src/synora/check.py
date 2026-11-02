@@ -170,7 +170,7 @@ def _missing(value: object) -> str:
 def _document_rules(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
     if rules.document.forbid_tracked_changes and doc.has_tracked_changes:
         yield Finding("document.tracked_changes", Severity.WARNING, "false", "true", False)
-    # Mimari §8: altChunk / gömülü OLE'ye dokunulmaz, uyarı bulgusu üretilir (Ö4).
+    # Mimari §8: altChunk / gömülü OLE'ye dokunulmaz, uyarı bulgusu üretilir.
     if doc.alt_chunks:
         yield Finding("document.alt_chunk", Severity.WARNING, "0", str(doc.alt_chunks), False)
     if doc.embedded_objects:
@@ -391,7 +391,7 @@ def rule_catalog(rules: Ruleset) -> list[str]:
     """Bu kural setinin denetlediği tüm kural kimlikleri (bulgu çıkmasa da).
 
     Buradaki adlandırma bu dosyadaki Finding üreticileriyle birebir aynı kalmalı;
-    rapor 'denetlendi ve uygun' maddelerini bu listeden çıkarır (Ö2).
+    rapor 'denetlendi ve uygun' maddelerini bu listeden çıkarır.
     """
     out: list[str] = []
     out.extend("document.missing_section" for _ in rules.required_sections[:1])

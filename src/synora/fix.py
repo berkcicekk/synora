@@ -244,7 +244,7 @@ def _page_number_ops(f: Finding, sections: int, current: list[str]) -> dict[int,
 # --- Uygulama ------------------------------------------------------------------------------------
 
 
-MAX_FIX_ROUNDS = 3  # düzeltme, rolleri değiştirip var olan hataları görünür kılabilir (Ö11)
+MAX_FIX_ROUNDS = 3  # düzeltme, rolleri değiştirip var olan hataları görünür kılabilir
 
 
 def fix_document(

@@ -53,13 +53,13 @@ CREATE TABLE IF NOT EXISTS jobs (
     report TEXT
 );
 CREATE INDEX IF NOT EXISTS jobs_email ON jobs(email, created_at);
--- Günlük iş sınırı sayacı: iş/rapor silinse de düşmez (ONERILER Ö5). E-posta yerine özeti.
+-- Günlük iş sınırı sayacı: iş/rapor silinse de düşmez. E-posta yerine özeti.
 CREATE TABLE IF NOT EXISTS job_starts (
     email_hash TEXT NOT NULL,
     created_at REAL NOT NULL
 );
 CREATE INDEX IF NOT EXISTS job_starts_email ON job_starts(email_hash, created_at);
--- Ö1: "Bu bulgu yanlış mı?" geri bildirimi. Metin yok; iş silinince satır da silinir.
+-- "Bu bulgu yanlış mı?" geri bildirimi. Metin yok; iş silinince satır da silinir.
 CREATE TABLE IF NOT EXISTS feedback (
     job_id TEXT NOT NULL,
     rule_id TEXT NOT NULL,
@@ -160,7 +160,7 @@ class Rows(list[tuple[Any, ...]]):
     """Kilit içinde okunmuş sorgu sonucu (cursor'un kullanılan arayüzü: fetchone/fetchall).
 
     Paylaşılan bağlantıda fetchone kilit dışında çalışırsa eşzamanlı iki okuma birbirinin
-    sonucunu bozar (ONERILER Ö9).
+    sonucunu bozar.
     """
 
     def __init__(self, cur: sqlite3.Cursor) -> None:
@@ -458,7 +458,7 @@ class Database:
             self._conn.execute("DELETE FROM jobs WHERE id=?", (job_id,))
             self._conn.execute("DELETE FROM feedback WHERE job_id=?", (job_id,))
 
-    # --- Bulgu geri bildirimi (Ö1) ------------------------------------------------------------
+    # --- Bulgu geri bildirimi ------------------------------------------------------------
 
     def add_feedback(self, job_id: str, ruleset: str, ruleset_version: int,
                      rule_id: str, para_id: str | None, verdict: str) -> bool:

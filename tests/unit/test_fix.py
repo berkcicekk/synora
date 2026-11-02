@@ -212,7 +212,7 @@ def test_gate_catches_new_findings() -> None:
     assert exc.value.code is ErrorCode.WRITE_NEW_FINDINGS
 
 
-# --- Düzeltme döngüsü (Ö11) --------------------------------------------------------------------
+# --- Düzeltme döngüsü --------------------------------------------------------------------
 # Gerçek belgelerde bir düzeltme (ör. pageBreakBefore) sayfa geometrisini değiştirip bazı
 # paragrafları yeniden sınıflandırabilir; o paragrafların zaten var olan hataları ancak o zaman
 # görünür olur. Döngü bunları da düzeltir; kapılar son çıktıya aynen uygulanır.

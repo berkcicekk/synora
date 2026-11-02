@@ -40,7 +40,7 @@ def _new_parser() -> etree.XMLParser:
 def screen(data: bytes, *, max_bytes: int = DEFAULT_MAX_BYTES) -> None:
     """Parse etmeden bayt düzeyi süzgeçler: boyut sınırı ve DOCTYPE yasağı.
 
-    Synora'nın hiç okumadığı part'lar için (Ö10): parse edilmeyen veri saldırı yüzeyi
+    Synora'nın hiç okumadığı part'lar için: parse edilmeyen veri saldırı yüzeyi
     oluşturmaz, ama DOCTYPE/boyut sınırları her XML part'ında geçerli kalır.
     """
     if len(data) > max_bytes:

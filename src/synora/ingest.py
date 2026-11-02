@@ -107,7 +107,7 @@ def open_docx(data: bytes, limits: Limits | None = None) -> DocxPackage:
         else:
             # Synora'nın hiç okumadığı part (ör. customXml): parse edilmez, bayt süzgeçleri
             # uygulanır ve olduğu gibi korunur. Word geçersiz xmlns'i hoş görür; katı parse
-            # burada resmi şablonları gereksiz yere reddediyordu (Ö10). Okunan her part,
+            # burada resmi şablonları gereksiz yere reddediyordu. Okunan her part,
             # kullanım anında da xmlsafe.parse'tan geçer (tek giriş kapısı değişmez).
             xmlsafe.screen(blob, max_bytes=limits.max_xml_bytes)
 

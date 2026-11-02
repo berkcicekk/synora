@@ -1,8 +1,5 @@
-"""A9 web güvenliği (gece taraması): giriş bağlantısı, oturum, CSRF, yetki, dosya türü sahteciliği,
+"""A9 web güvenliği: giriş bağlantısı, oturum, CSRF, yetki, dosya türü sahteciliği,
 güvenlik başlıkları, çerez bayrakları, hız sınırları, XSS ve sır saklama.
-
-A9 backend kodu değiştirilmedi. Bulunan açıklar xfail (strict) olarak işaretli; çözüm önerileri
-.gece/ONERILER.md, ayrıntı .gece/GUVENLIK_RAPORU.md.
 """
 
 from __future__ import annotations
@@ -320,7 +317,7 @@ def test_daily_counter_is_purged_after_a_day(tmp_path: Path) -> None:
     db = Database(tmp_path / "g.db")
     db.add_job("gunluk-is-0000000001", EMAIL, "example")
     db.delete_job("gunluk-is-0000000001")
-    assert db.jobs_since(EMAIL, time.time() - 86400) == 1  # silmek sayacı düşürmez (Ö5)
+    assert db.jobs_since(EMAIL, time.time() - 86400) == 1  # silmek sayacı düşürmez
     db.execute("UPDATE job_starts SET created_at = created_at - 90000")
     db.purge(retention_seconds=86400)
     assert db.execute("SELECT COUNT(*) FROM job_starts").fetchone()[0] == 0
@@ -353,7 +350,7 @@ def test_login_requests_limited_per_client(client: TestClient, mailer: ConsoleMa
 
 def test_expired_report_is_not_served_before_purge(client: TestClient,
                                                    mailer: ConsoleMailer) -> None:
-    # Gizlilik sözü "24 saat sonra silinir": temizlik görevi (10 dakikada bir) beklenmez (Ö8).
+    # Gizlilik sözü "24 saat sonra silinir": temizlik görevi (10 dakikada bir) beklenmez.
     csrf = login(client, mailer)
     job_id = upload(client, csrf, thesis())
     wait_done(client, job_id)

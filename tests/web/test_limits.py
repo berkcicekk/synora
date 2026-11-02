@@ -1,4 +1,4 @@
-"""Kaynak sınırları (ONERILER Ö6): kopya üretimi eşzamanlı iş sınırına tabi, sunucu genelinde
+"""Kaynak sınırları: kopya üretimi eşzamanlı iş sınırına tabi, sunucu genelinde
 aynı anda en fazla `workers` kopya üretilir, iş kuyruğu sınırlıdır."""
 
 from __future__ import annotations

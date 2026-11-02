@@ -157,7 +157,7 @@ class User:
 
 
 class RateLimiter:
-    """Ö7: anahtar (istemci özeti) başına saatlik ve site geneli dakikalık istek sınırı.
+    """Anahtar (istemci özeti) başına saatlik ve site geneli dakikalık istek sınırı.
 
     Bellek içi. Reddedilen yeni anahtar saklanmaz, penceresi geçen anahtarlar düşer; sözlük
     site geneli sınırın izin verdiği kadar (saatte per_minute × 60 anahtar) büyüyebilir.
@@ -396,7 +396,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     )
     login_tiles: list[RuleTile] = rule_tiles(ordered_rulesets[0].rules) if ordered_rulesets else []
     # Sayılar şeridi: kural seti / üniversite sayısı keşiften; doğruluk oranı 37 resmi şablonda
-    # 1840 denemelik bozma ölçümünden (.gece/CAPRAZ_DOGRULAMA.md, 2026-10-20: yakalama %97,1).
+    # 1840 denemelik bozma ölçümünden (2026-10-20: yakalama %97,1).
     landing_stats = {
         "formats": len(rulesets),
         "universities": len({r.rules.institution for r in rulesets.values()
@@ -548,7 +548,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         # Temizlik görevi 10 dakikada bir çalışır; "24 saat sonra silinir" sözü okurken de tutulur.
         return job.created_at < time.time() - settings.retention_hours * 3600
 
-    # Kopya üretimi istek içinde çalışır (ayrı süreç, 2 GB'a kadar; ONERILER Ö6).
+    # Kopya üretimi istek içinde çalışır (ayrı süreç, 2 GB'a kadar).
     outputs_running = SlotCounter()
 
     def check_active(email: str) -> None:
@@ -732,7 +732,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         set_pre_csrf(resp, token)
         return resp
 
-    # Ö7: istemci başına istek sınırı. Bellek içi ve hash'li: ham IP hiçbir yerde
+    # İstemci başına istek sınırı. Bellek içi ve hash'li: ham IP hiçbir yerde
     # tutulmaz, pencere dolunca kayıt düşer. Uygulamaya yalnızca 127.0.0.1 (tünel/vekil)
     # üzerinden ulaşılır; IP, öndeki vekilin koyduğu başlıktan (client_ip_header) okunur.
     def _client_key(request: Request) -> str:
@@ -1402,7 +1402,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     @app.post("/jobs/{job_id}/feedback")
     async def job_feedback(request: Request, job_id: str) -> JSONResponse:
-        """Ö1: "Bu bulgu yanlış mı?" oyu. Metin alınmaz; yalnızca rule_id ve karar."""
+        """Öğrencinin "Bu bulgu yanlış mı?" oyu. Metin alınmaz; yalnızca rule_id ve karar."""
         user = require_user(request)
         check_csrf(user.csrf, request.headers.get("x-csrf-token"))
         job = own_job(user, job_id)

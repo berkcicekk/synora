@@ -1,6 +1,6 @@
 """Rol sınıflandırma doğruluğu: etiketli sentetik derlem üzerinde ölçülür.
 
-Hedefler (docs/plan.md, F3):
+Hedefler:
 - Kesinlik: sınıflandırıcının rol verdiği (UNKNOWN olmayan) paragraflarda ≥ %90 doğru.
 - Kapsam: rolü bilinen paragrafların ≥ %85'ine rol verilmeli.
 - Yanlış denetim: "belirsiz kalmalı" etiketli satırlara denetlenen bir rol verilmemeli.

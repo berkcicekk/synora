@@ -601,7 +601,7 @@
     });
   }
 
-  // --- "Bu bulgu yanlış mı?" geri bildirimi (Ö1) ---------------------------------------------
+  // --- "Bu bulgu yanlış mı?" geri bildirimi ---------------------------------------------
   const fbOutputs = document.getElementById("outputs");
   if (fbOutputs && fbOutputs.dataset.job) {
     document.querySelectorAll("[data-feedback]").forEach((btn) => {

@@ -78,7 +78,7 @@ Access ayarı bozulursa panel 404 döner, açılmaz.
   erişim kaydı sorgu dizesini yazmaz ve hata kaydı yalnızca ciddi hataları tutar (giriş bağlantısı
   sızmasın).
 - **Sağlık.** `/health` veritabanı ya da iş yürütücü sorunluysa 503 döner; izleme bunu denetlemeli.
-- **Yükseltme.** Günlük iş sayacı (Ö5) yükseltmeden sonra boş başlar; ilk 24 saatte herkesin günlük
+- **Yükseltme.** Günlük iş sayacı yükseltmeden sonra boş başlar; ilk 24 saatte herkesin günlük
   kotası yenilenmiş olur.
 - **Yedek.** Veritabanında kalıcı olan yalnızca kayıt onaylarıdır (`users` tablosu). İşler ve raporlar
   24 saatte silinir; yedekler bu silmeyi geri getirmemeli. Demo sunucusundaki uygulama: günlük cron,

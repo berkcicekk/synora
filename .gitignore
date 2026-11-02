@@ -26,5 +26,5 @@ var/
 # Tasarım kaynakları (lisanslı, yalnızca referans)
 payper-tasarim/
 
-# İç çalışma notları (gece raporları, rakip analizi) — repoya girmez
+# İç çalışma notları — repoya girmez
 .gece/

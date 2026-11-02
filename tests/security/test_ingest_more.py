@@ -1,4 +1,4 @@
-"""A1 ek saldırılar (gece taraması): kodlama hileleri, iç içe zip, derin XML, şablon/makro türleri.
+"""A1 ek saldırılar: kodlama hileleri, iç içe zip, derin XML, şablon/makro türleri.
 
 Mevcut test_ingest_attacks.py'yi tamamlar; A1 kodu değiştirilmedi.
 """
@@ -211,7 +211,7 @@ def test_alt_chunk_produces_warning() -> None:
                for f in report["findings"])
 
 
-# --- Okunmayan part'lar (Ö10): katı parse yalnızca Synora'nın okuduğu part'lara ------------------
+# --- Okunmayan part'lar: katı parse yalnızca Synora'nın okuduğu part'lara ------------------
 # Word, customXml gibi hiç okumadığımız part'larda geçersiz xmlns'i hoş görür (Bingöl/Fırat
 # şablonları). Okunmayan part parse edilmez, bayt süzgeçlerinden geçer ve olduğu gibi korunur.
 
