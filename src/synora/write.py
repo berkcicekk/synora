@@ -25,7 +25,7 @@ from lxml import etree
 from synora.errors import ErrorCode, SynoraError
 from synora.fingerprint import content_fingerprint
 from synora.ingest import DocxPackage, open_docx
-from synora.ooxml import W_NS, w
+from synora.ooxml import W_NS, to_int, w
 from synora.package import story_parts
 from synora.parse import parse_package
 
@@ -105,9 +105,9 @@ class RevisionIds:
         highest = 0
         for root in roots:
             for el in root.iter():
-                raw = el.get(wq("id")) if isinstance(el.tag, str) else None
-                if raw is not None and raw.lstrip("-").isdigit():
-                    highest = max(highest, int(raw))
+                value = to_int(el.get(wq("id"))) if isinstance(el.tag, str) else None
+                if value is not None:
+                    highest = max(highest, value)
         return cls(highest + 1)
 
     def take(self) -> str:

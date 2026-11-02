@@ -309,10 +309,10 @@ def _drawing_width_cm(p: Any) -> float | None:
         extent = inline.find(_WP_EXTENT)
         if extent is None:
             continue
-        try:
-            width = int(extent.get("cx", "")) / _EMU_PER_CM
-        except ValueError:
+        emu = to_int(extent.get("cx"))
+        if emu is None:
             continue
+        width = emu / _EMU_PER_CM
         if widest is None or width > widest:
             widest = width
     return widest

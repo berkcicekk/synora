@@ -16,7 +16,7 @@ from synora.check import Finding, UserRoles, check
 from synora.errors import ErrorCode
 from synora.ingest import DocxPackage, open_docx
 from synora.model import Role, RunInfo
-from synora.ooxml import TWIPS_PER_CM, w
+from synora.ooxml import TWIPS_PER_CM, measure_twips, w
 from synora.parse import ParseResult, parse_document, parse_package
 from synora.ruleset import Ruleset
 from synora.write import (
@@ -207,7 +207,9 @@ def _section_op(f: Finding, rules: Ruleset) -> PPrOp | None:
 
         def orient(sect: Any) -> None:
             el = ordered_child(sect, w("pgSz"), SECTPR_ORDER)
-            width, height = int(el.get(wq("w")) or 11906), int(el.get(wq("h")) or 16838)
+            # Strict OOXML "21cm" yazabilir; okunamayan değer A4 sayılır.
+            width = round(measure_twips(el.get(wq("w"))) or 11906)
+            height = round(measure_twips(el.get(wq("h"))) or 16838)
             short, long_ = sorted((width, height))
             if landscape:
                 _set(el, w=long_, h=short, orient="landscape")

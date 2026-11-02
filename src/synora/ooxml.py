@@ -57,16 +57,17 @@ def toggle(el: Any, tag: str) -> bool | None:
     return v is None or v.lower() not in ("0", "false", "off", "none")
 
 
+# Word'ün yazabileceğinden çok geniş; aşan değer bozuk sayılır (ör. 400 haneli "w:sz").
+_INT_RE = re.compile(r"\s*[+-]?[0-9]{1,18}\s*")
+
+
 def to_int(value: str | None) -> int | None:
-    if value is None:
+    if value is None or not _INT_RE.fullmatch(value):
         return None
-    try:
-        return int(value)
-    except ValueError:
-        return None
+    return int(value)
 
 
-_MEASURE_RE = re.compile(r"(-?\d+(?:\.\d+)?)(mm|cm|in|pt|pc|pi)")
+_MEASURE_RE = re.compile(r"(-?[0-9]{1,18}(?:\.[0-9]{1,18})?)(mm|cm|in|pt|pc|pi)")
 _UNIT_TWIPS = {"mm": TWIPS_PER_CM / 10, "cm": TWIPS_PER_CM, "in": 1440.0, "pt": 20.0,
                "pc": 240.0, "pi": 240.0}
 

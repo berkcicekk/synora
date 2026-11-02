@@ -25,40 +25,68 @@ _CONTAINERS = frozenset(
 _DELETED = frozenset({w("del"), w("moveFrom")})
 _INSERTED = frozenset({w("ins"), w("moveTo")})
 _SKIP_IN_RUN = frozenset({w("rPr"), w("drawing"), w("pict"), w("object"), w("txbxContent")})
+MAX_INSTRUCTION_CHARS = 256  # alan türü komutun ilk sözcüğüdür; devamı gerekmez
+_SURROGATES = range(0xD800, 0xE000)
+_REPLACEMENT = "\ufffd"
+
+
+@dataclass
+class _OpenField:
+    instruction: str = ""
+    kind: str | None = None  # `separate` görülünce dolar: alan artık sonuç evresindedir
 
 
 @dataclass
 class FieldTracker:
     """Karmaşık alan durumu (fldChar begin/separate/end). Paragraflar arası sürer:
-    bir içindekiler (TOC) alanı onlarca paragrafa yayılır."""
+    bir içindekiler (TOC) alanı onlarca paragrafa yayılır.
 
-    _stack: list[list[str]] = field(default_factory=list)  # [komut, evre]
+    Her işlem sabit sürelidir: küçük bir dosya on binlerce run ve iç içe alan taşıyabilir."""
+
+    _stack: list[_OpenField] = field(default_factory=list)
+    _instructions_open: int = 0
 
     def begin(self) -> None:
-        self._stack.append(["", "instr"])
+        self._stack.append(_OpenField())
+        self._instructions_open += 1
 
     def instr(self, text: str) -> None:
-        if self._stack and self._stack[-1][1] == "instr":
-            self._stack[-1][0] += text
+        if self._stack and self._stack[-1].kind is None:
+            top = self._stack[-1]
+            top.instruction = (top.instruction + text)[:MAX_INSTRUCTION_CHARS]
 
     def separate(self) -> None:
-        if self._stack:
-            self._stack[-1][1] = "result"
+        if self._stack and self._stack[-1].kind is None:
+            self._stack[-1].kind = field_kind(self._stack[-1].instruction)
+            self._instructions_open -= 1
 
     def end(self) -> None:
-        if self._stack:
-            self._stack.pop()
+        if self._stack and self._stack.pop().kind is None:
+            self._instructions_open -= 1
 
     @property
     def in_instruction(self) -> bool:
-        return any(phase == "instr" for _, phase in self._stack)
+        return self._instructions_open > 0
 
     @property
     def kind(self) -> str | None:
-        for instr, phase in reversed(self._stack):
-            if phase == "result":
-                return field_kind(instr)
+        """En içteki sonuç evresindeki alan. Komut evresi açıkken metin üretilmediği için bu
+        özellik fiilen yığının tepesine bakar."""
+        for open_field in reversed(self._stack):
+            if open_field.kind is not None:
+                return open_field.kind
         return None
+
+
+def sym_char(code: str | None) -> str:
+    """w:sym karakteri. Geçersiz kod ve UTF-8'e yazılamayan vekil (surrogate) yerine "\ufffd"."""
+    if not code:
+        return ""
+    try:
+        value = int(code, 16)
+        return _REPLACEMENT if value in _SURROGATES else chr(value)
+    except (ValueError, OverflowError):
+        return _REPLACEMENT
 
 
 def field_kind(instr: str) -> str:
@@ -112,11 +140,7 @@ def _run_text(r: Any, tracker: FieldTracker) -> tuple[str, str | None, bool]:
                 page_break = True
             emit("\n")
         elif tag == w("sym"):
-            code = wattr(c, "char")
-            try:
-                emit(chr(int(code, 16)) if code else "")
-            except (ValueError, OverflowError):
-                emit("�")
+            emit(sym_char(wattr(c, "char")))
         elif tag == w("noBreakHyphen"):
             emit("‑")
         elif tag == w("softHyphen"):

@@ -6,7 +6,7 @@ Bulgular metin içermez: yalnızca kural kimliği, konum ve biçim değerleri (e
 from __future__ import annotations
 
 import re
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 
@@ -179,6 +179,28 @@ def _document_rules(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
 
 
 _TOC_TAIL_RE = re.compile(r"(?:(?:\s*[.·…]){2,}|\t)\s*\d+\s*$|\s+\d+\s*$")
+_TOC_TAIL_CHARS = 64  # desen uzun dizide karesel; karşılaştırma zaten satır başına bakar
+_TOC_PREFIX_CHARS = 50
+
+
+def strip_toc_tail(text: str) -> str:
+    """İçindekiler satırının sonundaki "..... 12" parçasını atar."""
+    text = text.strip()
+    cut = max(0, len(text) - _TOC_TAIL_CHARS)
+    return text[:cut] + _TOC_TAIL_RE.sub("", text[cut:])
+
+
+def listed_in_toc(entries: list[str]) -> Callable[[str], bool]:
+    """Başlık dizinde var mı: biri diğerinin başı (ilk 50 karakter). Kümelerle, satır sayısından
+    bağımsız sürede."""
+    entry_prefixes = {e[:k] for e in entries for k in range(len(e[:_TOC_PREFIX_CHARS]) + 1)}
+    entry_starts = {e[:_TOC_PREFIX_CHARS] for e in entries if len(e) >= 3}
+
+    def listed(head: str) -> bool:
+        return (head[:_TOC_PREFIX_CHARS] in entry_prefixes
+                or any(head[:k] in entry_starts for k in range(3, len(head) + 1)))
+
+    return listed
 
 
 # Mikro-tipografi: desenler sunucuda, yerel olarak aranır; rapora yalnızca tür ve adet çıkar.
@@ -271,7 +293,7 @@ def _toc_freshness(doc: DocModel, roles: dict[str, RoleDecision]) -> Iterator[Fi
     kılavuzdan kılavuza değişir); rapora başlık metni değil yalnızca sayı çıkar.
     """
     def norm(text: str) -> str:
-        text = _TOC_TAIL_RE.sub("", text.strip())
+        text = strip_toc_tail(text)
         return " ".join(_tr_lower(_PREFIX_RE.sub("", text)).split())
 
     toc_entries: list[str] = []
@@ -290,10 +312,7 @@ def _toc_freshness(doc: DocModel, roles: dict[str, RoleDecision]) -> Iterator[Fi
     if len(toc_entries) < 2 or not chapter_heads:
         return
 
-    def listed(head: str) -> bool:
-        return any(e.startswith(head[:50]) or (len(e) >= 3 and head.startswith(e[:50]))
-                   for e in toc_entries)
-
+    listed = listed_in_toc(toc_entries)
     # Parantezli ya da çok uzun 'başlıklar' şablon yönergesi kalıbıdır (ör. '(yoksa silinir)').
     candidates = [h for h in chapter_heads if 3 <= len(h) <= 60 and "(" not in h]
     missing = [h for h in candidates if not listed(h)]

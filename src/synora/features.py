@@ -173,6 +173,16 @@ SECTION_TITLES = frozenset({
     "TOPLUMSAL KATKI",  # bazı enstitülerde özgeçmişten sonra, aynı sayfada gelen zorunlu bölüm
 }) | REFERENCE_TITLES | _REFERENCE_END_TITLES
 _TOC_LIKE_RE = re.compile(r"(?:\t|\.{4,}|…{2,})\s*[\divxlcIVXLC]{1,5}\s*$")
+# Bu iki desen uzun nokta/boşluk dizisinde karesel: yalnızca işe yarayan parçaya uygulanır.
+_TOC_TAIL_CHARS = 64
+_CAPTION_HEAD_CHARS = 200
+
+
+def is_toc_like(text: str) -> bool:
+    """Satır sonu "....... 12" biçiminde mi?"""
+    return bool(_TOC_LIKE_RE.search(text.rstrip()[-_TOC_TAIL_CHARS:]))
+
+
 _REFERENCE_RE = re.compile(
     rf"\[\d{{1,4}}\]\s|\d{{1,4}}\.\s+[{_UPPER}][\w'’\-]+,\s*[{_UPPER}]\.|"
     rf"[{_UPPER}][\w'’\-]+(?:\s[{_UPPER}][\w'’\-]+)?,\s*[{_UPPER}]\.(?:\s?[{_UPPER}]\.)*"
@@ -232,12 +242,12 @@ def number_prefix(text: str) -> NumberPrefix:
 
 def keyword(text: str) -> Keyword:
     t = text.strip()
-    if m := _CAPTION_RE.match(t):
+    if m := _CAPTION_RE.match(t[:_CAPTION_HEAD_CHARS]):
         kw = m.group("kw").replace("İ", "i").casefold()
         return Keyword.TABLE_CAPTION if kw in _TABLE_KW else Keyword.FIGURE_CAPTION
     # İçindekiler satırı ("KAYNAKÇA ....... 108") başlık değildir; sayılırsa bölüm (ör. kaynakça)
     # içindekiler sayfasında başlamış olurdu.
-    if len(t) <= 80 and not _TOC_LIKE_RE.search(t):
+    if len(t) <= 80 and not is_toc_like(t):
         upper = tr_upper(t)
         if _CHAPTER_RE.match(upper):
             return Keyword.CHAPTER
@@ -619,7 +629,7 @@ def extract_features(doc: DocModel) -> dict[str, ParaFeatures]:
             ends_with_colon=stripped.endswith(":"),
             number_prefix=number_prefix(stripped),
             keyword=keyword(stripped),
-            toc_like=bool(_TOC_LIKE_RE.search(text)),
+            toc_like=is_toc_like(text),
             reference_like=bool(
                 _REFERENCE_RE.match(stripped) or _YEAR_IN_PARENS_RE.search(stripped[:200])
             ) and len(stripped) > 30,
