@@ -76,7 +76,7 @@ CSP = (
     "font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; "
     "frame-ancestors 'none'; form-action 'self'"
 )
-OUTPUT_FILES = {"fixed": "payper-duzeltilmis.docx", "annotated": "payper-yorumlu.docx"}
+OUTPUT_FILES = {"fixed": "sontez-duzeltilmis.docx", "annotated": "sontez-yorumlu.docx"}
 DOCX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 OUTPUT_ERRORS = {
     "NOTHING_TO_FIX": "Bu belgede otomatik düzeltilebilecek bir bulgu yok.",
@@ -673,7 +673,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         data = word_templates.get(ruleset_id)
         if data is None:
             data = word_templates[ruleset_id] = build_docx(info.rules)
-        name = f"payper-{ruleset_id}-sablon.docx"
+        name = f"sontez-{ruleset_id}-sablon.docx"
         return Response(
             data,
             media_type="application/vnd.openxmlformats-officedocument"
@@ -688,7 +688,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         data = latex_zips.get(ruleset_id)
         if data is None:
             data = latex_zips[ruleset_id] = build_zip(info.rules)
-        name = f"payper-{ruleset_id}-latex.zip"
+        name = f"sontez-{ruleset_id}-latex.zip"
         return Response(data, media_type="application/zip",
                         headers={"Content-Disposition": f'attachment; filename="{name}"'})
 
@@ -816,11 +816,11 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         """llmstxt.org: yapay zekâ asistanlarına site tanıtımı. Tez metni içermez;
         yalnızca herkese açık sayfalar ve gizlilik ilkeleri anlatılır."""
         body = (
-            "# Payper\n\n"
-            "> Payper, .docx tezleri üniversitenin resmi yazım kılavuzuna göre denetleyen "
+            "# Sontez\n\n"
+            "> Sontez, .docx tezleri üniversitenin resmi yazım kılavuzuna göre denetleyen "
             "ve biçim hatalarını düzelten ücretsiz bir web aracıdır. "
             f"{len(rulesets)} üniversite kural seti hazır yüklüdür.\n\n"
-            "Önemli: Payper tezin metnini ASLA değiştirmez ve hiçbir yapay zekâ modeli tez "
+            "Önemli: Sontez tezin metnini ASLA değiştirmez ve hiçbir yapay zekâ modeli tez "
             "metnini görmez; yalnızca biçim (kenar boşluğu, yazı tipi, satır aralığı, başlık "
             "stilleri, sayfa numarası) denetlenir ve düzeltilir. Yüklenen dosya diske "
             "yazılmaz; rapor 24 saat içinde silinir.\n\n"
@@ -834,7 +834,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             "- [GitHub](https://github.com/berkcicekk/synora): kaynak kod ve kural setleri\n"
             f"- [security.txt]({settings.base_url}/.well-known/security.txt)\n\n"
             "## English summary\n\n"
-            "Payper checks Turkish university theses (.docx) against the institution's "
+            "Sontez checks Turkish university theses (.docx) against the institution's "
             "official formatting guide and fixes formatting errors without ever modifying "
             "the thesis text. No AI model sees the text; uploads are processed in memory "
             "and never written to disk. Free during the pilot; sign in with a university "
@@ -1318,7 +1318,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if not job.report:
             raise HTTPException(404)
         return Response(job.report, media_type="application/json",
-                        headers={"Content-Disposition": 'attachment; filename="payper-rapor.json"'})
+                        headers={"Content-Disposition": 'attachment; filename="sontez-rapor.json"'})
 
     @app.post("/jobs/{job_id}/delete")
     async def job_delete(request: Request, job_id: str) -> Response:

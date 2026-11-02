@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#F7F7F9">
-  <title>{% block title %}Payper{% endblock %}</title>
+  <title>{% block title %}Sontez{% endblock %}</title>
   <link rel="stylesheet" href="/static/fonts.css?v={{ asset_v }}">
   <link rel="stylesheet" href="/static/app.css?v={{ asset_v }}">
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
@@ -18,7 +18,7 @@
   {% block topbar %}
   <header class="site-nav">
     <div class="wrap nav-inner">
-      <a class="brand" href="/" aria-label="Payper ana sayfa"><span class="brand-badge">{{ mark() }}</span><span class="word">Payper</span></a>
+      <a class="brand" href="/" aria-label="Sontez ana sayfa"><span class="brand-badge">{{ mark() }}</span><span class="word">Sontez</span></a>
       <nav class="pill" aria-label="Site">
         {% if user %}
         <a href="/" {% if active == "panel" %}aria-current="page"{% endif %}>Denetle</a>
@@ -51,7 +51,7 @@
   {% block footer %}
   <footer class="footer">
     <div class="wrap footer-grid">
-      <a class="brand" href="/">{{ mark() }}<span class="word">Payper</span></a>
+      <a class="brand" href="/">{{ mark() }}<span class="word">Sontez</span></a>
       <p>Tez biçim denetimi · ZBEÜ pilotu. Metniniz değiştirilmez, yapay zekâ tarafından okunmaz;
          rapor {{ retention_hours }} saat sonra silinir. Son biçim onayı fakültenize aittir.</p>
       <div class="footer-links">

@@ -1,4 +1,4 @@
-// Synora arayüzü: yükleme, durum takibi, bulgu süzme. Harici kütüphane yok.
+// Sontez arayüzü: yükleme, durum takibi, bulgu süzme. Harici kütüphane yok.
 "use strict";
 
 (function () {
@@ -446,7 +446,7 @@
     let opener = null;
     // Tez metin görünümünde açıldıysa (docview.js, aynı dosya doğrulandı) kopya için yeniden sorulmaz.
     let openFile = null;
-    document.addEventListener("payper:docfile", (e) => { openFile = e.detail || null; });
+    document.addEventListener("sontez:docfile", (e) => { openFile = e.detail || null; });
     const say = (msg, isError) => {
       status.textContent = msg;
       status.classList.toggle("error", Boolean(isError));
@@ -488,7 +488,7 @@
       zone.addEventListener(t, (e) => { e.preventDefault(); zone.classList.remove("over"); }));
     // Kopya için seçilen dosya metin görünümünü de açar (docview.js aynı dosya özetini doğrular).
     const picked = (file) => {
-      if (file) document.dispatchEvent(new CustomEvent("payper:pickfile", { detail: file }));
+      if (file) document.dispatchEvent(new CustomEvent("sontez:pickfile", { detail: file }));
       send(file);
     };
     zone.addEventListener("drop", (e) => picked(e.dataTransfer.files[0]));
@@ -549,7 +549,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = kind === "fixed" ? "payper-duzeltilmis.docx" : "payper-yorumlu.docx";
+        a.download = kind === "fixed" ? "sontez-duzeltilmis.docx" : "sontez-yorumlu.docx";
         document.body.appendChild(a);
         a.click();
         a.remove();

@@ -1,4 +1,4 @@
-// Payper tanıtım sayfası: belirme, hafif kaydırma (parallax), eğilme ve parlama, "nasıl çalışır"
+// Sontez tanıtım sayfası: belirme, hafif kaydırma (parallax), eğilme ve parlama, "nasıl çalışır"
 // tetikleyicisi, barkod ve piksel süsleri. Yalnızca bu sayfada yüklenir; harici kütüphane yok.
 // Kurallar: yalnızca transform/opacity değişir; hareket azaltılmışsa animasyon yok, içerik
 // doğrudan görünür; parallax ve eğilme yalnızca fareli cihazlarda.

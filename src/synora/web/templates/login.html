@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Payper — Tez biçim denetimi{% endblock %}
+{% block title %}Sontez — Tez biçim denetimi{% endblock %}
 {% block body_class %}landing{% endblock %}
 {% block scripts %}<script src="/static/landing.js?v={{ asset_v }}" defer></script>{% endblock %}
 {% block content %}
@@ -19,7 +19,7 @@
     <p class="hero-steps" aria-label="Üç adım: Yükle, Denetle, Teslim et">
       <span aria-hidden="true">Yükle</span><i aria-hidden="true">·</i><span aria-hidden="true">Denetle</span><i aria-hidden="true">·</i><span aria-hidden="true">Teslim et</span>
     </p>
-    <p>Payper, Word tezinizi enstitünüzün yazım kılavuzuna göre denetler, hataları belge üzerinde
+    <p>Sontez, Word tezinizi enstitünüzün yazım kılavuzuna göre denetler, hataları belge üzerinde
        işaretler ve metninize dokunmadan Word'de kabul edebileceğiniz düzeltmeleri hazırlar.</p>
     <div class="hero-ctas hero-aside">
       <a class="btn primary" href="/kayit"><span class="lbl">Hemen başla</span><span class="arr" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>
@@ -60,7 +60,7 @@
     <div class="guide-text reveal" id="guide-text">
       <p class="eyebrow-dot">{{ page.name if page else "Kılavuz" }}</p>
       <h2>Kılavuzunuz,<br>ölçü ölçü.</h2>
-      <p>Payper fakültenizin kılavuzunu satır satır kurala çevirir. Pilotta ZBEÜ Tıp Fakültesi
+      <p>Sontez fakültenizin kılavuzunu satır satır kurala çevirir. Pilotta ZBEÜ Tıp Fakültesi
          kılavuzu kullanılıyor; {{ stats.universities }} üniversitenin kural seti hazır.</p>
       {% if tiles %}
       <dl class="guide-dl">

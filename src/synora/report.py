@@ -273,7 +273,7 @@ def to_json(result: CheckResult, rules: Ruleset) -> str:
 
 def to_text(result: CheckResult, rules: Ruleset, *, max_locations: int = 8) -> str:
     s = summary(result)
-    lines = [f"Payper · {rules.name} (kural seti {rules.ruleset} v{rules.version})", ""]
+    lines = [f"Sontez · {rules.name} (kural seti {rules.ruleset} v{rules.version})", ""]
     if rules.uyari:
         lines += [f"UYARI: {rules.uyari}", ""]
     if not result.findings:

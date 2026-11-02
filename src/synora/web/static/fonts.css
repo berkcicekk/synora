@@ -1,4 +1,4 @@
-/* Payper yazı tipleri — yerelde sunulur (CSP: font-src 'self'; Google'a istek atılmaz).
+/* Sontez yazı tipleri — yerelde sunulur (CSP: font-src 'self'; Google'a istek atılmaz).
    Inter (SIL OFL, değişken 400–700), JetBrains Mono (SIL OFL), Latin Modern Roman
    (GUST Font License; LaTeX'in varsayılanı — tez/sayfa önizlemelerinde). */
 @font-face {

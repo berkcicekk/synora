@@ -1,9 +1,9 @@
-/* Payper — tasarım devri 2026-10 (payper-tasarim): beyaz site zemini, gri uygulama
+/* Sontez — tasarım devri 2026-10 (payper-tasarim): beyaz site zemini, gri uygulama
    çerçevesi, mor vurgu. Yazı: Inter (başlıklar 600, -0.04em), etiket/ölçü: JetBrains Mono.
    Tez/sayfa önizlemeleri: Latin Modern. Tek (açık) tema. */
 
 :root {
-  /* Payper kimliği */
+  /* Sontez kimliği */
   --bg: #FFFFFF;            /* site zemini */
   --app-bg: #EEEEF2;        /* uygulama dış zemini */
   --app-panel: #F7F7F9;     /* uygulama paneli (köşe 32px) */

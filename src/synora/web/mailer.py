@@ -36,9 +36,9 @@ class SmtpMailer:
         msg = EmailMessage()
         msg["From"] = self.s.smtp_from
         msg["To"] = email
-        msg["Subject"] = "Payper giriş bağlantınız"
+        msg["Subject"] = "Sontez giriş bağlantınız"
         msg.set_content(
-            "Merhaba,\n\nPayper'a giriş yapmak için aşağıdaki bağlantıyı açın. "
+            "Merhaba,\n\nSontez'e giriş yapmak için aşağıdaki bağlantıyı açın. "
             "Bağlantı 15 dakika geçerlidir ve yalnızca bir kez kullanılabilir.\n\n"
             f"{link}\n\nBu isteği siz yapmadıysanız bu e-postayı yok sayabilirsiniz.\n"
         )

@@ -1,13 +1,13 @@
-# Payper
+# Sontez
 
-Payper, `.docx` tezleri enstitünün yazım kılavuzuna göre **denetler** ve biçimsel hataları
+Sontez, `.docx` tezleri enstitünün yazım kılavuzuna göre **denetler** ve biçimsel hataları
 **metne dokunmadan** düzeltir. Öğrenci tezini web arayüzüne yükler, raporu ekranda görür,
 isterse düzeltmeleri Word'de izlenen değişiklik olarak taşıyan kopyayı indirir.
 
 Demo: https://sontez.com · Pilot: Zonguldak Bülent Ecevit Üniversitesi (Tıp Fakültesi)
 
 > Kod adları tarihsel nedenle `synora` (paket, CLI, `SYNORA_*` ortam değişkenleri);
-> ürün adı Payper'dır. Ayrıntı: `docs/architecture.md`.
+> ürün adı Sontez'dir. Ayrıntı: `docs/architecture.md`.
 
 ## Değişmez ilkeler
 
@@ -56,5 +56,5 @@ değişiklik planla başlar. Güvenlik açıkları için: [SECURITY.md](SECURITY
 ## Lisans
 
 [GNU AGPL-3.0-or-later](LICENSE). Kodu kullanabilir, değiştirebilir ve kendi sunucunuzda
-barındırabilirsiniz; Payper'ı bir ağ hizmeti olarak sunuyorsanız yaptığınız değişikliklerin
+barındırabilirsiniz; Sontez'i bir ağ hizmeti olarak sunuyorsanız yaptığınız değişikliklerin
 kaynağını da aynı lisansla açmanız gerekir.

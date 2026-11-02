@@ -1,8 +1,8 @@
-# Payper — Mimari
+# Sontez — Mimari
 
-> Ürün adı **Payper** (2026-10-20'de Synora'dan değişti). Kod tarafındaki adlar (paket `synora`,
+> Ürün adı **Sontez** (2026-11-02'de Payper'dan, 2026-10-20'de Synora'dan değişti). Kod tarafındaki adlar (paket `synora`,
 > `SYNORA_*` ortam değişkenleri, CLI `synora`, hata sınıfları) bilinçli olarak eskisi gibi kaldı;
-> metinde geçen "Synora" ürünü, yani Payper'ı anlatır.
+> metinde geçen "Synora" ürünü, yani Sontez'i anlatır.
 
 > Durum: **v0.3** (2026-10-22). F0–F5 uygulanmış durumda (bkz. §12); `[KARAR?]` ile işaretli
 > yerler henüz netleşmedi. Kod herkese açık: AGPL-3.0-or-later (kökteki `LICENSE`).
@@ -14,7 +14,7 @@ isteğe bağlı olarak **biçimsel hataları düzeltir**. Tezin metnine hiçbir 
 (kenar boşluğu, yazı tipi, satır aralığı, başlık stilleri, sayfa numarası vb.) değiştirir.
 
 Öğrenci tezini sade bir **web arayüzüne** yükler, raporu ekranda görür, isterse düzeltilmiş dosyayı indirir.
-Görsel kimlik ve arayüz dili: Payper tasarım kimliği (2026-10-22 tasarım devri; kurallar §10.1).
+Görsel kimlik ve arayüz dili: Sontez tasarım kimliği (2026-10-22 tasarım devri; kurallar §10.1).
 
 **Pilot:** Zonguldak Bülent Ecevit Üniversitesi (ZBEÜ). İlk kural seti `rulesets/zbeu-tip.yaml`:
 Tıp Fakültesi *Tıpta Uzmanlık Öğrencileri için Tez Yazım Kılavuzu* (2019). Kılavuzla madde madde eşleme,
@@ -60,7 +60,7 @@ Kapsam dışı: yazım/dil denetimi, intihal, içerik önerisi, kaynakça içeri
 | A8 | CLI | `synora.cli` | `synora check`, `synora fix` komutları (geliştirme ve enstitü içi toplu kullanım) | |
 | A9 | Web API | `synora.web` | Dosya yükleme, iş oluşturma, rapor/çıktı indirme, oturum (FastAPI) | ✅ |
 | A10 | İş yürütücü | `synora.worker` | Kuyruktaki işi izole süreçte çalıştırır (zaman/bellek sınırı), saklama süresi dolanları siler | ✅ |
-| A11 | Arayüz | `web/` | Yükle → ilerleme → rapor → indir akışı; Payper tasarım kimliğine uygun, mobil uyumlu, erişilebilir | |
+| A11 | Arayüz | `web/` | Yükle → ilerleme → rapor → indir akışı; Sontez tasarım kimliğine uygun, mobil uyumlu, erişilebilir | |
 | A12 | LaTeX şablonu | `synora.latex` | Kural setinden Overleaf'e yüklenebilir tez şablonu (.cls + örnek tez); derleme yok | |
 
 \* Hassas modüllerde (A1, A2, A5, A9, A10) kod yazmadan önce plan sunulur ve onay beklenir (bkz. `CLAUDE.md`).

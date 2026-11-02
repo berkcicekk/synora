@@ -1,4 +1,4 @@
-# Payper'ı sunucuya kurmak
+# Sontez'i sunucuya kurmak
 
 > Servis, paket ve ortam değişkeni adları tarihsel nedenle `synora`/`SYNORA_*` kalmıştır.
 

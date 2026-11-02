@@ -60,7 +60,7 @@ class Settings:
     smtp_port: int = 587
     smtp_user: str = ""
     smtp_password: str = field(default="", repr=False)
-    smtp_from: str = "Synora <noreply@synora.local>"
+    smtp_from: str = "Sontez <noreply@synora.local>"
     # Yönetim paneli (/yonetim): listedeki e-posta + oturum başına yönetici anahtarı. Demo
     # kipinde adres doğrulanmadığı için e-posta tek başına yetmez. Anahtarın kendisi değil,
     # SHA-256 özeti tutulur (`synora admin-key` üretir). İkisinden biri boşsa panel kapalı.
@@ -68,7 +68,7 @@ class Settings:
     admin_key_sha256: str = field(default="", repr=False)
     # Cloudflare Access: ikisi de doluysa panele yalnızca Access ile girilir (JWT uygulamada da
     # doğrulanır), oturum ve anahtar yöntemi kapanır. Listedeki e-posta yine şarttır.
-    access_team_domain: str = ""  # ör. payper.cloudflareaccess.com
+    access_team_domain: str = ""  # ör. sontez.cloudflareaccess.com
     access_aud: str = ""  # Access uygulamasının AUD etiketi (64 onaltılık)
     build: str = ""  # panelde gösterilen sürüm (imaj derlenirken verilir)
 

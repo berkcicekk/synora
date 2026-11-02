@@ -1,7 +1,7 @@
 """A5 — Yorumlu kopya: her bulgu, belgedeki ilgili paragrafa Word yorumu olarak eklenir.
 
 Belgeye yalnızca yorum işaretleri (commentRangeStart/End + commentReference run'ı) eklenir;
-bunlar metin taşımaz, content_fingerprint değişmez. Yorum metinleri Synora'nın Türkçe
+bunlar metin taşımaz, content_fingerprint değişmez. Yorum metinleri Sontez'in Türkçe
 mesajlarıdır, tez metni değil. Öğrencinin mevcut yorumları korunur.
 """
 
@@ -34,7 +34,7 @@ def _comment_lines(findings: list[Finding]) -> list[str]:
         role = ROLE_NAMES.get(f.role, "") if f.role else ""
         prefix = f"[{SEVERITY_NAMES[f.severity]}] " + (f"{role}: " if role else "")
         lines.append(prefix + message(f))
-    lines.append("Payper otomatik biçim denetimi")
+    lines.append("Sontez otomatik biçim denetimi")
     return lines
 
 

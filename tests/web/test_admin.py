@@ -164,7 +164,7 @@ def test_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_malformed_key_hash_stops_production(settings: Settings) -> None:
-    prod = replace(settings, dev=False, base_url="https://payper.example",
+    prod = replace(settings, dev=False, base_url="https://sontez.example",
                    admin_emails=(ADMIN,), admin_key_sha256="parola123")
     assert not prod.admin_enabled
     assert any("SYNORA_ADMIN_KEY_SHA256" in p for p in prod.problems())

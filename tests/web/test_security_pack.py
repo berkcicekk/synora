@@ -341,13 +341,13 @@ def test_feedback_para_id_format(client: TestClient, mailer: ConsoleMailer,
 # --- İndirme adları ve security.txt -----------------------------------------------------------
 
 
-def test_download_names_use_payper(client: TestClient, mailer: ConsoleMailer) -> None:
+def test_download_names_use_sontez(client: TestClient, mailer: ConsoleMailer) -> None:
     job_id, csrf = ready_job(client, mailer)
     report = client.get(f"/jobs/{job_id}/report.json")
-    assert report.headers["content-disposition"] == 'attachment; filename="payper-rapor.json"'
+    assert report.headers["content-disposition"] == 'attachment; filename="sontez-rapor.json"'
     data = bad_thesis()
-    for kind, name in (("fixed", "payper-duzeltilmis.docx"),
-                       ("annotated", "payper-yorumlu.docx")):
+    for kind, name in (("fixed", "sontez-duzeltilmis.docx"),
+                       ("annotated", "sontez-yorumlu.docx")):
         res = output(client, csrf, job_id, kind, data)
         assert res.status_code == 200
         assert res.headers["content-disposition"] == f'attachment; filename="{name}"'

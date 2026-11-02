@@ -29,7 +29,7 @@ from synora.web.settings import Settings
 
 ADMIN = "yonetici@beun.edu.tr"
 KEY = "dogru-anahtar-0123456789abcdef"
-TEAM = "payper-test.cloudflareaccess.com"
+TEAM = "sontez-test.cloudflareaccess.com"
 AUD = "a" * 64
 PRIVATE = rsa.generate_private_key(public_exponent=65537, key_size=2048)
 OTHER_PRIVATE = rsa.generate_private_key(public_exponent=65537, key_size=2048)
@@ -236,7 +236,7 @@ def test_malformed_key_set_is_rejected(monkeypatch: pytest.MonkeyPatch,
 
 
 def _prod(settings: Settings, **kw: Any) -> Settings:
-    return replace(settings, dev=False, base_url="https://payper.example", **kw)
+    return replace(settings, dev=False, base_url="https://sontez.example", **kw)
 
 
 def test_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -258,9 +258,9 @@ def test_half_configuration_stops_production(settings: Settings, kw: dict[str, s
     "kotu.example.com",
     "cloudflareaccess.com",
     "a.b.cloudflareaccess.com",
-    "payper.cloudflareaccess.com.kotu.example",
-    "payper.cloudflareaccess.com/yol",
-    "https://payper.cloudflareaccess.com",
+    "sontez.cloudflareaccess.com.kotu.example",
+    "sontez.cloudflareaccess.com/yol",
+    "https://sontez.cloudflareaccess.com",
 ])
 def test_foreign_team_domain_stops_production(settings: Settings, domain: str) -> None:
     prod = _prod(settings, access_team_domain=domain, access_aud=AUD)

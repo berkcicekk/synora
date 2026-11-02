@@ -69,5 +69,5 @@ def test_llms_txt_introduces_site_to_ai_assistants(client: TestClient) -> None:
     res = client.get("/llms.txt")
     assert res.status_code == 200
     assert "markdown" in res.headers["content-type"]
-    assert res.text.startswith("# Payper")
+    assert res.text.startswith("# Sontez")
     assert "/demo" in res.text and "metni" in res.text

@@ -1,4 +1,4 @@
-// Payper rapor sayfası: tezin metnini Word'deki gibi gösterir.
+// Sontez rapor sayfası: tezin metnini Word'deki gibi gösterir.
 // Dosya YALNIZCA bu tarayıcıda açılır: hiçbir yere gönderilmez, saklanmaz; sayfa kapanınca gider.
 // Sunucudaki rapor metin taşımaz; bloklar yalnızca gövde paragraf sırasını (data-i) bilir.
 // Burada .docx okunur, paragraflar aynı sırayla yürünür (synora.parse ile aynı yürüyüş) ve
@@ -812,7 +812,7 @@
       }
       if (openBtn) openBtn.hidden = true;
       say(root.dataset.sample ? "Örnek tez açıldı." : "Teziniz açıldı" + (file ? ": " + file.name : "") + ". Sayfayı kapatınca ekrandan gider.");
-      if (file) document.dispatchEvent(new CustomEvent("payper:docfile", { detail: file }));
+      if (file) document.dispatchEvent(new CustomEvent("sontez:docfile", { detail: file }));
     } catch (err) {
       say(err instanceof ViewError ? err.message : UNREADABLE, true);
       if (openBtn) openBtn.disabled = false;
@@ -825,7 +825,7 @@
     openBtn.addEventListener("click", () => { picker.value = ""; picker.click(); });
     picker.addEventListener("change", () => { if (picker.files[0]) open(picker.files[0]); });
     // Kopya için seçilen dosya da (aynı dosya) metni gösterir.
-    document.addEventListener("payper:pickfile", (e) => { if (!shown && e.detail) open(e.detail); });
+    document.addEventListener("sontez:pickfile", (e) => { if (!shown && e.detail) open(e.detail); });
     const canvas = document.querySelector(".pane-canvas");
     if (canvas) {
       const hasFiles = (e) => e.dataTransfer && [...e.dataTransfer.types].includes("Files");

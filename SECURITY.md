@@ -1,6 +1,6 @@
 # Güvenlik politikası
 
-Payper öğrencilerin tez dosyalarını işler; güvenlik bildirimlerini ciddiye alıyoruz.
+Sontez öğrencilerin tez dosyalarını işler; güvenlik bildirimlerini ciddiye alıyoruz.
 
 ## Açık bildirme
 
