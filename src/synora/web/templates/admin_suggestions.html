@@ -1,0 +1,50 @@
+{% extends "admin_base.html" %}
+{% block admin_title %}Öneriler{% endblock %}
+{% block admin_tools %}
+<nav class="subnav" aria-label="Öneri filtresi">
+  <a href="/yonetim/oneriler"{% if not admin.unread_only %} aria-current="true"{% endif %}>Tümü</a>
+  <a href="/yonetim/oneriler?filtre=okunmamis"{% if admin.unread_only %} aria-current="true"{% endif %}>Okunmamış ({{ admin.unread }})</a>
+</nav>
+{% endblock %}
+{% block admin_content %}
+<section aria-labelledby="oneriler-h" class="pcard table-card">
+  <div class="table-head">
+    <h2 id="oneriler-h" class="pcard-title">İstek ve öneriler</h2>
+    <span class="pcard-sub">Son 100 mesaj · {{ admin.unread }} okunmamış</span>
+  </div>
+  {% if admin.suggestions %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Tarih</th><th scope="col">Sayfa</th><th scope="col">E-posta</th><th scope="col" class="msg">Mesaj</th><th scope="col">Durum</th><th scope="col">İşlem</th></tr></thead>
+    <tbody>
+      {% for s in admin.suggestions %}
+      <tr>
+        <td>{{ s.when }}</td>
+        <td class="num">{{ s.page }}</td>
+        <td class="admin-email">{{ s.email }}</td>
+        <td class="msg">{{ s.message }}</td>
+        <td>{% if s.read %}Okundu{% else %}<strong>Yeni</strong>{% endif %}</td>
+        <td><div class="admin-actions">
+          <form method="post" action="/yonetim/oneri/{% if s.read %}okunmadi{% else %}okundu{% endif %}">
+            <input type="hidden" name="csrf" value="{{ user.csrf }}">
+            <input type="hidden" name="id" value="{{ s.id }}">
+            <button class="btn small" type="submit"><span class="lbl">{% if s.read %}Okunmadı{% else %}Okundu{% endif %}</span></button>
+          </form>
+          <form method="post" action="/yonetim/oneri/sil">
+            <input type="hidden" name="csrf" value="{{ user.csrf }}">
+            <input type="hidden" name="id" value="{{ s.id }}">
+            <button class="btn small" type="submit"><span class="lbl">Sil</span></button>
+          </form>
+        </div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% elif admin.unread_only %}
+  <p class="empty pad-b">Okunmamış mesaj yok.</p>
+  {% else %}
+  <p class="empty pad-b">Henüz mesaj yok.</p>
+  {% endif %}
+</section>
+{% endblock %}

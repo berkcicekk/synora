@@ -1035,7 +1035,35 @@ body.app .footer, body.editor .footer { background: transparent; }
 .ptable thead th.msg, .ptable td.msg { text-align: left; min-width: 260px; overflow-wrap: anywhere; }
 .admin-status { color: var(--ok); font-size: .88rem; margin-bottom: 14px; }
 .admin-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; align-items: flex-start; }
-.admin-delete > summary { list-style: none; cursor: pointer; }
-.admin-delete > summary::-webkit-details-marker { display: none; }
-.admin-delete[open] form { margin-top: 10px; min-width: 240px; text-align: left; }
+/* Sol menü + içerik; telefonda menü üstte yatay şerit */
+.admin-layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 32px; align-items: start; }
+.admin-nav { display: flex; flex-direction: column; gap: 2px; position: sticky; top: 16px; }
+.admin-nav a { display: flex; align-items: center; min-height: 44px; padding: 0 14px; color: var(--muted);
+  border-radius: var(--radius-field); font-size: .9rem; font-weight: 600; text-decoration: none; }
+.admin-nav a:hover { background: var(--soft); color: var(--ink); }
+.admin-nav a[aria-current] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-chip); }
+.admin-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.admin-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.admin-title { margin: 0; font-size: 1.75rem; font-weight: 600; letter-spacing: -.04em; }
+.admin-more { font-size: .82rem; font-weight: 600; }
+.admin-state { font-weight: 600; color: var(--muted); }
+.admin-state.is-on { color: var(--ok); }
+.admin-state.is-off { color: var(--error); }
+.admin-search { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.admin-search .fld-search { flex: 1 1 240px; }
+.admin-menu > summary { list-style: none; cursor: pointer; }
+.admin-menu > summary::-webkit-details-marker { display: none; }
+.admin-pop { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 10px;
+  min-width: 240px; text-align: left; }
+.admin-add[open] .admin-pop { padding: 16px; background: var(--surface); border-radius: var(--radius-field);
+  box-shadow: var(--shadow-chip); max-width: 340px; }
+.admin-delete { width: 100%; padding-top: 10px; border-top: 1px solid var(--line); }
+.admin-pages { display: flex; justify-content: center; align-items: center; gap: 12px; padding-bottom: 1rem; }
+.admin-pages .pcard-sub { margin: 0; }
+@media (max-width: 760px) {
+  .admin-layout { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .admin-nav { position: static; flex-direction: row; overflow-x: auto; scrollbar-width: none; }
+  .admin-nav::-webkit-scrollbar { display: none; }
+  .admin-nav a { flex: none; }
+}
 /* == /YÖNETİM == */

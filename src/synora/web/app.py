@@ -94,14 +94,27 @@ ADMIN_STATUS = {
     "yok": ("Kayıt bulunamadı ya da işlem zaten yapılmış.", True),
     "okundu": ("Öneri okundu işaretlendi.", False),
     "oneri-silindi": ("Öneri silindi.", False),
+    "okunmadi": ("Öneri okunmadı işaretlendi.", False),
+    "eklendi": ("Hesap eklendi. Kişi kayıt olurken aydınlatma metnini kendisi onaylayacak.", False),
+    "var": ("Bu adresle kayıtlı bir hesap zaten var.", True),
+    "gecersiz": ("Geçerli bir üniversite e-posta adresi yazın.", True),
+    "askida": ("Hesap askıya alındı, oturumları kapatıldı.", False),
+    "etkin": ("Hesap yeniden etkinleştirildi.", False),
+    "yonetici": ("Yönetici hesabı askıya alınamaz.", True),
 }
 ADMIN_ACTIONS = {
     "session_end": "Oturum kapatma",
+    "account_add": "Hesap ekleme",
     "account_delete": "Hesap silme",
+    "account_suspend": "Hesap askıya alma",
+    "account_activate": "Hesap etkinleştirme",
     "suggestion_read": "Öneri okundu",
+    "suggestion_unread": "Öneri okunmadı",
     "suggestion_delete": "Öneri silme",
 }
+ADMIN_PAGE_SIZE = 50
 SUGGESTION_ID_RE = re.compile(r"[0-9]{1,18}")
+PAGE_NUMBER_RE = re.compile(r"[1-9][0-9]{0,8}")
 # Rol seçim listesi (arayüz sırası); yalnızca synora.check.USER_ROLES içindekiler.
 ROLE_CHOICES = [r for r in (
     "heading_1", "heading_2", "heading_3", "body", "front_matter", "block_quote", "list_item",
@@ -744,6 +757,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return fail(
                 "Pilot süresince yalnızca üniversite e-posta adresleri kullanılabilir."
             )
+        if db.is_suspended(email):
+            return fail("Bu adresle giriş şu anda kapalı.")
         consent = None
         if mode == "register":
             if form.get("kvkk") != "1":
@@ -957,8 +972,21 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     def _day_label(day: str) -> str:
         return f"{int(day[8:])} {TR_MONTHS[int(day[5:7]) - 1]}"
 
-    def admin_context() -> dict[str, Any]:
-        """Sayılar, hesaplar, öneriler, en sık kurallar. Rapor içeriği (başlık yolu dahil) yok."""
+    def account_rows(now: float, *, limit: int, offset: int = 0,
+                     query: str = "") -> list[dict[str, Any]]:
+        return [{"email": e, "joined": format_when(c), "online": bool(o), "jobs": int(n),
+                 "suspended": s is not None, "pending": v is None,
+                 "is_admin": e in settings.admin_emails}
+                for e, c, v, s, o, n in db.admin_accounts(now, limit=limit, offset=offset,
+                                                          query=query)]
+
+    def suggestion_rows(limit: int, unread_only: bool = False) -> list[dict[str, Any]]:
+        return [{"id": i, "when": format_when(t), "page": p or "—", "email": e or "—",
+                 "message": m, "read": r is not None}
+                for i, t, p, e, m, r in db.admin_suggestions(limit, unread_only)]
+
+    def admin_overview() -> dict[str, Any]:
+        """Özet: sayılar, 14 gün, son hesaplar ve öneriler, en sık kurallar. Rapor içeriği yok."""
         now = time.time()
         days = [tr_day(now - k * 86400) for k in range(14)]  # bugün başta
         jobs_by_day = db.daily_jobs(days[-1])
@@ -973,19 +1001,33 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         return {
             "counts": db.admin_counts(now),
             "activity": activity,
-            "accounts": [{"email": e, "joined": format_when(c), "consent": v or "—",
-                          "online": bool(o), "jobs": int(n)}
-                         for e, c, v, o, n in db.accounts(now)],
-            "suggestions": [{"id": i, "when": format_when(t), "page": p or "—", "email": e or "—",
-                             "message": m, "read": r is not None}
-                            for i, t, p, e, m, r in db.admin_suggestions(50)],
+            "accounts": account_rows(now, limit=5),
+            "suggestions": suggestion_rows(5),
             "unread": db.unread_suggestions(),
-            "log": [{"when": format_when(t), "actor": a, "action": ADMIN_ACTIONS.get(c, c),
-                     "target": x} for t, a, c, x in db.admin_log(50)],
             "rules": [{"label": rule_label(r), "id": r, "n": n, "wrong": w,
                        "w": round(n / rule_peak * 100)} for r, n, w in rules],
             "session_hours": int(settings.session_hours),
-            "system": admin_system(now),
+        }
+
+    def admin_accounts_page(request: Request) -> dict[str, Any]:
+        raw = request.query_params.get("sayfa", "1")
+        total = db.account_total()
+        pages = max(1, (total + ADMIN_PAGE_SIZE - 1) // ADMIN_PAGE_SIZE)
+        page = min(int(raw), pages) if PAGE_NUMBER_RE.fullmatch(raw) else 1
+        counts = db.admin_counts(time.time())
+        return {"accounts": account_rows(time.time(), limit=ADMIN_PAGE_SIZE,
+                                         offset=(page - 1) * ADMIN_PAGE_SIZE),
+                "total": total, "page": page, "pages": pages, "query": "",
+                "pending": counts["pending"], "suspended": counts["suspended"]}
+
+    def admin_suggestions_page(request: Request) -> dict[str, Any]:
+        unread_only = request.query_params.get("filtre") == "okunmamis"
+        return {"suggestions": suggestion_rows(100, unread_only), "unread_only": unread_only,
+                "unread": db.unread_suggestions()}
+
+    def admin_usage_page() -> dict[str, Any]:
+        now = time.time()
+        return {
             "usage": [{"name": ruleset_name(r), "id": r, "total": d + f, "failed": f,
                        "rate": round(d / (d + f) * 100),
                        "avg": f"{s / d:.1f} sn".replace(".", ",") if d else "—"}
@@ -1025,28 +1067,58 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     # Anahtar denemesi: istemci başına saatte 5, sunucu genelinde dakikada 20.
     admin_key_rate_ok = make_rate_limiter(5, 20)
 
+    def admin_render(request: Request, user: User, template: str, section: str,
+                     data: dict[str, Any]) -> HTMLResponse:
+        return render(request, template, user=user, section=section, admin=data,
+                      notice=ADMIN_STATUS.get(request.query_params.get("durum", "")),
+                      access_login=access is not None, retention=int(settings.retention_hours))
+
+    def admin_view(request: Request, template: str, section: str,
+                   build: Callable[[], dict[str, Any]]) -> HTMLResponse:
+        """Access ya da listedeki e-posta + bu oturumda girilmiş anahtar; diğer herkese 404.
+        Sayfa verisi yalnızca yetki doğrulandıktan sonra hazırlanır."""
+        if access is not None:
+            user = access_admin(request, access)
+            if user is None:
+                raise HTTPException(404)
+        else:
+            found = current_user(request)
+            if found is None or not admin_allowed(found):
+                raise HTTPException(404)
+            if not admin_open(found):
+                return admin_key_form(request, found)
+            user = found
+        log_event("admin.view", hash=_hash(user.email)[:16])
+        return admin_render(request, user, template, section, build())
+
     @app.get("/yonetim", response_class=HTMLResponse)
     def admin_page(request: Request) -> HTMLResponse:
-        """Access ya da listedeki e-posta + bu oturumda girilmiş anahtar; diğer herkese 404."""
-        if access is not None:
-            admin = access_admin(request, access)
-            if admin is None:
-                raise HTTPException(404)
-            log_event("admin.view", hash=_hash(admin.email)[:16])
-            return render(request, "admin.html", user=admin, admin=admin_context(),
-                          notice=admin_notice(request), access_login=True,
-                          retention=int(settings.retention_hours))
-        user = current_user(request)
-        if user is None or not admin_allowed(user):
-            raise HTTPException(404)
-        if not admin_open(user):
-            return admin_key_form(request, user)
-        log_event("admin.view", hash=_hash(user.email)[:16])
-        return render(request, "admin.html", user=user, admin=admin_context(),
-                      notice=admin_notice(request), retention=int(settings.retention_hours))
+        return admin_view(request, "admin.html", "ozet", admin_overview)
 
-    def admin_notice(request: Request) -> tuple[str, bool] | None:
-        return ADMIN_STATUS.get(request.query_params.get("durum", ""))
+    @app.get("/yonetim/hesaplar", response_class=HTMLResponse)
+    def admin_accounts(request: Request) -> HTMLResponse:
+        return admin_view(request, "admin_accounts.html", "hesaplar",
+                          lambda: admin_accounts_page(request))
+
+    @app.get("/yonetim/oneriler", response_class=HTMLResponse)
+    def admin_suggestions(request: Request) -> HTMLResponse:
+        return admin_view(request, "admin_suggestions.html", "oneriler",
+                          lambda: admin_suggestions_page(request))
+
+    @app.get("/yonetim/kullanim", response_class=HTMLResponse)
+    def admin_usage(request: Request) -> HTMLResponse:
+        return admin_view(request, "admin_usage.html", "kullanim", admin_usage_page)
+
+    @app.get("/yonetim/sistem", response_class=HTMLResponse)
+    def admin_system_view(request: Request) -> HTMLResponse:
+        return admin_view(request, "admin_system.html", "sistem",
+                          lambda: admin_system(time.time()))
+
+    @app.get("/yonetim/kayit", response_class=HTMLResponse)
+    def admin_log_view(request: Request) -> HTMLResponse:
+        return admin_view(request, "admin_log.html", "kayit", lambda: {
+            "log": [{"when": format_when(t), "actor": a, "action": ADMIN_ACTIONS.get(c, c),
+                     "target": x} for t, a, c, x in db.admin_log(100)]})
 
     # --- Yönetim işlemleri: yetki → CSRF → işlem; yetkisize gövde okunmadan 404 -----------------
 
@@ -1056,20 +1128,71 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         user = current_user(request)
         return user if user is not None and admin_allowed(user) and admin_open(user) else None
 
-    async def admin_action(request: Request) -> tuple[str, FormData]:
-        """Yöneticinin özeti ve form. JWT anahtarı ağdan alınabilir: olay döngüsü bloklanmasın."""
+    async def admin_form(request: Request) -> tuple[User, FormData]:
+        """Yönetici ve form. JWT anahtarı ağdan alınabilir: olay döngüsü bloklanmasın."""
         user = await run_in_threadpool(admin_actor, request)
         if user is None:
             raise HTTPException(404)
         form = await small_form(request)
         check_csrf(user.csrf, str(form.get("csrf", "")))
+        return user, form
+
+    async def admin_action(request: Request) -> tuple[str, FormData]:
+        user, form = await admin_form(request)
         return _hash(user.email)[:16], form
 
-    def admin_done(status: str, anchor: str, actor: str | None = None,
+    def admin_done(status: str, page: str, actor: str | None = None,
                    action: str | None = None) -> RedirectResponse:
         if actor and action:
             log_event("admin.action", hash=actor, code=action)
-        return RedirectResponse(f"/yonetim?durum={status}#{anchor}", status_code=303)
+        return RedirectResponse(f"/yonetim/{page}?durum={status}", status_code=303)
+
+    @app.post("/yonetim/hesaplar/ara", response_class=HTMLResponse)
+    async def admin_search_accounts(request: Request) -> Response:
+        """Arama POST ile: e-posta adres çubuğuna ve aradaki kayıtlara düşmesin."""
+        user, form = await admin_form(request)
+        query = str(form.get("q", "")).strip()[:190]
+        counts = db.admin_counts(time.time())
+        return admin_render(request, user, "admin_accounts.html", "hesaplar", {
+            "accounts": account_rows(time.time(), limit=ADMIN_PAGE_SIZE, query=query),
+            "total": db.account_total(query), "page": 1, "pages": 1, "query": query,
+            "pending": counts["pending"], "suspended": counts["suspended"]})
+
+    @app.post("/yonetim/hesap/ekle")
+    async def admin_add_account(request: Request) -> Response:
+        actor, form = await admin_action(request)
+        email = form_email(form, "email")
+        if not EMAIL_RE.fullmatch(email) or not domain_allowed(email):
+            return admin_done("gecersiz", "hesaplar")
+        if not db.add_pending_user(email, actor=actor, target=_hash(email)[:16]):
+            return admin_done("var", "hesaplar")
+        return admin_done("eklendi", "hesaplar", actor, "account_add")
+
+    @app.post("/yonetim/hesap/askiya-al")
+    async def admin_suspend_account(request: Request) -> Response:
+        actor, form = await admin_action(request)
+        email = form_email(form, "email")
+        if email in settings.admin_emails:  # yönetici kendini dışarıda bırakmasın
+            return admin_done("yonetici", "hesaplar")
+        if not db.set_suspended(email, True, actor=actor, target=_hash(email)[:16]):
+            return admin_done("yok", "hesaplar")
+        return admin_done("askida", "hesaplar", actor, "account_suspend")
+
+    @app.post("/yonetim/hesap/etkinlestir")
+    async def admin_activate_account(request: Request) -> Response:
+        actor, form = await admin_action(request)
+        email = form_email(form, "email")
+        if not db.set_suspended(email, False, actor=actor, target=_hash(email)[:16]):
+            return admin_done("yok", "hesaplar")
+        return admin_done("etkin", "hesaplar", actor, "account_activate")
+
+    @app.post("/yonetim/oneri/okunmadi")
+    async def admin_unread_suggestion(request: Request) -> Response:
+        actor, form = await admin_action(request)
+        sid = suggestion_id(form)
+        if sid is None or not db.mark_suggestion_unread(sid, actor=actor):
+            return admin_done("yok", "oneriler")
+        return admin_done("okunmadi", "oneriler", actor, "suggestion_unread")
 
     def form_email(form: FormData, name: str) -> str:
         return str(form.get(name, "")).strip().lower()

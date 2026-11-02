@@ -30,11 +30,11 @@ def admin_client(settings: Settings, mailer: ConsoleMailer) -> Iterator[TestClie
         yield c
 
 
-def open_panel(client: TestClient, mailer: ConsoleMailer) -> str:
+def open_panel(client: TestClient, mailer: ConsoleMailer, path: str) -> str:
     csrf = login(client, mailer, ADMIN)
     assert client.post("/yonetim/anahtar", data={"key": KEY, "csrf": csrf},
                        follow_redirects=False).status_code == 303
-    return client.get("/yonetim").text
+    return client.get(path).text
 
 
 # --- Sistem durumu ------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ def open_panel(client: TestClient, mailer: ConsoleMailer) -> str:
 
 def test_system_section_shows_build_workers_and_queue(admin_client: TestClient,
                                                       mailer: ConsoleMailer) -> None:
-    html = open_panel(admin_client, mailer)
+    html = open_panel(admin_client, mailer, "/yonetim/sistem")
     assert 'id="sistem"' in html and "abc1234" in html
     assert 'id="s-workers">Çalışıyor<' in html
     assert 'id="s-queue">0 / 20<' in html
@@ -55,7 +55,7 @@ def test_system_section_lists_error_codes_of_last_day(admin_client: TestClient,
     db: Database = admin_client.app.state.db  # type: ignore[attr-defined]
     db.add_job("job-aaaaaaaaaaaaaaaa", "a@beun.edu.tr", "example")
     db.finish_job("job-aaaaaaaaaaaaaaaa", report=None, error_code="TIMEOUT")
-    html = open_panel(admin_client, mailer)
+    html = open_panel(admin_client, mailer, "/yonetim/sistem")
     assert "TIMEOUT" in html and "süre sınırını aştı" in html
 
 
@@ -90,13 +90,13 @@ def test_false_alarm_section_shows_rate(admin_client: TestClient, mailer: Consol
     db: Database = admin_client.app.state.db  # type: ignore[attr-defined]
     for job, verdict in [("j1", "wrong"), ("j2", "wrong"), ("j3", "wrong"), ("j4", "ok")]:
         db.add_feedback(job, "example", 3, "body.line_spacing", None, verdict)
-    html = open_panel(admin_client, mailer)
+    html = open_panel(admin_client, mailer, "/yonetim/kullanim")
     assert 'id="yanlis-alarm"' in html
     assert "%75" in html and "3 / 4" in html
 
 
 def test_false_alarm_section_empty_state(admin_client: TestClient, mailer: ConsoleMailer) -> None:
-    assert 'Henüz "yanlış" oyu yok' in open_panel(admin_client, mailer)
+    assert 'Henüz "yanlış" oyu yok' in open_panel(admin_client, mailer, "/yonetim/kullanim")
 
 
 # --- Kullanım -----------------------------------------------------------------------------------
@@ -143,13 +143,13 @@ def test_usage_section_after_real_job_hides_report_text(admin_client: TestClient
     student = TestClient(admin_client.app)
     job_id = upload(student, login(student, mailer), bad_thesis())
     assert wait_done(student, job_id) == "done"
-    html = open_panel(admin_client, mailer)
+    html = open_panel(admin_client, mailer, "/yonetim/kullanim")
     assert 'id="kullanim"' in html and "%100" in html
     assert SECRET not in html
 
 
 def test_usage_section_empty_state(admin_client: TestClient, mailer: ConsoleMailer) -> None:
-    assert "Son 30 günde denetim yok" in open_panel(admin_client, mailer)
+    assert "Son 30 günde denetim yok" in open_panel(admin_client, mailer, "/yonetim/kullanim")
 
 
 # --- Sürüm ayarı --------------------------------------------------------------------------------

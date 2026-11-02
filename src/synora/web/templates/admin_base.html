@@ -1,0 +1,24 @@
+{# Yönetim paneli kabuğu: solda menü, sağda içerik. Telefonda menü üste yatay şerit olur. #}
+{% extends "app_base.html" %}
+{% block title %}Yönetim · Payper{% endblock %}
+{% block content %}
+<div class="admin-layout">
+  <nav class="admin-nav" aria-label="Yönetim">
+    {% for href, key, label in [("/yonetim", "ozet", "Özet"), ("/yonetim/hesaplar", "hesaplar", "Hesaplar"), ("/yonetim/oneriler", "oneriler", "Öneriler"), ("/yonetim/kullanim", "kullanim", "Kullanım"), ("/yonetim/sistem", "sistem", "Sistem"), ("/yonetim/kayit", "kayit", "İşlem kaydı")] %}
+    <a href="{{ href }}"{% if section == key %} aria-current="page"{% endif %}>{{ label }}</a>
+    {% endfor %}
+  </nav>
+  <div class="admin-main">
+    <div class="admin-head">
+      <h1 class="admin-title">{% block admin_title %}{% endblock %}</h1>
+      {% block admin_tools %}{% endblock %}
+    </div>
+    {% if notice %}
+    {% if notice[1] %}<p class="alert" role="alert">{{ notice[0] }}</p>
+    {% else %}<p class="admin-status" role="status">{{ notice[0] }}</p>{% endif %}
+    {% endif %}
+    {% block admin_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}
+{% block framefoot %}<span class="fineprint">Bu panel sayıları ve hesapları gösterir; rapor içeriği gösterilmez</span>{% endblock %}

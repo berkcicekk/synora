@@ -1,0 +1,32 @@
+{% extends "admin_base.html" %}
+{% block admin_title %}Sistem{% endblock %}
+{% block admin_content %}
+{% set s = admin %}
+<section id="sistem" aria-labelledby="sistem-h" class="pcard table-card">
+  <div class="table-head">
+    <h2 id="sistem-h" class="pcard-title">Sistem durumu</h2>
+    <span class="pcard-sub">Sürüm <span id="s-build">{{ s.build }}</span></span>
+  </div>
+  <div class="meterline pad-b">
+    <div class="mrow"><span>İş yürütücü</span><span class="admin-day"><strong id="s-workers">{% if s.workers_ok %}Çalışıyor{% else %}Sorun var{% endif %}</strong></span></div>
+    <div class="mrow"><span>Kuyruk</span><span class="admin-day"><strong id="s-queue">{{ s.queue }}</strong></span></div>
+    <div class="mrow"><span>Süren yükleme</span><span class="admin-day"><strong id="s-uploads">{{ s.uploads }}</strong></span></div>
+    <div class="mrow"><span>Veritabanı</span><span class="admin-day"><strong id="s-db">{{ s.db }}</strong></span></div>
+    <div class="mrow"><span>Çalışma süresi</span><span class="admin-day"><strong id="s-uptime">{{ s.uptime }}</strong></span></div>
+  </div>
+  {% if s.errors %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Hata kodu</th><th scope="col" class="msg">Anlamı</th><th scope="col">Son 24 sa</th></tr></thead>
+    <tbody>
+      {% for e in s.errors %}
+      <tr><td class="num">{{ e.code }}</td><td class="msg">{{ e.message }}</td><td class="num">{{ e.n }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Son 24 saatte başarısız denetim yok.</p>
+  {% endif %}
+</section>
+{% endblock %}

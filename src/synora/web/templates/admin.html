@@ -1,27 +1,8 @@
-{% extends "app_base.html" %}
-{% block title %}Yönetim · Payper{% endblock %}
+{% extends "admin_base.html" %}
+{% block admin_title %}Özet{% endblock %}
+{% block admin_content %}
 {% set c = admin.counts %}
-{% block content %}
-<div class="apphead">
-  <h1 class="steptitle"><span aria-current="page">Yönetim</span></h1>
-  <nav aria-label="Yönetim bölümleri" class="subnav">
-    <a href="#genel" aria-current="location">Genel bakış</a>
-    <a href="#sistem">Sistem</a>
-    <a href="#kullanim">Kullanım</a>
-    <a href="#hesaplar">Hesaplar</a>
-    <a href="#oneriler">Öneriler</a>
-    <a href="#kurallar">Sık bulgular</a>
-    <a href="#yanlis-alarm">Yanlış alarm</a>
-    <a href="#islem-kaydi">İşlem kaydı</a>
-  </nav>
-</div>
-
-{% if notice %}
-{% if notice[1] %}<p class="alert" role="alert">{{ notice[0] }}</p>
-{% else %}<p class="admin-status" role="status">{{ notice[0] }}</p>{% endif %}
-{% endif %}
-
-<div id="genel" class="cardgrid">
+<div class="cardgrid">
   <article class="pcard">
     <div class="pcard-head"><div><h2 class="pcard-title">Kayıtlı hesap</h2>
       <p class="pcard-sub">Aydınlatma metnini onaylayıp kayıt olanlar</p></div></div>
@@ -40,108 +21,20 @@
     <div class="pcard-body"><div class="bignum-row"><span class="bignum" id="n-jobs">{{ c.jobs }}</span>
       <span class="bignum-note">{{ c.done }} tamamlandı · {{ c.failed }} başarısız<br>{{ c.queued + c.running }} sürüyor</span></div></div>
   </article>
-  <article class="pcard admin-days">
-    <div class="pcard-head"><div><h2 class="pcard-title">Son 14 gün</h2>
-      <p class="pcard-sub">Gün başına yeni kayıt ve denetim</p></div></div>
-    <div class="pcard-body meterline">
-      {% for d in admin.activity %}
-      <div><div class="mrow"><span>{{ d.label }}</span><span class="admin-day">{{ d.users }} kayıt · <strong>{{ d.jobs }}</strong> denetim</span></div>
-      <div class="meter"><i data-w="{{ d.w }}"></i></div></div>
-      {% endfor %}
-    </div>
-  </article>
 </div>
 
-{% set s = admin.system %}
-<section id="sistem" aria-labelledby="sistem-h" class="pcard table-card mt14">
+<section aria-labelledby="son-hesaplar-h" class="pcard table-card">
   <div class="table-head">
-    <h2 id="sistem-h" class="pcard-title">Sistem durumu</h2>
-    <span class="pcard-sub">Sürüm <span id="s-build">{{ s.build }}</span></span>
-  </div>
-  <div class="meterline pad-b">
-    <div class="mrow"><span>İş yürütücü</span><span class="admin-day"><strong id="s-workers">{% if s.workers_ok %}Çalışıyor{% else %}Sorun var{% endif %}</strong></span></div>
-    <div class="mrow"><span>Kuyruk</span><span class="admin-day"><strong id="s-queue">{{ s.queue }}</strong></span></div>
-    <div class="mrow"><span>Süren yükleme</span><span class="admin-day"><strong id="s-uploads">{{ s.uploads }}</strong></span></div>
-    <div class="mrow"><span>Veritabanı</span><span class="admin-day"><strong id="s-db">{{ s.db }}</strong></span></div>
-    <div class="mrow"><span>Çalışma süresi</span><span class="admin-day"><strong id="s-uptime">{{ s.uptime }}</strong></span></div>
-  </div>
-  {% if s.errors %}
-  <div class="ptable-wrap">
-  <table class="ptable">
-    <thead><tr><th scope="col">Hata kodu</th><th scope="col" class="msg">Anlamı</th><th scope="col">Son 24 sa</th></tr></thead>
-    <tbody>
-      {% for e in s.errors %}
-      <tr><td class="num">{{ e.code }}</td><td class="msg">{{ e.message }}</td><td class="num">{{ e.n }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </div>
-  {% else %}
-  <p class="empty pad-b">Son 24 saatte başarısız denetim yok.</p>
-  {% endif %}
-</section>
-
-<section id="kullanim" aria-labelledby="kullanim-h" class="pcard table-card mt14">
-  <div class="table-head">
-    <h2 id="kullanim-h" class="pcard-title">Kullanım</h2>
-    <span class="pcard-sub">Son 30 gün, kural seti başına · yeniden denetimler dahil, anonim</span>
-  </div>
-  {% if admin.usage %}
-  <div class="ptable-wrap">
-  <table class="ptable">
-    <thead><tr><th scope="col">Kural seti</th><th scope="col">Denetim</th><th scope="col">Başarılı</th><th scope="col">Ort. süre</th></tr></thead>
-    <tbody>
-      {% for u in admin.usage %}
-      <tr><td title="{{ u.id }}">{{ u.name }}</td><td class="num">{{ u.total }}</td><td class="num">%{{ u.rate }}</td><td class="num">{{ u.avg }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </div>
-  {% else %}
-  <p class="empty pad-b">Son 30 günde denetim yok.</p>
-  {% endif %}
-</section>
-
-<section id="hesaplar" aria-labelledby="hesaplar-h" class="pcard table-card mt14">
-  <div class="table-head">
-    <h2 id="hesaplar-h" class="pcard-title">Kayıtlı hesaplar</h2>
-    <span class="pcard-sub">{% if admin.accounts | length >= 500 %}En yeni 500 hesap{% else %}{{ admin.accounts | length }} hesap{% endif %}</span>
+    <h2 id="son-hesaplar-h" class="pcard-title">Son hesaplar</h2>
+    <a class="admin-more" href="/yonetim/hesaplar">Tümünü yönet</a>
   </div>
   {% if admin.accounts %}
   <div class="ptable-wrap">
   <table class="ptable">
-    <thead><tr><th scope="col">E-posta</th><th scope="col">Kayıt</th><th scope="col">Onaylanan metin</th><th scope="col">Oturum</th><th scope="col">Son 24 sa denetim</th><th scope="col">İşlem</th></tr></thead>
+    <thead><tr><th scope="col">E-posta</th><th scope="col">Kayıt</th><th scope="col">Durum</th></tr></thead>
     <tbody>
       {% for a in admin.accounts %}
-      <tr>
-        <td class="admin-email">{{ a.email }}</td>
-        <td>{{ a.joined }}</td>
-        <td class="num">{{ a.consent }}</td>
-        <td>{% if a.online %}açık{% else %}—{% endif %}</td>
-        <td class="num">{{ a.jobs }}</td>
-        <td><div class="admin-actions">
-          {% if a.online %}
-          <form method="post" action="/yonetim/hesap/oturum">
-            <input type="hidden" name="csrf" value="{{ user.csrf }}">
-            <input type="hidden" name="email" value="{{ a.email }}">
-            <button class="btn small" type="submit"><span class="lbl">Oturumu kapat</span></button>
-          </form>
-          {% endif %}
-          <details class="admin-delete">
-            <summary class="btn small"><span class="lbl">Sil</span></summary>
-            <form method="post" action="/yonetim/hesap/sil" class="admin-key-form">
-              <input type="hidden" name="csrf" value="{{ user.csrf }}">
-              <input type="hidden" name="email" value="{{ a.email }}">
-              <p class="fineprint">Hesap, raporlar, oturumlar ve öneriler kalıcı olarak silinir; yedeklerde saklama süresi dolana kadar kalır.</p>
-              <div class="fld">
-                <label for="sil-{{ loop.index }}">Onay için e-postayı yazın</label>
-                <input class="fld-search" id="sil-{{ loop.index }}" name="confirm" type="text" required autocomplete="off" spellcheck="false">
-              </div>
-              <button class="btn small danger" type="submit"><span class="lbl">Kalıcı olarak sil</span></button>
-            </form>
-          </details>
-        </div></td>
-      </tr>
+      <tr><td class="admin-email">{{ a.email }}</td><td>{{ a.joined }}</td><td>{% include "_admin_state.html" %}</td></tr>
       {% endfor %}
     </tbody>
   </table>
@@ -151,38 +44,18 @@
   {% endif %}
 </section>
 
-<section id="oneriler" aria-labelledby="oneriler-h" class="pcard table-card mt14">
+<section aria-labelledby="son-oneriler-h" class="pcard table-card">
   <div class="table-head">
-    <h2 id="oneriler-h" class="pcard-title">İstek ve öneriler</h2>
-    <span class="pcard-sub">Son 50 mesaj · {{ admin.unread }} okunmamış</span>
+    <h2 id="son-oneriler-h" class="pcard-title">Son öneriler</h2>
+    <a class="admin-more" href="/yonetim/oneriler">{{ admin.unread }} okunmamış · Tümünü yönet</a>
   </div>
   {% if admin.suggestions %}
   <div class="ptable-wrap">
   <table class="ptable">
-    <thead><tr><th scope="col">Tarih</th><th scope="col">Sayfa</th><th scope="col">E-posta</th><th scope="col" class="msg">Mesaj</th><th scope="col">Durum</th><th scope="col">İşlem</th></tr></thead>
+    <thead><tr><th scope="col">Tarih</th><th scope="col" class="msg">Mesaj</th></tr></thead>
     <tbody>
       {% for s in admin.suggestions %}
-      <tr>
-        <td>{{ s.when }}</td>
-        <td class="num">{{ s.page }}</td>
-        <td class="admin-email">{{ s.email }}</td>
-        <td class="msg">{{ s.message }}</td>
-        <td>{% if s.read %}Okundu{% else %}<strong>Yeni</strong>{% endif %}</td>
-        <td><div class="admin-actions">
-          {% if not s.read %}
-          <form method="post" action="/yonetim/oneri/okundu">
-            <input type="hidden" name="csrf" value="{{ user.csrf }}">
-            <input type="hidden" name="id" value="{{ s.id }}">
-            <button class="btn small" type="submit"><span class="lbl">Okundu</span></button>
-          </form>
-          {% endif %}
-          <form method="post" action="/yonetim/oneri/sil">
-            <input type="hidden" name="csrf" value="{{ user.csrf }}">
-            <input type="hidden" name="id" value="{{ s.id }}">
-            <button class="btn small" type="submit"><span class="lbl">Sil</span></button>
-          </form>
-        </div></td>
-      </tr>
+      <tr><td>{{ s.when }}</td><td class="msg">{{ s.message }}</td></tr>
       {% endfor %}
     </tbody>
   </table>
@@ -192,7 +65,18 @@
   {% endif %}
 </section>
 
-<section id="kurallar" aria-labelledby="kurallar-h" class="pcard table-card mt14">
+<article class="pcard admin-days">
+  <div class="pcard-head"><div><h2 class="pcard-title">Son 14 gün</h2>
+    <p class="pcard-sub">Gün başına yeni kayıt ve denetim</p></div></div>
+  <div class="pcard-body meterline">
+    {% for d in admin.activity %}
+    <div><div class="mrow"><span>{{ d.label }}</span><span class="admin-day">{{ d.users }} kayıt · <strong>{{ d.jobs }}</strong> denetim</span></div>
+    <div class="meter"><i data-w="{{ d.w }}"></i></div></div>
+    {% endfor %}
+  </div>
+</article>
+
+<section aria-labelledby="kurallar-h" class="pcard table-card">
   <div class="table-head">
     <h2 id="kurallar-h" class="pcard-title">En sık bulgular</h2>
     <span class="pcard-sub">Tüm denetimler, anonim · rızalı eğitim verisi: {{ c.training }} satır</span>
@@ -208,47 +92,4 @@
   <p class="empty pad-b">Henüz denetim yok.</p>
   {% endif %}
 </section>
-
-<section id="yanlis-alarm" aria-labelledby="yanlis-alarm-h" class="pcard table-card mt14">
-  <div class="table-head">
-    <h2 id="yanlis-alarm-h" class="pcard-title">Yanlış alarm</h2>
-    <span class="pcard-sub">Öğrenci oylarına göre, kural seti sürümü başına · az oyda oran yanıltıcı olabilir</span>
-  </div>
-  {% if admin.false_alarms %}
-  <div class="ptable-wrap">
-  <table class="ptable">
-    <thead><tr><th scope="col">Kural</th><th scope="col">Kural seti</th><th scope="col">Sürüm</th><th scope="col">Yanlış / oy</th><th scope="col">Oran</th></tr></thead>
-    <tbody>
-      {% for f in admin.false_alarms %}
-      <tr><td title="{{ f.id }}">{{ f.label }}</td><td>{{ f.name }}</td><td class="num">{{ f.version }}</td><td class="num">{{ f.wrong }} / {{ f.votes }}</td><td class="num">%{{ f.rate }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </div>
-  {% else %}
-  <p class="empty pad-b">Henüz "yanlış" oyu yok.</p>
-  {% endif %}
-</section>
-
-<section id="islem-kaydi" aria-labelledby="islem-kaydi-h" class="pcard table-card mt14">
-  <div class="table-head">
-    <h2 id="islem-kaydi-h" class="pcard-title">İşlem kaydı</h2>
-    <span class="pcard-sub">Son 50 işlem · e-posta yerine özet tutulur, 180 gün saklanır</span>
-  </div>
-  {% if admin.log %}
-  <div class="ptable-wrap">
-  <table class="ptable">
-    <thead><tr><th scope="col">Tarih</th><th scope="col">İşlem</th><th scope="col">Yönetici</th><th scope="col">Hedef</th></tr></thead>
-    <tbody>
-      {% for e in admin.log %}
-      <tr><td>{{ e.when }}</td><td>{{ e.action }}</td><td class="num">{{ e.actor }}</td><td class="num">{{ e.target }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </div>
-  {% else %}
-  <p class="empty pad-b">Henüz işlem yok.</p>
-  {% endif %}
-</section>
 {% endblock %}
-{% block framefoot %}<span class="fineprint">Bu sayfa yalnızca sayıları ve hesapları gösterir; rapor içeriği gösterilmez</span>{% endblock %}

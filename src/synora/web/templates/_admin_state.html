@@ -1,0 +1,1 @@
+{% if a.suspended %}<span class="admin-state is-off">Askıda</span>{% elif a.pending %}<span class="admin-state">Onay bekliyor</span>{% else %}<span class="admin-state is-on">Aktif</span>{% endif %}{% if a.online %} · oturum açık{% endif %}

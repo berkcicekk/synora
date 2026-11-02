@@ -1,0 +1,45 @@
+{% extends "admin_base.html" %}
+{% block admin_title %}Kullanım{% endblock %}
+{% block admin_content %}
+<section id="kullanim" aria-labelledby="kullanim-h" class="pcard table-card">
+  <div class="table-head">
+    <h2 id="kullanim-h" class="pcard-title">Kural setleri</h2>
+    <span class="pcard-sub">Son 30 gün · yeniden denetimler dahil, anonim</span>
+  </div>
+  {% if admin.usage %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Kural seti</th><th scope="col">Denetim</th><th scope="col">Başarılı</th><th scope="col">Ort. süre</th></tr></thead>
+    <tbody>
+      {% for u in admin.usage %}
+      <tr><td title="{{ u.id }}">{{ u.name }}</td><td class="num">{{ u.total }}</td><td class="num">%{{ u.rate }}</td><td class="num">{{ u.avg }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Son 30 günde denetim yok.</p>
+  {% endif %}
+</section>
+
+<section id="yanlis-alarm" aria-labelledby="yanlis-alarm-h" class="pcard table-card">
+  <div class="table-head">
+    <h2 id="yanlis-alarm-h" class="pcard-title">Yanlış alarm</h2>
+    <span class="pcard-sub">Öğrenci oylarına göre, kural seti sürümü başına · az oyda oran yanıltıcı olabilir</span>
+  </div>
+  {% if admin.false_alarms %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Kural</th><th scope="col">Kural seti</th><th scope="col">Sürüm</th><th scope="col">Yanlış / oy</th><th scope="col">Oran</th></tr></thead>
+    <tbody>
+      {% for f in admin.false_alarms %}
+      <tr><td title="{{ f.id }}">{{ f.label }}</td><td>{{ f.name }}</td><td class="num">{{ f.version }}</td><td class="num">{{ f.wrong }} / {{ f.votes }}</td><td class="num">%{{ f.rate }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Henüz "yanlış" oyu yok.</p>
+  {% endif %}
+</section>
+{% endblock %}

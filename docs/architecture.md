@@ -314,6 +314,12 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   rapor, oy, günlük sınır sayacı ve o adresli öneriler tek işlemde silinir, anonim sayaçlar kalır;
   yedeklerde saklama süresi dolana kadar durur); öneri okundu/silme. Her işlem aynı veritabanı
   işleminde `admin_log`'a yazılır (yönetici ve hedef e-postası özet olarak; mesaj metni yok; 180 gün).
+  **Sayfalar** (solda menü; hepsi aynı yetki): `/yonetim` özet, `/yonetim/hesaplar`, `/yonetim/oneriler`,
+  `/yonetim/kullanim`, `/yonetim/sistem`, `/yonetim/kayit`. Hesap araması POST ile yapılır, e-posta adrese
+  düşmez. **Hesap ekleme:** onay boş kalır, kişi kayıt olurken kendisi onaylar; onaysız satır kullanıcı
+  sayılarına girmez. **Askıya alma** (`users.suspended_at`, yöneticiler hariç): oturumlar ve gönderilmiş
+  giriş bağlantıları kapanır, giriş ve kayıt reddedilir, oturum okuması askıdaki hesabı geçersiz sayar;
+  veri silinmez, geri alınabilir.
 
 ## 10a. LaTeX şablonu (A12)
 

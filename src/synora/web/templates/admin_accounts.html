@@ -1,0 +1,100 @@
+{% extends "admin_base.html" %}
+{% block admin_title %}Hesaplar{% endblock %}
+{% block admin_tools %}
+<details class="admin-menu admin-add">
+  <summary class="btn small primary"><span class="lbl">Hesap ekle</span></summary>
+  <form method="post" action="/yonetim/hesap/ekle" class="admin-key-form admin-pop">
+    <input type="hidden" name="csrf" value="{{ user.csrf }}">
+    <div class="fld">
+      <label for="yeni-eposta">E-posta</label>
+      <input class="fld-search" id="yeni-eposta" name="email" type="email" required autocomplete="off" spellcheck="false">
+    </div>
+    <p class="fineprint">Kişi kayıt olurken aydınlatma metnini kendisi onaylar; o zamana kadar hesap "Onay bekliyor" görünür ve giriş yapamaz.</p>
+    <button class="btn small primary" type="submit"><span class="lbl">Ekle</span></button>
+  </form>
+</details>
+{% endblock %}
+{% block admin_content %}
+<form method="post" action="/yonetim/hesaplar/ara" class="admin-search" role="search">
+  <input type="hidden" name="csrf" value="{{ user.csrf }}">
+  <label for="ara" class="visually-hidden">E-postada ara</label>
+  <input class="fld-search" id="ara" name="q" type="search" value="{{ admin.query }}" placeholder="E-postada ara" autocomplete="off" spellcheck="false">
+  <button class="btn small" type="submit"><span class="lbl">Ara</span></button>
+  {% if admin.query %}<a class="admin-more" href="/yonetim/hesaplar">Aramayı temizle</a>{% endif %}
+</form>
+
+<section aria-labelledby="hesaplar-h" class="pcard table-card">
+  <div class="table-head">
+    <h2 id="hesaplar-h" class="pcard-title">{{ admin.total }} hesap</h2>
+    <span class="pcard-sub">{{ admin.pending }} onay bekliyor · {{ admin.suspended }} askıda</span>
+  </div>
+  {% if admin.accounts %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">E-posta</th><th scope="col">Kayıt</th><th scope="col">Durum</th><th scope="col">Son 24 sa denetim</th><th scope="col">İşlem</th></tr></thead>
+    <tbody>
+      {% for a in admin.accounts %}
+      <tr>
+        <td class="admin-email">{{ a.email }}</td>
+        <td>{{ a.joined }}</td>
+        <td>{% include "_admin_state.html" %}</td>
+        <td class="num">{{ a.jobs }}</td>
+        <td>
+          <details class="admin-menu">
+            <summary class="btn small"><span class="lbl">İşlemler</span></summary>
+            <div class="admin-pop">
+              {% if a.online %}
+              <form method="post" action="/yonetim/hesap/oturum">
+                <input type="hidden" name="csrf" value="{{ user.csrf }}">
+                <input type="hidden" name="email" value="{{ a.email }}">
+                <button class="btn small" type="submit"><span class="lbl">Oturumu kapat</span></button>
+              </form>
+              {% endif %}
+              {% if a.suspended %}
+              <form method="post" action="/yonetim/hesap/etkinlestir">
+                <input type="hidden" name="csrf" value="{{ user.csrf }}">
+                <input type="hidden" name="email" value="{{ a.email }}">
+                <button class="btn small" type="submit"><span class="lbl">Etkinleştir</span></button>
+              </form>
+              {% elif not a.is_admin %}
+              <form method="post" action="/yonetim/hesap/askiya-al">
+                <input type="hidden" name="csrf" value="{{ user.csrf }}">
+                <input type="hidden" name="email" value="{{ a.email }}">
+                <button class="btn small" type="submit"><span class="lbl">Askıya al</span></button>
+              </form>
+              {% endif %}
+              <form method="post" action="/yonetim/hesap/sil" class="admin-key-form admin-delete">
+                <input type="hidden" name="csrf" value="{{ user.csrf }}">
+                <input type="hidden" name="email" value="{{ a.email }}">
+                <p class="fineprint">Hesap, raporlar, oturumlar ve öneriler kalıcı olarak silinir; yedeklerde saklama süresi dolana kadar kalır.</p>
+                <div class="fld">
+                  <label for="sil-{{ loop.index }}">Onay için e-postayı yazın</label>
+                  <input class="fld-search" id="sil-{{ loop.index }}" name="confirm" type="text" required autocomplete="off" spellcheck="false">
+                </div>
+                <button class="btn small danger" type="submit"><span class="lbl">Kalıcı olarak sil</span></button>
+              </form>
+            </div>
+          </details>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% elif admin.query %}
+  <p class="empty pad-b">Eşleşen hesap yok.</p>
+  {% else %}
+  <p class="empty pad-b">Henüz kayıtlı hesap yok.</p>
+  {% endif %}
+  {% if admin.query and admin.total > admin.accounts | length %}
+  <p class="fineprint pad-b">İlk {{ admin.accounts | length }} sonuç gösteriliyor; aramayı daraltın.</p>
+  {% endif %}
+  {% if admin.pages > 1 %}
+  <nav class="admin-pages" aria-label="Sayfalar">
+    {% if admin.page > 1 %}<a class="btn small" href="/yonetim/hesaplar?sayfa={{ admin.page - 1 }}"><span class="lbl">Önceki</span></a>{% endif %}
+    <span class="pcard-sub">Sayfa {{ admin.page }} / {{ admin.pages }}</span>
+    {% if admin.page < admin.pages %}<a class="btn small" href="/yonetim/hesaplar?sayfa={{ admin.page + 1 }}"><span class="lbl">Sonraki</span></a>{% endif %}
+  </nav>
+  {% endif %}
+</section>
+{% endblock %}

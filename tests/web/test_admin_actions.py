@@ -314,8 +314,9 @@ def test_panel_shows_log_section_and_forms(client_: TestClient, mailer: ConsoleM
     db.add_session("ogrenci-oturumu", STUDENT, "csrf", 3600)  # "Oturumu kapat" görünsün
     db.add_suggestion("mesaj", "", "/")
     csrf = open_panel(client_, mailer)
-    html = client_.get("/yonetim").text
-    assert 'id="islem-kaydi"' in html and "Henüz işlem yok" in html
+    log_page = client_.get("/yonetim/kayit").text
+    assert 'id="islem-kaydi"' in log_page and "Henüz işlem yok" in log_page
+    html = client_.get("/yonetim/hesaplar").text + client_.get("/yonetim/oneriler").text
     for route in ROUTES:
         assert f'action="{route}"' in html
     assert f'name="csrf" value="{csrf}"' in html
@@ -323,8 +324,8 @@ def test_panel_shows_log_section_and_forms(client_: TestClient, mailer: ConsoleM
     assert 'name="confirm"' in main and "<script" not in main and "style=" not in main  # CSP
     res = post(client_, "/yonetim/oneri/okundu", csrf=csrf, id="1")
     assert "Öneri okundu işaretlendi" in client_.get(res.headers["location"]).text
-    assert "Öneri okundu işaretlendi" not in client_.get("/yonetim").text  # ileti kalıcı değil
-    assert "Henüz işlem yok" not in client_.get("/yonetim").text
+    assert "Öneri okundu işaretlendi" not in client_.get("/yonetim/oneriler").text  # kalıcı değil
+    assert "Henüz işlem yok" not in client_.get("/yonetim/kayit").text
 
 
 def test_status_message_is_allowlisted(client_: TestClient, mailer: ConsoleMailer) -> None:
@@ -353,7 +354,7 @@ def test_access_mode_action_needs_token_and_page_csrf(access_client: TestClient)
     db = db_of(access_client)
     db.add_suggestion("mesaj", "", "/")
     headers = {"Cf-Access-Jwt-Assertion": mint()}
-    html = access_client.get("/yonetim", headers=headers).text
+    html = access_client.get("/yonetim/oneriler", headers=headers).text
     found = re.search(r'name="csrf" value="([0-9a-f]{64})"', html)
     assert found
     csrf = found.group(1)
@@ -375,7 +376,7 @@ def test_access_csrf_does_not_transfer_between_apps(settings: Settings, mailer: 
     headers = {"Cf-Access-Jwt-Assertion": mint()}
     db_of(access_client).add_suggestion("mesaj", "", "/")  # form görünsün
     first = re.search(r'name="csrf" value="([0-9a-f]{64})"',
-                      access_client.get("/yonetim", headers=headers).text)
+                      access_client.get("/yonetim/oneriler", headers=headers).text)
     assert first
     configured = replace(settings, admin_emails=(ADMIN,), access_team_domain=TEAM, access_aud=AUD,
                          db_path=Path(f"{settings.db_path}.ikinci"))

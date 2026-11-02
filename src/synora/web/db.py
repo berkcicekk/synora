@@ -205,6 +205,9 @@ class Database:
                                   self._conn.execute("PRAGMA table_info(suggestions)")}
             if "read_at" not in suggestion_columns:
                 self._conn.execute("ALTER TABLE suggestions ADD COLUMN read_at REAL")
+            user_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(users)")}
+            if "suspended_at" not in user_columns:
+                self._conn.execute("ALTER TABLE users ADD COLUMN suspended_at REAL")
             # Yeniden başlatmada yarıda kalan işler: dosya bellekteydi, artık yok.
             self._conn.execute(
                 "UPDATE jobs SET status='failed', error_code='INTERRUPTED', finished_at=? "
@@ -298,8 +301,14 @@ class Database:
             (email, now, consent_version, now))
 
     def user_count(self) -> int:
-        """Kayıtlı kullanıcı sayısı (tanıtım sayfasındaki sayılar şeridi için)."""
-        return int(self.execute("SELECT COUNT(*) FROM users").fetchone()[0])
+        """Onay vermiş kullanıcı sayısı (tanıtım sayfasındaki sayılar şeridi için)."""
+        row = self.execute("SELECT COUNT(*) FROM users WHERE consent_version IS NOT NULL")
+        return int(row.fetchone()[0])
+
+    def is_suspended(self, email: str) -> bool:
+        row = self.execute("SELECT 1 FROM users WHERE email=? AND suspended_at IS NOT NULL",
+                           (email,)).fetchone()
+        return row is not None
 
     def user_consent(self, email: str) -> tuple[str, float] | None:
         """Kullanıcının onayladığı aydınlatma metni sürümü ve zamanı; onay yoksa None."""
@@ -316,8 +325,11 @@ class Database:
                      (id_hash, email, csrf, time.time() + ttl))
 
     def get_session(self, id_hash: str) -> tuple[str, str] | None:
-        row = self.execute("SELECT email, csrf, expires_at FROM sessions WHERE id_hash=?",
-                           (id_hash,)).fetchone()
+        # Askıdaki hesabın oturumu geçersizdir (askıya almayla yarışan giriş dahil).
+        row = self.execute(
+            "SELECT s.email, s.csrf, s.expires_at FROM sessions s "
+            "LEFT JOIN users u ON u.email = s.email "
+            "WHERE s.id_hash=? AND u.suspended_at IS NULL", (id_hash,)).fetchone()
         if row is None or row[2] < time.time():
             return None
         return str(row[0]), str(row[1])
@@ -459,10 +471,13 @@ class Database:
         def one(sql: str, params: tuple[object, ...] = ()) -> int:
             return int(self.execute(sql, params).fetchone()[0])
 
+        consented = "SELECT COUNT(*) FROM users WHERE consent_version IS NOT NULL"
         counts = {
-            "users": one("SELECT COUNT(*) FROM users"),
-            "users_7d": one("SELECT COUNT(*) FROM users WHERE created_at>=?", (week,)),
-            "users_30d": one("SELECT COUNT(*) FROM users WHERE created_at>=?", (month,)),
+            "users": one(consented),
+            "users_7d": one(f"{consented} AND created_at>=?", (week,)),
+            "users_30d": one(f"{consented} AND created_at>=?", (month,)),
+            "pending": one("SELECT COUNT(*) FROM users WHERE consent_version IS NULL"),
+            "suspended": one("SELECT COUNT(*) FROM users WHERE suspended_at IS NOT NULL"),
             "online": one("SELECT COUNT(DISTINCT email) FROM sessions WHERE expires_at>?", (now,)),
             "training": one("SELECT COUNT(*) FROM training"),
             "done": 0, "failed": 0, "queued": 0, "running": 0,
@@ -473,17 +488,31 @@ class Database:
         counts["jobs"] = sum(counts[s] for s in ("done", "failed", "queued", "running"))
         return counts
 
-    def accounts(self, now: float, limit: int = 500) -> list[tuple[Any, ...]]:
-        """(email, kayıt zamanı, onay sürümü, açık oturum var mı, son 24 saatteki iş sayısı)."""
+    @staticmethod
+    def _email_pattern(query: str) -> str:
+        """E-postada harfi harfine arama; % ve _ joker sayılmaz. Boş arama hepsini bulur."""
+        escaped = query.lower().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        return f"%{escaped}%"
+
+    def admin_accounts(self, now: float, *, limit: int, offset: int = 0,
+                       query: str = "") -> list[tuple[Any, ...]]:
+        """(email, kayıt zamanı, onay sürümü, askı zamanı, açık oturum, son 24 saatteki iş)."""
         return self.execute(
-            "SELECT u.email, u.created_at, u.consent_version, "
+            "SELECT u.email, u.created_at, u.consent_version, u.suspended_at, "
             "EXISTS(SELECT 1 FROM sessions s WHERE s.email=u.email AND s.expires_at>?), "
             "(SELECT COUNT(*) FROM jobs j WHERE j.email=u.email AND j.created_at>=?) "
-            "FROM users u ORDER BY u.created_at DESC LIMIT ?",
-            (now, now - 86400, limit)).fetchall()
+            "FROM users u WHERE u.email LIKE ? ESCAPE '\\' "
+            "ORDER BY u.created_at DESC, u.email LIMIT ? OFFSET ?",
+            (now, now - 86400, self._email_pattern(query), limit, offset)).fetchall()
+
+    def account_total(self, query: str = "") -> int:
+        row = self.execute("SELECT COUNT(*) FROM users u WHERE u.email LIKE ? ESCAPE '\\'",
+                           (self._email_pattern(query),))
+        return int(row.fetchone()[0])
 
     def registrations_since(self, since: float) -> list[float]:
-        rows = self.execute("SELECT created_at FROM users WHERE created_at>=?", (since,))
+        rows = self.execute("SELECT created_at FROM users WHERE created_at>=? "
+                            "AND consent_version IS NOT NULL", (since,))
         return [float(r[0]) for r in rows]
 
     def daily_jobs(self, since_day: str) -> dict[str, int]:
@@ -525,10 +554,52 @@ class Database:
 
     # --- Yönetim işlemleri (her biri işlem kaydıyla birlikte, tek seferde yazılır) -------------
 
-    def admin_suggestions(self, limit: int = 50) -> list[tuple[Any, ...]]:
+    def add_pending_user(self, email: str, *, actor: str, target: str) -> bool:
+        """Yönetici ekler: onay boş kalır, kişi kayıt olurken metni kendisi onaylar."""
+        with self._transaction():
+            cur = self._conn.execute(
+                "INSERT OR IGNORE INTO users (email, created_at) VALUES (?, ?)",
+                (email, time.time()))
+            if cur.rowcount == 0:
+                return False
+            self._audit(actor, "account_add", target)
+        return True
+
+    def set_suspended(self, email: str, suspended: bool, *, actor: str, target: str) -> bool:
+        """Askıya alma oturumları ve gönderilmiş giriş bağlantılarını da kapatır; veri silinmez."""
+        with self._transaction():
+            if suspended:
+                cur = self._conn.execute(
+                    "UPDATE users SET suspended_at=? WHERE email=? AND suspended_at IS NULL",
+                    (time.time(), email))
+            else:
+                cur = self._conn.execute(
+                    "UPDATE users SET suspended_at=NULL WHERE email=? "
+                    "AND suspended_at IS NOT NULL", (email,))
+            if cur.rowcount == 0:
+                return False
+            if suspended:
+                self._conn.execute("DELETE FROM sessions WHERE email=?", (email,))
+                self._conn.execute("DELETE FROM login_tokens WHERE email=?", (email,))
+            self._audit(actor, "account_suspend" if suspended else "account_activate", target)
+        return True
+
+    def admin_suggestions(self, limit: int = 50,
+                          unread_only: bool = False) -> list[tuple[Any, ...]]:
         """(no, zaman, sayfa, e-posta, mesaj, okunma zamanı); en yeni başta."""
         return self.execute("SELECT id, created_at, page, email, message, read_at "
-                            "FROM suggestions ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+                            "FROM suggestions WHERE (? = 0 OR read_at IS NULL) "
+                            "ORDER BY id DESC LIMIT ?", (int(unread_only), limit)).fetchall()
+
+    def mark_suggestion_unread(self, suggestion_id: int, *, actor: str) -> bool:
+        with self._transaction():
+            cur = self._conn.execute(
+                "UPDATE suggestions SET read_at=NULL WHERE id=? AND read_at IS NOT NULL",
+                (suggestion_id,))
+            if cur.rowcount == 0:
+                return False
+            self._audit(actor, "suggestion_unread", str(suggestion_id))
+        return True
 
     def unread_suggestions(self) -> int:
         row = self.execute("SELECT COUNT(*) FROM suggestions WHERE read_at IS NULL").fetchone()

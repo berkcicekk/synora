@@ -1,0 +1,24 @@
+{% extends "admin_base.html" %}
+{% block admin_title %}İşlem kaydı{% endblock %}
+{% block admin_content %}
+<section id="islem-kaydi" aria-labelledby="islem-kaydi-h" class="pcard table-card">
+  <div class="table-head">
+    <h2 id="islem-kaydi-h" class="pcard-title">Son 100 işlem</h2>
+    <span class="pcard-sub">E-posta yerine özet tutulur, 180 gün saklanır</span>
+  </div>
+  {% if admin.log %}
+  <div class="ptable-wrap">
+  <table class="ptable">
+    <thead><tr><th scope="col">Tarih</th><th scope="col">İşlem</th><th scope="col">Yönetici</th><th scope="col">Hedef</th></tr></thead>
+    <tbody>
+      {% for e in admin.log %}
+      <tr><td>{{ e.when }}</td><td>{{ e.action }}</td><td class="num">{{ e.actor }}</td><td class="num">{{ e.target }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty pad-b">Henüz işlem yok.</p>
+  {% endif %}
+</section>
+{% endblock %}
