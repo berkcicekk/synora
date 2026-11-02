@@ -5,7 +5,8 @@
 {% if valid %}
 <span class="eyebrow">Bağlantı doğrulandı</span>
 <h1 class="auth-title">Sontez'e hoş geldiniz.</h1>
-<p class="auth-lead">Oturumu açmak için düğmeye basın.</p>
+<p class="auth-lead">Bu bağlantı <span class="mono">{{ account }}</span> hesabını açar. Bu adres
+   sizin değilse devam etmeyin: tezinizi başkasının hesabına yüklemiş olursunuz.</p>
 <form method="post" action="/auth" class="auth-form">
   <input type="hidden" name="csrf" value="{{ csrf }}">
   <input type="hidden" name="token" value="{{ token }}">

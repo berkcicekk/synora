@@ -24,6 +24,8 @@ TR_TZ = timezone(timedelta(hours=3))  # Türkiye 2016'dan beri yaz saati uygulam
 SUGGESTION_KEEP_DAYS = 180
 SUGGESTION_KEEP_ROWS = 1000
 USAGE_KEEP_DAYS = 90
+# Silinen hesabın işlem kaydındaki hedefi: özet de kişisel veridir, silmeyle birlikte kalkar.
+ERASED_TARGET = "silinen hesap"
 ADMIN_LOG_KEEP_DAYS = 180
 
 SCHEMA = """
@@ -294,6 +296,11 @@ class Database:
                     "consent_version=excluded.consent_version, consent_at=excluded.consent_at",
                     (row[0], now, row[3], now))
             return str(row[0])
+
+    def login_token_email(self, token_hash: str) -> str | None:
+        row = self.execute("SELECT email FROM login_tokens WHERE token_hash=?",
+                           (token_hash,)).fetchone()
+        return None if row is None else str(row[0])
 
     def delete_login_token(self, token_hash: str) -> None:
         self.execute("DELETE FROM login_tokens WHERE token_hash=?", (token_hash,))
@@ -666,7 +673,9 @@ class Database:
             self._conn.execute("DELETE FROM job_starts WHERE email_hash=?", (_email_hash(email),))
             self._conn.execute("DELETE FROM suggestions WHERE LOWER(email)=?", (email,))
             self._conn.execute("DELETE FROM users WHERE email=?", (email,))
-            self._audit(actor, "account_delete", target)
+            self._conn.execute("UPDATE admin_log SET target=? WHERE target=?",
+                               (ERASED_TARGET, target))
+            self._audit(actor, "account_delete", ERASED_TARGET)
         # Silinen raporlar WAL dosyasında kalmasın (purge ile aynı).
         self.execute("PRAGMA wal_checkpoint(TRUNCATE)")
         return True

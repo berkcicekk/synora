@@ -239,8 +239,8 @@ def test_suspend_ends_sessions_and_blocks_login_until_activated(
     page = blocked.get("/giris")
     sent = len(mailer.sent)
     res = blocked.post("/login", data={"email": STUDENT, "csrf": csrf_from(page.text)})
-    assert res.status_code == 400 and "giriş şu anda kapalı" in res.text
-    assert len(mailer.sent) == sent  # bağlantı gönderilmez
+    assert res.status_code == 200  # dışarıdan normal giriş gibi görünür
+    assert len(mailer.sent) == sent  # ama bağlantı gönderilmez
 
     res = post(client_, "/yonetim/hesap/etkinlestir", csrf=csrf, email=STUDENT)
     assert "durum=etkin" in res.headers["location"]

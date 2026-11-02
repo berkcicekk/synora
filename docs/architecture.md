@@ -309,7 +309,8 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   kullanım, öneri kutusu, en sık bulgular. Rapor içeriği gösterilmez. Erişim: e-posta
   `SYNORA_ADMIN_EMAILS` listesinde **ve** oturum başına yönetici anahtarı (`SYNORA_ADMIN_KEY_SHA256`
   yalnızca özet; `synora admin-key` üretir; istemci başına saatte 5 deneme; 2 saat geçerli). Demo
-  kipinde e-posta doğrulanmadığı için adres tek başına yetmez. Yetkisiz herkes 404 görür; ayar boşsa
+  kipinde e-posta doğrulanmadığı için adres tek başına yetmez ve üst çubukta "Yönetim" bağlantısı
+  gösterilmez (panel doğrudan adresinden açılır). Yetkisiz herkes 404 görür; ayar boşsa
   panel kapalıdır. Geçmiş kullanım `daily_jobs` tablosundan (yalnızca gün + sayı) okunur.
   **Cloudflare Access** (`SYNORA_ACCESS_TEAM_DOMAIN` + `SYNORA_ACCESS_AUD`): ayarlıysa kimlik yalnızca
   Access JWT'sinden gelir, oturum ve anahtar yöntemi kapanır (`synora.web.access`). Uygulama jetonu
@@ -319,7 +320,8 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   saklanır) ve kural seti sürümü başına yanlış alarm oranını (`feedback_counts`) gösterir.
   **Yönetim işlemleri** (`/yonetim/hesap/*`, `/yonetim/oneri/*`, yalnızca POST + CSRF, tam yetki):
   oturum kapatma; hesap silme (e-postayı yeniden yazarak onay; hesap, oturum, giriş bağlantısı, iş,
-  rapor, oy, günlük sınır sayacı ve o adresli öneriler tek işlemde silinir, anonim sayaçlar kalır;
+  rapor, oy, günlük sınır sayacı ve o adresli öneriler tek işlemde silinir, işlem kaydındaki özeti de
+  kaldırılır, anonim sayaçlar kalır;
   yedeklerde saklama süresi dolana kadar durur); öneri okundu/silme. Her işlem aynı veritabanı
   işleminde `admin_log`'a yazılır (yönetici ve hedef e-postası özet olarak; mesaj metni yok; 180 gün).
   **Sayfalar** (solda menü; hepsi aynı yetki): `/yonetim` özet, `/yonetim/hesaplar`, `/yonetim/oneriler`,

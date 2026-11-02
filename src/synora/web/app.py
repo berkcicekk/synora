@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import ipaddress
 import json
 import re
 import secrets
@@ -130,6 +131,22 @@ JOB_ERRORS = {
 
 def _hash(value: str) -> str:
     return hashlib.sha256(value.encode()).hexdigest()
+
+
+def _same_token(expected: str, provided: str) -> bool:
+    """Bayt karşılaştırması: str sürümü ASCII dışı girdide TypeError fırlatır."""
+    return hmac.compare_digest(expected.encode(), provided.encode())
+
+
+def client_network(ip: str) -> str:
+    """Hız sınırı anahtarı: IPv6 istemcisi /64 ağının tamamını kullanabilir, tek istemci sayılır."""
+    try:
+        address = ipaddress.ip_address(ip)
+    except ValueError:
+        return ip
+    if address.version == 6:
+        return str(ipaddress.ip_network(f"{address}/64", strict=False))
+    return ip
 
 
 @dataclass(frozen=True)
@@ -331,6 +348,13 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
             "editable": sum(1 for b in blocks if "pid" in b)}
 
 
+def finding_exists(report: dict[str, Any], rule_id: str, para_id: str) -> bool:
+    """Oy yalnızca bu raporda gerçekten geçen bulguya verilebilir (yanlış alarm ölçüsü bozulmasın).
+    Paragraf verilmezse kartın tamamına verilmiş sayılır."""
+    return any(f["rule_id"] == rule_id and (not para_id or f.get("para_id") == para_id)
+               for f in report["findings"])
+
+
 def _outline(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Sol bölme: bölümler ve başlıklar; her girdinin kapsadığı bloklardaki bulgu sayısı."""
     entries: list[dict[str, Any]] = []
@@ -453,7 +477,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         return user
 
     def check_csrf(expected: str, provided: str | None) -> None:
-        if not provided or not hmac.compare_digest(expected, provided):
+        if not provided or not _same_token(expected, provided):
             raise HTTPException(403, "CSRF")
 
     def pre_csrf(request: Request) -> str:
@@ -464,7 +488,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                             secure=settings.secure_cookies, max_age=3600)
 
     def render(request: Request, name: str, status: int = 200, **ctx: Any) -> HTMLResponse:
-        ctx["is_admin"] = admin_allowed(ctx.get("user"))  # üst çubukta "Yönetim" bağlantısı
+        # Üst çubukta "Yönetim" bağlantısı. Demo kipinde adres doğrulanmadığından gösterilmez: aksi
+        # hâlde bir adresle oturum açan, onun yönetici olduğunu öğrenirdi.
+        ctx["is_admin"] = settings.email_verification and admin_allowed(ctx.get("user"))
         return templates.TemplateResponse(request, name, ctx, status_code=status)
 
     # Yönetici anahtarı girilmiş oturumlar: oturum özeti → bitiş. Bellekte; yeniden başlatmada
@@ -513,6 +539,10 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if session_bound and not hmac.compare_digest(job.session_hash or "", user.session_hash):
             raise HTTPException(404)
         return job
+
+    def visible_jobs(user: User) -> list[Job]:
+        return db.recent_jobs(user.email,
+                              session_hash=user.session_hash if session_bound else None)
 
     def expired(job: Job) -> bool:
         # Temizlik görevi 10 dakikada bir çalışır; "24 saat sonra silinir" sözü okurken de tutulur.
@@ -604,9 +634,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     def panel_context(user: User) -> dict[str, Any]:
         """Panel kartları ve son denetimler tablosu. Tam rapor değil, yalnızca özet okunur."""
-        jobs = [j for j in db.recent_jobs(
-            user.email, session_hash=user.session_hash if session_bound else None)
-            if not expired(j)]
+        jobs = [j for j in visible_jobs(user) if not expired(j)]
         rows: list[dict[str, Any]] = []
         latest: dict[str, Any] | None = None
         frequent: list[tuple[str, int]] = []
@@ -653,7 +681,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         user = current_user(request)
         if user is None:
             return RedirectResponse("/giris", status_code=303)
-        latest_done = next((j.id for j in db.recent_jobs(user.email)
+        latest_done = next((j.id for j in visible_jobs(user)
                             if j.status == "done" and not expired(j)), None)
         return render(request, "upload.html", user=user, active="yukle",
                       rulesets=ordered_rulesets, ruleset_groups=ruleset_groups,
@@ -711,7 +739,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         header = settings.client_ip_header
         ip = ((request.headers.get(header) if header else None)
               or (request.client.host if request.client else "?"))
-        return hashlib.sha256(ip.encode()).hexdigest()[:16]
+        return hashlib.sha256(client_network(ip).encode()).hexdigest()[:16]
 
     def make_rate_limiter(per_ip_hour: int, per_minute: int) -> Callable[[Request], bool]:
         limiter = RateLimiter(per_ip_hour, per_minute)
@@ -739,7 +767,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         form = await small_form(request)
         email = str(form.get("email", "")).strip().lower()
         expected, provided = request.cookies.get(PRE_CSRF_COOKIE, ""), str(form.get("csrf", ""))
-        if not provided or not hmac.compare_digest(expected, provided):
+        if not provided or not _same_token(expected, provided):
             # Form uzun süre açık kalmış: yazılan adres kaybolmasın, yeni formla gönderilsin.
             return auth_form(request, mode, status=403, email=email, error=(
                 "Sayfanın süresi doldu. Adresinizi kontrol edip yeniden gönderin."))
@@ -756,21 +784,27 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return fail(
                 "Pilot süresince yalnızca üniversite e-posta adresleri kullanılabilir."
             )
-        if db.is_suspended(email):
-            return fail("Bu adresle giriş şu anda kapalı.")
         if mode == "register" and form.get("kvkk") != "1":
             return fail("Devam etmek için aydınlatma metnini onaylayın.")
-        if db.login_requests_since(email, time.time() - 3600) >= settings.login_requests_per_hour:
-            return fail("Çok fazla giriş isteği gönderildi. Bir saat sonra yeniden deneyin.")
         if not settings.email_verification:
-            # Demo kipi: adres sahipliği doğrulanmadan oturum açılır (bkz. Settings).
-            # ttl=0 bağlantısı kullanılamaz; yalnızca saatlik istek sayacına yazılır.
-            db.add_login_token(_hash(secrets.token_urlsafe(32)), email, 0)
+            # Demo kipi: adres sahipliği doğrulanmadan oturum açılır (bkz. Settings). E-posta
+            # gönderilmediği için adres başına sınır yok; başkası bu adresi kilitleyemesin.
+            if db.is_suspended(email):
+                return fail("Bu adresle giriş şu anda kapalı.")
             if mode == "register":
                 db.register_user(email, TERMS_VERSION)
             elif db.user_consent(email) is None:
                 return fail("Bu adres kayıtlı değil. Önce kayıt olun.")
             return open_session(email)
+
+        def link_sent() -> HTMLResponse:
+            return render(request, "login_sent.html", email=email, mode=mode,
+                          minutes=int(settings.login_token_minutes))
+
+        if db.is_suspended(email):
+            return link_sent()  # aynı yanıt, e-posta yok: hesap durumu dışarıdan anlaşılmasın
+        if db.login_requests_since(email, time.time() - 3600) >= settings.login_requests_per_hour:
+            return fail("Çok fazla giriş isteği gönderildi. Bir saat sonra yeniden deneyin.")
         login_token = secrets.token_urlsafe(32)
         token_hash = _hash(login_token)
         # Onayı olmayan adres giriş formundan gelse de bağlantı onay sayfasına çıkar. Hata vermek
@@ -787,8 +821,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             log_event("mail.failed", code=type(exc).__name__)
             return auth_form(request, mode, status=503, email=email,
                              error="E-posta gönderilemedi. Birkaç dakika sonra yeniden deneyin.")
-        return render(request, "login_sent.html", email=email, mode=mode,
-                      minutes=int(settings.login_token_minutes))
+        return link_sent()
 
     demo_state: dict[str, Any] = {}
 
@@ -936,8 +969,10 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         csrf = pre_csrf(request)
         # Kayıt bağlantısı: formu başkası doldurmuş olabilir; onay kutusunu adres sahibi işaretler.
         needs_consent = valid and db.login_token_consent(_hash(token)) is not None
+        account = db.login_token_email(_hash(token)) if valid else None
         resp = render(request, "auth_confirm.html", status=status or (200 if valid else 400),
                       token=token, csrf=csrf, valid=valid, needs_consent=needs_consent,
+                      account=account,
                       error=error)
         set_pre_csrf(resp, csrf)
         return resp
@@ -1271,6 +1306,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             raise HTTPException(400, "Kural seti bulunamadı.")
         check_job_limits(user.email)
         data = await read_upload(request, user.email)
+        require_user(request)  # okunurken hesap silinmiş ya da askıya alınmış olabilir
         if not data:
             raise HTTPException(400, "Dosya boş.")
         # Gövde okunurken paralel istekler aynı kontrolü geçmiş olabilir; buradan sonra await
@@ -1376,6 +1412,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         para_id = str(form.get("para_id", ""))
         if verdict not in ("wrong", "ok") or not re.fullmatch(r"[a-z0-9_.]{1,64}", rule_id) or (
                 para_id and not PARA_ID_RE.fullmatch(para_id)):
+            raise HTTPException(400, "Geçersiz geri bildirim.")
+        if not job.report or not finding_exists(json.loads(job.report), rule_id, para_id):
             raise HTTPException(400, "Geçersiz geri bildirim.")
         if db.feedback_count(job_id) >= 200:  # sınırsız birikme olmasın
             raise HTTPException(429, "Bu denetim için geri bildirim sınırına ulaşıldı.")

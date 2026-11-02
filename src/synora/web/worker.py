@@ -11,6 +11,7 @@ from __future__ import annotations
 import contextlib
 import json
 import multiprocessing as mp
+import os
 import queue
 import sys
 import threading
@@ -29,6 +30,7 @@ from synora.web.pipeline import (
 from synora.web.settings import Settings
 
 MEMORY_LIMIT_BYTES = 2 * 1024 * 1024 * 1024
+SETTINGS_ENV_PREFIX = "SYNORA_"
 
 
 UserRoles = dict[str, str] | None
@@ -38,10 +40,17 @@ class NoProcessSlot(Exception):
     """Tüm alt süreç yuvaları dolu; kopya üretimi şimdi başlatılamaz."""
 
 
+def scrub_environment() -> None:
+    """Alt süreç güvenilmez dosya işler: SMTP parolası gibi ayarlar ortamında kalmasın."""
+    for name in [n for n in os.environ if n.startswith(SETTINGS_ENV_PREFIX)]:
+        del os.environ[name]
+
+
 def _child(
     conn: Connection, task: str, ruleset_path: str, job_id: str, cpu_seconds: int,
     user_roles: UserRoles = None,
 ) -> None:
+    scrub_environment()
     if sys.platform != "win32":
         import resource
 
