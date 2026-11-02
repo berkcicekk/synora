@@ -22,13 +22,28 @@
         Aynı dosyayı yeniden yüklediğinizi anlamak için yalnızca dosyanın SHA-256 özeti tutulur.</li>
       <li><strong>Denetim raporu:</strong> tezinizin metnini içermez; yalnızca bölüm ve başlık adları,
         biçim bulguları ve sizin seçtiğiniz paragraf türleri yer alır. Rapor ve özet {{ retention }} saat
-        sonra silinir; dilediğiniz an kendiniz de silebilirsiniz.</li>
+        sonra silinir; dilediğiniz an kendiniz de silebilirsiniz. Otomatik sınıflandırma bir gövde
+        paragrafını başlık sanarsa, o paragrafın kısa bir parçası da bu süre boyunca raporda durur.</li>
+      <li><strong>İstek ve önerileriniz:</strong> yazdığınız mesaj, geldiği sayfa ve isteğe bağlı e-posta
+        adresiniz en çok 180 gün saklanır.</li>
+      <li><strong>Bulgu oylarınız:</strong> "Bu bulgu yanlış mı?" oyu raporla birlikte silinir; yalnızca
+        kural bazında kimliksiz toplam sayı kalır.</li>
+      <li><strong>Eğitim verisi (isteğe bağlı):</strong> ayrıca onay verirseniz paragraf türü seçimleriniz,
+        tez metni ve kimliğiniz olmadan yalnızca biçim ölçüleriyle saklanır.</li>
+      <li><strong>Kullanım sayıları:</strong> gün ve kural seti başına kimliksiz denetim sayıları tutulur.</li>
+      <li><strong>Yedekler:</strong> kayıt onayları ve öneriler günlük yedeklere girer, yedekler 7 gün
+        saklanır. Tez dosyası, rapor ve oturum bilgileri yedeklenmez.</li>
+      <li><strong>Yönetim işlemleri:</strong> hesap ve öneri işlemleri, e-posta adresi yerine özetiyle 180
+        gün kaydedilir. Hesabınız silinirse özet de kayıttan kaldırılır.</li>
     </ul>
 
     <h2>Yapay zekâ ve aktarım</h2>
-    <p>Tezinizin metni hiçbir yapay zekâ modeline ya da üçüncü tarafa gönderilmez. Paragraf türü yalnızca
-       punto, hizalama gibi sayısal biçim ölçülerinden belirlenir. [Sunucunun Türkiye'de barındırılması
-       planlanıyor; barındırma kararı bekleniyor.]</p>
+    <p>Tezinizin metni hiçbir yapay zekâ modeline gönderilmez. Sunucu dosyayı biçim denetimi için bellekte
+       okur; paragraf türü yalnızca punto, hizalama gibi biçim ölçüleri ve şekil sinyallerinden belirlenir.
+       [Sunucunun Türkiye'de barındırılması planlanıyor; barındırma kararı bekleniyor.]</p>
+    <p>Site Cloudflare altyapısı üzerinden yayınlanır: yüklediğiniz dosya ve diğer verileriniz şifreli
+       bağlantıyla Cloudflare ağından geçerek sunucuya ulaşır. [Yurt dışı aktarım değerlendirmesi hukuk
+       görüşüyle netleşecek.]</p>
 
     <h2>Çerezler</h2>
     <p>Yalnızca oturum ve form güvenliği (CSRF) için zorunlu çerezler kullanılır. Reklam ya da izleme

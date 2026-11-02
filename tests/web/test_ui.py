@@ -121,7 +121,7 @@ def test_upload_page_shows_step_one_and_privacy(client: TestClient, mailer: Cons
     html = client.get("/yukle").text
     assert re.search(r'<a href="#dosya" aria-current="step">', html)  # adım çizgisi: Dosya etkin
     # Mimari §10.1: yükleme ekranında gizlilik notu (güven şeridi)
-    for promise in ("diske yazılmaz", "Yapay zekâ metni görmez", "kendiliğinden silinir"):
+    for promise in ("diske yazılmaz", "yapay zekâya gönderilmez", "kendiliğinden silinir"):
         assert promise in html
     assert "Yüklemeden önce" in html
     assert "Farklı Kaydet" in html

@@ -75,7 +75,7 @@ def test_how_it_works_has_five_accessible_steps(client: TestClient) -> None:
         label = re.search(r'aria-label="([^"]+)"', svg)
         assert label and len(label.group(1)) > 15, svg
     assert "kılavuzları kurallara çevirirken" in sec  # yapay zekâ notu
-    assert "metninizi okumaz" in sec
+    assert "Denetimde yapay zekâ" in sec
 
 
 def test_privacy_cells_replaced_by_how_it_works(client: TestClient) -> None:
