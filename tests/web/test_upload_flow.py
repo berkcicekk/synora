@@ -22,10 +22,10 @@ def css_block(selector: str) -> str:
     return found.group(1)
 
 
-def test_test_stage_label_replaces_pilot_label(client: TestClient) -> None:
+def test_stage_label_uses_pilot_term(client: TestClient) -> None:
     for path in ("/", "/giris", "/kayit"):
         html = client.get(path).text
-        assert '<p class="eyebrow-dot">Test aşamasında</p>' in html, path
+        assert '<p class="eyebrow-dot">Pilot aşamasında</p>' in html, path
         assert "Pilot · ZBEÜ" not in html, path
 
 

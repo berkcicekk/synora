@@ -51,6 +51,7 @@ from synora.web.worker import JobRunner, NoProcessSlot
 from synora.word import build_docx
 
 HERE = Path(__file__).resolve().parent
+HERO_SHOT = HERE / "static" / "rapor-once-sonra.webp"  # varsa ana sayfada barkodun yerini alır
 SESSION_COOKIE = "synora_session"
 PRE_CSRF_COOKIE = "synora_pre"
 # Kayıtta onaylanan aydınlatma metninin sürümü; metin değişince artırılır.
@@ -407,11 +408,17 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     login_tiles: list[RuleTile] = rule_tiles(ordered_rulesets[0].rules) if ordered_rulesets else []
     # Sayılar şeridi: kural seti / üniversite sayısı keşiften; doğruluk oranı 37 resmi şablonda
     # 1840 denemelik bozma ölçümünden (2026-10-20: yakalama %97,1).
+    # Sayılar yalnızca üniversite tez kılavuzlarını kapsar (örnek küme ve dergi şablonları hariç).
+    thesis_sets = [r for r in rulesets.values() if r.rules.kind == "thesis" and r.rules.institution]
     landing_stats = {
-        "formats": len(rulesets),
+        "formats": len(thesis_sets),
         "universities": len({r.rules.institution for r in rulesets.values()
                              if r.rules.institution and r.rules.kind == "thesis"}),
         "accuracy": "%97,1",
+        "max_mb": settings.max_upload_bytes // (1024 * 1024),
+        "daily_jobs": settings.max_daily_jobs,
+        "job_minutes": int(settings.job_timeout_seconds // 60),
+        "hero_shot": HERO_SHOT.is_file(),
     }
     # LaTeX şablonu ilk istendiğinde kural setinden üretilip saklanır (kullanıcı girdisi yok;
     # yalnızca keşfedilmiş kural seti kimlikleri kabul edilir).
@@ -726,6 +733,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                             if j.status == "done" and not expired(j)), None)
         return render(request, "upload.html", user=user, active="yukle",
                       rulesets=ordered_rulesets, ruleset_groups=ruleset_groups,
+                      counts=landing_stats,
                       latest_done=latest_done,
                       max_mb=settings.max_upload_bytes // (1024 * 1024),
                       retention=int(settings.retention_hours))
@@ -893,7 +901,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             "# Sontez\n\n"
             "> Sontez, .docx tezleri üniversitenin resmî yazım kılavuzuna göre denetleyen "
             "ve biçim hatalarını düzelten ücretsiz bir web aracıdır. "
-            f"{len(rulesets)} üniversite kural seti hazır yüklüdür.\n\n"
+            f"{landing_stats['universities']} üniversitenin {landing_stats['formats']} kural seti "
+            "hazır yüklüdür.\n\n"
             "Önemli: Sontez tezin metnini ASLA değiştirmez ve hiçbir yapay zekâ modeli tez "
             "metnini görmez; yalnızca biçim (kenar boşluğu, yazı tipi, satır aralığı, başlık "
             "stilleri, sayfa numarası) denetlenir ve düzeltilir. Yüklenen dosya diske "

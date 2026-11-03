@@ -230,7 +230,7 @@ B için eğitim verisi olur. C, B yeterli olmazsa `[KARAR?]` değerlendirilir.
 
 ### 10.1 Kullanıcı akışı
 
-Rotalar (2026-10-22 tasarım devri): `/` girişsiz tanıtım, girişli **panel** (son rapor özeti, son
+Rotalar (2026-10-22 tasarım devri): `/` girişsiz tanıtım (SSS dahil; `static/rapor-once-sonra.webp` eklenirse barkodun yerini alır), girişli **panel** (son rapor özeti, son
 denetimler tablosu); `/yukle` yükleme; `/jobs/<id>` rapor. Büyük adım başlığı (Yükle · Denetle ·
 Teslim et) aynı zamanda gezinmedir. `/yonetim` yönetim paneli (bkz. §10.3).
 

@@ -361,7 +361,7 @@ def test_pricing_page_is_public(client: TestClient, mailer: ConsoleMailer) -> No
     res = client.get("/fiyatlandirma")
     assert res.status_code == 200
     assert "Fiyatlandırma" in res.text
-    assert "Test aşamasında" in res.text
+    assert "Pilot aşamasında" in res.text
     assert 'aria-current="page"' in res.text
     login(client, mailer)
     assert client.get("/fiyatlandirma").status_code == 200

@@ -346,7 +346,8 @@ def test_landing_stats_strip(client: TestClient) -> None:
     unis = {r.rules.institution for r in rulesets.values()
             if r.rules.institution and r.rules.kind == "thesis"}  # dergi yayıncısı sayılmaz
     html = client.get("/").text
-    assert f'<span class="n">{len(rulesets)}</span>' in html
+    thesis_sets = [r for r in rulesets.values() if r.rules.institution and r.rules.kind == "thesis"]
+    assert f'<span class="n">{len(thesis_sets)}</span>' in html  # örnek küme ve dergi sayılmaz
     assert f'<span class="n">{len(unis)}</span>' in html
     assert "%97,1" in html
 

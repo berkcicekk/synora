@@ -95,7 +95,8 @@ def test_landing_university_count_excludes_journals(client: TestClient) -> None:
                     if r.rules.institution and r.rules.kind == "thesis"}
     publishers = {r.rules.institution for r in ALL.values() if r.rules.kind == "journal"}
     assert publishers  # sayım farkı ancak bir dergi kural seti varken anlamlı
-    assert f"{len(universities)} üniversitenin kural seti hazır" in client.get("/").text
+    expected = f"{len(universities)} üniversitenin kılavuzundan kural seti çıkarıldı"
+    assert expected in client.get("/").text
 
 
 def test_ruleset_cascade_component_shipped() -> None:

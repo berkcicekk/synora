@@ -51,12 +51,12 @@
     const COLS = 16, ROWS = 12;
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
-        const onL = (ROWS - r) <= ROWS - Math.floor(c * 0.75) - Math.floor(rnd() * 2) - 1
-          || (rnd() < 0.04 && r > 2);
+        // Yalnız köşedeki yığın: üst bölgeye serpilen kareler metnin üstüne biniyordu.
+        const onL = (ROWS - r) <= ROWS - Math.floor(c * 0.75) - Math.floor(rnd() * 2) - 1;
         const a = document.createElement("i");
         if (onL) a.style.background = shades[Math.floor(rnd() * shades.length)];
         pxLeft.appendChild(a);
-        const onR = (ROWS - r) <= Math.floor(c * 0.8) + 1 - Math.floor(rnd() * 2) || (rnd() < 0.03 && r > 3);
+        const onR = (ROWS - r) <= Math.floor(c * 0.8) + 1 - Math.floor(rnd() * 2);
         const b = document.createElement("i");
         if (onR) b.style.background = shades[Math.floor(rnd() * shades.length)];
         pxRight.appendChild(b);
@@ -96,7 +96,6 @@
   const guide = document.querySelector("[data-guide]");
   const page = document.getElementById("guide-page");
   const text = document.getElementById("guide-text");
-  const chips = guide ? [...guide.querySelectorAll(".guide-chip")] : [];
   let raf = 0;
   const frame = () => {
     raf = 0;
@@ -111,12 +110,10 @@
       const r = guide.getBoundingClientRect();
       if (r.bottom > 0 && r.top < vh) {
         const d = Math.max(0, Math.min(1, (vh - r.top) / (vh + r.height))) - 0.5;
+        // Hafif: altındaki ölçü etiketlerine binmesin.
         if (page) page.style.transform =
-          "translate3d(0," + (d * -140).toFixed(1) + "px,0) rotate(" + (d * -6).toFixed(2) + "deg)";
+          "translate3d(0," + (d * -24).toFixed(1) + "px,0) rotate(" + (d * -3).toFixed(2) + "deg)";
         if (text) text.style.transform = "translate3d(0," + (d * 60).toFixed(1) + "px,0)";
-        chips.forEach((c) => {
-          c.style.transform = "translate3d(0," + (d * Number(c.dataset.v || 0)).toFixed(1) + "px,0)";
-        });
       }
     }
   };

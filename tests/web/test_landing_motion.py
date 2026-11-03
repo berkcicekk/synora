@@ -37,7 +37,8 @@ def test_landing_has_no_upload_panel(client: TestClient) -> None:
 def test_landing_calls_to_sign_in(client: TestClient) -> None:
     html = client.get("/").text
     hero = html[html.index('class="hero"'):html.index("</section>")]
-    assert 'href="/kayit"' in hero and 'href="/giris"' in hero
+    assert 'href="/kayit"' in hero and 'href="/demo"' in hero  # giriş üst menüde
+    assert 'href="/giris"' in html[:html.index('class="hero"')]
 
 
 def test_signed_in_user_lands_on_panel(client: TestClient, mailer: ConsoleMailer) -> None:

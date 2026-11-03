@@ -10,11 +10,9 @@
   <div class="hero-layers" aria-hidden="true">
     <div class="grad hero-grad" data-depth="0.35"></div>
     <div class="hero-dots" data-depth="0.15"></div>
-    <i class="hero-px p1" data-depth="0.6"></i><i class="hero-px p2" data-depth="0.45"></i>
-    <i class="hero-px p3" data-depth="0.7"></i><i class="hero-px p4" data-depth="0.5"></i>
   </div>
   <div class="wrap">
-    <p class="eyebrow-dot">Test aşamasında</p>
+    <p class="eyebrow-dot">Pilot aşamasında</p>
     <h1>Tezinizi formata<br>uygun hale getirin.</h1>
     <p class="hero-steps" aria-label="Üç adım: Yükle, Denetle, Teslim et">
       <span aria-hidden="true">Yükle</span><i aria-hidden="true">·</i><span aria-hidden="true">Denetle</span><i aria-hidden="true">·</i><span aria-hidden="true">Teslim et</span>
@@ -23,17 +21,25 @@
        işaretler ve metninize dokunmadan Word'de kabul edebileceğiniz düzeltmeleri hazırlar.</p>
     <div class="hero-ctas hero-aside">
       <a class="btn primary" href="/kayit"><span class="lbl">Hemen başla</span><span class="arr" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>
-      <a class="btn" href="/giris"><span class="lbl">Giriş yap</span></a>
+      <a class="btn" href="/demo"><span class="lbl">Örnek raporu gör</span></a>
     </div>
-    <p class="hero-note">Denetim için giriş gerekir · <a class="ulink" href="/demo">Önce örnek raporu görün</a></p>
+    <p class="hero-note">Denetim için giriş gerekir · Pilot süresince üniversite e-postasıyla ücretsiz</p>
   </div>
 </section>
 
+{# Örnek rapor görseli: static/rapor-once-sonra.webp eklenince barkodun yerini alır. #}
+{% if stats.hero_shot %}
+<figure class="wrap hero-shot">
+  <img src="/static/rapor-once-sonra.webp" width="2400" height="1350" loading="lazy"
+       alt="Örnek rapor: biçim düzeltmesinden önce ve sonra">
+</figure>
+{% else %}
 {# Barkod bandı: tezin satırları (landing.js çizer; süslemedir) #}
 <section aria-hidden="true" class="wrap barcode" id="barcode" hidden>
   <div class="barcode-row"><span class="barcode-note">Sol kenar boşluğu<br>3,0 cm → 4,0 cm</span></div>
   <div class="barcode-row"></div>
 </section>
+{% endif %}
 
 {# ------------------------- ARKA PLANDA NASIL ÇALIŞIR ------------------------- #}
 {% include "_nasil_calisir.html" %}
@@ -58,10 +64,11 @@
 <section id="kilavuz" class="wrap guide" data-guide>
   <div class="guide-grid">
     <div class="guide-text reveal" id="guide-text">
-      <p class="eyebrow-dot">{{ page.name if page else "Kılavuz" }}</p>
+      <p class="eyebrow-dot">Örnek kılavuz</p>
       <h2>Kılavuzunuz,<br>ölçü ölçü.</h2>
-      <p>Sontez fakültenizin kılavuzunu satır satır kurala çevirir. Pilotta ZBEÜ Tıp Fakültesi
-         kılavuzu kullanılıyor; {{ stats.universities }} üniversitenin kural seti hazır.</p>
+      <p>Sontez, fakültenizin kılavuzunu satır satır kurala çevirir. Pilot, Zonguldak Bülent Ecevit
+         Üniversitesi (ZBEÜ) Tıp Fakültesi'nde yürütülecek;
+         {{ stats.universities }} üniversitenin kılavuzundan kural seti çıkarıldı.</p>
       {% if tiles %}
       <dl class="guide-dl">
         {% for t in tiles[:8] %}
@@ -75,11 +82,6 @@
       {# Değerler etikete göre: rule_tiles() isteğe bağlı ölçüleri yalnızca tanımlıysa ekler,
          sıra kayar. Kural setinde karşılığı olmayan çip gösterilmez. #}
       {% set tv = {} %}{% for t in tiles %}{% set _ = tv.update({t.label: t.value}) %}{% endfor %}
-      {% if "Gövde" in tv %}<span class="guide-chip chip-1" data-v="-320">{{ tv["Gövde"] }}</span>{% endif %}
-      {% if "Satır aralığı" in tv %}<span class="guide-chip hi chip-2" data-v="260">{{ tv["Satır aralığı"] }} satır</span>{% endif %}
-      {% if "Girinti" in tv %}<span class="guide-chip chip-3" data-v="420">girinti {{ tv["Girinti"] }}</span>{% endif %}
-      <span class="guide-chip chip-4" data-v="-380">sol {{ page.labels["left"] }}</span>
-      {% if "Yazı tipi" in tv %}<span class="guide-chip hi chip-5" data-v="200">{{ tv["Yazı tipi"] }}</span>{% endif %}
       <div class="guide-page" id="guide-page">
         <div class="guide-page-in" data-inset="{{ (page.left_mm / page.width_mm * 100) | round(1) }},{{ (page.right_mm / page.width_mm * 100) | round(1) }},{{ (page.top_mm / page.height_mm * 100) | round(1) }},{{ (page.bottom_mm / page.height_mm * 100) | round(1) }}">
           <i class="h"></i><i></i><i></i><i class="w8"></i><i></i><i class="a"></i><i></i><i class="w6"></i><i class="gap"></i><i></i><i class="w7"></i>
@@ -89,13 +91,48 @@
         <span class="guide-dim dim-top">{{ page.labels["top"] }}</span>
         <span class="guide-dim dim-bottom">{{ page.labels["bottom"] }}</span>
       </div>
+      <div class="guide-chips">
+        {% if "Gövde" in tv %}<span class="guide-chip">{{ tv["Gövde"] }}</span>{% endif %}
+        {% if "Satır aralığı" in tv %}<span class="guide-chip hi">{{ tv["Satır aralığı"] }} satır</span>{% endif %}
+        {% if "Girinti" in tv %}<span class="guide-chip">girinti {{ tv["Girinti"] }}</span>{% endif %}
+        {% if "Yazı tipi" in tv %}<span class="guide-chip hi">{{ tv["Yazı tipi"] }}</span>{% endif %}
+      </div>
     </figure>
     {% endif %}
   </div>
   <div class="guide-stats reveal" data-stagger>
-    <div class="lift tilt"><span class="n">{{ stats.formats }}</span><span class="t">kılavuzlardan çıkarılmış kural seti</span></div>
-    <div class="lift tilt"><span class="n">{{ stats.universities }}</span><span class="t">üniversitenin yazım kılavuzu</span></div>
-    <div class="lift tilt"><span class="n">{{ stats.accuracy }}</span><span class="t">yakalama doğruluğu · 1.840 denemelik bozma testi</span></div>
+    <div class="lift tilt"><span class="n">{{ stats.formats }}</span><span class="t">Tez kılavuzlarından çıkarılmış kural seti</span></div>
+    <div class="lift tilt"><span class="n">{{ stats.universities }}</span><span class="t">Kılavuzu eklenmiş üniversite</span></div>
+    <div class="lift tilt"><span class="n">{{ stats.accuracy }}</span><span class="t">Yakalama doğruluğu · 37 resmî şablonda, kasıtlı yapılan 1.840 bozmayla ölçüldü</span></div>
+  </div>
+  <p class="guide-note">Kural setleri enstitülerce doğrulanmamıştır.</p>
+</section>
+
+{# ------------------------------ SSS ------------------------------ #}
+<section id="sss" class="wrap faq reveal" aria-labelledby="sss-h">
+  <p class="eyebrow-dot">SSS</p>
+  <h2 id="sss-h">Sıkça sorulan sorular</h2>
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary>Hangi dosya türleri destekleniyor?</summary>
+      <p>Yalnızca Word (.docx). Eski .doc dosyasını önce .docx olarak kaydedin. Makrolu (.docm) ve parolalı dosyalar kabul edilmez.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Dosya boyutu sınırı var mı?</summary>
+      <p>En fazla {{ stats.max_mb }} MB. Günde en çok {{ stats.daily_jobs }} denetim yapılabilir.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Denetim ne kadar sürer?</summary>
+      <p>Genellikle birkaç saniye; en çok {{ stats.job_minutes }} dakika.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Üniversitem listede yoksa ne yapabilirim?</summary>
+      <p>Sağ alttaki İstek / Öneri kutusundan bize yazın.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Raporum ne zaman silinir?</summary>
+      <p>Rapor {{ retention_hours }} saat sonra kendiliğinden silinir, isterseniz hemen silebilirsiniz. Dosyanız diske yazılmaz.</p>
+    </details>
   </div>
 </section>
 

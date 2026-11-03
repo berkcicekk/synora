@@ -19,7 +19,7 @@ def template(name: str) -> str:
 def test_stat_does_not_claim_official_templates(client: TestClient) -> None:
     html = client.get("/").text
     assert "resmî biçim şablonu" not in html
-    assert "üniversitenin yazım kılavuzu" in html
+    assert "Kılavuzu eklenmiş üniversite" in html
 
 
 def test_landing_has_description(client: TestClient) -> None:

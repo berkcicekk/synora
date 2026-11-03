@@ -53,7 +53,7 @@
         {% else %}
         <p class="alert">Tanımlı kural seti yok. Yöneticiye başvurun.</p>
         {% endif %}
-        <p class="fld-note">{{ ruleset_groups|length }} üniversite, {{ rulesets|length }} kılavuz.
+        <p class="fld-note">{{ counts.universities }} üniversite, {{ counts.formats }} tez kılavuzu.
            Kural setleri resmî kılavuzlardan çıkarılır; enstitülerce doğrulanmamıştır.</p>
       </section>
       <section id="ciktilar" aria-label="Çıktılar" class="pcard">
