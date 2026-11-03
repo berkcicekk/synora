@@ -26,6 +26,153 @@
     if (fromHash) mark(fromHash);
   });
 
+  // --- Seçim kutusu: yerel <select> üzerine aranabilir açılır liste ---------------------------
+  // Değer yine yerel select'te durur (form ve JS'siz kullanım); bu yalnızca görünümdür.
+  const foldTr = (s) => s.replace(/I/g, "ı").replace(/İ/g, "i").toLocaleLowerCase("tr");
+  const SEARCH_FROM = 7; // bundan kısa listede arama kutusu gürültüdür
+  let pickerCount = 0;
+  const makePicker = (select, { searchLabel, keywords, noun }) => {
+    const id = "pick-" + (++pickerCount);
+    const make = (tag, className) => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      return node;
+    };
+    const wrap = make("div", "pick");
+    const button = make("button", "pick-btn");
+    const value = make("span", "pick-value");
+    const pop = make("div", "pick-pop");
+    const search = make("input", "pick-search");
+    const count = make("p", "pick-count");
+    const list = make("ul", "pick-list");
+    const empty = make("p", "pick-empty");
+    button.type = "button";
+    button.id = id;
+    button.setAttribute("aria-haspopup", "listbox");
+    button.setAttribute("aria-expanded", "false");
+    button.append(value);
+    pop.hidden = true;
+    search.type = "search";
+    search.autocomplete = "off";
+    search.placeholder = searchLabel;
+    search.setAttribute("aria-label", searchLabel);
+    search.setAttribute("role", "combobox");
+    search.setAttribute("aria-controls", id + "-list");
+    search.setAttribute("aria-expanded", "true");
+    count.setAttribute("role", "status");
+    list.id = id + "-list";
+    list.tabIndex = -1;
+    list.setAttribute("role", "listbox");
+    empty.textContent = "Eşleşen sonuç yok.";
+    empty.hidden = true;
+    pop.append(search, count, list, empty);
+    wrap.append(button, pop);
+    select.after(wrap);
+    select.classList.add("visually-hidden");
+    select.tabIndex = -1;
+    select.setAttribute("aria-hidden", "true");
+    const label = select.id && document.querySelector('label[for="' + select.id + '"]');
+    if (label) {
+      label.id = label.id || id + "-label";
+      label.htmlFor = id;
+      button.setAttribute("aria-labelledby", label.id + " " + id);
+      list.setAttribute("aria-labelledby", label.id);
+    }
+
+    let visible = [];
+    let active = -1;
+    const focusTarget = () => (search.hidden ? list : search);
+    const setActive = (index) => {
+      active = index;
+      [...list.children].forEach((li, i) => {
+        li.classList.toggle("is-active", i === index);
+        if (i === index) li.scrollIntoView({ block: "nearest" });
+      });
+      const current = list.children[index];
+      if (current) focusTarget().setAttribute("aria-activedescendant", current.id);
+      else focusTarget().removeAttribute("aria-activedescendant");
+    };
+    const renderList = () => {
+      const words = foldTr(search.value).split(/\s+/).filter(Boolean);
+      const options = [...select.options];
+      visible = options.filter((o) => {
+        const key = foldTr(o.textContent + " " + (keywords ? keywords(o) : ""));
+        return words.every((w) => key.includes(w));
+      });
+      list.textContent = "";
+      visible.forEach((o, i) => {
+        const li = make("li");
+        li.id = id + "-opt-" + i;
+        li.textContent = o.textContent;
+        li.setAttribute("role", "option");
+        li.setAttribute("aria-selected", String(o.value === select.value));
+        li.addEventListener("mousemove", () => { if (active !== i) setActive(i); });
+        li.addEventListener("click", () => choose(o));
+        list.append(li);
+      });
+      empty.hidden = visible.length > 0;
+      list.hidden = !visible.length;
+      count.textContent = words.length && noun ? visible.length + " " + noun : "";
+      const selected = visible.findIndex((o) => o.value === select.value);
+      setActive(words.length ? (visible.length ? 0 : -1) : selected);
+    };
+    const isOpen = () => !pop.hidden;
+    const close = (refocus) => {
+      if (!isOpen()) return;
+      pop.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+      if (refocus) button.focus();
+    };
+    const open = () => {
+      if (isOpen()) return;
+      search.value = "";
+      search.hidden = select.options.length < SEARCH_FROM;
+      pop.hidden = false;
+      button.setAttribute("aria-expanded", "true");
+      const room = window.innerHeight - button.getBoundingClientRect().bottom;
+      pop.classList.toggle("up", room < 340 && button.getBoundingClientRect().top > 340);
+      renderList();
+      focusTarget().focus();
+    };
+    const choose = (option) => {
+      const changed = select.value !== option.value;
+      select.value = option.value;
+      value.textContent = option.textContent;
+      close(true);
+      if (changed) select.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+    button.addEventListener("click", () => (isOpen() ? close(true) : open()));
+    button.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); open(); }
+    });
+    search.addEventListener("input", renderList);
+    pop.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" && visible.length) {
+        e.preventDefault();
+        setActive((active + 1) % visible.length);
+      } else if (e.key === "ArrowUp" && visible.length) {
+        e.preventDefault();
+        setActive((active - 1 + visible.length) % visible.length);
+      } else if (e.key === "Enter") {
+        e.preventDefault(); // formu (yüklemeyi) göndermesin
+        if (visible[active]) choose(visible[active]);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation(); // açık bir pencere varsa onu kapatmasın
+        close(true);
+      } else if (e.key === "Tab") {
+        close(false);
+      }
+    });
+    document.addEventListener("pointerdown", (e) => { if (!wrap.contains(e.target)) close(false); });
+    const refresh = () => {
+      const current = select.options[select.selectedIndex];
+      value.textContent = current ? current.textContent : "";
+    };
+    refresh();
+    return { refresh, button };
+  };
+
   // --- Kılavuz seçimi: üniversite → kılavuz kademeli listeler + şablon bağlantıları ----
   const rulesetSelect = document.getElementById("ruleset");
   if (rulesetSelect && rulesetSelect.tagName === "SELECT") {
@@ -49,6 +196,7 @@
       if (wordLink) wordLink.href = "/sablon/" + encodeURIComponent(opt.value) + "/sablon.docx";
     };
     rulesetSelect.addEventListener("change", syncLatex);
+    const rulesetPicker = makePicker(rulesetSelect, { searchLabel: "Kılavuz ara", noun: "kılavuz" });
 
     // Üniversite listesi: seçilince kılavuz listesi yalnızca o üniversiteye süzülür.
     const uniFld = document.getElementById("uni-fld");
@@ -68,39 +216,16 @@
           rulesetSelect.value = g.options[0].value;
         }
         syncLatex();
+        rulesetPicker.refresh();
       };
       uniSel.addEventListener("change", applyUni);
       applyUni();
-
-      // Arama: üniversite ve kılavuz adlarında, Türkçe büyük/küçük harf duyarlı ("Iğdır", "İzmir").
-      const search = document.getElementById("uni-search");
-      const count = document.getElementById("uni-count");
-      if (search) {
-        const fold = (s) => s.replace(/I/g, "ı").replace(/İ/g, "i").toLocaleLowerCase("tr");
-        const keys = groups.map((g) => fold(g.label + " " + g.options.map((o) => o.text).join(" ")));
-        const fill = (indices) => {
-          const current = uniSel.value;
-          uniSel.textContent = "";
-          indices.forEach((i) => uniSel.add(new Option(groups[i].label, String(i), false, String(i) === current)));
-          // Seçili üniversite süzgeç dışında kaldıysa ilk eşleşme seçilir; kılavuz listesi izler.
-          if (!indices.some((i) => String(i) === current)) uniSel.value = String(indices[0]);
-          applyUni();
-        };
-        const all = groups.map((_, i) => i);
-        search.addEventListener("input", () => {
-          const words = fold(search.value).split(/\s+/).filter(Boolean);
-          const hits = all.filter((i) => words.every((w) => keys[i].includes(w)));
-          if (words.length && !hits.length) {
-            fill(all);
-            count.textContent = "Eşleşen üniversite yok; tüm liste gösteriliyor.";
-          } else {
-            fill(hits);
-            count.textContent = words.length ? hits.length + " üniversite" : "";
-          }
-        });
-        // Arama kutusunda Enter formu (yüklemeyi) göndermesin.
-        search.addEventListener("keydown", (e) => { if (e.key === "Enter") e.preventDefault(); });
-      }
+      // Arama kılavuz adlarında da çalışır ("Tıp" yazınca o kılavuzu olan üniversiteler).
+      makePicker(uniSel, {
+        searchLabel: "Üniversite ya da kılavuz ara",
+        noun: "üniversite",
+        keywords: (o) => groups[Number(o.value)].options.map((g) => g.text).join(" "),
+      });
     }
   }
 
@@ -173,6 +298,16 @@
     el.classList.toggle("error", Boolean(isError));
   };
 
+  // --- Bilgi pencereleri: düğmeyle açılır, Esc, kapat düğmesi ya da dışarı tıklamayla kapanır ----
+  document.querySelectorAll("[data-dialog-open]").forEach((opener) => {
+    const dialog = document.getElementById(opener.dataset.dialogOpen);
+    if (!dialog) return;
+    opener.addEventListener("click", () => dialog.showModal());
+    dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
+    dialog.querySelectorAll("[data-dialog-close]").forEach((b) =>
+      b.addEventListener("click", () => dialog.close()));
+  });
+
   // --- Yükleme sayfası ----------------------------------------------------------------------
   const form = document.getElementById("upload");
   if (form) {
@@ -191,11 +326,46 @@
       if (dropTitle) dropTitle.innerHTML = dropInitial[0];
       if (dropHelp) dropHelp.innerHTML = dropInitial[1];
     };
+    // Akış: önce tez, sonra kılavuz, sonra başlat. Kılavuz ve şablonlar dosyasız da kullanılabilir.
+    const guide = document.getElementById("kilavuz-sec");
+    const guideHint = document.getElementById("guide-hint");
+    const guideHintInitial = guideHint ? guideHint.textContent : "";
+    const leadToGuide = () => {
+      if (!guide) return;
+      guide.classList.add("is-next");
+      if (guideHint) guideHint.textContent = "Tezinizin kılavuzu bu mu? Değilse değiştirin, sonra denetimi başlatın.";
+      const stepLinks = document.querySelectorAll(".subnav a[href^=\"#\"]");
+      stepLinks.forEach((a) => {
+        if (a.getAttribute("href") === "#kilavuz-sec") a.setAttribute("aria-current", "step");
+        else a.removeAttribute("aria-current");
+      });
+      // Kılavuz ve başlatma düğmesi birlikte sığıyorsa ikisi de görünsün; dar ekranda kılavuz öncelikli.
+      const span = submit.getBoundingClientRect().bottom - guide.getBoundingClientRect().top;
+      if (span < window.innerHeight - 120) submit.scrollIntoView({ block: "end" });
+      else guide.scrollIntoView({ block: "center" });
+      const first = guide.querySelector(".pick-btn");
+      if (first) first.focus({ preventScroll: true });
+    };
+    const resetFlow = () => {
+      if (guide) guide.classList.remove("is-next");
+      if (guideHint) guideHint.textContent = guideHintInitial;
+      submit.classList.remove("is-next");
+    };
+    if (guide) guide.addEventListener("change", () => {
+      if (!file) return;
+      guide.classList.remove("is-next");
+      if (guideHint) guideHint.textContent = "Hazır. Denetimi başlatabilirsiniz.";
+      submit.classList.add("is-next");
+      submit.scrollIntoView({ block: "end" });
+      submit.focus({ preventScroll: true });
+    });
+
     const choose = (f) => {
       file = null;
       submit.disabled = true;
       drop.classList.remove("has-file");
       resetDrop();
+      resetFlow();
       if (!f) return;
       const problem = fileProblem(f, max);
       if (problem) { say(problem, true); return; }
@@ -204,7 +374,8 @@
       drop.classList.add("has-file");
       if (dropTitle) dropTitle.textContent = f.name;
       if (dropHelp) dropHelp.textContent = "Hazır (" + fmtSize(f.size) + ") · denetim yalnızca bellekte çalışır";
-      say("Seçilen dosya: " + f.name + " (" + fmtSize(f.size) + ")");
+      say("Seçilen dosya: " + f.name + " (" + fmtSize(f.size) + "). Şimdi kılavuzu kontrol edin.");
+      leadToGuide();
     };
 
     input.addEventListener("change", () => choose(input.files[0]));
@@ -291,8 +462,8 @@
     const started = Date.now();
     const live = poller.querySelector("[role=status]");
     const stop = (msg) => {
-      const bar = poller.querySelector(".progress");
-      if (bar) bar.hidden = true;
+      // Takip bitti: animasyon sürerse "hâlâ denetleniyor" izlenimi verirdi.
+      document.querySelectorAll(".paperfall, .scan, .check-stages").forEach((el) => { el.hidden = true; });
       if (live) live.textContent = msg;
     };
     const tick = async () => {

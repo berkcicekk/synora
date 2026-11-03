@@ -248,9 +248,12 @@ yeni renk/yarıçap/gölge değeri oraya token olarak eklenir, bileşene ham de�
 - CSP: şablonlarda satır içi stil ve betik yok; dinamik ölçüler `data-*` ile `app.js`'ten.
 - Tasarım kaynakları (`payper-tasarim/`, repoda değil) yalnızca referanstır; çelişkide bu bölüm geçerli.
 
-1. **Yükle:** Tek ekran. Sürükle-bırak alanı, enstitü/kural seti seçimi (pilotta yalnızca ZBEÜ), gizlilik notu:
+1. **Yükle:** Tek ekran, adım adım: önce tez, ardından kılavuz kartı renklenir ve odaklanır, seçim sonrası
+   başlatma düğmesi öne çıkar. Kılavuz seçimi yerel `select` üzerine aranabilir listedir (JS'siz select kalır).
+   "Yüklemeden önce" bilgi penceresidir. Gizlilik notu:
    "Tezinizin metni değiştirilmez ve yapay zekâ tarafından okunmaz. Dosyanız işlem bitince silinir."
-2. **İşleniyor:** İlerleme göstergesi (güvenlik kontrolü → okuma → denetim).
+2. **İşleniyor:** Tam ekran düşen kâğıtlar ve taranan sayfa (yalnızca dönüşüm animasyonu; hareket azaltılmışsa
+   görünmez). Sıralı aşama adları süstür, gerçek ilerlemeyi ölçmez.
 3. **Rapor:** Özet ("12 hata, 4 uyarı. 10'u otomatik düzeltilebilir."), bulgu listesi sayfa/bölüme göre
    gruplu, filtre (Hata / Uyarı / Düzeltilebilir). Rolü belirsiz paragraflar için "Bu bir … mi?" düzeltmesi.
    **Metin görünümü (uygulandı):** öğrenci "Tezimi aç" ile denetlediği dosyayı seçer; `static/docview.js`

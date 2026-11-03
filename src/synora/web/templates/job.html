@@ -58,12 +58,19 @@
 
 {% block content %}
 {% if job.status in ("queued", "running") %}
-<section class="section simple" data-poll="/jobs/{{ job.id }}/status">
-  <div class="sheet-card">
+{# Süs: tam ekran düşen kâğıtlar. Yalnızca dönüşüm animasyonu; hareket azaltılmışsa görünmez. #}
+<div class="paperfall" aria-hidden="true">{% for _ in range(24) %}<i></i>{% endfor %}</div>
+<section class="section simple checking" data-poll="/jobs/{{ job.id }}/status">
+  <div class="sheet-card checking-card">
     {{ steps(2) }}
+    <div class="scan" aria-hidden="true">
+      <div class="scan-page"><i></i><i></i><i></i><i></i><i></i><i></i><span class="scan-beam"></span></div>
+    </div>
     <span class="eyebrow">Denetim · {{ job.created_at | when }}</span>
     <h1 class="page-title">Teziniz denetleniyor.</h1>
-    <div class="progress" aria-hidden="true"><span></span></div>
+    <ul class="check-stages" aria-hidden="true">
+      <li>Güvenlik kontrolü</li><li>Biçim okuma</li><li>Kılavuz denetimi</li>
+    </ul>
     <p class="muted" role="status" aria-live="polite">Güvenlik kontrolü, biçim okuma ve kılavuz denetimi
       yapılıyor. Genellikle birkaç saniye sürer.</p>
     <p class="muted small">Denetim bitince sayfa kendiliğinden yenilenir. Bu sayfadan ayrılırsanız
@@ -149,12 +156,12 @@
         <strong>Sentetik örnek tez açılıyor…</strong>
         <span class="muted small">Bulgular metnin üzerinde, Word'deki gibi gösterilir.</span>
         {% else %}
-        <strong>Tezinizi metniyle, Word'deki gibi görün.</strong>
-        <span class="muted small">Denetlediğiniz dosyayı seçin. Dosya yalnızca bu tarayıcıda açılır; sunucuya gönderilmez ve sayfayı kapatınca ekrandan gider.</span>
+        <strong>Bulguları tezinizin metni üzerinde görün.</strong>
+        <span class="muted small">Bilgisayarınızdan denetlediğiniz dosyayı seçin. Bu bir indirme değildir: dosya yalnızca bu sekmede görüntülenir, sunucuya gönderilmez.</span>
         {% endif %}
       </div>
       {% if not demo %}
-      <button type="button" class="btn small primary" id="docview-open"><span class="lbl">Tezimi aç</span>{{ arrow() }}</button>
+      <button type="button" class="btn small primary" id="docview-open"><span class="lbl">Dosyamı seç</span></button>
       <input type="file" id="docview-file" class="visually-hidden" tabindex="-1" aria-hidden="true"
              accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
       {% endif %}
