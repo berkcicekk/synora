@@ -138,9 +138,25 @@ h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -.04em; line-height: 1
 @media (max-width: 760px) {
   .pill { order: 3; flex-basis: 100%; overflow-x: auto; scrollbar-width: none; }
   .pill::-webkit-scrollbar { display: none; }
-  .pill a { flex: 1 0 auto; justify-content: center; padding: .55rem .7rem; }
+  .pill a { flex: 1 0 auto; justify-content: center; padding: .55rem .4rem; }
   .who { display: none; }
   .who-chip { padding-right: .4rem; }
+}
+/* Telefonda logo ve düğmeler tek satır, menü altında: üst alan ilk ekranı doldurmasın. */
+@media (max-width: 480px) {
+  .nav-inner { padding-block: .75rem; gap: .6rem; }
+  .brand { gap: .4rem; }
+  .brand-badge { width: 44px; height: 44px; }
+  .brand .word { padding: 0; }
+  .nav-end { gap: .35rem; }
+  .nav-link { min-height: 44px; padding-inline: .75rem; }
+  .nav-end .btn { min-height: 44px; }
+  .nav-end .btn .lbl { padding-inline: .75rem; }
+}
+/* En dar telefonlar: logo yazısı sığmaz (bağlantının adı aria-label'da), menü dört bağlantıyı da gösterir. */
+@media (max-width: 359px) {
+  .site-nav .word { display: none; }
+  .pill a { font-size: .8rem; padding-inline: .2rem; }
 }
 
 /* ============================ UYGULAMA ÇERÇEVESİ ============================
@@ -308,7 +324,11 @@ body.app { background: var(--app-panel); }
 .barcode-note { flex: 0 0 168px; background: var(--accent); padding: 12px; box-sizing: border-box;
   font-family: var(--mono); font-size: .72rem; line-height: 1.4; letter-spacing: .04em;
   text-transform: uppercase; color: var(--ink); }
-@media (max-width: 640px) { .barcode-row { height: 90px; } .barcode-note { flex-basis: 140px; } }
+/* Dar ekranda etiket en başa alınır: çubukların ardında kalırsa satır sonunda kesilir. */
+@media (max-width: 640px) {
+  .barcode-row { height: 90px; }
+  .barcode-note { flex-basis: 140px; order: -1; }
+}
 
 .preview-end { display: flex; justify-content: flex-end; }
 
@@ -356,7 +376,7 @@ body.app { background: var(--app-panel); }
 .guide-page-in i.a { background: var(--accent); width: 76%; }
 .guide-page-in i.w8 { width: 88%; } .guide-page-in i.w6 { width: 64%; } .guide-page-in i.w7 { width: 80%; }
 .guide-page-in i.gap { margin-top: 10px; }
-.guide-dim { position: absolute; font-family: var(--mono); font-size: .68rem; color: var(--accent-ink); text-align: center; white-space: nowrap; }
+.guide-dim { position: absolute; font-family: var(--mono); font-size: .75rem; color: var(--accent-ink); text-align: center; white-space: nowrap; }
 /* Ölçü etiketleri sayfanın altında sıralanır: sayfaya ve kenar ölçülerine binmez. */
 .guide-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .guide-chip { padding: 8px 14px; border-radius: var(--radius-pill);
@@ -438,7 +458,8 @@ body.app { background: var(--app-panel); }
 .hero-steps { display: flex; gap: .7rem; justify-content: center; margin: 0; font-family: var(--mono);
   font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
 .hero-steps i { font-style: normal; color: var(--step-off); }
-.hero-steps span { position: relative; padding-bottom: 5px; }
+.hero-steps span { position: relative; padding-bottom: 5px; white-space: nowrap; }
+@media (max-width: 359px) { .hero .hero-steps { font-size: .875rem; gap: .5rem; } }
 .hero-steps span::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
   background: var(--accent); transform: scaleX(0); transform-origin: left; }
 .hero-steps span:last-of-type::after { transform: none; }
@@ -487,6 +508,7 @@ body.app { background: var(--app-panel); }
   .privacy-dots { min-height: 0; padding-bottom: calc(34.5vw + 24px); } /* metin yığınların üstünde kalsın */
   .pixelpile { width: 46vw; }
 }
+@media (max-width: 359px) { .hiw-step p { min-height: 8em; } } /* en uzun metin burada bir satır fazla */
 .hiw-note { margin: 24px 0 0; padding: 16px 20px; border-radius: 16px; background: var(--accent-soft);
   color: var(--ink-2); font-size: .9rem; line-height: 1.55; max-width: 760px; }
 .hiw-note strong { color: var(--accent-ink); }
@@ -1052,7 +1074,7 @@ body.editor main { display: flex; min-height: 0; }
 
 /* Dokunmatik: küçük bağlantı ve düğmelere 44 px dokunma alanı. */
 @media (pointer: coarse) {
-  .nav-link, .linkbtn, .back, .output-close { min-height: 44px; display: inline-flex; align-items: center; }
+  .nav-link, .pill a, .linkbtn, .back, .output-close { min-height: 44px; display: inline-flex; align-items: center; }
   .output-close { min-width: 44px; justify-content: center; }
 }
 
@@ -1061,7 +1083,7 @@ body.editor main { display: flex; min-height: 0; }
 body.app .footer, body.editor .footer { background: transparent; }
 .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
   gap: 24px; border-top: 1px solid var(--line); padding-top: 24px; font-size: .82rem; line-height: 1.6; }
-.footer .brand { color: var(--ink); font-weight: 700; }
+.footer .brand { color: var(--ink); font-weight: 700; min-height: 44px; }
 .footer .brand .word { font-size: .95rem; }
 .footer .brand .mark { width: 18px; }
 .footer p { margin: 0; font-size: .82rem; line-height: 1.6; max-width: 560px; }
@@ -1145,7 +1167,8 @@ body.app .footer, body.editor .footer { background: transparent; }
 /* İstek / öneri: sağ altta sabit düğme + <dialog> popup */
 .suggest-fab {
   position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 40;
-  display: inline-flex; align-items: center; gap: .5rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 44px; min-width: 44px;
   padding: .6rem 1rem; border-radius: 999px; cursor: pointer;
   background: var(--night); color: #fff; border: 1px solid var(--night-2);
   font: 500 .85rem/1 var(--sans); letter-spacing: .01em;
@@ -1154,7 +1177,8 @@ body.app .footer, body.editor .footer { background: transparent; }
 }
 .suggest-fab:hover { background: var(--blue); transform: translateY(-2px); }
 .suggest-fab svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-@media (max-width: 640px) {
+/* Telefonda (yatay dahil) yalnız ikon: metnin üstüne binmesin; ad ekran okuyucuda kalır. */
+@media (max-width: 760px), (max-height: 500px) {
   .suggest-fab { padding: .75rem; }
   .suggest-fab span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }

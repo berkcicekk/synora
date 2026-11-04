@@ -177,6 +177,74 @@ def test_step_text_is_readable() -> None:
     assert diagram and "font-size: 14px" in diagram.group(1)
 
 
+# --- Telefon --------------------------------------------------------------------------------------
+
+
+def css_block(selector: str, css: str | None = None) -> str:
+    """Seçicinin ilk kuralının gövdesi."""
+    source = css if css is not None else (STATIC / "app.css").read_text(encoding="utf-8")
+    match = re.search(rf"(?:^|\n)\s*{re.escape(selector)} \{{([^}}]*)\}}", source)
+    assert match, selector
+    return match.group(1)
+
+
+def media_block(condition: str) -> str:
+    """`@media <koşul> {` bloklarının birleşik içeriği (süslü parantez dengesiyle)."""
+    css = (STATIC / "app.css").read_text(encoding="utf-8")
+    found = []
+    head = f"@media {condition} {{"
+    start = css.find(head)
+    while start != -1:
+        depth, i = 1, start + len(head)
+        while depth:
+            depth += {"{": 1, "}": -1}.get(css[i], 0)
+            i += 1
+        found.append(css[start + len(head):i - 1])
+        start = css.find(head, i)
+    assert found, condition
+    return "\n".join(found)
+
+
+def test_nav_fits_one_row_above_menu_on_phones() -> None:
+    narrow = media_block("(max-width: 480px)")
+    assert "width: 44px" in css_block(".brand-badge", narrow)
+    assert "padding-inline: .75rem" in css_block(".nav-link", narrow)
+    assert "padding-inline: .75rem" in css_block(".nav-end .btn .lbl", narrow)
+    tiny = media_block("(max-width: 359px)")
+    assert "display: none" in css_block(".site-nav .word", tiny)
+
+
+def test_menu_links_all_fit_on_narrow_screens() -> None:
+    assert "padding: .55rem .4rem" in css_block(".pill a", media_block("(max-width: 760px)"))
+    tiny = css_block(".pill a", media_block("(max-width: 359px)"))
+    assert "font-size: .8rem" in tiny and "padding-inline: .2rem" in tiny
+
+
+def test_touch_targets_reach_44px() -> None:
+    coarse = media_block("(pointer: coarse)")
+    assert ".pill a" in coarse.split("{")[0]
+    assert "min-height: 44px" in css_block(".footer .brand")
+    fab = css_block(".suggest-fab")
+    assert "min-height: 44px" in fab and "min-width: 44px" in fab
+
+
+def test_barcode_note_is_not_clipped_on_phones() -> None:
+    assert "order: -1" in css_block(".barcode-note", media_block("(max-width: 640px)"))
+
+
+def test_small_diagram_labels_are_readable() -> None:
+    assert "font-size: .75rem" in css_block(".guide-dim")
+
+
+def test_hero_steps_stay_on_one_line() -> None:
+    assert "white-space: nowrap" in css_block(".hero-steps span")
+    assert "font-size: .875rem" in css_block(".hero .hero-steps", media_block("(max-width: 359px)"))
+
+
+def test_suggest_button_is_icon_only_on_landscape_phones() -> None:
+    assert ".suggest-fab span" in media_block("(max-width: 760px), (max-height: 500px)")
+
+
 # --- Kılavuz diyagramı ----------------------------------------------------------------------------
 
 
