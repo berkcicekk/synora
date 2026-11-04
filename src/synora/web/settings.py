@@ -49,6 +49,9 @@ class Settings:
     client_ip_header: str = "cf-connecting-ip"
     max_active_jobs: int = 2
     max_daily_jobs: int = 20
+    # Site geneli sınırlar: hesap çoğaltılsa da disk dolmaz, temizlik çalışmaya devam eder.
+    max_site_jobs_per_day: int = 1000
+    max_db_bytes: int = 2 * 1024 * 1024 * 1024
     max_queued_jobs: int = 20
     # Bellek bütçesi (toplamı konteyner tavanının altında kalır, testle zorlanır): kuyruk ve çalışan
     # işlerin dosyaları + gövdesi okunan yüklemeler + kopya dosyaları + workers kadar alt süreç.
@@ -56,6 +59,13 @@ class Settings:
     # Kopya ve yeniden denetim alt süreç çalıştırır, günlük sınıra girmez: hesap başına kota.
     copies_per_hour: int = 30
     copies_per_minute: int = 60  # site geneli
+    # Raporu okuyan rol seçimi ve geri bildirim istekleri: hesap başına, site geneli.
+    report_writes_per_hour: int = 600
+    report_writes_per_minute: int = 600
+    # Rızalı eğitim verisi (F6): yeniden denetim başına ve toplamda.
+    training_rows_per_job: int = 500
+    training_keep_rows: int = 100_000
+    training_keep_days: int = 365
     # Süresi dolan yüklemeler (istemci ağı başına): kasıtlı yuva kilitlemeye ceza.
     upload_timeouts_per_hour: int = 10
     # Aynı anda gövdesi okunan yükleme (yeni denetim + yeniden denetim): her biri belleğe 100 MB'a
@@ -150,6 +160,17 @@ class Settings:
             email_verification=_env("EMAIL_VERIFICATION", "1") == "1",
             retention_hours=float(_env("RETENTION_HOURS", str(cls.retention_hours))),
             workers=int(_env("WORKERS", str(cls.workers))),
+            max_site_jobs_per_day=int(_env("MAX_SITE_JOBS_PER_DAY",
+                                           str(cls.max_site_jobs_per_day))),
+            max_db_bytes=int(_env("MAX_DB_BYTES", str(cls.max_db_bytes))),
+            report_writes_per_hour=int(_env("REPORT_WRITES_PER_HOUR",
+                                            str(cls.report_writes_per_hour))),
+            report_writes_per_minute=int(_env("REPORT_WRITES_PER_MINUTE",
+                                              str(cls.report_writes_per_minute))),
+            training_rows_per_job=int(_env("TRAINING_ROWS_PER_JOB",
+                                           str(cls.training_rows_per_job))),
+            training_keep_rows=int(_env("TRAINING_KEEP_ROWS", str(cls.training_keep_rows))),
+            training_keep_days=int(_env("TRAINING_KEEP_DAYS", str(cls.training_keep_days))),
             smtp_host=_env("SMTP_HOST", ""),
             smtp_port=int(_env("SMTP_PORT", "587")),
             smtp_user=_env("SMTP_USER", ""),

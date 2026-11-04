@@ -55,7 +55,7 @@ HERO_SHOT = HERE / "static" / "rapor-once-sonra.webp"  # varsa ana sayfada barko
 SESSION_COOKIE = "synora_session"
 PRE_CSRF_COOKIE = "synora_pre"
 # Kayıtta onaylanan aydınlatma metninin sürümü; metin değişince artırılır.
-TERMS_VERSION = "aydinlatma-taslak-2026-11b"
+TERMS_VERSION = "aydinlatma-taslak-2026-11c"
 SERVER_BUSY = "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin."
 MAX_FORM_BYTES = 8 * 1024
 MAX_JSON_BYTES = 64 * 1024
@@ -429,6 +429,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     templates.env.globals["now"] = time.time
     # Saklama sözü her sayfada ayardan gelir (sabit "24 saat" ayar değişince yanlış söz olurdu).
     templates.env.globals["retention_hours"] = int(settings.retention_hours)
+    templates.env.globals["training_keep_days"] = settings.training_keep_days
     # Statik dosyalar için sürüm damgası: içerik değişince tarayıcı önbelleği geçersizleşir.
     asset_hash = hashlib.sha256()
     for name in ("app.css", "app.js", "fonts.css", "landing.js", "docview.js", "guide-scene.js"):
@@ -599,11 +600,29 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             raise HTTPException(429, "Kısa sürede çok fazla kopya istendi. Bir saat sonra "
                                      "yeniden deneyin.")
 
+    report_writes = RateLimiter(settings.report_writes_per_hour,
+                                settings.report_writes_per_minute)
+
+    def check_report_write_quota(email: str) -> None:
+        """Raporu okuyan rol seçimi ve geri bildirim: tek hesap sunucuyu meşgul etmesin."""
+        if not report_writes.allow(_hash(email)[:16]):
+            raise HTTPException(429, "Kısa sürede çok fazla işlem yapıldı. Biraz sonra yeniden "
+                                     "deneyin.")
+
     def check_job_limits(email: str) -> None:
-        """Yeni yükleme: eşzamanlı ve günlük sınır (kopya ve yeniden denetim günlük sayılmaz)."""
+        """Yeni yükleme: eşzamanlı, günlük ve site geneli sınır (kopya ve yeniden denetim günlük
+        sayılmaz)."""
         check_active(email)
-        if db.jobs_since(email, time.time() - 86400) >= settings.max_daily_jobs:
+        day_ago = time.time() - 86400
+        if db.jobs_since(email, day_ago) >= settings.max_daily_jobs:
             raise HTTPException(429, "Günlük denetim sınırına ulaştınız. Yarın yeniden deneyin.")
+        if db.jobs_started_since(day_ago) >= settings.max_site_jobs_per_day:
+            log_event("capacity.daily_limit")
+            raise HTTPException(503, "Sunucu bugünlük denetim kapasitesine ulaştı. Yarın yeniden "
+                                     "deneyin.")
+        if db.used_bytes() >= settings.max_db_bytes:
+            log_event("capacity.db_full")
+            raise HTTPException(503, SERVER_BUSY)
 
     # Gövdesi okunmakta olan yüklemeler (her biri bellekte 100 MB'a kadar). Kuyruk ve iş sayısı
     # ancak gövde okunduktan sonra artar; bu sayaç olmadan paralel isteklerin hepsi okunurdu.
@@ -1422,6 +1441,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         bir rol adı alınır; metin alınmaz. Boş rol seçimi kaldırır."""
         user = require_user(request)
         check_csrf(user.csrf, request.headers.get("x-csrf-token"))
+        check_report_write_quota(user.email)
         job = await load_job(user, job_id)
         if job.status != "done" or not job.report:
             raise HTTPException(409, "Bu denetim için paragraf türü seçilemiyor.")
@@ -1432,7 +1452,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         changes = body.get("roles") if isinstance(body, dict) else None
         if not isinstance(changes, dict) or len(changes) > MAX_USER_ROLES:
             raise HTTPException(400, "Geçersiz istek.")
-        report = json.loads(job.report)
+        report = await parse_report(job)
         editable = {b["pid"] for b in report.get("document") or [] if "pid" in b}
         pending = pending_roles(job, report)
         for pid, role in changes.items():
@@ -1456,6 +1476,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         """Öğrencinin "Bu bulgu yanlış mı?" oyu. Metin alınmaz; yalnızca rule_id ve karar."""
         user = require_user(request)
         check_csrf(user.csrf, request.headers.get("x-csrf-token"))
+        check_report_write_quota(user.email)
         job = await load_job(user, job_id)
         form = await small_form(request)
         rule_id = str(form.get("rule_id", ""))
@@ -1479,7 +1500,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         """Seçilen rollerle aynı dosyayı yeniden denetler."""
         user = require_user(request)
         check_csrf(user.csrf, request.headers.get("x-csrf-token"))
-        job = own_job(user, job_id)
+        job = await load_job(user, job_id)
         ruleset = rulesets.get(job.ruleset)
         if job.status != "done" or ruleset is None or not job.source_sha256 or not job.report:
             raise HTTPException(409, "Bu denetim yeniden çalıştırılamıyor.")

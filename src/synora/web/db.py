@@ -151,6 +151,12 @@ def _email_hash(email: str) -> str:
     return hashlib.sha256(email.encode("utf-8")).hexdigest()
 
 
+def _quota_hash(email: str) -> str:
+    """Günlük kota anahtarı: `ali+1@` ve `ali@` tek kişi sayılır; hesaplar ayrı kalır."""
+    local, _, domain = email.partition("@")
+    return _email_hash(f"{local.split('+', 1)[0]}@{domain}")
+
+
 def tr_day(ts: float) -> str:
     """Türkiye saatine göre gün: '2026-10-23'."""
     return datetime.fromtimestamp(ts, TR_TZ).strftime("%Y-%m-%d")
@@ -225,6 +231,15 @@ class Database:
             user_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(users)")}
             if "suspended_at" not in user_columns:
                 self._conn.execute("ALTER TABLE users ADD COLUMN suspended_at REAL")
+            # Aynı satır yeniden denetimlerle çoğalmasın. Eski kurulumlarda önce kopyalar silinir.
+            has_index = self._conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE name='training_unique'").fetchone()
+            if not has_index:
+                self._conn.execute(
+                    "DELETE FROM training WHERE rowid NOT IN "
+                    "(SELECT MIN(rowid) FROM training GROUP BY features, label, ruleset)")
+                self._conn.execute(
+                    "CREATE UNIQUE INDEX training_unique ON training(features, label, ruleset)")
             # Yeniden başlatmada yarıda kalan işler: dosya bellekteydi, artık yok.
             self._conn.execute(
                 "UPDATE jobs SET status='failed', error_code='INTERRUPTED', finished_at=? "
@@ -371,7 +386,7 @@ class Database:
             self._conn.execute("INSERT INTO jobs (id, email, ruleset, status, created_at, "
                                "session_hash) VALUES (?, ?, ?, 'queued', ?, ?)",
                                (job_id, email, ruleset, now, session_hash))
-            self._conn.execute("INSERT INTO job_starts VALUES (?, ?)", (_email_hash(email), now))
+            self._conn.execute("INSERT INTO job_starts VALUES (?, ?)", (_quota_hash(email), now))
             self._conn.execute("INSERT INTO daily_jobs (day, n) VALUES (?, 1) "
                                "ON CONFLICT(day) DO UPDATE SET n = n + 1", (tr_day(now),))
 
@@ -390,8 +405,17 @@ class Database:
         now = time.time()
         with self._lock:
             self._conn.executemany(
-                "INSERT INTO training (features, label, ruleset, created_at) "
+                "INSERT OR IGNORE INTO training (features, label, ruleset, created_at) "
                 "VALUES (?, ?, ?, ?)", [(f, lb, rs, now) for f, lb, rs in rows])
+
+    def trim_training(self, keep_rows: int, keep_days: int) -> None:
+        """Eğitim tablosunu sınırlar: süresi dolanlar ve en yeni `keep_rows` dışındakiler gider."""
+        with self._lock:
+            self._conn.execute("DELETE FROM training WHERE created_at < ?",
+                               (time.time() - keep_days * 86400,))
+            self._conn.execute("DELETE FROM training WHERE rowid NOT IN "
+                               "(SELECT rowid FROM training ORDER BY rowid DESC LIMIT ?)",
+                               (keep_rows,))
 
     def add_finding_counts(self, ruleset: str, counts: dict[str, int]) -> None:
         """Anonim bulgu sayacı: rule_id → adet. Kimlik ya da metin taşımaz."""
@@ -453,8 +477,22 @@ class Database:
 
     def jobs_since(self, email: str, since: float) -> int:
         row = self.execute("SELECT COUNT(*) FROM job_starts WHERE email_hash=? AND created_at>=?",
-                           (_email_hash(email), since)).fetchone()
+                           (_quota_hash(email), since)).fetchone()
         return int(row[0])
+
+    def jobs_started_since(self, since: float) -> int:
+        """Site genelinde başlatılan denetim sayısı (rapor silinse de düşmez)."""
+        row = self.execute("SELECT COUNT(*) FROM job_starts WHERE created_at>=?",
+                           (since,)).fetchone()
+        return int(row[0])
+
+    def used_bytes(self) -> int:
+        """Dolu veri boyutu. Boş sayfalar sayılmaz: silinen raporlar yeri geri kazandırır."""
+        with self._lock:
+            pages = self._conn.execute("PRAGMA page_count").fetchone()[0]
+            free = self._conn.execute("PRAGMA freelist_count").fetchone()[0]
+            size = self._conn.execute("PRAGMA page_size").fetchone()[0]
+        return int((pages - free) * size)
 
     def delete_job(self, job_id: str) -> None:
         with self._lock:
@@ -675,7 +713,7 @@ class Database:
             self._conn.execute("DELETE FROM jobs WHERE email=?", (email,))
             self._conn.execute("DELETE FROM sessions WHERE email=?", (email,))
             self._conn.execute("DELETE FROM login_tokens WHERE email=?", (email,))
-            self._conn.execute("DELETE FROM job_starts WHERE email_hash=?", (_email_hash(email),))
+            self._conn.execute("DELETE FROM job_starts WHERE email_hash=?", (_quota_hash(email),))
             self._conn.execute("DELETE FROM suggestions WHERE LOWER(email)=?", (email,))
             self._conn.execute("DELETE FROM users WHERE email=?", (email,))
             self._conn.execute("UPDATE admin_log SET target=? WHERE target=?",

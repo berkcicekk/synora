@@ -286,6 +286,8 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   **Cloudflare istisnası:** tünel kurulumunda TLS Cloudflare'de sonlanır; dosya, giriş bağlantısı ve oturum
   bilgisi orada açık hâlde işlenir. Aydınlatma metni bunu söyler; pilot kararı için bkz. §13.
 - KVKK aydınlatma metni ve açık rıza (rol düzeltmelerinin eğitim verisi olarak kullanımı için ayrı onay).
+  Eğitim satırları kimliksizdir: aynı satır bir kez yazılır, yeniden denetim başına ≤ 500, toplam ≤ 100.000
+  satır, en çok 365 gün. Etiketler güvenilmez girdidir; F6'da eğitimden önce süzülmelidir.
 - Giriş (`/giris`) ve kayıt (`/kayit`) ayrı sayfalar; ikisi de parolasız bağlantı gönderir. Kayıt,
   aydınlatma metni (`/aydinlatma`, **taslak**) onayı ister. Kayıt formunu başkası doldurmuş olabileceği
   için onay kutusu bağlantının açıldığı onay sayfasında yeniden işaretlenir; onay (metin sürümü + zaman)
@@ -294,7 +296,9 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
 - Kimlik doğrulama pilotta: üniversite e-postasına tek kullanımlık giriş bağlantısı `[KARAR?]`
   (ileride enstitünün SSO sistemi).
 - Web'e özel ek sınırlar: kullanıcı başına eşzamanlı iş ≤ 2 (kopya üretimi dahil), günlük iş ≤ 20 (rapor
-  silinse de düşmez), sunucu genelinde aynı anda en fazla `workers` kopya, kuyrukta en fazla 20 iş; formlar
+  silinse de düşmez; `ali+1@` ve `ali@` tek kişi sayılır), site genelinde günde en çok 1000 yeni iş ve
+  veritabanı ≤ 2 GB (aşılınca yeni iş 503, temizlik sürer), rol seçimi ve geri bildirim hesap başına saatte
+  600, sunucu genelinde aynı anda en fazla `workers` kopya, kuyrukta en fazla 20 iş; formlar
   yalnızca URL kodlu ≤ 8 KB. CSRF koruması, yükleme yalnızca
   `.docx` uzantısı + içerik doğrulaması (A1). Aynı anda gövdesi okunan yükleme (yeni denetim +
   yeniden denetim) sunucu genelinde ≤ `max_uploads_in_flight` (4), kullanıcı başına ≤ 2; fazlası

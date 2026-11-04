@@ -222,7 +222,7 @@ class JobRunner:
             return
         if result["training"] and job.collect:
             # F6: yalnızca açık rıza işaretli işlerde; satırlar metinsiz ve iş kimliksizdir.
-            self.db.add_training(result["training"])
+            self.db.add_training(result["training"][:self.settings.training_rows_per_job])
         if result["stats"]:
             # Anonim bulgu sayacı ("en sık yapılan hatalar"); kimlik ya da metin yok.
             rule_counts = json.loads(result["stats"])["rule_counts"]
@@ -268,6 +268,8 @@ class JobRunner:
         while not self._stop.wait(600):
             try:
                 removed = self.db.purge(self.settings.retention_hours * 3600)
+                self.db.trim_training(self.settings.training_keep_rows,
+                                      self.settings.training_keep_days)
             except Exception:
                 # Geçici hata (kilit, dolu disk) temizliği kalıcı durdurmasın: raporlar
                 # süresinde silinmeli. Bir sonraki turda yeniden denenir.
