@@ -42,7 +42,7 @@ def test_filter_counts_use_the_same_unit_as_the_summary(client: TestClient,
     job_id = upload(client, csrf, bad_thesis())
     wait_done(client, job_id)
     html = client.get(f"/jobs/{job_id}").text
-    tally = re.search(r"<strong>(\d+) hata, (\d+) uyarı\.</strong>", html)
+    tally = re.search(r"<strong>(\d+) hata, (\d+) uyarı</strong>", html)
     assert tally
     errors, warnings = int(tally.group(1)), int(tally.group(2))
 
@@ -51,8 +51,8 @@ def test_filter_counts_use_the_same_unit_as_the_summary(client: TestClient,
         return int(m.group(1)) if m else 0
 
     assert fc("error") == errors and fc("warning") == warnings
-    fixable = re.search(r'data-apply-filter="fixable"[^>]*>\s*<span class="b-num">(\d+)', html)
-    assert fixable and fc("fixable") == int(fixable.group(1))
+    fixable = re.search(r'data-apply-filter="auto"[^>]*>\s*<span class="b-num">(\d+)', html)
+    assert fixable and fc("auto") == int(fixable.group(1))
 
 
 def test_card_tap_on_phone_does_not_jump_to_the_page_view() -> None:
@@ -76,7 +76,7 @@ def test_role_select_is_touch_sized_on_phones() -> None:
 
 def test_block_label_keeps_heading_text() -> None:
     job = (TEMPLATES / "job.html").read_text(encoding="utf-8")
-    assert 'aria-label="{% if b.text %}{{ b.text }}: {% endif %}{{ b.cards|length }} bulgu"' in job
+    assert 'aria-label="{% if b.text %}{{ b.text }}: {% endif %}Yorum {{ first.n }}' in job
 
 
 def test_delete_confirmation_can_be_cancelled() -> None:

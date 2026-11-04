@@ -250,6 +250,11 @@ yeni renk/yarıçap/gölge değeri oraya token olarak eklenir, bileşene ham de�
   ölçü işaretleme); giriş, yükleme ve rapor ekranları kısa ve sade. Hareket `transform`/`opacity`
   ile yapılır; `prefers-reduced-motion` altında 3D ve girişler kapanır (`.motion` sınıfı eklenmez).
 - Tasarım kaynakları (`payper-tasarim/`, repoda değil) yalnızca referanstır; çelişkide bu bölüm geçerli.
+- **Rapor ekranı istisnası** (`body.editor`, 2026-11-04): akademik, basılı rapor görünümü. Kırık beyaz zemin,
+  mor yalnız etkileşim ve seçili durumda; düğme ve kart yarıçapı 4–6 px (hap yalnız süzgeç ve etiketlerde);
+  mono yok; gölge yalnız yüzen pencerede; durumlar yazı ve şekille de ayrılır. Tokenlar `--rp-*`, `--fs-*`,
+  `--sp-*`. Panel, yükleme ve tanıtım sayfası yukarıdaki kimlikte kalır. Sayıların tek kaynağı
+  `report_counts`: "Kontrol edin" paragraf birimidir, bulgu toplamına katılmaz.
 
 1. **Yükle:** Tek ekran, adım adım: önce tez, ardından kılavuz kartı renklenir ve odaklanır, seçim sonrası
    başlatma düğmesi öne çıkar. Kılavuz seçimi yerel `select` üzerine aranabilir listedir (JS'siz select kalır).

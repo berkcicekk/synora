@@ -321,6 +321,11 @@ def _toc_freshness(doc: DocModel, roles: dict[str, RoleDecision]) -> Iterator[Fi
                       f"{len(missing)} başlık dizinde yok", False)
 
 
+def section_key(text: str) -> str:
+    """Başlık karşılaştırma anahtarı: numara öneki atılır, Türkçe küçük harfe çevrilir."""
+    return _tr_lower(_PREFIX_RE.sub("", text).strip())
+
+
 def _required_sections(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
     """Kılavuzun zorunlu saydığı bölümler belgede var mı? Yalnızca bölüm ADLARI (kural
     setinden) raporlanır; tez metni rapora girmez."""
@@ -332,7 +337,7 @@ def _required_sections(doc: DocModel, rules: Ruleset) -> Iterator[Finding]:
             continue
         text = p.text.strip()
         if text and len(text) <= 80:  # bölüm başlığı olabilecek kısa satırlar
-            headings.append(_tr_lower(_PREFIX_RE.sub("", text).strip()))
+            headings.append(section_key(text))
     for name in rules.required_sections:
         # "SONUÇLAR|SONUÇ": kılavuzun kabul ettiği alternatif yazımlar; raporda ilki gösterilir.
         alts = [a.strip() for a in name.split("|") if a.strip()]

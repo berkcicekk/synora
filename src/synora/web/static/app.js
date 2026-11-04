@@ -491,43 +491,66 @@
   }
 
   // --- Bulgu süzme --------------------------------------------------------------------------
-  const filters = document.querySelectorAll(".filter");
-  filters.forEach((btn) => btn.addEventListener("click", () => {
-    filters.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
-    const f = btn.dataset.filter;
-    document.querySelectorAll(".card").forEach((card) => {
-      const show = f === "all"
-        || (f === "fixable" && card.dataset.fixable === "yes")
-        || (f === "manual" && card.dataset.fixable === "no")
-        || card.dataset.severity === f;
-      card.hidden = !show;
-    });
+  // Sayılar sunucudan gelir (report_counts); burada yalnızca görünürlük değişir.
+  const filters = [...document.querySelectorAll(".filter")];
+  const checkList = document.getElementById("check-list");
+  const onlyNote = document.getElementById("filter-only");
+  const filterEmpty = document.getElementById("filter-empty");
+  const stepPosLabel = document.getElementById("step-pos");
+  const applyCards = (show, dimBlock) => {
+    document.querySelectorAll(".card").forEach((card) => { card.hidden = !show(card); });
     const shown = document.querySelectorAll(".card:not([hidden])").length;
-    const empty = document.getElementById("filter-empty");
-    if (empty) empty.hidden = shown > 0;
-    const pos = document.getElementById("step-pos");
-    if (pos) pos.textContent = shown + " yorum";
-    // Editör: görünür yorumu olmayan paragrafları soluklaştır.
+    if (stepPosLabel) stepPosLabel.textContent = shown + " yorum";
     const visible = new Set([...document.querySelectorAll(".comment:not([hidden])")].map((c) => c.dataset.card));
+    // Editör: görünür yorumu olmayan paragrafları soluklaştır.
     document.querySelectorAll(".blk[data-cards]").forEach((blk) => {
       const cards = blk.dataset.cards.split(" ").filter(Boolean);
-      blk.classList.toggle("dim", f !== "all" && cards.length > 0 && !cards.some((n) => visible.has(n)));
+      blk.classList.toggle("dim", dimBlock(blk, cards, visible));
     });
+    return shown;
+  };
+  const FILTER_TESTS = {
+    all: () => true,
+    auto: (card) => card.dataset.fixable === "yes",
+    manual: (card) => card.dataset.fixable === "no",
+    error: (card) => card.dataset.severity === "error",
+    warning: (card) => card.dataset.severity === "warning",
+    check: () => false, // bulgu değil, paragraf: aşağıdaki liste gösterilir
+  };
+  const setFilter = (f) => {
+    filters.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === f)));
+    if (onlyNote) onlyNote.hidden = true;
+    if (checkList) checkList.hidden = f !== "check";
+    const dim = f === "check"
+      ? (blk) => !blk.classList.contains("is-unsure")
+      : (blk, cards, visible) => f !== "all" && cards.length > 0 && !cards.some((n) => visible.has(n));
+    const shown = applyCards(FILTER_TESTS[f], dim);
+    if (filterEmpty) filterEmpty.hidden = shown > 0 || f === "check";
+  };
+  filters.forEach((btn) => btn.addEventListener("click", () => setFilter(btn.dataset.filter)));
+  const showAll = () => { if (filters.length) setFilter("all"); };
+  document.querySelectorAll("[data-filter-reset]").forEach((btn) => btn.addEventListener("click", () => {
+    showAll();
+    const all = filters.find((b) => b.dataset.filter === "all");
+    if (all) all.focus();
   }));
-
-  // Özet kutuları: ilgili süzgeci uygular; "Kontrol edin" ilk belirsiz paragrafa götürür.
+  // Özet şeridi: ilgili süzgeci uygular.
   document.querySelectorAll("[data-apply-filter]").forEach((btn) => btn.addEventListener("click", () => {
-    const target = document.querySelector('.filter[data-filter="' + btn.dataset.applyFilter + '"]');
+    const target = filters.find((b) => b.dataset.filter === btn.dataset.applyFilter);
     if (target) { target.click(); target.focus(); }
   }));
-  const jumpUnsure = document.querySelector("[data-jump-unsure]");
-  if (jumpUnsure) jumpUnsure.addEventListener("click", () => {
-    const first = document.querySelector(".blk.is-unsure");
-    if (!first) return;
-    first.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-    const sel = first.querySelector("select");
-    if (sel) sel.focus({ preventScroll: true });
-  });
+  // Bir satırın "+N" rozeti: yalnızca o satırın yorumları.
+  const showOnly = (numbers) => {
+    filters.forEach((b) => b.setAttribute("aria-pressed", "false"));
+    if (checkList) checkList.hidden = true;
+    if (filterEmpty) filterEmpty.hidden = true;
+    const wanted = new Set(numbers);
+    applyCards((card) => wanted.has(card.dataset.card), () => false);
+    if (onlyNote) {
+      onlyNote.hidden = false;
+      document.getElementById("filter-only-text").textContent = "Bu satırın " + wanted.size + " yorumu gösteriliyor.";
+    }
+  };
 
   // --- Editör: yorum ↔ paragraf ------------------------------------------------------------
   const canvas = document.querySelector(".pane-canvas");
@@ -541,7 +564,10 @@
         el.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
         return;
       }
-      const top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - 80;
+      // Yapışkan "Bulgular" başlığının altında kalmasın.
+      const head = pane.querySelector(".pane-head");
+      const gap = head ? head.offsetHeight + 12 : 80;
+      const top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - gap;
       pane.scrollTo({ top, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     };
     // Tek sütunda sayfa görünümü yorumların altında kalır; karta dokununca oraya kaydırılmaz.
@@ -582,18 +608,44 @@
         else if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); step(e.key === "ArrowDown" ? 1 : -1); }
       });
     });
+    // Belgedeki işaret: ilgili yorumu açar; süzgeç gizliyorsa önce süzgeci kaldırır.
+    const openCard = (number, blk) => {
+      const comment = document.getElementById("c" + number);
+      if (!comment) return;
+      if (comment.hidden) showAll();
+      activateCard(comment, false);
+      if (blk) blk.classList.add("active");
+      scrollInto(commentsPane, comment);
+    };
     document.querySelectorAll(".blk[data-cards]").forEach((blk) => {
-      const open = () => {
-        const first = blk.dataset.cards.split(" ").filter(Boolean)[0];
-        const comment = first && document.getElementById("c" + first);
-        if (!comment) return;
-        activateCard(comment, false);
-        blk.classList.add("active");
-        scrollInto(commentsPane, comment);
-      };
-      if (!blk.dataset.cards) return;
-      blk.addEventListener("click", open);
-      blk.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      const first = blk.dataset.cards.split(" ").filter(Boolean)[0];
+      if (first) blk.addEventListener("click", () => openCard(first, blk));
+    });
+    document.querySelectorAll("[data-open-card]").forEach((pin) => pin.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openCard(pin.dataset.openCard, pin.closest(".blk"));
+      document.getElementById("c" + pin.dataset.openCard)?.focus({ preventScroll: true });
+    }));
+    document.querySelectorAll("[data-only-cards]").forEach((more) => more.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showOnly(more.dataset.onlyCards.split(" "));
+      openCard(more.dataset.onlyCards.split(" ")[0], more.closest(".blk"));
+    }));
+    document.querySelectorAll("[data-jump-block]").forEach((btn) => btn.addEventListener("click", () => {
+      const blk = document.getElementById("b" + btn.dataset.jumpBlock);
+      if (!blk) return;
+      scrollInto(canvas, blk);
+      const sel = blk.querySelector("select");
+      if (sel) sel.focus({ preventScroll: true });
+    }));
+    // Klavye: J/K bulgular arasında gezer. Yalnızca odak rapordayken; form alanlarında çalışmaz.
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key !== "j" && e.key !== "k") return;
+      const el = document.activeElement;
+      if (!el || !el.closest(".workspace") || el.matches("input, select, textarea")) return;
+      e.preventDefault();
+      step(e.key === "j" ? 1 : -1);
     });
     document.querySelectorAll("[data-jump]").forEach((a) => a.addEventListener("click", (e) => {
       const target = document.getElementById("b" + a.dataset.jump);
@@ -603,6 +655,25 @@
       a.classList.add("current");
       scrollInto(canvas, target);
     }));
+  }
+
+  // --- İsteğe bağlı metin görünümü kutusu: kapatma tercihi ---------------------------------
+  const docviewBox = document.getElementById("docview");
+  const docviewClose = document.querySelector("[data-docview-dismiss]");
+  const docviewShow = document.querySelector("[data-docview-show]");
+  if (docviewBox && docviewClose && docviewShow) {
+    const KEY = "sontez.docview.dismissed";
+    const remember = (on) => {
+      try { if (on) localStorage.setItem(KEY, "1"); else localStorage.removeItem(KEY); } catch (err) { /* depo kapalı */ }
+    };
+    const setDismissed = (on) => { docviewBox.hidden = on; docviewShow.hidden = !on; };
+    let dismissed = false;
+    try { dismissed = localStorage.getItem(KEY) === "1"; } catch (err) { /* depo kapalı */ }
+    setDismissed(dismissed);
+    docviewClose.addEventListener("click", () => { remember(true); setDismissed(true); docviewShow.focus(); });
+    docviewShow.addEventListener("click", () => { remember(false); setDismissed(false); });
+    // Dosya tuvale bırakılarak açıldıysa kutu görünsün (durum satırı orada).
+    document.addEventListener("sontez:docfile", () => setDismissed(false));
   }
 
   // --- Düzeltilmiş / yorumlu kopya --------------------------------------------------------
@@ -810,6 +881,10 @@
       sstatus.classList.toggle("error", Boolean(isError));
     };
     openBtn.hidden = false; // JS yoksa düğme hiç görünmez (dialog JS'siz açılamaz)
+    document.querySelectorAll("[data-open-suggest]").forEach((link) => {
+      link.hidden = false;
+      link.addEventListener("click", () => openBtn.click());
+    });
     openBtn.addEventListener("click", () => {
       ssay("");
       suggestDialog.showModal();

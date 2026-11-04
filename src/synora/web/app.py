@@ -34,7 +34,7 @@ from pydantic import ValidationError
 from starlette.datastructures import FormData, UploadFile
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from synora.check import USER_ROLES
+from synora.check import USER_ROLES, section_key
 from synora.errors import ErrorCode
 from synora.latex import build_zip
 from synora.log import log_event
@@ -302,9 +302,64 @@ def pending_roles(job: Job, report: dict[str, Any]) -> dict[str, str]:
     return dict(json.loads(job.user_roles)) if job.user_roles is not None else applied_roles(report)
 
 
-def report_view(report: dict[str, Any]) -> dict[str, Any]:
-    """Rapor JSON'unu ekran için gruplar: aynı kural + aynı değerler tek kart."""
+MISSING_SECTION_RULE = "document.missing_section"
+OUTLINE_RANK = {"section": 0, "h1": 1, "missing": 1, "h2": 2, "h3": 3}
+
+
+def report_counts(summary: dict[str, int], cards: list[dict[str, Any]]) -> dict[str, int]:
+    """Rapor ekranındaki tüm sayıların tek kaynağı; şablon ve betik başka sayı hesaplamaz.
+
+    Bulgu sayıları özetten gelir (çok büyük raporda listeye girmeyenler de dahil). `check`
+    bulgu değil, türü belirlenemeyen paragraf sayısıdır; bu yüzden `total`a katılmaz.
+    """
+    errors, warnings = summary.get("errors", 0), summary.get("warnings", 0)
+    total, auto = errors + warnings, summary.get("fixable", 0)
+    return {"errors": errors, "warnings": warnings, "total": total, "auto": auto,
+            "manual": max(total - auto, 0), "check": summary.get("unknown_paragraphs") or 0,
+            "comments": len(cards)}
+
+
+def _section_label(name: str) -> str:
+    """"ÖNSÖZ" → "Önsöz": kılavuzdaki büyük harfli bölüm adı cümle düzenine."""
+    lower = section_key(name)
+    first = {"i": "İ", "ı": "I"}.get(lower[:1], lower[:1].upper())
+    return first + lower[1:]
+
+
+def _missing_position(name: str, required: tuple[str, ...], blocks: list[dict[str, Any]]) -> int:
+    """Eksik bölümün beklenen yeri: kural setindeki önceki bölümün bittiği yer, yoksa başı."""
+    alternatives = [[section_key(a) for a in r.split("|") if a.strip()] for r in required]
+    wanted = section_key(name)
+    index = next((k for k, alts in enumerate(alternatives) if wanted in alts), 0)
+    headings = [(i, b) for i, b in enumerate(blocks) if b["kind"] in OUTLINE_RANK]
+    for alts in reversed(alternatives[:index]):
+        for n, (_, b) in enumerate(headings):
+            text = section_key(b.get("text") or "")
+            if text and any(text.startswith(a) for a in alts):
+                rank = OUTLINE_RANK[b["kind"]]
+                later = (i for i, h in headings[n + 1:] if OUTLINE_RANK[h["kind"]] <= rank)
+                return next(later, len(blocks))
+    # Belgenin başı: ilk bölüm işaretinin altında, böylece o bölümün toplamına girer.
+    return 1 if blocks and blocks[0]["kind"] == "section" else 0
+
+
+def _missing_sections(findings: list[dict[str, Any]], blocks: list[dict[str, Any]],
+                      required: tuple[str, ...]) -> list[dict[str, Any]]:
+    names = [f["expected"] for f in findings if f["rule_id"] == MISSING_SECTION_RULE]
+    return [{"id": f"m{k}", "name": name, "label": _section_label(name),
+             "at": _missing_position(name, required, blocks)} for k, name in enumerate(names)]
+
+
+def report_view(report: dict[str, Any], required: tuple[str, ...] = ()) -> dict[str, Any]:
+    """Rapor JSON'unu ekran için gruplar: aynı kural + aynı değerler tek kart.
+
+    `required`: kural setinin zorunlu bölümleri; eksik bölümün belgedeki yeri bundan bulunur.
+    """
+    blocks: list[dict[str, Any]] = [dict(b) for b in report.get("document") or []]
+    missing = _missing_sections(report["findings"], blocks, required)
+    missing_by_name = {m["name"]: m for m in missing}
     groups: dict[tuple[str, str, str], dict[str, Any]] = {}
+    per_block: dict[int, int] = {}
     for f in report["findings"]:
         key = (f["rule_id"], f["expected"], f["actual"])
         g = groups.get(key)
@@ -321,6 +376,8 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
                 "sections": set(),
                 "count": 0,
                 "omitted": 0,
+                "missing": missing_by_name.get(f["expected"])
+                if f["rule_id"] == MISSING_SECTION_RULE else None,
             }
         omitted = f.get("omitted", 0)  # raporda tutulmayan aynı türden bulgular
         g["count"] += 1 + omitted
@@ -330,33 +387,53 @@ def report_view(report: dict[str, Any]) -> dict[str, Any]:
         elif f.get("section_index") is not None:
             g["sections"].add(f["section_index"] + 1)
         g.setdefault("blocks", set())
-        if f.get("block") is not None:
+        # Eksik bölümün belgede satırı yok: yerini yer tutucu gösterir, ilk bloğa sayılmaz.
+        if f.get("block") is not None and f["rule_id"] != MISSING_SECTION_RULE:
             g["blocks"].add(f["block"])
+            per_block[f["block"]] = per_block.get(f["block"], 0) + 1 + omitted
     order = {"error": 0, "warning": 1, "info": 2}
+
+    def position(g: dict[str, Any]) -> float:
+        if g["missing"]:
+            return float(g["missing"]["at"]) - .5  # yer tutucu, önüne geldiği bloğun önünde
+        return float(min(g["blocks"])) if g["blocks"] else -1.0
+
     # Editörde yorumlar belge sırasını izler (Word'ün gözden geçirme bölmesi gibi).
-    cards = sorted(
-        groups.values(),
-        key=lambda g: (min(g["blocks"]) if g["blocks"] else -1, order.get(g["severity"], 9)),
-    )
-    blocks: list[dict[str, Any]] = [dict(b) for b in report.get("document") or []]
+    cards = sorted(groups.values(), key=lambda g: (position(g), order.get(g["severity"], 9)))
     for b in blocks:
-        b["cards"], b["sev"] = [], None
+        b["cards"], b["sev"], b["missing"] = [], None, []
     for n, c in enumerate(cards, start=1):
         c["n"] = n
         c["sections"] = sorted(c["sections"])
         c["blocks"] = sorted(c["blocks"])
+        c["targets"] = [str(i) for i in c["blocks"]]
+        if c["missing"]:
+            c["missing"]["card"] = n
+            c["targets"].append(c["missing"]["id"])
         for i in c["blocks"]:
             if 0 <= i < len(blocks):
                 blocks[i]["cards"].append(n)
                 if blocks[i]["sev"] != "error":
                     blocks[i]["sev"] = c["severity"]
+    for m in missing:
+        if m["at"] < len(blocks):
+            blocks[m["at"]]["missing"].append(m)
+    last_heading = ""
+    check_blocks = []
+    for i, b in enumerate(blocks):
+        if b["kind"] in ("h1", "h2", "h3"):
+            last_heading = b.get("text") or last_heading
+        if "pid" in b:
+            check_blocks.append({"i": i, "under": last_heading})
     return {"summary": report["summary"], "ruleset": report["ruleset"], "cards": cards,
-            "finding_count": sum(c["count"] for c in cards),
+            "counts": report_counts(report["summary"], cards),
+            "finding_count": sum(c["count"] for c in cards),  # listedeki bulgular (sınır denetimi)
             "dropped_findings": report.get("dropped_findings", 0),
-            "blocks": blocks, "outline": _outline(blocks),
+            "blocks": blocks, "outline": _outline(blocks, per_block, missing),
+            "missing_tail": [m for m in missing if m["at"] >= len(blocks)],
             "role_choices": [(r, _role_name(r)) for r in ROLE_CHOICES],
             "checked": report.get("checked_rules") or [],  # eski raporlarda alan yok
-            "editable": sum(1 for b in blocks if "pid" in b)}
+            "check_blocks": check_blocks, "editable": len(check_blocks)}
 
 
 def finding_exists(report: dict[str, Any], rule_id: str, para_id: str) -> bool:
@@ -366,16 +443,29 @@ def finding_exists(report: dict[str, Any], rule_id: str, para_id: str) -> bool:
                for f in report["findings"])
 
 
-def _outline(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Sol bölme: bölümler ve başlıklar; her girdinin kapsadığı bloklardaki bulgu sayısı."""
+def _outline(blocks: list[dict[str, Any]], per_block: dict[int, int],
+             missing: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Sol bölme: bölümler, başlıklar ve eksik bölümler. Rozet bulgu sayısıdır; bir girdinin
+    toplamı kendi kısmındaki bulgular + altındaki girdilerin toplamıdır."""
     entries: list[dict[str, Any]] = []
-    for i, b in enumerate(blocks):
-        if b["kind"] in ("h1", "h2", "h3", "section"):
-            entries.append({"i": i, "kind": b["kind"],
+    for at in range(len(blocks) + 1):
+        entries.extend({"i": m["id"], "at": at, "kind": "missing", "own": 1,
+                        "text": f"Eksik: {m['label']}"} for m in missing if m["at"] == at)
+        if at < len(blocks) and blocks[at]["kind"] in OUTLINE_RANK:
+            b = blocks[at]
+            entries.append({"i": at, "at": at, "kind": b["kind"], "own": 0,
                             "text": b.get("text") or f"Bölüm {b.get('n')}"})
     for k, e in enumerate(entries):
-        end = entries[k + 1]["i"] if k + 1 < len(entries) else len(blocks)
-        e["count"] = len({n for b in blocks[e["i"]:end] for n in b["cards"]})
+        if e["kind"] != "missing":
+            end = next((x["at"] for x in entries[k + 1:] if x["kind"] != "missing"), len(blocks))
+            e["own"] = sum(per_block.get(i, 0) for i in range(e["at"], end))
+    for k, e in enumerate(entries):
+        rank = OUTLINE_RANK[e["kind"]]
+        e["count"] = e["own"]
+        for later in entries[k + 1:]:
+            if OUTLINE_RANK[later["kind"]] <= rank:
+                break
+            e["count"] += later["own"]
     return entries
 
 
@@ -981,17 +1071,18 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         Kullanıcı girdisi yok; sonuç deterministik olduğundan ilk istekte üretilip
         bellekte tutulur. Rol düzenleme ve kopya üretimi kapalıdır.
         """
+        default = rulesets[settings.default_ruleset]
         if "report" not in demo_state:
             sample = (HERE / "static" / "ornek-tez.docx").read_bytes()
-            default = rulesets[settings.default_ruleset]
             outcome = run_pipeline(sample, str(default.path), job_id="demo")
             if outcome["report"] is None:  # pragma: no cover - sentetik belge hep geçer
                 raise HTTPException(503, SERVER_BUSY)
             demo_state["report"] = json.loads(outcome["report"])
-        view = report_view(demo_state["report"])
+        view = report_view(demo_state["report"], default.rules.required_sections)
         view["pending"] = {}
         view["roles_changed"] = False
         view["editable"] = 0
+        view["check_blocks"] = []
         for b in view["blocks"]:
             b.pop("pid", None)  # rol düzenleme demo'da kapalı
         job = Job(id="demo", email="", ruleset=settings.default_ruleset, status="done",
@@ -1395,7 +1486,9 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             return RedirectResponse("/", status_code=303)
         job = own_job(user, job_id)
         report = json.loads(job.report) if job.report else None
-        view = report_view(report) if report else None
+        info = rulesets.get(job.ruleset)
+        required = info.rules.required_sections if info else ()
+        view = report_view(report, required) if report else None
         if report and view:
             view["pending"] = pending_roles(job, report)
             view["roles_changed"] = view["pending"] != applied_roles(report)

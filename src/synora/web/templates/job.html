@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_marks.html" import arrow, mark %}
+{% from "_marks.html" import arrow, download, mark %}
 {% from "_steps.html" import steps %}
 {% from "_howto.html" import howto %}
 {% set demo = demo | default(false) %}
@@ -8,7 +8,7 @@
 
 {% block topbar %}
 {% if job.status == "done" %}
-{% set s = view.summary %}
+{% set n = view.counts %}
 {# demo'da id "outputs" olmaz: app.js'teki kopya üretim kodu hiç devreye girmez #}
 <header class="toolbar" {% if demo %}id="demo-toolbar"{% else %}id="outputs" data-csrf="{{ user.csrf }}" data-job="{{ job.id }}" data-max="{{ max_bytes }}"{% endif %}>
   <div class="toolbar-left">
@@ -19,18 +19,17 @@
     </div>
   </div>
   <div class="toolbar-mid" aria-label="Özet">
-    <span class="tally"><strong>{{ s.errors }} hata, {{ s.warnings }} uyarı.</strong></span>
-    <span class="chip">{{ s.fixable }} düzeltilebilir</span>
-    <span class="chip ghost">{{ view.ruleset.name }}</span>
+    <span class="tally"><strong>{{ n.errors }} hata, {{ n.warnings }} uyarı</strong></span>
+    <span class="doc-ruleset" tabindex="0" title="{{ view.ruleset.name }}">{{ view.ruleset.name }}</span>
   </div>
   <div class="toolbar-right">
     {% if demo %}
     <a class="btn small primary" href="/kayit"><span class="lbl">Kendi tezinizle deneyin</span>{{ arrow() }}</a>
     {% else %}
-    {% if s.errors or s.warnings %}
-    <button type="button" class="btn small" data-output="annotated"><span class="lbl">Yorumlu kopya</span>{{ arrow() }}</button>
-    {% if s.fixable %}
-    <button type="button" class="btn small primary" data-output="fixed"><span class="lbl">Düzeltilmiş kopyayı indir</span>{{ arrow() }}</button>
+    {% if n.total %}
+    <button type="button" class="btn small" data-output="annotated"><span class="lbl">Yorumlu kopyayı indir (tüm bulgular)</span>{{ download() }}</button>
+    {% if n.auto %}
+    <button type="button" class="btn small primary" data-output="fixed"><span class="lbl">{{ n.auto }} bulguyu düzelten kopyayı indir</span>{{ download() }}</button>
     {% endif %}
     {% endif %}
     <input type="file" id="output-file" class="visually-hidden" tabindex="-1" aria-hidden="true"
@@ -45,7 +44,7 @@
     <p class="output-help" id="output-help">Dosyanızı sunucuda saklamıyoruz. Kopyayı hazırlamak için <strong>denetlediğiniz dosyayı</strong>
        yeniden seçin; metninize dokunulmadan hazırlanıp indirilir.</p>
     <div class="output-drop" id="output-drop">
-      <button type="button" class="btn small primary" id="output-choose"><span class="lbl">Dosyayı seç</span>{{ arrow() }}</button>
+      <button type="button" class="btn small primary" id="output-choose"><span class="lbl">Dosyayı seç</span></button>
       <span class="muted small">ya da buraya bırakın</span>
     </div>
     <p id="output-status" class="status" role="status" aria-live="polite"></p>
@@ -55,6 +54,13 @@
 {{ super() }}
 {% endif %}
 {% endblock %}
+
+{% macro placeholder(m) %}
+<div class="blk blk-missing has-error" id="b{{ m.id }}" data-cards="{{ m.card }}">
+  <span class="pins"><button type="button" class="pin" data-open-card="{{ m.card }}" aria-label="Yorum {{ m.card }}, Hata: Eksik bölüm, {{ m.label }}">{{ m.card }}</button></span>
+  <span class="missing-name"><b>Eksik:</b> {{ m.label }}</span>
+</div>
+{% endmacro %}
 
 {% block content %}
 {% if job.status in ("queued", "running") %}
@@ -124,6 +130,7 @@
 
 {% else %}
 {% set s = view.summary %}
+{% set n = view.counts %}
 <div class="workspace">
   <h1 class="visually-hidden">Denetim raporu · {{ job.created_at | when }}</h1>
   {# --- Sol: ana hat --- #}
@@ -143,6 +150,7 @@
     {% else %}
     <p class="muted small">Ana hat bu rapor için yok.</p>
     {% endif %}
+    <button type="button" class="linkbtn outline-suggest" data-open-suggest hidden>İstek / Öneri</button>
   </nav>
 
   {# --- Orta: sayfa tuvali --- #}
@@ -156,12 +164,13 @@
         <strong>Sentetik örnek tez açılıyor…</strong>
         <span class="muted small">Bulgular metnin üzerinde, Word'deki gibi gösterilir.</span>
         {% else %}
-        <strong>Bulguları tezinizin metni üzerinde görün.</strong>
-        <span class="muted small">Bilgisayarınızdan denetlediğiniz dosyayı seçin. Bu bir indirme değildir: dosya yalnızca bu sekmede görüntülenir, sunucuya gönderilmez.</span>
+        <strong>İsterseniz metninizi de görün (isteğe bağlı)</strong>
+        <span class="muted small">Metniniz sunucuda saklanmadığı için paragraflar çizgiyle gösterilir; başlıklar ve bulgular gerçektir. Denetlediğiniz dosyayı seçerseniz bulguları metnin üzerinde görürsünüz. Bu bir indirme değildir: dosya yalnızca bu sekmede görüntülenir, sunucuya gönderilmez.</span>
         {% endif %}
       </div>
       {% if not demo %}
-      <button type="button" class="btn small primary" id="docview-open"><span class="lbl">Dosyamı seç</span></button>
+      <button type="button" class="btn small" id="docview-open"><span class="lbl">Dosyamı seç</span></button>
+      <button type="button" class="docview-close" data-docview-dismiss aria-label="Bu bilgiyi kapat" title="Bu bilgiyi kapat">×</button>
       <input type="file" id="docview-file" class="visually-hidden" tabindex="-1" aria-hidden="true"
              accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
       {% endif %}
@@ -171,17 +180,19 @@
     <div class="canvas-legend">
       <span class="lg lg-error">Hata</span>
       <span class="lg lg-warning">Uyarı</span>
-      {% if view.editable %}<span class="lg lg-unsure">Türü belirsiz</span>{% endif %}
-      <span class="lg-note" id="legend-note">Metniniz sunucuda saklanmadığı için paragraflar çizgiyle gösterilir; başlıklar ve bulgular gerçektir.</span>
+      {% if n.check %}<span class="lg lg-unsure">Kontrol edin</span>{% endif %}
+      {% if viewable and not demo %}<button type="button" class="linkbtn" data-docview-show hidden>Metnimi de göster</button>{% endif %}
+      <span class="lg-note" id="legend-note"></span>
     </div>
     <div class="paper" lang="tr">
       {% for b in view.blocks %}
       {% set i = loop.index0 %}
+      {% for m in b.missing %}{{ placeholder(m) }}{% endfor %}
       <div class="blk blk-{{ b.kind }}{% if b.sev %} has-{{ b.sev }}{% endif %}{% if b.center %} is-center{% endif %}{% if b.pid %} is-unsure{% endif %}"
-           id="b{{ i }}" data-block="{{ i }}" data-cards="{{ b.cards|join(' ') }}"{% if b.i is defined %} data-i="{{ b.i }}"{% endif %}{% if b.cards %} tabindex="0" role="button" aria-label="{% if b.text %}{{ b.text }}: {% endif %}{{ b.cards|length }} bulgu"{% endif %}>
+           id="b{{ i }}" data-block="{{ i }}" data-cards="{{ b.cards|join(' ') }}"{% if b.i is defined %} data-i="{{ b.i }}"{% endif %}>
         {% if b.pid %}
         <label class="role-pick">
-          <span>{{ "Paragraf türü" if b.pid in view.pending else "Türü belirsiz" }}</span>
+          <span>{{ "Paragraf türü" if b.pid in view.pending else "Kontrol edin" }}</span>
           <select data-pid="{{ b.pid }}">
             <option value="">Seçin…</option>
             {% for value, name in view.role_choices %}
@@ -190,7 +201,11 @@
           </select>
         </label>
         {% endif %}
-        {% if b.cards %}<span class="pins" aria-hidden="true"><span class="pin">{{ b.cards[0] }}</span>{% if b.cards|length > 1 %}<span class="pin more">+{{ b.cards|length - 1 }}</span>{% endif %}</span>{% endif %}
+        {% if b.cards %}
+        {% set first = view.cards[b.cards[0] - 1] %}
+        {% set others = b.cards|length - 1 %}
+        <span class="pins"><button type="button" class="pin" data-open-card="{{ first.n }}" aria-label="{% if b.text %}{{ b.text }}: {% endif %}Yorum {{ first.n }}, {{ first.severity_name }}: {{ first.message }}">{{ first.n }}</button>{% if others %}<button type="button" class="pin more" data-only-cards="{{ b.cards|join(' ') }}" aria-label="Bu satırda {{ others }} bulgu daha var; bu satırın yorumlarını göster" title="Bu satırda {{ others }} bulgu daha var">+{{ others }}</button>{% endif %}</span>
+        {% endif %}
         {% if b.kind in ("h1", "h2", "h3") %}
           <span class="blk-text">{{ b.text }}</span>
         {% elif b.kind == "para" %}
@@ -208,70 +223,69 @@
         {% elif b.kind == "section" %}
           <span class="marker">Bölüm {{ b.n }}{% if b.numbering %} · sayfa no: {{ {"decimal": "1, 2, 3", "lowerRoman": "i, ii, iii", "upperRoman": "I, II, III"}.get(b.numbering, b.numbering) }}{% endif %}</span>
         {% elif b.kind == "pagebreak" %}
-          <span class="marker">sayfa sonu</span>
+          <span class="marker">Sayfa sonu</span>
         {% elif b.kind == "notes" %}
           <span class="marker">Dipnotlar ({{ b.count }})</span>
         {% elif b.kind == "margins" %}
           <span class="marker">Üst ve altbilgiler</span>
         {% endif %}
+        {% if b.cards %}<span class="blk-note" title="{{ first.message }}"><b>{{ first.severity_name }}:</b> {{ first.message }}</span>{% endif %}
       </div>
       {% else %}
       <p class="muted small">Bu rapor için belge görünümü gösterilmiyor. Yorumlar sağda.</p>
       {% endfor %}
+      {% for m in view.missing_tail %}{{ placeholder(m) }}{% endfor %}
     </div>
   </section>
 
-  {# --- Sağ: yorumlar --- #}
+  {# --- Sağ: yorumlar. Bütün sayılar view.counts'tan gelir (report_counts). --- #}
   <aside class="pane pane-comments" aria-label="Bulgular">
-    {% set manual = [s.errors + s.warnings - s.fixable, 0] | max %}
-    {% set unsure = s.unknown_paragraphs or 0 %}
-    {% if view.cards or unsure %}
+    {% if n.total or n.check %}
     <section class="digest" aria-labelledby="digest-title">
       <div class="digest-top">
         <h2 id="digest-title" class="digest-title">Özet</h2>
-        <p class="digest-tally"><strong>{{ s.errors }} hata, {{ s.warnings }} uyarı.</strong>
-          {% if s.fixable %}{{ s.fixable }} tanesi otomatik düzeltilebilir.{% endif %}</p>
+        <p class="digest-tally"><strong>{{ n.errors }} hata, {{ n.warnings }} uyarı</strong></p>
       </div>
       <ul class="buckets">
-        {% if view.cards %}
+        {% if n.total %}
         <li class="bucket b-fix">
-          <button type="button" data-apply-filter="fixable"{% if not s.fixable %} disabled{% endif %}>
-            <span class="b-num">{{ s.fixable }}</span>
-            <span class="b-name">Otomatik düzeltilebilir</span>
+          <button type="button" data-apply-filter="auto"{% if not n.auto %} disabled{% endif %}>
+            <span class="b-num">{{ n.auto }}</span>
+            <span class="b-name">Otomatik</span>
             <span class="b-note">Düzeltilmiş kopyada izlenen değişiklik olarak gelir.</span>
           </button>
         </li>
         <li class="bucket b-manual">
-          <button type="button" data-apply-filter="manual"{% if not manual %} disabled{% endif %}>
-            <span class="b-num">{{ manual }}</span>
-            <span class="b-name">Sizin düzeltmeniz gereken</span>
-            <span class="b-note">Yorumlu kopyada paragrafın yanında not olarak gelir.</span>
+          <button type="button" data-apply-filter="manual"{% if not n.manual %} disabled{% endif %}>
+            <span class="b-num">{{ n.manual }}</span>
+            <span class="b-name">Elle</span>
+            <span class="b-note">Word'de sizin düzeltmeniz gerekir; yorumlu kopyada paragrafın yanında not olarak gelir.</span>
           </button>
         </li>
         {% endif %}
-        {% if unsure %}
+        {% if n.check %}
         <li class="bucket b-check">
-          <button type="button" data-jump-unsure{% if not view.editable %} disabled{% endif %}>
-            <span class="b-num">{{ unsure }}</span>
+          <button type="button" data-apply-filter="check"{% if not view.editable %} disabled{% endif %}>
+            <span class="b-num">{{ n.check }}</span>
             <span class="b-name">Kontrol edin</span>
             <span class="b-note">Türü belirlenemeyen paragraf; türünü seçip yeniden denetleyin.</span>
           </button>
         </li>
         {% endif %}
       </ul>
-      <details class="next">
+      <details class="next" open>
         <summary>Sıradaki adımlar</summary>
         <ol class="next-steps">
-          {% if s.fixable %}<li>Düzeltilmiş kopyayı indirin; Word'de <em>Gözden Geçir › Tümünü Kabul Et</em> deyin.</li>{% endif %}
-          {% if manual %}<li>Kalan {{ manual }} bulguyu Word'de düzeltin; yorumlu kopya yerlerini gösterir.</li>{% endif %}
-          {% if unsure %}<li>Kesikli çizgili paragrafların türünü seçip yeniden denetleyin.</li>{% endif %}
+          {% if n.auto %}<li>Düzeltilmiş kopyayı indirin; Word'de <em>Gözden Geçir › Tümünü Kabul Et</em> deyin.</li>{% endif %}
+          {% if n.manual %}<li>Kalan {{ n.manual }} bulguyu Word'de düzeltin; yorumlu kopya yerlerini gösterir.</li>{% endif %}
+          {% if n.check %}<li>"Kontrol edin" işaretli paragrafların türünü seçip yeniden denetleyin.</li>{% endif %}
           <li>Düzelttiğiniz dosyayı yeni bir denetimle kontrol edin.</li>
         </ol>
       </details>
     </section>
     {% endif %}
     {% if s.cover_paragraphs %}
-    <p class="info">Kapak, onay/beyan ve özgeçmiş sayfaları ({{ s.cover_paragraphs }} satır) denetlenmedi; kılavuzla elle karşılaştırın.</p>
+    <p class="notice-warn"><strong>Denetlenmedi:</strong> kapak, onay/beyan ve özgeçmiş sayfalarındaki {{ s.cover_paragraphs }} paragraf. Bunları kılavuzla elle karşılaştırın.</p>
     {% endif %}
     {% if view.editable %}
     <div class="roles-bar" id="roles-bar" data-job="{{ job.id }}"{% if not view.roles_changed %} hidden{% endif %}>
@@ -282,62 +296,70 @@
         <span>Seçimlerim, tezimin metni olmadan (yalnızca biçim ölçüleri) sınıflandırıcıyı
           geliştirmek için kullanılsın. İsteğe bağlıdır.</span>
       </label>
-      <button type="button" class="btn small primary" data-output="recheck"><span class="lbl">Yeniden denetle</span>{{ arrow() }}</button>
+      <button type="button" class="btn small primary" data-output="recheck"><span class="lbl">Yeniden denetle</span></button>
     </div>
     <p id="roles-status" class="status small" role="status" aria-live="polite"></p>
     {% endif %}
-    {% if not view.cards %}
-    {% if s.unknown_paragraphs %}
-    <p class="info">Denetlenen paragraflarda kılavuza aykırı biçim bulunamadı. Türü belirsiz
-       paragraflar denetlenmedi; türlerini seçip yeniden denetleyin.</p>
-    {% else %}
-    <p class="info ok">Kılavuza aykırı biçim bulunamadı. Tebrikler.</p>
+    {% if not n.total %}
+    <div class="report-empty">
+      <p class="empty-count">0 bulgu</p>
+      {% if n.check %}
+      <p>Denetlenen paragraflarda kılavuza aykırı biçim bulunamadı. {{ n.check }} paragraf denetlenmedi; türlerini seçip yeniden denetleyin.</p>
+      {% else %}
+      <p>Kılavuza aykırı biçim bulunamadı. Tebrikler.</p>
+      {% endif %}
+    </div>
     {% endif %}
-    {% endif %}
-    {% if view.cards %}
-    {# Süzgeç sayıları özetle aynı birimde: bulgu (bir yorum aynı türden birkaç bulguyu toplar). #}
-    {% set n_err = view.cards | selectattr("severity", "equalto", "error") | sum(attribute="count") %}
-    {% set n_warn = view.cards | selectattr("severity", "equalto", "warning") | sum(attribute="count") %}
-    {% set n_fix = view.cards | selectattr("fixable") | sum(attribute="count") %}
-    {% set n_all = view.cards | sum(attribute="count") %}
+    {% if n.total or view.editable %}
     <div class="pane-head">
+      {% if n.total %}
       <div class="pane-head-row">
-        <h2 class="pane-title">Yorumlar <span class="muted">({{ view.cards|length }})</span></h2>
-        <div class="stepper" role="group" aria-label="Yorumlar arasında gezin">
-          <button type="button" class="step-btn" data-step-card="-1" aria-label="Önceki yorum">↑</button>
-          <span class="step-pos" id="step-pos" aria-live="polite">{{ view.cards|length }} yorum</span>
-          <button type="button" class="step-btn" data-step-card="1" aria-label="Sonraki yorum">↓</button>
+        <h2 class="pane-title">Bulgular</h2>
+        <div class="stepper" role="group" aria-label="Bulgular arasında gezin">
+          <button type="button" class="step-btn" data-step-card="-1" aria-label="Önceki bulgu" title="Önceki bulgu (K)">↑</button>
+          <span class="step-pos" id="step-pos" aria-live="polite">{{ n.comments }} yorum</span>
+          <button type="button" class="step-btn" data-step-card="1" aria-label="Sonraki bulgu" title="Sonraki bulgu (J)">↓</button>
         </div>
       </div>
-      {% if view.finding_count > view.cards|length %}
-      <p class="muted small">{{ view.finding_count }} bulgu; aynı türdekiler tek yorumda toplandı.</p>
-      {% endif %}
+      <p class="muted small count-line">{{ n.total }} bulgu · {{ n.comments }} yorumda toplandı{% if n.check %} · {{ n.check }} paragraf kontrol bekliyor{% endif %}</p>
       {% if view.dropped_findings %}
       <p class="muted small">Çok fazla bulgu olduğu için {{ view.dropped_findings }} bulgu listede gösterilmiyor; üstteki hata ve uyarı sayılarına dahildir.</p>
       {% endif %}
+      {% elif n.check %}
+      <p class="muted small count-line">{{ n.check }} paragraf kontrol bekliyor</p>
+      {% endif %}
       <div class="filters" role="group" aria-label="Bulguları süz">
-        <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü <span class="fc">{{ n_all }}</span></button>
-        {% if n_err %}<button type="button" class="filter" data-filter="error" aria-pressed="false">Hatalar <span class="fc">{{ n_err }}</span></button>{% endif %}
-        {% if n_warn %}<button type="button" class="filter" data-filter="warning" aria-pressed="false">Uyarılar <span class="fc">{{ n_warn }}</span></button>{% endif %}
-        {% if n_fix %}<button type="button" class="filter" data-filter="fixable" aria-pressed="false">Düzeltilebilir <span class="fc">{{ n_fix }}</span></button>{% endif %}
-        {% if n_all - n_fix %}<button type="button" class="filter" data-filter="manual" aria-pressed="false">Elle <span class="fc">{{ n_all - n_fix }}</span></button>{% endif %}
+        <button type="button" class="filter" data-filter="all" aria-pressed="true">Tümü <span class="fc">{{ n.total }}</span></button>
+        {% if n.errors %}<button type="button" class="filter" data-filter="error" aria-pressed="false">Hatalar <span class="fc">{{ n.errors }}</span></button>{% endif %}
+        {% if n.warnings %}<button type="button" class="filter" data-filter="warning" aria-pressed="false">Uyarılar <span class="fc">{{ n.warnings }}</span></button>{% endif %}
+        {% if n.auto %}<button type="button" class="filter" data-filter="auto" aria-pressed="false">Otomatik <span class="fc">{{ n.auto }}</span></button>{% endif %}
+        {% if n.manual %}<button type="button" class="filter" data-filter="manual" aria-pressed="false">Elle <span class="fc">{{ n.manual }}</span></button>{% endif %}
+        {% if n.check and view.editable %}<button type="button" class="filter" data-filter="check" aria-pressed="false">Kontrol edin <span class="fc">{{ n.check }}</span></button>{% endif %}
       </div>
     </div>
     {% endif %}
+    {% if view.editable %}
+    <ul class="check-list" id="check-list" hidden>
+      {% for c in view.check_blocks %}
+      <li><button type="button" class="linkbtn" data-jump-block="{{ c.i }}">{{ loop.index }}. paragraf{% if c.under %} · {{ c.under }} altında{% endif %}</button></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <p class="filter-only muted small" id="filter-only" hidden><span id="filter-only-text"></span> <button type="button" class="linkbtn" data-filter-reset>Tümünü göster</button></p>
     <ol class="comments">
       {% for c in view.cards %}
-      <li class="comment card sev-{{ c.severity }}" id="c{{ c.n }}" data-card="{{ c.n }}" data-blocks="{{ c.blocks|join(' ') }}"
+      <li class="comment card sev-{{ c.severity }}" id="c{{ c.n }}" data-card="{{ c.n }}" data-blocks="{{ c.targets|join(' ') }}"
           data-severity="{{ c.severity }}" data-fixable="{{ 'yes' if c.fixable else 'no' }}" tabindex="0">
         <div class="comment-head">
           <span class="pin">{{ c.n }}</span>
-          <p class="message">{{ c.message }}</p>
-        </div>
-        <div class="comment-meta">
-          <span class="tag sev-tag {{ c.severity }}">{{ c.severity_name }}</span>
+          <span class="sev-label {{ c.severity }}">{{ c.severity_name }}</span>
+          {% if c.fixable %}<span class="tag fix">Otomatik</span>{% else %}<span class="tag">Elle</span>{% endif %}
           {% if c.role_name %}<span class="tag">{{ c.role_name }}</span>{% endif %}
           {% if c.count > 1 %}<span class="tag">× {{ c.count }}</span>{% endif %}
-          {% if c.fixable %}<span class="tag fix">Otomatik düzeltilir</span>{% endif %}
         </div>
+        <p class="message">{{ c.message }}</p>
+        <div class="comment-foot">
+        {% if c.locations or c.sections or c.omitted %}
         <div class="where">
           {% if c.locations %}
             {% if c.locations|length == 1 %}Yer: {{ c.locations[0] }}{% else %}
@@ -347,14 +369,16 @@
           {% elif c.sections %}Yer: bölüm {{ c.sections|join(", ") }} (sayfa ayarları){% endif %}
           {% if c.omitted %}<p class="muted small">ve {{ c.omitted }} yer daha</p>{% endif %}
         </div>
-        {{ howto(c.rule_id) }}
-        {% if not demo %}
-        <button type="button" class="linkbtn fb" data-feedback="{{ c.rule_id }}">Bu bulgu yanlış mı?</button>
         {% endif %}
+          {{ howto(c.rule_id) }}
+          {% if not demo %}
+          <button type="button" class="linkbtn fb" data-feedback="{{ c.rule_id }}">Bu bulgu yanlış mı?</button>
+          {% endif %}
+        </div>
       </li>
       {% endfor %}
     </ol>
-    <p id="filter-empty" class="muted small" hidden>Bu süzgeçte bulgu yok.</p>
+    <p id="filter-empty" class="muted small" hidden>Bu süzgeçte bulgu yok. <button type="button" class="linkbtn" data-filter-reset>Tümünü göster</button></p>
     {% if view.checked %}
     <details class="checked-rules">
       <summary>Denetlendi ve uygun: {{ view.checked|length }} madde</summary>
@@ -373,7 +397,7 @@
       <form method="post" action="/jobs/{{ job.id }}/delete" class="delete-form">
         <input type="hidden" name="csrf" value="{{ user.csrf }}">
         <button type="button" class="linkbtn" data-confirm>Raporu şimdi sil</button>
-        <button type="submit" class="btn small danger" hidden><span class="lbl">Evet, sil</span>{{ arrow() }}</button>
+        <button type="submit" class="btn small danger" hidden><span class="lbl">Evet, sil</span></button>
         <button type="button" class="linkbtn" data-cancel-delete hidden>Vazgeç</button>
       </form>
       <p class="fineprint">Bu rapor {{ retention }} saat sonra kendiliğinden silinir.</p>

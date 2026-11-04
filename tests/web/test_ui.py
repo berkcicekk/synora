@@ -56,6 +56,14 @@ TEXT_PAIRS = [
     # Adım başlığı bağlantıları (Yükle · Denetle · Teslim et) gezinmedir: okunur olmalı.
     ("step-off", "app-panel"), ("step-off", "bg"),
     ("muted-2", "surface"), ("accent-ink", "surface"),
+    # Rapor ekranı (§10.1 istisnası)
+    ("rp-ink", "rp-bg"), ("rp-ink", "rp-surface"), ("rp-muted", "rp-bg"),
+    ("rp-muted", "rp-surface"),
+    ("rp-error", "rp-bg"), ("rp-error", "rp-surface"), ("rp-warning", "rp-bg"),
+    ("rp-warning", "rp-surface"), ("rp-check", "rp-bg"), ("rp-on-status", "rp-error"),
+    ("rp-on-status", "rp-warning"), ("rp-on-status", "rp-check"), ("accent-ink", "rp-bg"),
+    ("accent-ink", "accent-soft"), ("rp-ink", "accent-soft"), ("rp-muted", "accent-soft"),
+    ("ok", "rp-bg"),
 ]
 # Odak çerçevesi (WCAG 1.4.11, metin dışı öğe) için 3:1
 FOCUS_PAIRS = [("blue", "paper"), ("blue", "card"), ("blue", "desk"), ("cyan", "night"),
@@ -174,7 +182,7 @@ def test_report_digest_buckets_and_next_steps(client: TestClient, mailer: Consol
     job_id = _done_job(client, mailer, bad_thesis())
     html = client.get(f"/jobs/{job_id}").text
     digest = html.split('class="digest"', 1)[1].split("</section>", 1)[0]
-    assert "1 hata, 0 uyarı." in digest  # telefonda araç çubuğu özeti gizli; burada görünür
+    assert "1 hata, 0 uyarı" in digest  # telefonda araç çubuğu özeti gizli; burada görünür
     fix = digest.split('class="bucket b-fix"', 1)[1].split("</li>", 1)[0]
     manual = digest.split('class="bucket b-manual"', 1)[1].split("</li>", 1)[0]
     assert '<span class="b-num">1</span>' in fix
@@ -183,10 +191,9 @@ def test_report_digest_buckets_and_next_steps(client: TestClient, mailer: Consol
     assert "Sıradaki adımlar" in digest
     assert "Tümünü Kabul Et" in digest
     # Süzgeçler sayılı; boş süzgeç gösterilmez (bu raporda elle düzeltilecek bulgu yok).
-    assert ('data-filter="fixable" aria-pressed="false">Düzeltilebilir <span class="fc">1</span>'
-            in html)
+    assert 'data-filter="auto" aria-pressed="false">Otomatik <span class="fc">1</span>' in html
     assert 'data-filter="manual"' not in html
-    assert '<span class="tag fix">Otomatik düzeltilir</span>' in html
+    assert '<span class="tag fix">Otomatik</span>' in html
     assert "Word'de nasıl düzeltilir" in html
     assert "Satır Aralığı Seçenekleri" in html  # body.line_spacing bulgusu
     assert "son onayı" in html  # resmi kontrolün yerini almaz
@@ -197,7 +204,7 @@ def test_report_digest_points_to_unsure_paragraphs(client: TestClient,
     job_id = _done_job(client, mailer, ambiguous_thesis())
     html = client.get(f"/jobs/{job_id}").text
     check = html.split('class="bucket b-check"', 1)[1].split("</li>", 1)[0]
-    assert "Kontrol edin" in check and "data-jump-unsure" in check
+    assert "Kontrol edin" in check and 'data-apply-filter="check"' in check
     assert "türünü seçip yeniden denetleyin" in html
 
 
@@ -240,7 +247,7 @@ def test_no_congratulations_while_paragraphs_unchecked(client: TestClient,
     job_id = _done_job(client, mailer, ambiguous_thesis())
     html = client.get(f"/jobs/{job_id}").text
     assert "Tebrikler" not in html
-    assert "Türü belirsiz" in html
+    assert "Kontrol edin" in html and "0 bulgu" in html
     assert 'class="bucket b-fix"' not in html  # bulgu yokken boş kovalar gösterilmez
 
 
@@ -422,8 +429,8 @@ def test_upload_reports_progress_without_flooding_screen_readers() -> None:
 def test_report_stepper_and_legend(client: TestClient, mailer: ConsoleMailer) -> None:
     job_id = _done_job(client, mailer, bad_thesis())
     html = client.get(f"/jobs/{job_id}").text
-    assert 'data-step-card="-1" aria-label="Önceki yorum"' in html
-    assert 'data-step-card="1" aria-label="Sonraki yorum"' in html
+    assert 'data-step-card="-1" aria-label="Önceki bulgu"' in html
+    assert 'data-step-card="1" aria-label="Sonraki bulgu"' in html
     assert 'id="step-pos" aria-live="polite"' in html
     assert 'class="lg lg-error"' in html
     # Özet önce, yorum başlığı ve süzgeçler sonra (bulgular ilk ekranda görünsün diye özet kompakt).

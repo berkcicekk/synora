@@ -92,7 +92,7 @@ def test_login_flow_and_upload_report(client: TestClient, mailer: ConsoleMailer)
     assert wait_done(client, job_id) == "done"
     page = client.get(f"/jobs/{job_id}")
     assert page.status_code == 200
-    assert "1 hata, 0 uyarı." in page.text
+    assert "1 hata, 0 uyarı" in page.text
     assert "Satır aralığı 1,0. Kılavuz 1,5 istiyor." in page.text
     assert "GİRİŞ › 1.1 Amaç" in page.text  # başlık yolu
     assert SECRET not in page.text
