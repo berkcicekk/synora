@@ -115,13 +115,11 @@
     steps.forEach((s) => s.classList.add("is-in"));
   }
 
-  // --- Parallax: kahraman, barkod, gizlilik, kılavuz metni; tek rAF döngüsünde -----------------
+  // --- Parallax: kahraman, barkod, gizlilik; tek rAF döngüsünde -------------------------------
   const hero = document.querySelector(".hero");
   const heroWrap = hero && hero.querySelector(".wrap");
   const layers = [...document.querySelectorAll(".hero-layers [data-depth]")];
   const stage = document.querySelector(".privacy-stage");
-  const guide = document.querySelector("[data-guide]");
-  const text = document.getElementById("guide-text");
   const cursor = { x: 0, y: 0, tx: 0, ty: 0 }; // ekrana göre -0,5…+0,5
   let raf = 0;
   const frame = () => {
@@ -150,10 +148,6 @@
       const k = 1 - progress(stage, .75);
       move(pxLeft, 0, k * pxLeft.offsetHeight * .8);
       move(pxRight, 0, k * pxRight.offsetHeight * 1.2);
-    }
-    if (fine && guide && text && inView(guide)) {
-      const r = guide.getBoundingClientRect();
-      move(text, 0, (clamp((innerHeight - r.top) / (innerHeight + r.height)) - .5) * 60);
     }
     if (Math.abs(cursor.tx - cursor.x) + Math.abs(cursor.ty - cursor.y) > .002) schedule();
   };

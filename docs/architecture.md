@@ -246,8 +246,8 @@ yeni renk/yarıçap/gölge değeri oraya token olarak eklenir, bileşene ham de�
 - Erişilebilirlik: metin kontrastı ≥4,5:1 (`tests/web/test_ui.py` TEXT_PAIRS ile zorlanır);
   gerçek `<button>`/`<a href>`/`<label>`; ikon düğmelerinde `aria-label`.
 - CSP: şablonlarda satır içi stil ve betik yok; dinamik ölçüler `data-*` ile `app.js`'ten.
-- Hareket: gösteri yalnız ana sayfada (`landing.js`, `guide-scene.js`: parallax, 3D kılavuz kağıdı,
-  noktalı bağlar); giriş, yükleme ve rapor ekranları kısa ve sade. Hareket `transform`/`opacity`
+- Hareket: gösteri yalnız ana sayfada (`landing.js`: parallax; `guide-scene.js`: gerçek ölçekli kılavuz sayfası,
+  ölçü işaretleme); giriş, yükleme ve rapor ekranları kısa ve sade. Hareket `transform`/`opacity`
   ile yapılır; `prefers-reduced-motion` altında 3D ve girişler kapanır (`.motion` sınıfı eklenmez).
 - Tasarım kaynakları (`payper-tasarim/`, repoda değil) yalnızca referanstır; çelişkide bu bölüm geçerli.
 

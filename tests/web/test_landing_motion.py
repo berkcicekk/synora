@@ -204,13 +204,22 @@ def _figure(client: TestClient) -> str:
     return client.get("/").text.split('class="guide-fig"')[1].split("</figure>")[0]
 
 
-def test_guide_page_has_3d_layers(client: TestClient) -> None:
+def test_guide_page_is_a_typeset_sample_not_effects(client: TestClient) -> None:
     figure = _figure(client)
-    assert figure.count('class="guide-sheet"') == 3
-    for layer in ("guide-sheen", "guide-scan", "guide-tag"):
-        assert layer in figure, layer
+    assert 'class="guide-sample" aria-hidden="true"' in figure
+    assert 'data-body="12"' in figure and 'data-lead="1,5"' in figure
+    assert 'data-indent="1"' in figure and 'data-font="Times New Roman"' in figure
+    for gone in ("guide-sheet", "guide-sheen", "guide-scan", "guide-tag", "guide-links"):
+        assert gone not in figure and gone not in CSS, gone
     for side in MARGINS:
         assert f'class="guide-band b-{side}"' in figure, side
+
+
+def test_page_text_scales_with_ruleset_values() -> None:
+    block = _block(SCENE)
+    assert "calc(var(--pt) * .168cqw)" in block  # 1 pt / 210 mm
+    assert "calc(var(--indent-cm) * 4.762cqw)" in block  # 10 mm / 210 mm
+    assert "line-height: calc(var(--lead) * 1.15)" in block
 
 
 def test_diagram_values_are_real_buttons(client: TestClient) -> None:
@@ -220,10 +229,10 @@ def test_diagram_values_are_real_buttons(client: TestClient) -> None:
                          rf'data-part="{part}"', figure), part
 
 
-def test_each_chip_has_a_target_line_on_the_page(client: TestClient) -> None:
+def test_each_chip_has_a_mark_on_the_page(client: TestClient) -> None:
     figure = _figure(client)
-    for line in ("l-size", "l-sp", "l-ind", "l-font"):
-        assert re.search(rf'<i class="[^"]*\b{line}\b', figure), line
+    for mark in ("gs-size", "gs-lead", "gs-ind", "gs-font"):
+        assert mark in figure, mark
 
 
 def test_scene_css_only_moves_compositor_properties() -> None:
@@ -239,11 +248,9 @@ def test_scene_css_only_moves_compositor_properties() -> None:
 
 
 def test_scene_3d_and_entrances_need_motion_class() -> None:
-    """Hareket azaltılmışsa landing.js .motion eklemez: 3D ve girişler hiç devreye girmez."""
+    """Hareket azaltılmışsa landing.js .motion eklemez: eğilme ve girişler hiç devreye girmez."""
     block = _block(SCENE)
-    for selector in (".guide-fig { perspective", ".guide-page { transform-style",
-                     ".guide-sheet { display: block", ".guide-scan.run::after"):
-        assert f".motion {selector}" in block, selector
+    assert ".motion .guide-fig { perspective" in block
     assert ".hiw.is-armed .hiw-step:not(.is-in)" in block
 
 
@@ -258,12 +265,14 @@ def test_motion_scripts_stay_safe_and_stop_themselves() -> None:
     scene = GUIDE_JS.read_text(encoding="utf-8")
     assert len(scene.encode()) <= 8 * 1024, "guide-scene.js bütçesi (8 KB) aşıldı"
     for js in (landing, scene):
-        assert "setInterval" not in js  # otomatik tur bir kez döner, sonsuz döngü yok
+        assert "setInterval" not in js
         assert "passive: true" in js
-        assert "if (!reduced" in js  # 3D ve parallax azaltılmış harekette çalışmaz
         assert "http://" not in js.replace("http://www.w3.org/2000/svg", "")
         assert "https://" not in js and "innerHTML" not in js and "eval(" not in js
+    # Azaltılmış harekette parallax ve eğilme çalışmaz.
+    assert "if (!reduced)" in landing and "if (reduced) return;" in scene
     assert "if (reduced || !fine) return" in landing  # eğilme yalnızca farede
+    assert "setTimeout" not in scene  # kendiliğinden oynayan tur yok
 
 
 def test_guide_scene_loads_only_on_landing(client: TestClient) -> None:

@@ -83,24 +83,31 @@
       {# Değerler etikete göre: rule_tiles() isteğe bağlı ölçüleri yalnızca tanımlıysa ekler,
          sıra kayar. Kural setinde karşılığı olmayan çip gösterilmez. #}
       {% set tv = {} %}{% for t in tiles %}{% set _ = tv.update({t.label: t.value}) %}{% endfor %}
-      <div class="guide-page" id="guide-page">
-        {# 3D sahne (landing.js): tez destesi, kenar şeritleri, ışık, tarama. Süstür, hareket azaltılmışsa gizli. #}
-        <i class="guide-sheet"></i><i class="guide-sheet"></i><i class="guide-sheet"></i>
-        <i class="guide-band b-left"></i><i class="guide-band b-right"></i><i class="guide-band b-top"></i><i class="guide-band b-bottom"></i>
+      {# Örnek sayfa kural setindeki ölçülerle gerçek ölçekte dizilir (guide-scene.js); metin süstür. #}
+      <div class="guide-page" id="guide-page"{% if "Gövde" in tv %} data-body="{{ tv["Gövde"].split()[0] }}"{% endif %}{% if "Satır aralığı" in tv %} data-lead="{{ tv["Satır aralığı"] }}"{% endif %}{% if "Girinti" in tv %} data-indent="{{ tv["Girinti"].split()[0] }}"{% endif %}{% if "Yazı tipi" in tv %} data-font="{{ tv["Yazı tipi"] }}"{% endif %}>
+        <div class="guide-band b-left" data-wpct="{{ (page.left_mm / page.width_mm * 100) | round(1) }}"><button type="button" class="guide-dim dim-left" data-part="left">{{ page.labels["left"] }}</button></div>
+        <div class="guide-band b-right" data-wpct="{{ (page.right_mm / page.width_mm * 100) | round(1) }}"><button type="button" class="guide-dim dim-right" data-part="right">{{ page.labels["right"] }}</button></div>
+        <div class="guide-band b-top"><button type="button" class="guide-dim dim-top" data-part="top">{{ page.labels["top"] }}</button></div>
+        <div class="guide-band b-bottom"><button type="button" class="guide-dim dim-bottom" data-part="bottom">{{ page.labels["bottom"] }}</button></div>
         <div class="guide-page-in" data-inset="{{ (page.left_mm / page.width_mm * 100) | round(1) }},{{ (page.right_mm / page.width_mm * 100) | round(1) }},{{ (page.top_mm / page.height_mm * 100) | round(1) }},{{ (page.bottom_mm / page.height_mm * 100) | round(1) }}">
-          <i class="h"></i><i class="l-sp"></i><i class="l-sp"></i><i class="w8 l-font"></i><i></i><i class="a l-size"></i><i></i><i class="w6"></i><i class="gap l-ind"></i><i></i><i class="w7"></i>
+          <div class="guide-sample" aria-hidden="true">
+            <p class="gs-h">1. GİRİŞ</p>
+            <p><span class="gs-size">Bu bölümde</span> çalışmanın konusu, amacı ve kapsamı özetlenmektedir. Konuyla ilgili temel kavramlar açıklandıktan sonra, araştırmanın dayandığı sorular ve bu soruların ele alınış biçimi sırasıyla sunulmaktadır. Bölümün sonunda tezin genel yapısı hakkında kısa bilgi verilmektedir.</p>
+            <p><i class="gs-mark gs-lead"></i>Akademik çalışmalarda biçimsel tutarlılık, metnin okunabilirliğini ve değerlendirilmesini doğrudan etkileyen bir unsurdur. Kenar boşlukları, yazı tipi, satır aralığı ve başlık düzeni gibi öğeler, <span class="gs-font">enstitülerin</span> yayımladığı yazım kılavuzlarında ayrıntılı biçimde tanımlanmaktadır. Bu kurallara uyulması, tezin teslim sürecinde yeniden düzenleme gereksinimini azaltmaktadır.</p>
+            <p class="gs-h2">1.1. Çalışmanın Amacı</p>
+            <p><i class="gs-mark gs-ind"></i>Bu çalışmanın amacı, belirlenen konuya ilişkin mevcut bilgileri derlemek ve araştırma sorularını yanıtlamaya yönelik bulguları ortaya koymaktır. Elde edilen sonuçların, alanda yapılacak sonraki çalışmalara yol göstermesi beklenmektedir.</p>
+            <p class="gs-h2">1.2. Çalışmanın Kapsamı</p>
+            <p>Araştırmanın kapsamı, ilgili literatür ile belirlenen örneklem üzerinden yürütülen incelemelerle sınırlıdır. Kullanılan yöntem ve veri toplama araçları ikinci bölümde, bulgular ise üçüncü bölümde ayrıntılı olarak ele alınmaktadır. Son bölümde sonuçlar tartışılmakta ve öneriler sunulmaktadır.</p>
+            <p class="gs-h2">1.3. Çalışmanın Önemi</p>
+            <p>Konuya ilişkin çalışmaların sınırlı olması, bu araştırmanın gerekçelerinden birini oluşturmaktadır. Elde edilecek bulguların hem kuramsal tartışmalara katkı sağlaması hem de uygulamada karşılaşılan sorunların çözümüne ışık tutması amaçlanmaktadır. Bu yönüyle çalışma, alandaki araştırmacılar ve uygulayıcılar için başvurulabilecek bir kaynak niteliği taşımaktadır.</p>
+          </div>
         </div>
-        <i class="guide-sheen"></i><i class="guide-scan"></i><span class="guide-tag" aria-hidden="true"></span>
-        <button type="button" class="guide-dim dim-left" data-part="left" data-wpct="{{ (page.left_mm / page.width_mm * 100) | round(1) }}">{{ page.labels["left"] }}</button>
-        <button type="button" class="guide-dim dim-right" data-part="right" data-wpct="{{ (page.right_mm / page.width_mm * 100) | round(1) }}">{{ page.labels["right"] }}</button>
-        <button type="button" class="guide-dim dim-top" data-part="top">{{ page.labels["top"] }}</button>
-        <button type="button" class="guide-dim dim-bottom" data-part="bottom">{{ page.labels["bottom"] }}</button>
       </div>
       <div class="guide-chips">
         {% if "Gövde" in tv %}<button type="button" class="guide-chip" data-part="size">{{ tv["Gövde"] }}</button>{% endif %}
-        {% if "Satır aralığı" in tv %}<button type="button" class="guide-chip hi" data-part="spacing">{{ tv["Satır aralığı"] }} satır</button>{% endif %}
+        {% if "Satır aralığı" in tv %}<button type="button" class="guide-chip" data-part="spacing">{{ tv["Satır aralığı"] }} satır</button>{% endif %}
         {% if "Girinti" in tv %}<button type="button" class="guide-chip" data-part="indent">girinti {{ tv["Girinti"] }}</button>{% endif %}
-        {% if "Yazı tipi" in tv %}<button type="button" class="guide-chip hi" data-part="font">{{ tv["Yazı tipi"] }}</button>{% endif %}
+        {% if "Yazı tipi" in tv %}<button type="button" class="guide-chip" data-part="font">{{ tv["Yazı tipi"] }}</button>{% endif %}
       </div>
     </figure>
     {% endif %}
