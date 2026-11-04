@@ -431,7 +431,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     templates.env.globals["retention_hours"] = int(settings.retention_hours)
     # Statik dosyalar için sürüm damgası: içerik değişince tarayıcı önbelleği geçersizleşir.
     asset_hash = hashlib.sha256()
-    for name in ("app.css", "app.js", "fonts.css", "landing.js", "docview.js"):
+    for name in ("app.css", "app.js", "fonts.css", "landing.js", "docview.js", "guide-scene.js"):
         asset_hash.update((HERE / "static" / name).read_bytes())
     templates.env.globals["asset_v"] = asset_hash.hexdigest()[:10]
 

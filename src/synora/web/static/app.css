@@ -1285,3 +1285,112 @@ body.app .footer, body.editor .footer { background: transparent; }
   .btn:not(:disabled):active, .nav-link:active, .suggest-fab:active { transform: none; }
 }
 /* == /ARAYUZ HAREKETI == */
+
+/* == SAHNE == */
+/* Ana sayfa gösterisi. Tüm 3D ve girişler .motion altında: hareket azaltılmışsa landing.js bu
+   sınıfı eklemez, kağıt düz kalır. Odak vurgusu hareketsiz de çalışır (işlevseldir). */
+
+/* Barkod: şeritler zıt yöne akar, etiket sabit kalır. */
+.barcode-bars { display: flex; justify-content: space-between; align-items: stretch; gap: 6px; flex: 3 0 auto; min-width: 0; will-change: transform; }
+.barcode-bars:last-child { flex-grow: 2; }
+.barcode-note { position: relative; z-index: 1; }
+
+/* Düğmeye dönen değerler: görünüm ve yerleşim aynı, dokunma alanı görünmez dolguyla büyür. */
+.guide-chip, .guide-dim { line-height: inherit; }
+.guide-chip { position: relative; }
+.guide-dim { padding: 0; border: 0; background: none; }
+.guide-chip::before, .guide-dim::before { content: ""; position: absolute; inset: -4px -2px; }
+.guide-dim::before { inset: -14px -8px; }
+.guide-fig.is-live .guide-chip, .guide-fig.is-live .guide-dim { cursor: pointer; }
+.guide-chips { position: relative; z-index: 3; }
+.guide-chip.is-on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.guide-dim.is-on { font-weight: 700; }
+
+/* Kağıt: deste, ışık, kenar şeritleri */
+.guide-sheet { display: none; position: absolute; inset: 0; pointer-events: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: inherit; }
+.guide-sheen, .guide-scan { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; }
+.guide-page .guide-sheen { opacity: 0;
+  background: radial-gradient(circle at var(--sx, 50%) var(--sy, 50%), color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%); }
+.guide-band { position: absolute; pointer-events: none; opacity: 0;
+  background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--accent) 45%, transparent) 0 2px, transparent 2px 7px); }
+.b-left { left: 0; top: 0; bottom: 0; } .b-right { right: 0; top: 0; bottom: 0; }
+.b-top { top: 0; left: 0; right: 0; } .b-bottom { bottom: 0; left: 0; right: 0; }
+.guide-fig[data-focus="left"] .b-left, .guide-fig[data-focus="right"] .b-right,
+.guide-fig[data-focus="top"] .b-top, .guide-fig[data-focus="bottom"] .b-bottom { opacity: 1; }
+.guide-scan { overflow: hidden; }
+.guide-scan::after { content: ""; position: absolute; inset: 0; opacity: 0;
+  background: linear-gradient(to bottom, transparent 62%, color-mix(in srgb, var(--accent) 22%, transparent) 99%, var(--accent) 99%); }
+.guide-tag { position: absolute; top: 13%; right: 15%; padding: 4px 10px; border-radius: var(--radius-pill); pointer-events: none;
+  background: var(--ink); color: var(--surface); font-family: var(--mono); font-size: .75rem; white-space: nowrap; opacity: 0; }
+.guide-fig[data-focus="size"] .guide-tag, .guide-fig[data-focus="spacing"] .guide-tag,
+.guide-fig[data-focus="indent"] .guide-tag, .guide-fig[data-focus="font"] .guide-tag { opacity: 1; }
+
+/* Analiz: seçilen ölçü öne çıkar, kalanı soluklaşır. */
+.guide-page-in i { position: relative; }
+.guide-fig[data-focus] .guide-page-in i { opacity: .28; }
+.guide-fig[data-focus="size"] .guide-page-in .l-size { opacity: 1; transform: scaleY(2.6); }
+.guide-fig[data-focus="spacing"] .guide-page-in .l-sp { opacity: 1; background: var(--accent); }
+.guide-page-in .l-sp + .l-sp::before { content: ""; position: absolute; left: -9px; bottom: 0; width: 4px; height: 17px; opacity: 0;
+  border: 1px solid var(--accent-ink); border-right: 0; transform-origin: bottom; transform: scaleY(.3); }
+.guide-fig[data-focus="spacing"] .l-sp + .l-sp::before { opacity: 1; transform: none; }
+.guide-fig[data-focus="indent"] .guide-page-in .l-ind { opacity: 1; background: linear-gradient(to right, transparent 12%, var(--accent) 12%); }
+.guide-page-in .l-ind::before { content: ""; position: absolute; left: 0; top: 1px; width: 12%; border-top: 2px dotted var(--accent-ink);
+  opacity: 0; transform-origin: left; transform: scaleX(0); }
+.guide-fig[data-focus="indent"] .l-ind::before { opacity: 1; transform: none; }
+.guide-fig[data-focus="font"] .guide-page-in i:not(.h) { opacity: 1; background: var(--accent); }
+
+/* Noktalı bağlar: etiketten kağıttaki yerine */
+.guide-links { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 2; }
+.guide-links circle { fill: var(--accent-ink); opacity: 0; }
+.guide-links.is-linked circle { opacity: .35; }
+.guide-fig[data-focus] .guide-links g { opacity: 0; }
+.guide-fig[data-focus] .guide-links g.on { opacity: 1; }
+.guide-links g.on circle { opacity: 1; }
+
+/* 3D */
+.motion .guide-fig { perspective: 1100px; perspective-origin: 50% 40%; }
+.motion .guide-page { transform-style: preserve-3d; }
+.motion .guide-sheet { display: block; transition: transform .5s var(--ease-out); }
+.motion .guide-sheet:nth-child(1) { transform: translate3d(3px, 3px, -6px); }
+.motion .guide-sheet:nth-child(2) { transform: translate3d(6px, 6px, -12px); }
+.motion .guide-sheet:nth-child(3) { transform: translate3d(9px, 9px, -18px); }
+.motion .guide-page-in { transform-style: preserve-3d; transition: transform .5s var(--ease-out); }
+.motion .guide-page-in i { transition: opacity .25s var(--ease-out), transform .35s var(--ease-out); }
+.motion .guide-page-in i::before { transition: opacity .25s var(--ease-out), transform .35s var(--ease-out); }
+.motion .guide-band { transform: translateZ(1px); transition: opacity .25s var(--ease-out); }
+.motion .guide-page .guide-sheen { transform: translateZ(3px); transition: opacity .3s var(--ease-out); }
+.motion .guide-scan { transform: translateZ(44px); }
+.motion .guide-tag { transform: translateZ(64px) translateY(6px); transition: opacity .25s var(--ease-out), transform .35s var(--ease-out); }
+.motion .guide-fig[data-focus] .guide-tag { transform: translateZ(64px); }
+.motion .guide-dim { transition: translate .5s var(--ease-out); }
+.motion .guide-chip { transition: transform .2s var(--ease-out); }
+.motion .guide-chip.is-on { transform: translateY(-2px); }
+.motion .guide-links circle { transition: opacity .3s var(--ease-out); }
+.motion .guide-links g { transition: opacity .25s var(--ease-out); }
+
+/* Katmanlara ayrılma: üzerine gelince ya da bir ölçü seçiliyken. */
+.motion .guide-fig.is-open .guide-page-in { transform: translateZ(34px); }
+.motion .guide-fig.is-open .guide-dim { translate: 0 0 26px; }
+.motion .guide-fig.is-open .guide-sheet:nth-child(1) { transform: translate3d(8px, 8px, -30px); }
+.motion .guide-fig.is-open .guide-sheet:nth-child(2) { transform: translate3d(16px, 16px, -60px); }
+.motion .guide-fig.is-open .guide-sheet:nth-child(3) { transform: translate3d(24px, 24px, -90px); }
+@media (hover: hover) { .motion .guide-fig:hover .guide-sheen { opacity: 1; } }
+
+/* Tarama çizgisi: seçim başına bir kez */
+.motion .guide-scan.run::after { animation: guide-scan .9s cubic-bezier(.45, 0, .55, 1) both; }
+@keyframes guide-scan {
+  0% { opacity: 0; transform: translateY(-100%); }
+  15%, 85% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(100%); }
+}
+
+/* Nasıl çalışır: kartlar geriye yatık gelip düzleşir; fare eğilmesi (`transform`) etkilenmez. */
+.motion .hiw-steps, .motion .hiw-group-steps { perspective: 1000px; }
+.hiw.is-armed .hiw-step { transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out),
+  opacity .7s var(--ease-out) var(--d, 0ms), rotate .8s var(--ease-out) var(--d, 0ms), translate .8s var(--ease-out) var(--d, 0ms); }
+.hiw.is-armed .hiw-step:not(.is-in) { opacity: 0; rotate: x 22deg; translate: 0 44px; }
+
+.guide-stats .n { font-variant-numeric: tabular-nums; }
+.motion .hero .wrap, .motion .pixelpile { will-change: transform; }
+/* == /SAHNE == */

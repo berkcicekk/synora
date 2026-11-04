@@ -1,7 +1,7 @@
-// Sontez tanıtım sayfası: belirme, hafif kaydırma (parallax), eğilme ve parlama, "nasıl çalışır"
-// tetikleyicisi, barkod ve piksel süsleri. Yalnızca bu sayfada yüklenir; harici kütüphane yok.
-// Kurallar: yalnızca transform/opacity değişir; hareket azaltılmışsa animasyon yok, içerik
-// doğrudan görünür; parallax ve eğilme yalnızca fareli cihazlarda.
+// Sontez tanıtım sayfası: belirme, parallax, eğilme ve parlama, "nasıl çalışır" tetikleyicisi,
+// barkod ve piksel süsleri, sayılar (kılavuz sahnesi: guide-scene.js). Yalnızca bu sayfada
+// yüklenir; harici kütüphane yok. Kurallar: hareket transform/opacity ile; hareket azaltılmışsa
+// animasyon yok, içerik doğrudan görünür; kaydırma her cihazda, imleç ve eğilme yalnızca farede.
 "use strict";
 
 (function () {
@@ -10,12 +10,19 @@
   // CSS gizli başlangıç hâllerini yalnızca bu sınıf varken uygular (JS yoksa içerik görünür).
   if (!reduced) document.documentElement.classList.add("motion");
 
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const inView = (el) => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+  // Öğenin üstü ekranın altına gelince 0, `span` ekran boyu sonra 1.
+  const progress = (el, span) => clamp((innerHeight - el.getBoundingClientRect().top) / (innerHeight * span));
+  const move = (el, x, y) => { el.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)"; };
+
   // --- Süsler -----------------------------------------------------------------------------
   // Deterministik sözde rastgele: her yüklemede aynı desen.
   const seeded = (seed) => () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
 
-  // Barkod bandı: tezin satırları
+  // Barkod bandı: tezin satırları. Çubuklar şeritlerde: kaydırınca satırlar zıt yöne akar.
   const barcode = document.getElementById("barcode");
+  let stripsA = [], stripB = null;
   if (barcode) {
     const rnd = seeded(7);
     const bar = (o = {}) => {
@@ -27,17 +34,22 @@
       if (o.slant) { el.style.transform = "skewX(-18deg)"; el.style.transformOrigin = "bottom"; }
       return el;
     };
+    const strip = (row, n, one, before) => {
+      const s = document.createElement("span");
+      s.className = "barcode-bars";
+      for (let i = 0; i < n; i++) s.appendChild(one(i));
+      row.insertBefore(s, before || null);
+      return s;
+    };
     const rows = barcode.querySelectorAll(".barcode-row");
     const note = rows[0].querySelector(".barcode-note");
-    for (let i = 0; i < 30; i++) {
-      rows[0].insertBefore(i === 4 ? bar({ w: 2, slant: true, keep: true })
-        : i === 17 ? bar({ w: 4, accent: true }) : bar(), note);
-    }
-    for (let i = 0; i < 20; i++) rows[0].appendChild(bar());
-    for (let i = 0; i < 60; i++) {
-      rows[1].appendChild(i === 8 ? bar({ w: 5, accent: true })
-        : i === 51 ? bar({ w: 3, slant: true, keep: true }) : bar());
-    }
+    stripsA = [
+      strip(rows[0], 30, (i) => (i === 4 ? bar({ w: 2, slant: true, keep: true })
+        : i === 17 ? bar({ w: 4, accent: true }) : bar()), note),
+      strip(rows[0], 20, () => bar()),
+    ];
+    stripB = strip(rows[1], 60, (i) => (i === 8 ? bar({ w: 5, accent: true })
+      : i === 51 ? bar({ w: 3, slant: true, keep: true }) : bar()));
     barcode.hidden = false;
   }
 
@@ -64,6 +76,20 @@
     }
   }
 
+  // Sayılar: görününce gerçek değere kadar sayar; sonunda sunucudan gelen metin aynen geri yazılır.
+  const countUp = (el) => {
+    const full = el.textContent;
+    const m = /^(\D*)(\d+)(?:,(\d+))?$/.exec(full);
+    if (!m) return;
+    const end = Number(m[2] + "." + (m[3] || "0")), digits = (m[3] || "").length, t0 = performance.now();
+    const tick = (now) => {
+      const k = clamp((now - t0) / 1200);
+      el.textContent = k < 1 ? m[1] + (end * (1 - Math.pow(1 - k, 3))).toFixed(digits).replace(".", ",") : full;
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
   // --- Belirme: bölümler görünür olunca yumuşakça gelir; [data-stagger] çocukları sırayla ----
   const reveals = [...document.querySelectorAll(".reveal")];
   document.querySelectorAll("[data-stagger]").forEach((p) =>
@@ -75,6 +101,7 @@
     const io = new IntersectionObserver((entries) => entries.forEach((en) => {
       if (!en.isIntersecting) return;
       en.target.classList.add("is-in");
+      if (en.target.matches(".guide-stats")) en.target.querySelectorAll(".n").forEach(countUp);
       io.unobserve(en.target);
     }), { rootMargin: "0px 0px -8% 0px", threshold: 0.15 });
     reveals.forEach((el) => io.observe(el));
@@ -88,39 +115,62 @@
     steps.forEach((s) => s.classList.add("is-in"));
   }
 
-  if (reduced || !fine) return;  // aşağısı: parallax ve eğilme (yalnızca fare, hareket açık)
-
-  // --- Parallax: kahraman katmanları ve kılavuz sayfası, tek rAF döngüsünde ------------------
+  // --- Parallax: kahraman, barkod, gizlilik, kılavuz metni; tek rAF döngüsünde -----------------
   const hero = document.querySelector(".hero");
+  const heroWrap = hero && hero.querySelector(".wrap");
   const layers = [...document.querySelectorAll(".hero-layers [data-depth]")];
+  const stage = document.querySelector(".privacy-stage");
   const guide = document.querySelector("[data-guide]");
-  const page = document.getElementById("guide-page");
   const text = document.getElementById("guide-text");
+  const cursor = { x: 0, y: 0, tx: 0, ty: 0 }; // ekrana göre -0,5…+0,5
   let raf = 0;
   const frame = () => {
     raf = 0;
+    cursor.x += (cursor.tx - cursor.x) * .1;
+    cursor.y += (cursor.ty - cursor.y) * .1;
     const y = window.scrollY;
-    const vh = window.innerHeight || 800;
     if (hero && y < hero.offsetHeight * 1.2) {
       layers.forEach((el) => {
-        el.style.transform = "translate3d(0," + (y * Number(el.dataset.depth)).toFixed(1) + "px,0)";
+        const depth = Number(el.dataset.depth);
+        move(el, cursor.x * depth * 120, y * depth + cursor.y * depth * 90);
       });
-    }
-    if (guide) {
-      const r = guide.getBoundingClientRect();
-      if (r.bottom > 0 && r.top < vh) {
-        const d = Math.max(0, Math.min(1, (vh - r.top) / (vh + r.height))) - 0.5;
-        // Hafif: altındaki ölçü etiketlerine binmesin.
-        if (page) page.style.transform =
-          "translate3d(0," + (d * -24).toFixed(1) + "px,0) rotate(" + (d * -3).toFixed(2) + "deg)";
-        if (text) text.style.transform = "translate3d(0," + (d * 60).toFixed(1) + "px,0)";
+      if (heroWrap) {
+        // Metin geride kalır; düğmeler ekrandayken okunur kalsın diye solma geç başlar.
+        const fade = clamp((y / hero.offsetHeight - .35) / .65);
+        move(heroWrap, 0, y * .08);
+        heroWrap.style.opacity = (1 - fade * .5).toFixed(3);
       }
     }
+    if (barcode && inView(barcode)) {
+      const d = (progress(barcode, 1.3) - .5) * 64;
+      stripsA.forEach((s) => move(s, d, 0));
+      move(stripB, -d, 0);
+    }
+    if (stage && pxLeft && inView(stage)) {
+      const k = 1 - progress(stage, .75);
+      move(pxLeft, 0, k * pxLeft.offsetHeight * .8);
+      move(pxRight, 0, k * pxRight.offsetHeight * 1.2);
+    }
+    if (fine && guide && text && inView(guide)) {
+      const r = guide.getBoundingClientRect();
+      move(text, 0, (clamp((innerHeight - r.top) / (innerHeight + r.height)) - .5) * 60);
+    }
+    if (Math.abs(cursor.tx - cursor.x) + Math.abs(cursor.ty - cursor.y) > .002) schedule();
   };
   const schedule = () => { if (!raf) raf = requestAnimationFrame(frame); };
-  window.addEventListener("scroll", schedule, { passive: true });
-  window.addEventListener("resize", schedule);
-  frame();
+  if (!reduced) {
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    schedule();
+  }
+
+  if (reduced || !fine) return;  // aşağısı: imleç izleme ve eğilme (yalnızca fare, hareket açık)
+
+  window.addEventListener("pointermove", (e) => {
+    cursor.tx = e.clientX / innerWidth - .5;
+    cursor.ty = e.clientY / innerHeight - .5;
+    schedule();
+  }, { passive: true });
 
   // --- Eğilme + ışık parlaması: fareyi hafifçe izler (en çok 5°) ----------------------------
   document.querySelectorAll(".tilt").forEach((card) => {

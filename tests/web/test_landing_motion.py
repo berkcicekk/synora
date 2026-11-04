@@ -16,6 +16,7 @@ from synora.web.mailer import ConsoleMailer
 STATIC = Path(__file__).resolve().parents[2] / "src" / "synora" / "web" / "static"
 CSS = (STATIC / "app.css").read_text(encoding="utf-8")
 LANDING_JS = STATIC / "landing.js"
+GUIDE_JS = STATIC / "guide-scene.js"
 
 
 def _block(marker: str) -> str:
@@ -100,7 +101,7 @@ def test_landing_script_only_on_landing(client: TestClient, mailer: ConsoleMaile
 
 def test_asset_version_covers_landing_script(client: TestClient) -> None:
     h = hashlib.sha256()
-    for name in ("app.css", "app.js", "fonts.css", "landing.js", "docview.js"):
+    for name in ("app.css", "app.js", "fonts.css", "landing.js", "docview.js", "guide-scene.js"):
         h.update((STATIC / name).read_bytes())
     assert f"landing.js?v={h.hexdigest()[:10]}" in client.get("/").text
 
@@ -190,6 +191,85 @@ def test_shared_easing_is_one_token() -> None:
 
 def test_barcode_reveals_like_other_sections(client: TestClient) -> None:
     assert 'class="wrap barcode reveal"' in client.get("/").text
+
+
+# --- 4c. Ana sayfa sahneleri: 3D kılavuz, parallax -------------------------------------------
+
+SCENE = "SAHNE"
+PARTS = ("size", "spacing", "indent", "font")
+MARGINS = ("left", "right", "top", "bottom")
+
+
+def _figure(client: TestClient) -> str:
+    return client.get("/").text.split('class="guide-fig"')[1].split("</figure>")[0]
+
+
+def test_guide_page_has_3d_layers(client: TestClient) -> None:
+    figure = _figure(client)
+    assert figure.count('class="guide-sheet"') == 3
+    for layer in ("guide-sheen", "guide-scan", "guide-tag"):
+        assert layer in figure, layer
+    for side in MARGINS:
+        assert f'class="guide-band b-{side}"' in figure, side
+
+
+def test_diagram_values_are_real_buttons(client: TestClient) -> None:
+    figure = _figure(client)
+    for part in (*PARTS, *MARGINS):
+        assert re.search(rf'<button type="button" class="guide-(chip|dim)[^"]*"[^>]*'
+                         rf'data-part="{part}"', figure), part
+
+
+def test_each_chip_has_a_target_line_on_the_page(client: TestClient) -> None:
+    figure = _figure(client)
+    for line in ("l-size", "l-sp", "l-ind", "l-font"):
+        assert re.search(rf'<i class="[^"]*\b{line}\b', figure), line
+
+
+def test_scene_css_only_moves_compositor_properties() -> None:
+    block = _block(SCENE)
+    for trans in re.findall(r"transition:\s*([^;]+);", block):
+        flat = re.sub(r"\([^)]*\)", "", trans)
+        props = {p.strip().split()[0] for p in flat.split(",")}
+        # box-shadow: kartların mevcut hover gölgesi, yeni bir hareket değil.
+        assert props <= {"transform", "translate", "rotate", "opacity", "box-shadow"}, trans
+    for name, body in re.findall(r"@keyframes ([\w-]+) \{(.*?)\n\}", block, re.S):
+        assert set(re.findall(r"([a-z-]+):", body)) <= {"transform", "opacity"}, name
+    assert "infinite" not in block
+
+
+def test_scene_3d_and_entrances_need_motion_class() -> None:
+    """Hareket azaltılmışsa landing.js .motion eklemez: 3D ve girişler hiç devreye girmez."""
+    block = _block(SCENE)
+    for selector in (".guide-fig { perspective", ".guide-page { transform-style",
+                     ".guide-sheet { display: block", ".guide-scan.run::after"):
+        assert f".motion {selector}" in block, selector
+    assert ".hiw.is-armed .hiw-step:not(.is-in)" in block
+
+
+def test_scene_css_uses_tokens() -> None:
+    block = _block(SCENE)
+    assert not re.search(r"#[0-9A-Fa-f]{3,8}\b", block)
+    assert not re.search(r"\brgba?\(", block)
+
+
+def test_motion_scripts_stay_safe_and_stop_themselves() -> None:
+    landing = LANDING_JS.read_text(encoding="utf-8")
+    scene = GUIDE_JS.read_text(encoding="utf-8")
+    assert len(scene.encode()) <= 8 * 1024, "guide-scene.js bütçesi (8 KB) aşıldı"
+    for js in (landing, scene):
+        assert "setInterval" not in js  # otomatik tur bir kez döner, sonsuz döngü yok
+        assert "passive: true" in js
+        assert "if (!reduced" in js  # 3D ve parallax azaltılmış harekette çalışmaz
+        assert "http://" not in js.replace("http://www.w3.org/2000/svg", "")
+        assert "https://" not in js and "innerHTML" not in js and "eval(" not in js
+    assert "if (reduced || !fine) return" in landing  # eğilme yalnızca farede
+
+
+def test_guide_scene_loads_only_on_landing(client: TestClient) -> None:
+    assert "/static/guide-scene.js?v=" in client.get("/").text
+    for path in ("/giris", "/kayit", "/fiyatlandirma"):
+        assert "/static/guide-scene.js" not in client.get(path).text, path
 
 
 # --- 5. Panelde "hazır" kartı ----------------------------------------------------------------

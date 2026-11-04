@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Sontez — Tez biçim denetimi{% endblock %}
 {% block body_class %}landing{% endblock %}
-{% block scripts %}<script src="/static/landing.js?v={{ asset_v }}" defer></script>{% endblock %}
+{% block scripts %}<script src="/static/landing.js?v={{ asset_v }}" defer></script>
+  <script src="/static/guide-scene.js?v={{ asset_v }}" defer></script>{% endblock %}
 {% block content %}
 
 {# ------------------------------ KAHRAMAN ------------------------------ #}
@@ -83,19 +84,23 @@
          sıra kayar. Kural setinde karşılığı olmayan çip gösterilmez. #}
       {% set tv = {} %}{% for t in tiles %}{% set _ = tv.update({t.label: t.value}) %}{% endfor %}
       <div class="guide-page" id="guide-page">
+        {# 3D sahne (landing.js): tez destesi, kenar şeritleri, ışık, tarama. Süstür, hareket azaltılmışsa gizli. #}
+        <i class="guide-sheet"></i><i class="guide-sheet"></i><i class="guide-sheet"></i>
+        <i class="guide-band b-left"></i><i class="guide-band b-right"></i><i class="guide-band b-top"></i><i class="guide-band b-bottom"></i>
         <div class="guide-page-in" data-inset="{{ (page.left_mm / page.width_mm * 100) | round(1) }},{{ (page.right_mm / page.width_mm * 100) | round(1) }},{{ (page.top_mm / page.height_mm * 100) | round(1) }},{{ (page.bottom_mm / page.height_mm * 100) | round(1) }}">
-          <i class="h"></i><i></i><i></i><i class="w8"></i><i></i><i class="a"></i><i></i><i class="w6"></i><i class="gap"></i><i></i><i class="w7"></i>
+          <i class="h"></i><i class="l-sp"></i><i class="l-sp"></i><i class="w8 l-font"></i><i></i><i class="a l-size"></i><i></i><i class="w6"></i><i class="gap l-ind"></i><i></i><i class="w7"></i>
         </div>
-        <span class="guide-dim dim-left" data-wpct="{{ (page.left_mm / page.width_mm * 100) | round(1) }}">{{ page.labels["left"] }}</span>
-        <span class="guide-dim dim-right" data-wpct="{{ (page.right_mm / page.width_mm * 100) | round(1) }}">{{ page.labels["right"] }}</span>
-        <span class="guide-dim dim-top">{{ page.labels["top"] }}</span>
-        <span class="guide-dim dim-bottom">{{ page.labels["bottom"] }}</span>
+        <i class="guide-sheen"></i><i class="guide-scan"></i><span class="guide-tag" aria-hidden="true"></span>
+        <button type="button" class="guide-dim dim-left" data-part="left" data-wpct="{{ (page.left_mm / page.width_mm * 100) | round(1) }}">{{ page.labels["left"] }}</button>
+        <button type="button" class="guide-dim dim-right" data-part="right" data-wpct="{{ (page.right_mm / page.width_mm * 100) | round(1) }}">{{ page.labels["right"] }}</button>
+        <button type="button" class="guide-dim dim-top" data-part="top">{{ page.labels["top"] }}</button>
+        <button type="button" class="guide-dim dim-bottom" data-part="bottom">{{ page.labels["bottom"] }}</button>
       </div>
       <div class="guide-chips">
-        {% if "Gövde" in tv %}<span class="guide-chip">{{ tv["Gövde"] }}</span>{% endif %}
-        {% if "Satır aralığı" in tv %}<span class="guide-chip hi">{{ tv["Satır aralığı"] }} satır</span>{% endif %}
-        {% if "Girinti" in tv %}<span class="guide-chip">girinti {{ tv["Girinti"] }}</span>{% endif %}
-        {% if "Yazı tipi" in tv %}<span class="guide-chip hi">{{ tv["Yazı tipi"] }}</span>{% endif %}
+        {% if "Gövde" in tv %}<button type="button" class="guide-chip" data-part="size">{{ tv["Gövde"] }}</button>{% endif %}
+        {% if "Satır aralığı" in tv %}<button type="button" class="guide-chip hi" data-part="spacing">{{ tv["Satır aralığı"] }} satır</button>{% endif %}
+        {% if "Girinti" in tv %}<button type="button" class="guide-chip" data-part="indent">girinti {{ tv["Girinti"] }}</button>{% endif %}
+        {% if "Yazı tipi" in tv %}<button type="button" class="guide-chip hi" data-part="font">{{ tv["Yazı tipi"] }}</button>{% endif %}
       </div>
     </figure>
     {% endif %}
