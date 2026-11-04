@@ -139,6 +139,59 @@ def test_only_transform_and_opacity_are_animated() -> None:
                                   "background-size"}, (marker, trans)
 
 
+# --- 4b. Arayüz hareket katmanı --------------------------------------------------------------
+
+INTERFACE_MOTION = "ARAYUZ HAREKETI"
+
+
+def test_interface_motion_only_animates_transform_and_opacity() -> None:
+    block = _block(INTERFACE_MOTION)
+    frames = re.findall(r"@keyframes [\w-]+ \{ from \{ ([^}]*) \} \}", block)
+    assert len(frames) == block.count("@keyframes"), "beklenmeyen keyframes biçimi"
+    for body in frames:
+        assert {p for p in re.findall(r"([\w-]+):", body)} <= {"opacity", "transform"}, body
+        assert "scale(0)" not in body
+
+
+def test_interface_motion_targets_planned_components() -> None:
+    block = _block(INTERFACE_MOTION)
+    for selector in (".faq-item[open] p", ".plan", ".auth-card", ".suggest-dialog[open]",
+                     ".suggest-dialog[open]::backdrop", ".pick-pop", ".output-panel",
+                     ".btn:not(:disabled):active", ".nav-link:active", ".suggest-fab:active"):
+        assert selector in block, selector
+
+
+def test_interface_motion_stops_when_reduced() -> None:
+    block = _block(INTERFACE_MOTION)
+    reduced = block.split("@media (prefers-reduced-motion: reduce) {")[1]
+    for selector in (".faq-item[open] p", ".plan", ".auth-card", ".suggest-dialog[open]",
+                     ".suggest-dialog[open]::backdrop", ".pick-pop", ".output-panel",
+                     ".btn:not(:disabled):active", ".nav-link:active", ".suggest-fab:active"):
+        assert selector in reduced, f"azaltılmış harekette kapanmıyor: {selector}"
+
+
+def test_interface_motion_plays_once_and_stays_quick() -> None:
+    block = _block(INTERFACE_MOTION)
+    assert "infinite" not in block
+    durations = [float(d) for d in re.findall(r"animation: [\w-]+ (\.\d+)s", block)]
+    assert durations and max(durations) <= 0.4
+
+
+def test_frequent_report_interactions_stay_instant() -> None:
+    block = _block(INTERFACE_MOTION)
+    for selector in (".comment", ".filter", ".pcard", ".blk"):
+        assert selector not in block, selector
+
+
+def test_shared_easing_is_one_token() -> None:
+    assert "--ease-out: cubic-bezier(.2, .7, .2, 1);" in CSS
+    assert CSS.count("cubic-bezier(.2, .7, .2, 1)") == 1
+
+
+def test_barcode_reveals_like_other_sections(client: TestClient) -> None:
+    assert 'class="wrap barcode reveal"' in client.get("/").text
+
+
 # --- 5. Panelde "hazır" kartı ----------------------------------------------------------------
 
 

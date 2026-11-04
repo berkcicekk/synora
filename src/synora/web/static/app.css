@@ -53,6 +53,7 @@
   --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
   --serif: "Latin Modern Roman", "CMU Serif", Georgia, serif;
   --wide: 1280px;
+  --ease-out: cubic-bezier(.2, .7, .2, 1); /* sitedeki tüm giriş hareketleri */
   color-scheme: light;
 }
 
@@ -312,7 +313,7 @@ body.app { background: var(--app-panel); }
 .hero h1 { font-size: clamp(3rem, 8vw, 7.25rem); line-height: .95; letter-spacing: -.04em; max-width: 1000px; }
 .hero p { max-width: 560px; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-.hero .wrap > * { animation: rise .9s cubic-bezier(.2, .7, .2, 1) both; }
+.hero .wrap > * { animation: rise .9s var(--ease-out) both; }
 .hero h1 { animation-delay: .08s; } .hero .hero-ctas { animation-delay: .2s; }
 @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .hero .wrap > * { animation: none; } }
@@ -423,7 +424,7 @@ body.app { background: var(--app-panel); }
 /* == HAREKET == */
 /* Belirme: yalnızca JS hareket açıkken (.motion) gizli başlar; yoksa içerik zaten görünür.
    Konum için bağımsız `translate` kullanılır: eğilmenin `transform`'u ile çakışmaz. */
-.reveal, [data-stagger] > * { transition: opacity .7s cubic-bezier(.2, .7, .2, 1), translate .7s cubic-bezier(.2, .7, .2, 1); }
+.reveal, [data-stagger] > * { transition: opacity .7s var(--ease-out), translate .7s var(--ease-out); }
 .motion .reveal:not([data-stagger]):not(.is-in),
 .motion .reveal[data-stagger]:not(.is-in) > * { opacity: 0; translate: 0 24px; }
 [data-stagger] > * { transition-delay: calc(var(--i, 0) * 90ms); }
@@ -536,7 +537,7 @@ body.app { background: var(--app-panel); }
 .hiw.is-armed .hiw-step:not(.is-in) :is(.a-slide, .a-pop, .a-draw, .tag, .row, .fp, .eq, .chg .t-accink, .under, .badge, .lines-blur) { opacity: 0; }
 .hiw.is-armed .hiw-step:not(.is-in) .lines-sharp { opacity: 1; }
 .hiw.is-armed .hiw-step:not(.is-in) :is(.strike, .a-draw) { transform: scaleX(0); }
-.hiw.is-armed .hiw-step.is-in .a-slide { animation: k-slide .7s var(--d) cubic-bezier(.2, .7, .2, 1) both; }
+.hiw.is-armed .hiw-step.is-in .a-slide { animation: k-slide .7s var(--d) var(--ease-out) both; }
 .hiw.is-armed .hiw-step.is-in .a-pop { animation: k-pop .5s calc(var(--d) + .35s) cubic-bezier(.34, 1.56, .64, 1) both; }
 .hiw.is-armed .hiw-step.is-in .a-draw { animation: k-scale .5s calc(var(--d) + .75s) ease both; }
 .hiw.is-armed .hiw-step.is-in .lines-sharp { animation: k-out .6s calc(var(--d) + .2s) ease both; }
@@ -616,7 +617,7 @@ body.app { background: var(--app-panel); }
 .pricing { padding-bottom: clamp(4rem, 8vw, 6rem); }
 .plans { display: grid; gap: 1rem; margin-top: clamp(-5rem, -8vw, -3.5rem); }
 @media (min-width: 900px) { .plans { grid-template-columns: repeat(3, 1fr); align-items: stretch; } }
-.plan { position: relative; display: flex; flex-direction: column; gap: 1rem; padding: 1.8rem 1.6rem; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; box-shadow: 0 18px 40px -26px rgba(13, 22, 38, .35); transition: transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s; }
+.plan { position: relative; display: flex; flex-direction: column; gap: 1rem; padding: 1.8rem 1.6rem; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; box-shadow: 0 18px 40px -26px rgba(13, 22, 38, .35); transition: transform .3s var(--ease-out), box-shadow .3s; }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .plan:hover { transform: translateY(-6px); box-shadow: 0 26px 50px -24px rgba(13, 22, 38, .4); }
 }
@@ -1250,3 +1251,37 @@ body.app .footer, body.editor .footer { background: transparent; }
   .admin-nav a { flex: none; }
 }
 /* == /YÖNETİM == */
+
+/* == ARAYUZ HAREKETI == */
+/* Yalnızca transform ve opacity; her giriş bir kez oynar, kapanışlar canlandırılmaz. Dolgu
+   `backwards`: bitince kural serbest kalır, kartların hover hareketi çalışmaya devam eder.
+   Sık tekrarlanan rapor etkileşimleri (süzgeç, yorum seçimi, kısayollar) bilerek anlıktır. */
+@keyframes enter-up { from { opacity: 0; transform: translateY(var(--enter-y, 10px)); } }
+@keyframes enter-pop { from { opacity: 0; transform: scale(.97); } }
+@keyframes enter-from-corner { from { opacity: 0; transform: translate(12px, 12px) scale(.97); } }
+@keyframes fade-in { from { opacity: 0; } }
+
+/* Basınca: dokunuşa anında geri bildirim. */
+.nav-link { transition: transform .15s var(--ease-out); }
+.btn:not(:disabled):active, .nav-link:active, .suggest-fab:active { transform: scale(.97); transition-duration: .1s; }
+
+/* Sayfa açılışı */
+.plan { --enter-y: 12px; animation: enter-up .4s var(--ease-out) backwards; }
+.plan:nth-child(2) { animation-delay: 60ms; }
+.plan:nth-child(3) { animation-delay: 120ms; }
+.auth-card { animation: enter-up .32s var(--ease-out) backwards; }
+
+/* Açılan içerik: geldiği yerden açılır (yükseklik canlandırılmaz). */
+.faq-item[open] p { --enter-y: 4px; animation: enter-up .22s var(--ease-out) backwards; }
+.suggest-dialog[open] { animation: enter-from-corner .18s var(--ease-out) backwards; }
+.suggest-dialog[open]::backdrop { animation: fade-in .18s linear backwards; }
+.pick-pop { animation-name: enter-pop; animation-timing-function: var(--ease-out); transform-origin: top center; }
+.pick-pop.up { transform-origin: bottom center; }
+.output-panel { animation: enter-pop .16s var(--ease-out) backwards; transform-origin: top right; }
+
+@media (prefers-reduced-motion: reduce) {
+  .plan, .auth-card, .faq-item[open] p, .suggest-dialog[open], .suggest-dialog[open]::backdrop,
+  .pick-pop, .output-panel { animation: none; }
+  .btn:not(:disabled):active, .nav-link:active, .suggest-fab:active { transform: none; }
+}
+/* == /ARAYUZ HAREKETI == */
