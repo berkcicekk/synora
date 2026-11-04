@@ -266,6 +266,12 @@ class JobRunner:
 
     def _janitor(self) -> None:
         while not self._stop.wait(600):
-            removed = self.db.purge(self.settings.retention_hours * 3600)
+            try:
+                removed = self.db.purge(self.settings.retention_hours * 3600)
+            except Exception:
+                # Geçici hata (kilit, dolu disk) temizliği kalıcı durdurmasın: raporlar
+                # süresinde silinmeli. Bir sonraki turda yeniden denenir.
+                log_event("retention.purge_failed", code="INTERNAL")
+                continue
             if removed:
                 log_event("retention.purged", count=removed)

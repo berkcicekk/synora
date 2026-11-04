@@ -55,7 +55,7 @@ HERO_SHOT = HERE / "static" / "rapor-once-sonra.webp"  # varsa ana sayfada barko
 SESSION_COOKIE = "synora_session"
 PRE_CSRF_COOKIE = "synora_pre"
 # Kayıtta onaylanan aydınlatma metninin sürümü; metin değişince artırılır.
-TERMS_VERSION = "aydinlatma-taslak-2026-11"
+TERMS_VERSION = "aydinlatma-taslak-2026-11b"
 SERVER_BUSY = "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin."
 MAX_FORM_BYTES = 8 * 1024
 MAX_JSON_BYTES = 64 * 1024

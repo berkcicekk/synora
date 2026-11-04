@@ -282,8 +282,9 @@ sınırlar: root değil, salt okunur, yalnızca 127.0.0.1). Üretimde eksik ya d
   aynı dosyayı yeniden seçer; sunucu yalnızca ilk yüklemenin SHA-256 özetini tutar. Rapor (metin içermez,
   başlık yolları hariç) 24 saat sonra silinir; öğrenci hemen silebilir. Rapor sayfasındaki metin görünümü
   dosyayı öğrencinin kendi tarayıcısında okur; sunucuya ek veri gitmez (§10.1).
-- Sunucu Türkiye'de barındırılır (KVKK yurt dışı aktarım). Model katmanı metin görmediği için tez metni hiçbir
-  koşulda üçüncü tarafa gitmez.
+- Sunucu Türkiye'de barındırılır (KVKK yurt dışı aktarım). Tez metni hiçbir yapay zekâ modeline gitmez.
+  **Cloudflare istisnası:** tünel kurulumunda TLS Cloudflare'de sonlanır; dosya, giriş bağlantısı ve oturum
+  bilgisi orada açık hâlde işlenir. Aydınlatma metni bunu söyler; pilot kararı için bkz. §13.
 - KVKK aydınlatma metni ve açık rıza (rol düzeltmelerinin eğitim verisi olarak kullanımı için ayrı onay).
 - Giriş (`/giris`) ve kayıt (`/kayit`) ayrı sayfalar; ikisi de parolasız bağlantı gönderir. Kayıt,
   aydınlatma metni (`/aydinlatma`, **taslak**) onayı ister. Kayıt formunu başkası doldurmuş olabileceği
@@ -383,5 +384,8 @@ eşlemesi ve LaTeX'in kendiliğinden uygulayamadığı kurallar).
 - Pilot için enstitüde muhatap kim? Enstitünün format kontrolünü bugün kim, nasıl yapıyor?
 - Kimlik doğrulama: pilotta e-posta bağlantısı uygulandı; enstitü SSO'suna geçiş zamanı.
 - Barındırma: demo Türkiye'de bir VPS + Cloudflare tüneli; pilot için üniversite sunucusu mu,
-  bulut mu?
+  bulut mu? Cloudflare kalacaksa açık metin geçişi için hukuki dayanak gerekir; kalmayacaksa TLS kendi
+  sunucumuzda sonlanır (`deploy/nginx-synora.conf`).
+- Demo kipi (`SYNORA_EMAIL_VERIFICATION=0`): adres doğrulanmadığı için onay kaydı kanıt sayılmaz. Pilotta
+  kapanmalı; bunun için SMTP ayarı gerekir.
 - Yedekleme politikası (deploy/README.md): raporlar yedekten dönmeyecek şekilde nasıl standartlaşır?

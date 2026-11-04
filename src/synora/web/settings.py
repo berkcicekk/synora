@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
+MAX_RETENTION_HOURS = 24  # aydınlatma metni ve arayüz bu süreyi söz veriyor
 _SHA256_HEX = re.compile(r"[0-9a-f]{64}")
 _HEADER_NAME = re.compile(r"[a-z0-9-]{1,64}")
 _ACCESS_TEAM = re.compile(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.cloudflareaccess\.com")
@@ -103,6 +104,9 @@ class Settings:
         if self.dev:
             return []
         found = []
+        if self.retention_hours > MAX_RETENTION_HOURS:
+            found.append(f"SYNORA_RETENTION_HOURS en çok {MAX_RETENTION_HOURS} olabilir: "
+                         "kullanıcıya raporun bu sürede silineceği söyleniyor")
         if not self.base_url.startswith("https://"):
             found.append("SYNORA_BASE_URL https:// ile başlamalı (Secure çerezler ve "
                          "giriş bağlantıları için)")

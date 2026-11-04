@@ -71,8 +71,9 @@ Access ayarı bozulursa panel 404 döner, açılmaz.
 
 - **Tek süreç.** `synora serve` tek uvicorn süreci çalıştırır; ikinci bir örnek aynı veritabanını
   kullanırsa birbirinin işlerini "yarıda kaldı" diye kapatır. Ölçeklemek için `SYNORA_WORKERS` artırılır.
-- **Tez diske yazılmaz.** nginx'te `proxy_request_buffering off` zorunludur; açık kalırsa nginx yüklenen
-  dosyayı geçici dosyaya yazar. Uygulama dosyayı bellekte işler.
+- **Tez diske yazılmaz.** nginx'te `proxy_request_buffering off`, `proxy_buffering off` ve
+  `proxy_max_temp_file_size 0` zorunludur; açık kalırsa nginx yüklenen dosyayı ya da düzeltilmiş kopyayı
+  geçici dosyaya yazar. Uygulama dosyayı bellekte işler.
 - **Kayıtlar.** Uygulama olayları (`job.done`, `retention.purged`…) standart çıktıya JSON olarak yazılır,
   `journalctl -u synora` (Docker'da `docker compose logs`) ile okunur; tez metni içermez. Üretimde uvicorn erişim kaydı kapalıdır, nginx
   erişim kaydı sorgu dizesini yazmaz ve hata kaydı yalnızca ciddi hataları tutar (giriş bağlantısı

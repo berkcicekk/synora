@@ -287,7 +287,8 @@ class Database:
             now = time.time()
             if row is None or row[2] or row[1] < now:
                 return None
-            self._conn.execute("UPDATE login_tokens SET used=1 WHERE token_hash=?", (token_hash,))
+            # Aynı adrese gönderilmiş diğer bağlantılar da kapanır: postada geçerli kalmasın.
+            self._conn.execute("UPDATE login_tokens SET used=1 WHERE email=?", (row[0],))
             # Satır yalnızca kişi onay verince açılır (onayı olmayan adres girişte de onay verir).
             if row[3] and consent_confirmed:
                 self._conn.execute(
@@ -313,13 +314,15 @@ class Database:
     def register_user(self, email: str, consent_version: str) -> None:
         """Doğrulamasız kayıt (demo kipi): kullanıcı satırı (whitelist) ve onay kaydı.
 
-        Adres sahipliği doğrulanmadığı için onay, formu gönderenin beyanıdır.
+        Adres sahipliği doğrulanmadığı için onay, formu gönderenin beyanıdır: var olan onay
+        kaydının üstüne yazılmaz, yalnızca boş kayıt (yöneticinin eklediği hesap) doldurulur.
         """
         now = time.time()
         self.execute(
             "INSERT INTO users (email, created_at, consent_version, consent_at) "
             "VALUES (?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET "
-            "consent_version=excluded.consent_version, consent_at=excluded.consent_at",
+            "consent_version=COALESCE(users.consent_version, excluded.consent_version), "
+            "consent_at=COALESCE(users.consent_at, excluded.consent_at)",
             (email, now, consent_version, now))
 
     def user_count(self) -> int:
@@ -457,6 +460,8 @@ class Database:
         with self._lock:
             self._conn.execute("DELETE FROM jobs WHERE id=?", (job_id,))
             self._conn.execute("DELETE FROM feedback WHERE job_id=?", (job_id,))
+            # "Raporu şimdi sil": içerik bir sonraki temizliği beklemeden WAL'dan da çıksın.
+            self._conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
 
     # --- Bulgu geri bildirimi ------------------------------------------------------------
 

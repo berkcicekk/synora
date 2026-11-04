@@ -1,15 +1,13 @@
-"""Güvenlik denetiminde (2026-11-04) testsiz bulunan kritik akışlar.
-
-`xfail(strict=True)` işaretli testler raporlanmış, henüz düzeltilmemiş bulgulardır: düzeltme
-gelince test geçer, strict işaret paketi kırar ve işaret kaldırılır.
-"""
+"""Güvenlik denetiminde (2026-11-04) testsiz bulunan kritik akışlar ve kapatılan bulgular."""
 
 from __future__ import annotations
 
 import os
 import sqlite3
 import sys
+import time
 from collections.abc import Iterator
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -171,8 +169,6 @@ def test_janitor_purges_with_configured_retention(tmp_path: Path, settings: Sett
     assert seen == [settings.retention_hours * 3600]
 
 
-@pytest.mark.xfail(strict=True, raises=sqlite3.OperationalError,
-                   reason="O: tek veritabanı hatası temizlik iş parçacığını kalıcı olarak durdurur")
 def test_janitor_survives_a_database_error(tmp_path: Path, settings: Settings,
                                            monkeypatch: pytest.MonkeyPatch) -> None:
     runner = janitor_runner(tmp_path, settings, wakes=2)
@@ -184,12 +180,14 @@ def test_janitor_survives_a_database_error(tmp_path: Path, settings: Settings,
             raise sqlite3.OperationalError("disk full")
         return 0
 
+    events: list[str] = []
     monkeypatch.setattr(runner.db, "purge", purge)
+    monkeypatch.setattr(worker, "log_event", lambda event, **_: events.append(event))
     runner._janitor()
     assert len(calls) == 2
+    assert events == ["retention.purge_failed"]
 
 
-@pytest.mark.xfail(strict=True, reason="D: 'Raporu şimdi sil' WAL'ı boşaltmaz; içerik 10 dk kalır")
 def test_deleting_a_report_leaves_nothing_in_the_wal(tmp_path: Path) -> None:
     db = Database(tmp_path / "d.db")
     db.add_job("silinecek-is-0000000001", ALICE, "example")
@@ -197,12 +195,12 @@ def test_deleting_a_report_leaves_nothing_in_the_wal(tmp_path: Path) -> None:
     db.delete_job("silinecek-is-0000000001")
     wal = tmp_path / "d.db-wal"
     assert not wal.exists() or wal.stat().st_size == 0
+    assert b"GIZLI-RAPOR" not in (tmp_path / "d.db").read_bytes()
 
 
 # --- Giriş bağlantıları ve ayarlar ----------------------------------------------------------------
 
 
-@pytest.mark.xfail(strict=True, reason="D: kullanılan bağlantı aynı adresin diğerlerini kapatmıyor")
 def test_using_one_login_link_cancels_the_others(client: TestClient, mailer: ConsoleMailer) -> None:
     tokens = []
     for _ in range(2):
@@ -215,12 +213,35 @@ def test_using_one_login_link_cancels_the_others(client: TestClient, mailer: Con
     assert not db.login_token_valid(_hash(tokens[1]))
 
 
-@pytest.mark.xfail(strict=True, reason="D: üretimde saklama süresi 24 saatlik sözü aşabiliyor")
 def test_production_refuses_retention_beyond_the_promise(tmp_path: Path) -> None:
     settings = Settings(db_path=tmp_path / "t.db", rulesets_dir=ROOT / "rulesets",
                         base_url="https://ornek.edu.tr", allowed_domains=("beun.edu.tr",),
                         dev=False, email_verification=False, retention_hours=1000.0)
     assert any("RETENTION" in problem for problem in settings.problems())
+    allowed = replace(settings, retention_hours=24.0)
+    assert not any("RETENTION" in problem for problem in allowed.problems())
+
+
+def test_demo_registration_does_not_overwrite_an_existing_consent(tmp_path: Path) -> None:
+    """Demo kipinde adres doğrulanmaz: başkası formu doldurup onay kanıtını değiştirememeli."""
+    db = Database(tmp_path / "o.db")
+    db.register_user(ALICE, "surum-1")
+    first = db.user_consent(ALICE)
+    time.sleep(0.01)
+    db.register_user(ALICE, "surum-2")
+    assert db.user_consent(ALICE) == first
+
+
+def test_privacy_notice_says_cloudflare_opens_the_connection(client: TestClient) -> None:
+    text = " ".join(client.get("/aydinlatma").text.split())
+    assert "şifresi Cloudflare'de çözülür" in text
+    assert "şifreli bağlantıyla Cloudflare ağından geçerek" not in text
+
+
+def test_architecture_does_not_promise_no_third_party() -> None:
+    doc = " ".join((ROOT / "docs" / "architecture.md").read_text(encoding="utf-8").split())
+    assert "koşulda üçüncü tarafa gitmez" not in doc
+    assert "TLS Cloudflare'de sonlanır" in doc
 
 
 # --- Alt süreç yalıtımı ---------------------------------------------------------------------------
@@ -293,7 +314,6 @@ def test_nginx_keeps_its_promises(needle: str) -> None:
     assert "$request_uri" not in NGINX.split("log_format synora_noquery")[1].split(";")[0]
 
 
-@pytest.mark.xfail(strict=True, reason="O: düzeltilmiş tez nginx geçici dosyasına yazılabilir")
 @pytest.mark.parametrize("needle", ["proxy_buffering off;", "proxy_max_temp_file_size 0;"])
 def test_nginx_does_not_spool_returned_theses_to_disk(needle: str) -> None:
     assert needle in NGINX
