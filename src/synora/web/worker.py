@@ -33,6 +33,9 @@ from synora.web.settings import Settings
 MEMORY_LIMIT_BYTES = 2 * 1024 * 1024 * 1024
 SETTINGS_ENV_PREFIX = "SYNORA_"
 MAX_CHILD_MESSAGE_BYTES = 700 * 1024 * 1024  # açılmış paket tavanı (600 MB) + pay
+# Süre dolduktan sonra yarım kalan iletinin okunması için tanınan pay; sonra süreç öldürülür.
+CHILD_KILL_GRACE_SECONDS = 30.0
+CHILD_MAX_OPEN_FILES = 256
 
 
 UserRoles = dict[str, str] | None
@@ -94,16 +97,35 @@ def scrub_environment() -> None:
         del os.environ[name]
 
 
+def _make_undumpable() -> None:
+    """PR_SET_DUMPABLE=0 (Linux): döküm olmaz, aynı kullanıcı /proc'tan belleği okuyamaz."""
+    import ctypes
+
+    with contextlib.suppress(OSError, AttributeError):
+        ctypes.CDLL(None).prctl(4, 0, 0, 0, 0)
+
+
+def _apply_child_limits(cpu_seconds: int) -> None:
+    """Güvenilmez dosyayı işleyen sürecin sınırları: tez baytları döküm ya da dosyayla diske
+    düşmesin (süreç hiçbir dosyaya yazmaz; sonuç boru hattından döner)."""
+    if sys.platform == "win32":
+        return
+    import resource
+
+    resource.setrlimit(resource.RLIMIT_AS, (MEMORY_LIMIT_BYTES, MEMORY_LIMIT_BYTES))
+    resource.setrlimit(resource.RLIMIT_CPU, (cpu_seconds, cpu_seconds))
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+    resource.setrlimit(resource.RLIMIT_FSIZE, (0, 0))
+    resource.setrlimit(resource.RLIMIT_NOFILE, (CHILD_MAX_OPEN_FILES, CHILD_MAX_OPEN_FILES))
+    _make_undumpable()
+
+
 def _child(
     conn: Connection, task: str, ruleset_path: str, job_id: str, cpu_seconds: int,
     user_roles: UserRoles = None,
 ) -> None:
     scrub_environment()
-    if sys.platform != "win32":
-        import resource
-
-        resource.setrlimit(resource.RLIMIT_AS, (MEMORY_LIMIT_BYTES, MEMORY_LIMIT_BYTES))
-        resource.setrlimit(resource.RLIMIT_CPU, (cpu_seconds, cpu_seconds))
+    _apply_child_limits(cpu_seconds)
     data = conn.recv_bytes()
     if task == "check":
         conn.send_bytes(encode_pipeline(run_pipeline(data, ruleset_path, job_id, user_roles)))
@@ -124,6 +146,10 @@ def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: floa
                        daemon=True)
     proc.start()
     child.close()
+    # Dolu boru ya da yarım ileti yazma/okumayı süresiz tutmasın: süre dolunca süreç ölür.
+    watchdog = threading.Timer(timeout + CHILD_KILL_GRACE_SECONDS, proc.kill)
+    watchdog.daemon = True
+    watchdog.start()
     try:
         parent.send_bytes(data)
         if parent.poll(timeout):
@@ -134,10 +160,14 @@ def _spawn(task: str, data: bytes, ruleset_path: str, job_id: str, timeout: floa
         # Süreç çöktü ya da bellek sınırına takıldı.
         return "INTERNAL"
     finally:
+        watchdog.cancel()
         parent.close()
         proc.join(1)
         if proc.is_alive():
             proc.terminate()
+            proc.join(1)
+        if proc.is_alive():
+            proc.kill()
             proc.join(1)
 
 

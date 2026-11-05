@@ -854,6 +854,14 @@ body:has(.paperfall) { background: var(--app-panel); }
 
 .fineprint { font-size: .74rem; color: var(--muted); }
 
+/* Panel: hesap işlemleri */
+.account-card { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 20px; }
+.account-card .pcard-title { flex-basis: 100%; }
+.account-delete summary { cursor: pointer; font-size: .88rem; min-height: 44px; display: flex; align-items: center; gap: .4rem; color: var(--error); }
+.account-delete-form { display: grid; gap: 8px; max-width: 360px; margin-top: 8px; font-size: .88rem; }
+.account-delete-form input[type=email] { min-height: 44px; padding: 0 12px; border: 1px solid var(--border); border-radius: var(--radius-field); font: inherit; font-size: 16px; }
+.account-delete-form .btn { justify-self: start; }
+
 /* =================================== EDİTÖR =================================== */
 /* == RAPOR == */
 /* Rapor ekranı istisnası (docs/architecture.md §10.1): akademik, basılı rapor görünümü. Bileşenler

@@ -55,7 +55,7 @@ HERO_SHOT = HERE / "static" / "rapor-once-sonra.webp"  # varsa ana sayfada barko
 SESSION_COOKIE = "synora_session"
 PRE_CSRF_COOKIE = "synora_pre"
 # Kayıtta onaylanan aydınlatma metninin sürümü; metin değişince artırılır.
-TERMS_VERSION = "aydinlatma-taslak-2026-11c"
+TERMS_VERSION = "aydinlatma-taslak-2026-11d"
 SERVER_BUSY = "Sunucu şu an yoğun. Bir dakika sonra yeniden deneyin."
 MAX_FORM_BYTES = 8 * 1024
 MAX_JSON_BYTES = 64 * 1024
@@ -520,6 +520,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     # Saklama sözü her sayfada ayardan gelir (sabit "24 saat" ayar değişince yanlış söz olurdu).
     templates.env.globals["retention_hours"] = int(settings.retention_hours)
     templates.env.globals["training_keep_days"] = settings.training_keep_days
+    # Demo kipinde adres doğrulanmaz: başkasını düşüren ya da silen işlemler kapalıdır.
+    templates.env.globals["account_controls"] = settings.email_verification
     # Statik dosyalar için sürüm damgası: içerik değişince tarayıcı önbelleği geçersizleşir.
     asset_hash = hashlib.sha256()
     for name in ("app.css", "app.js", "fonts.css", "landing.js", "docview.js", "guide-scene.js"):
@@ -623,7 +625,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                 log_event("admin.access_invalid")
             return None
         if email not in settings.admin_emails:
-            log_event("admin.access_denied", hash=_hash(email)[:16])
+            log_event("admin.access_denied", hash=db.identity_hash(email))
             return None
         csrf = hmac.new(admin_csrf_secret, email.encode(), hashlib.sha256).hexdigest()
         return User(email=email, csrf=csrf, session_hash="")
@@ -908,7 +910,11 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     suggestion_rate_ok = make_rate_limiter(settings.suggestions_per_ip_hour,
                                            settings.suggestions_per_minute)
 
-    def open_session(email: str) -> RedirectResponse:
+    def open_session(request: Request, email: str) -> RedirectResponse:
+        # Aynı tarayıcıdaki eski oturum sunucuda açık kalmasın.
+        previous = request.cookies.get(SESSION_COOKIE)
+        if previous:
+            db.delete_session(_hash(previous))
         sid = secrets.token_urlsafe(32)
         db.add_session(_hash(sid), email, secrets.token_urlsafe(24),
                        settings.session_hours * 3600)
@@ -953,7 +959,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
                 db.register_user(email, TERMS_VERSION)
             elif db.user_consent(email) is None:
                 return fail("Bu adres kayıtlı değil. Önce kayıt olun.")
-            return open_session(email)
+            return open_session(request, email)
 
         def link_sent() -> HTMLResponse:
             return render(request, "login_sent.html", email=email, mode=mode,
@@ -1149,14 +1155,34 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         email = db.consume_login_token(_hash(token), consent_confirmed=form.get("kvkk") == "1")
         if email is None:
             return RedirectResponse("/auth", status_code=303)
-        return open_session(email)
+        return open_session(request, email)
 
     @app.post("/logout")
     async def logout(request: Request) -> Response:
         user = require_user(request)
         form = await small_form(request)
         check_csrf(user.csrf, str(form.get("csrf", "")))
-        db.delete_session(user.session_hash)
+        if form.get("all") == "1" and settings.email_verification:
+            db.delete_sessions(user.email)  # "tüm cihazlardan çık"
+        else:
+            db.delete_session(user.session_hash)
+        admin_unlocked.pop(user.session_hash, None)
+        resp = RedirectResponse("/", status_code=303)
+        resp.delete_cookie(SESSION_COOKIE)
+        return resp
+
+    @app.post("/hesap/sil")
+    async def delete_own_account(request: Request) -> Response:
+        """KVKK: öğrenci hesabını kendi siler. Demo kipinde adres doğrulanmadığı için kapalı."""
+        if not settings.email_verification:
+            raise HTTPException(404)
+        user = require_user(request)
+        form = await small_form(request)
+        check_csrf(user.csrf, str(form.get("csrf", "")))
+        if not hmac.compare_digest(form_email(form, "confirm").encode(), user.email.encode()):
+            raise HTTPException(400, "Onay için kendi e-posta adresinizi yazın.")
+        who = db.identity_hash(user.email)
+        await run_in_threadpool(db.delete_account, user.email, actor=who, target=who)
         admin_unlocked.pop(user.session_hash, None)
         resp = RedirectResponse("/", status_code=303)
         resp.delete_cookie(SESSION_COOKIE)
@@ -1283,7 +1309,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             if not admin_open(found):
                 return admin_key_form(request, found)
             user = found
-        log_event("admin.view", hash=_hash(user.email)[:16])
+        log_event("admin.view", hash=db.identity_hash(user.email))
         return admin_render(request, user, template, section, build())
 
     @app.get("/yonetim", response_class=HTMLResponse)
@@ -1334,7 +1360,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
 
     async def admin_action(request: Request) -> tuple[str, FormData]:
         user, form = await admin_form(request)
-        return _hash(user.email)[:16], form
+        return db.identity_hash(user.email), form
 
     def admin_done(status: str, page: str, actor: str | None = None,
                    action: str | None = None) -> RedirectResponse:
@@ -1359,7 +1385,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         email = form_email(form, "email")
         if not EMAIL_RE.fullmatch(email) or not domain_allowed(email):
             return admin_done("gecersiz", "hesaplar")
-        if not db.add_pending_user(email, actor=actor, target=_hash(email)[:16]):
+        if not db.add_pending_user(email, actor=actor, target=db.identity_hash(email)):
             return admin_done("var", "hesaplar")
         return admin_done("eklendi", "hesaplar", actor, "account_add")
 
@@ -1369,7 +1395,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         email = form_email(form, "email")
         if email in settings.admin_emails:  # yönetici kendini dışarıda bırakmasın
             return admin_done("yonetici", "hesaplar")
-        if not db.set_suspended(email, True, actor=actor, target=_hash(email)[:16]):
+        if not db.set_suspended(email, True, actor=actor, target=db.identity_hash(email)):
             return admin_done("yok", "hesaplar")
         return admin_done("askida", "hesaplar", actor, "account_suspend")
 
@@ -1377,7 +1403,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     async def admin_activate_account(request: Request) -> Response:
         actor, form = await admin_action(request)
         email = form_email(form, "email")
-        if not db.set_suspended(email, False, actor=actor, target=_hash(email)[:16]):
+        if not db.set_suspended(email, False, actor=actor, target=db.identity_hash(email)):
             return admin_done("yok", "hesaplar")
         return admin_done("etkin", "hesaplar", actor, "account_activate")
 
@@ -1400,7 +1426,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
     async def admin_end_sessions(request: Request) -> Response:
         actor, form = await admin_action(request)
         email = form_email(form, "email")
-        if not db.end_sessions(email, actor=actor, target=_hash(email)[:16]):
+        if not db.end_sessions(email, actor=actor, target=db.identity_hash(email)):
             return admin_done("oturum-yok", "hesaplar")
         return admin_done("oturum", "hesaplar", actor, "session_end")
 
@@ -1413,7 +1439,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         if not hmac.compare_digest(form_email(form, "confirm").encode(), email.encode()):
             return admin_done("onay", "hesaplar")
         deleted = await run_in_threadpool(db.delete_account, email, actor=actor,
-                                          target=_hash(email)[:16])
+                                          target=db.identity_hash(email))
         if not deleted:
             return admin_done("yok", "hesaplar")
         return admin_done("silindi", "hesaplar", actor, "account_delete")
@@ -1443,7 +1469,7 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
             raise HTTPException(404)
         form = await small_form(request)
         check_csrf(user.csrf, str(form.get("csrf", "")))
-        who = _hash(user.email)[:16]
+        who = db.identity_hash(user.email)
         if not admin_key_rate_ok(request):
             return admin_key_form(request, user, 429, "Çok fazla deneme yapıldı. Bir saat sonra "
                                                       "yeniden deneyin.")
@@ -1606,7 +1632,8 @@ def create_app(settings: Settings | None = None, mailer: Mailer | None = None) -
         check_active(user.email)
         check_queue(len(data))
         roles = pending_roles(job, await parse_report(job))
-        db.requeue(job_id)
+        if not db.requeue(job_id):  # raporu okurken paralel istek kuyruğa almış olabilir
+            raise HTTPException(409, "Bu denetim zaten yeniden denetleniyor.")
         runner.submit(job_id, data, str(ruleset.path), roles)
         del data
         return JSONResponse({"id": job_id, "url": f"/jobs/{job_id}"}, status_code=202)

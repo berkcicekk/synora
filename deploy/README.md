@@ -47,9 +47,10 @@ curl -s http://127.0.0.1:8000/health
 
 nginx ayarı (`nginx-synora.conf`) iki kurulumda aynıdır. Yükseltme: `git pull && sudo docker compose
 up -d --build`. Kayıtlar: `sudo docker compose logs -f`. `synora.service` bu kurulumda kullanılmaz;
-ikisini birden çalıştırmayın (tek süreç kuralı). Uygulama istemci IP'sini kullanmadığından
-`FORWARDED_ALLOW_IPS` kapsayıcıda etkisizdir; IP'ye dayalı bir sınır eklenirse Docker ağ geçidi
-adresi buraya yazılmalı. Yönetim panelinde sürüm görünsün diye derlemede
+ikisini birden çalıştırmayın (tek süreç kuralı). Hız sınırları istemci IP'sini
+`SYNORA_CLIENT_IP_HEADER` başlığından okur (tünelde `cf-connecting-ip`, nginx'te `x-real-ip`). Bu başlığı
+yalnızca öndeki vekil koyabilmeli ve istemciden geleni ezmeli; yoksa istemci başlığı değiştirerek sınırı
+atlatır. Yönetim panelinde sürüm görünsün diye derlemede
 `SYNORA_BUILD=$(git rev-parse --short HEAD) docker compose build` kullanılabilir (zorunlu değil).
 
 ## Yönetim paneli: Cloudflare Access

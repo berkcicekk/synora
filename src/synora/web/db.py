@@ -8,6 +8,8 @@ Gizli değerler (giriş bağlantısı, oturum kimliği) yalnızca SHA-256 özeti
 from __future__ import annotations
 
 import hashlib
+import hmac
+import secrets
 import sqlite3
 import threading
 import time
@@ -54,6 +56,11 @@ CREATE TABLE IF NOT EXISTS jobs (
 );
 CREATE INDEX IF NOT EXISTS jobs_email ON jobs(email, created_at);
 -- Günlük iş sınırı sayacı: iş/rapor silinse de düşmez. E-posta yerine özeti.
+-- Kuruluma özel anahtar: günlüklerdeki e-posta özeti adresten yeniden hesaplanamasın.
+CREATE TABLE IF NOT EXISTS meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS job_starts (
     email_hash TEXT NOT NULL,
     created_at REAL NOT NULL
@@ -231,6 +238,10 @@ class Database:
             user_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(users)")}
             if "suspended_at" not in user_columns:
                 self._conn.execute("ALTER TABLE users ADD COLUMN suspended_at REAL")
+            self._conn.execute("INSERT OR IGNORE INTO meta (key, value) VALUES (?, ?)",
+                               ("identity_key", secrets.token_hex(32)))
+            self._identity_key = self._conn.execute(
+                "SELECT value FROM meta WHERE key='identity_key'").fetchone()[0].encode()
             # Aynı satır yeniden denetimlerle çoğalmasın. Eski kurulumlarda önce kopyalar silinir.
             has_index = self._conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE name='training_unique'").fetchone()
@@ -245,6 +256,11 @@ class Database:
                 "UPDATE jobs SET status='failed', error_code='INTERRUPTED', finished_at=? "
                 "WHERE status IN ('queued', 'running')", (time.time(),),
             )
+
+    def identity_hash(self, email: str) -> str:
+        """Günlük ve işlem kaydındaki kimlik: anahtarsız yeniden hesaplanamaz (adresler tahmin
+        edilebildiği için düz özet geri çözülebilirdi)."""
+        return hmac.new(self._identity_key, email.encode("utf-8"), hashlib.sha256).hexdigest()[:16]
 
     def execute(self, sql: str, params: tuple[object, ...] = ()) -> Rows:
         with self._lock:
@@ -377,6 +393,10 @@ class Database:
     def delete_session(self, id_hash: str) -> None:
         self.execute("DELETE FROM sessions WHERE id_hash=?", (id_hash,))
 
+    def delete_sessions(self, email: str) -> None:
+        """Kullanıcının kendi isteği ("tüm cihazlardan çık"); yönetici işlemi değil."""
+        self.execute("DELETE FROM sessions WHERE email=?", (email,))
+
     # --- İşler ----------------------------------------------------------------------------
 
     def add_job(self, job_id: str, email: str, ruleset: str,
@@ -393,9 +413,11 @@ class Database:
     def set_running(self, job_id: str) -> None:
         self.execute("UPDATE jobs SET status='running' WHERE id=?", (job_id,))
 
-    def requeue(self, job_id: str) -> None:
-        """Aynı dosyayla yeniden denetim: rapor yeni sonuç gelene kadar korunur."""
-        self.execute("UPDATE jobs SET status='queued' WHERE id=?", (job_id,))
+    def requeue(self, job_id: str) -> bool:
+        """Aynı dosyayla yeniden denetim: rapor yeni sonuç gelene kadar korunur. Paralel iki
+        istekten yalnızca biri kazanır (durum tek yazımda değişir)."""
+        return self.execute("UPDATE jobs SET status='queued' WHERE id=? AND status='done'",
+                            (job_id,)).rowcount == 1
 
     def set_collect(self, job_id: str, collect: bool) -> None:
         self.execute("UPDATE jobs SET collect=? WHERE id=?", (int(collect), job_id))
@@ -716,8 +738,9 @@ class Database:
             self._conn.execute("DELETE FROM job_starts WHERE email_hash=?", (_quota_hash(email),))
             self._conn.execute("DELETE FROM suggestions WHERE LOWER(email)=?", (email,))
             self._conn.execute("DELETE FROM users WHERE email=?", (email,))
-            self._conn.execute("UPDATE admin_log SET target=? WHERE target=?",
-                               (ERASED_TARGET, target))
+            # Anahtarlı özetten önceki kayıtlar düz özetle yazılmıştı; onlar da kalmasın.
+            self._conn.execute("UPDATE admin_log SET target=? WHERE target IN (?, ?)",
+                               (ERASED_TARGET, target, _email_hash(email)[:16]))
             self._audit(actor, "account_delete", ERASED_TARGET)
         # Silinen raporlar WAL dosyasında kalmasın (purge ile aynı).
         self.execute("PRAGMA wal_checkpoint(TRUNCATE)")

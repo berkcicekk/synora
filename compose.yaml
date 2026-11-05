@@ -31,6 +31,9 @@ services:
       - no-new-privileges:true
     init: true  # her iş için açılan alt süreçler toplanır
     mem_limit: 6g
+    memswap_limit: 6g  # takas yok: bellekteki tez baytları diske düşmesin
+    ulimits:
+      core: 0  # çekirdek dökümü yok
     pids_limit: 128
     stop_grace_period: 30s
     logging:

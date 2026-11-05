@@ -16,7 +16,9 @@ RestartSec=5
 
 # İkinci kat sınır: her iş zaten ayrı süreçte 2 GB / 120 sn ile sınırlı (A10).
 MemoryMax=6G
+MemorySwapMax=0
 TasksMax=128
+LimitCORE=0
 
 # Sertleştirme: yalnızca veritabanı dizinine yazabilir; tez dosyası diske hiç yazılmaz.
 NoNewPrivileges=yes
@@ -30,6 +32,12 @@ ProtectKernelModules=yes
 ProtectControlGroups=yes
 RestrictSUIDSGID=yes
 LockPersonality=yes
+ProtectProc=invisible
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
 UMask=0077
 
 [Install]

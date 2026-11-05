@@ -118,7 +118,7 @@ def test_end_sessions_only_touches_that_account(client_: TestClient,
     assert count(db, "SELECT COUNT(*) FROM sessions WHERE email=?", OTHER) == 1
     rows = db.admin_log()
     assert len(rows) == 1 and rows[0][1:] == (
-        ACTOR, "session_end", hashlib.sha256(STUDENT.encode()).hexdigest()[:16])
+        db.identity_hash(ADMIN), "session_end", db.identity_hash(STUDENT))
 
 
 def test_end_sessions_without_open_session_logs_nothing(client_: TestClient,
@@ -368,7 +368,7 @@ def test_access_mode_action_needs_token_and_page_csrf(access_client: TestClient)
                               follow_redirects=False).status_code == 404
     res = access_client.post(route, data=data, headers=headers, follow_redirects=False)
     assert res.status_code == 303
-    assert [r[1] for r in db.admin_log()] == [ACTOR]
+    assert [r[1] for r in db.admin_log()] == [db.identity_hash(ADMIN)]
 
 
 def test_access_csrf_does_not_transfer_between_apps(settings: Settings, mailer: ConsoleMailer,

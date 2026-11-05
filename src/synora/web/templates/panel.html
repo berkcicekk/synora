@@ -127,4 +127,25 @@
     <a class="textlink" href="/yukle">yükleme sayfasından</a> gönderin.</p>
   {% endif %}
 </section>
+
+{% if account_controls %}
+<section id="hesap" aria-labelledby="hesap-h" class="pcard account-card">
+  <h2 id="hesap-h" class="pcard-title">Hesap</h2>
+  <form method="post" action="/logout">
+    <input type="hidden" name="csrf" value="{{ user.csrf }}">
+    <input type="hidden" name="all" value="1">
+    <button type="submit" class="btn small"><span class="lbl">Tüm cihazlardan çık</span></button>
+  </form>
+  <details class="account-delete">
+    <summary>Hesabımı sil</summary>
+    <p class="pcard-text">Hesabınız, raporlarınız ve oturumlarınız kalıcı olarak silinir. Onaylamak için e-posta adresinizi yazın.</p>
+    <form method="post" action="/hesap/sil" class="account-delete-form">
+      <input type="hidden" name="csrf" value="{{ user.csrf }}">
+      <label for="hesap-onay">E-posta adresiniz</label>
+      <input id="hesap-onay" name="confirm" type="email" autocomplete="off" required>
+      <button type="submit" class="btn small danger"><span class="lbl">Hesabımı kalıcı olarak sil</span></button>
+    </form>
+  </details>
+</section>
+{% endif %}
 {% endblock %}
